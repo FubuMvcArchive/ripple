@@ -1,0 +1,3 @@
+Builds each fubu repo and ripples it up to other consuming repos.
+
+Not really for public consumption yet...
