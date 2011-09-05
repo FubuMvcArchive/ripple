@@ -17,7 +17,7 @@ namespace ripple
 
         public string GetRippleFileName()
         {
-            return CurrentFolder().AppendPath(ProjectConfig.FileName);
+            return CurrentFolder().AppendPath(SolutionConfig.FileName);
         }
     }
 }

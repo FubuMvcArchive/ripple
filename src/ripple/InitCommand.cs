@@ -20,9 +20,9 @@ namespace ripple
         [Description("Open the ripple.config file after creating it")]
         public bool OpenFlag { get; set; }
 
-        public ProjectConfig BuildConfig()
+        public SolutionConfig BuildConfig()
         {
-            var config = new ProjectConfig()
+            var config = new SolutionConfig()
             {
                 Name = Name
             };
@@ -56,7 +56,7 @@ namespace ripple
             return writeGitIgnore(config);
         }
 
-        private static void writeRippleConfig(string rippleFilename, FileSystem fileSystem, ProjectConfig config)
+        private static void writeRippleConfig(string rippleFilename, FileSystem fileSystem, SolutionConfig config)
         {
             ConsoleWriter.Write("Writing new ripple.config to " + rippleFilename);
             fileSystem.WriteObjectToFile(rippleFilename, config);
@@ -70,7 +70,7 @@ namespace ripple
             }
         }
 
-        private static bool writeGitIgnore(ProjectConfig config)
+        private static bool writeGitIgnore(SolutionConfig config)
         {
             return new GitIgnoreCommand().Execute(new GitIgnoreInput(){
                 Line = config.SourceFolder + "/packages"
