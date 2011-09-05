@@ -55,6 +55,7 @@
     <Compile Include="InitCommand.cs" />
     <Compile Include="NugetDependency.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RippleInput.cs" />
     <Compile Include="SolutionGraph.cs" />

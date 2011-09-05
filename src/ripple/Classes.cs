@@ -62,27 +62,6 @@ namespace ripple
         }
     }
 
-    public class Project
-    {
-        private readonly IList<NugetDependency> _nugetDependencies = new List<NugetDependency>();
-
-        public Project(string filename)
-        {
-            throw new NotImplementedException();
-            // needs to parse out the name from csproj
-        }
-
-        public IEnumerable<NugetDependency> NugetDependencies
-        {
-            get { return _nugetDependencies; }
-        }
-
-        public void Clean(IFileSystem system)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     // Recursive -- thanks Josh
     public class NugetSpec
     {
