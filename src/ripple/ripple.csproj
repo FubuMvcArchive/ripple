@@ -62,6 +62,7 @@
     <Compile Include="PublishedAssembly.cs" />
     <Compile Include="RippleInput.cs" />
     <Compile Include="Solution.cs" />
+    <Compile Include="SolutionConfig.cs" />
     <Compile Include="SolutionDependency.cs" />
     <Compile Include="SolutionGraph.cs" />
   </ItemGroup>
