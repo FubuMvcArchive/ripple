@@ -67,6 +67,10 @@ namespace ripple
 
         public Solution Publisher { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format("Nuget {0} from {1}", _name, Publisher);
+        }
     }
 
     public class NugetAssembly

@@ -53,12 +53,14 @@
     <Compile Include="Classes.cs" />
     <Compile Include="GitIgnoreCommand.cs" />
     <Compile Include="InitCommand.cs" />
+    <Compile Include="MigrationPath.cs" />
     <Compile Include="NugetDependency.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RippleInput.cs" />
     <Compile Include="Solution.cs" />
+    <Compile Include="SolutionDependency.cs" />
     <Compile Include="SolutionGraph.cs" />
   </ItemGroup>
   <ItemGroup>

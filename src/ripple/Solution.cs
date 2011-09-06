@@ -48,9 +48,8 @@ namespace ripple
             }
         }
 
-        public void ReadDependencies(SolutionGraph graph)
+        public IEnumerable<SolutionDependency> FindImmediateDependencies(Func<string, NugetSpec> nugetSource)
         {
-            // TODO -- finish this out
             throw new NotImplementedException();
         }
     }
