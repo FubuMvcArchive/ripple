@@ -25,7 +25,14 @@ namespace ripple
 
         public static SolutionConfig LoadFrom(string directory)
         {
-            return new FileSystem().LoadFromFile<SolutionConfig>(directory.AppendPath(FileName));
+            var fileSystem = new FileSystem();
+            var file = directory.AppendPath(FileName);
+
+            return fileSystem.FileExists(file) 
+                ? fileSystem.LoadFromFile<SolutionConfig>(file) 
+                : null;
+            
+            
         }
     }
 }

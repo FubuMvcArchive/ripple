@@ -65,6 +65,7 @@
     <Compile Include="SolutionConfig.cs" />
     <Compile Include="SolutionDependency.cs" />
     <Compile Include="SolutionGraph.cs" />
+    <Compile Include="SolutionGraphBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

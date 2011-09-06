@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Linq;
 
 namespace ripple
 {
@@ -37,7 +38,10 @@ namespace ripple
 
         public IEnumerable<PublishedAssembly> PublishedAssemblies
         {
-            get { return _publishedAssemblies; }
+            get
+            {
+                return _publishedAssemblies;
+            }
         }
 
         // do still need this
@@ -95,11 +99,6 @@ namespace ripple
                     spec._publishedAssemblies.Add(assembly);
                 }
             }
-        }
-
-        public void ReadDependencies(SolutionGraph graph)
-        {
-            throw new NotImplementedException();
         }
 
         public override string ToString()

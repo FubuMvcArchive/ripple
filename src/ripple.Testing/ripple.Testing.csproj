@@ -73,6 +73,7 @@
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="ProjectTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionGraphBuilderTester.cs" />
     <Compile Include="SolutionTester.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,10 @@
     <None Include="data\validation\packaging\nuget\fubumvc.validation.nuspec" />
     <None Include="data\validation\ripple.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\junk1\" />
+    <Folder Include="data\junk2\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
