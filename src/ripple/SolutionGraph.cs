@@ -39,9 +39,9 @@ namespace ripple
     }
 
 
-
+    
     public class SolutionGraph
     {
-
+        // this will be a "structurer"
     }
 }

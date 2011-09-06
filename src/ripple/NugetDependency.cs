@@ -20,14 +20,35 @@ namespace ripple
         {
             foreach (XmlElement element in document.SelectNodes("//package"))
             {
-                yield return new NugetDependency(element.GetAttribute("id"), element.GetAttribute("version"));
+                yield return ReadFrom(element);
             }
+        }
+
+        public static NugetDependency ReadFrom(XmlElement element)
+        {
+            return new NugetDependency(element.GetAttribute("id"), element.GetAttribute("version"));
+        }
+
+        public NugetDependency(string name)
+        {
+            _name = name;
+            _version = string.Empty;
         }
 
         public NugetDependency(string name, string version)
         {
             _name = name;
-            _version = version;
+            _version = version ?? string.Empty;
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public string Version
+        {
+            get { return _version; }
         }
 
         public bool Equals(NugetDependency other)

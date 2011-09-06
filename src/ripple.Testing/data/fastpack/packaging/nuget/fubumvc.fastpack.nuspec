@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>FubuMVC.FastPack</id>
+    <version>0.0</version>
+    <authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan</authors>
+    <owners>Joshua Flanagan</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://fubumvc.com</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Additional functionality useful for FubuMVC applications that use NHibernate and StructureMap</description>
+    <tags>fubumvc mvc nhibernate</tags>
+    <dependencies>
+      <dependency id="FubuMVC.References" />
+      <dependency id="FubuValidation" />
+    </dependencies>
+  </metadata>
+  <files>
+	  <file src="..\..\build\FubuFastPack.*" target="lib" />
+	  <file src="..\..\src\FubuFastPack\**\*.cs" target="src" />
+	  <file src="..\..\lib\fluent-nhibernate\FluentNHibernate.dll" target="lib" />	  
+	  <file src="..\..\lib\NHibernate\Antlr3.Runtime.dll" target="lib" />
+	  <file src="..\..\lib\NHibernate\Castle.Core.dll" target="lib" />
+	  <file src="..\..\lib\NHibernate\NHibernate.ByteCode.Castle.dll" target="lib" />
+	  <file src="..\..\lib\NHibernate\Iesi.Collections.dll" target="lib" />
+	  <file src="..\..\lib\NHibernate\NHibernate.dll" target="lib" />
+  </files>
+</package>

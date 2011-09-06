@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Bottles.Deployers.TopShelf</id>
+    <version>0.0.0</version>
+    <authors>Jeremy D. Miller, Dru Sellers, et al.</authors>
+    <owners>Jeremy D. Miller</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/bottles/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://fubumvc.com</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/bottles/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Tools for deploying TopShelf applications built on top of the Bottles framework</description>
+    <tags>packaging areas slices</tags>
+    <dependencies>
+      <dependency id="Bottles" />
+      <dependency id="Bottles.Deployment" />
+      <dependency id="Bottles.Host.Packaging" />
+    </dependencies>
+  </metadata>
+  <files>
+	  <file src="..\..\build\topshelf-deployers.zip" target="tools" />
+	  <file src="..\..\build\Bottles.Deployers.TopShelf.*" target="lib" />
+	  <file src="..\..\src\Bottles.Deployers.TopShelf\**\*.cs" target="src" />
+  </files>
+</package>

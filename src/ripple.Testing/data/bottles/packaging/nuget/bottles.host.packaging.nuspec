@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Bottles.Host.Packaging</id>
+    <version>0.0.0</version>
+    <authors>Jeremy D. Miller, Dru Sellers, et al.</authors>
+    <owners>Jeremy D. Miller</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/bottles/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://fubumvc.com</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/bottles/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Support for creating services via Bottles</description>
+    <tags>packaging service</tags>
+    <dependencies>
+      <dependency id="FubuCore" />
+      <dependency id="Bottles" />
+      <dependency id="Bottles.Deployment" />
+    </dependencies>
+  </metadata>
+  <files>
+	  <file src="..\..\build\Bottles.Host.Packaging.*" target="lib" />
+	  <file src="..\..\src\Bottles.Host.Packaging\**\*.cs" target="src" />
+  </files>
+</package>

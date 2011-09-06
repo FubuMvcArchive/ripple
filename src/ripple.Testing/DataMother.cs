@@ -17,5 +17,13 @@ namespace ripple.Testing
         }
 
 
+        public static void CreateDataFolder()
+        {
+            var fileSystem = new FileSystem();
+            fileSystem.CleanDirectory("data");
+            fileSystem.DeleteDirectory("data");
+            fileSystem.Copy(FileSystem.Combine("..", "..", "data"), "data");
+
+        }
     }
 }
