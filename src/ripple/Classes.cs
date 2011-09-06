@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Xml.Serialization;
-using FubuCore;
 
 namespace ripple
 {
@@ -27,40 +26,6 @@ namespace ripple
         public string FastBuildCommand { get; set; }
     }
 
-
-    public class Solution
-    {
-        private readonly SolutionConfig _config;
-        private readonly IList<Project> _projects = new List<Project>();
-
-        public Solution(SolutionConfig config)
-        {
-            _config = config;
-        }
-
-        public string Name
-        {
-            get
-            {
-                return _config.Name;
-            }
-        }
-
-        public void Clean(IFileSystem fileSystem)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddNugetSpec(NugetSpec spec)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReadDependencies(SolutionGraph graph)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     // Recursive -- thanks Josh
     public class NugetSpec
