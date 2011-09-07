@@ -42,7 +42,7 @@ namespace ripple
                 var dir = Path.GetDirectoryName(file);
                 return Solution.ReadFrom(dir);
 
-            });
+            }).ToList();
         }
 
 

@@ -7,15 +7,19 @@ namespace ripple
 {
     public class SolutionGraph
     {
+        private readonly Lazy<IEnumerable<NugetSpec>> _allNugets;
         private readonly Cache<string, Solution> _solutions = new Cache<string, Solution>();
 
         public SolutionGraph(IEnumerable<Solution> solutions)
         {
-            solutions.Each(s =>
-            {
-                _solutions[s.Name] = s;
-            });
+            _allNugets = new Lazy<IEnumerable<NugetSpec>>(() => _solutions.SelectMany(x => x.PublishedNugets).ToList());
+
+            solutions.Each(s => _solutions[s.Name] = s);
+            solutions.Each(s => s.DetermineDependencies(FindNugetSpec));
         }
+
+
+
 
         public Solution this[string name]
         {
@@ -43,9 +47,11 @@ namespace ripple
             return AllNugets().FirstOrDefault(x => x.Name == nugetName);
         }
 
+
+
         public IEnumerable<NugetSpec> AllNugets()
         {
-            return _solutions.SelectMany(x => x.PublishedNugets);
+            return _allNugets.Value;
         }
 
         public IEnumerable<NugetSpec> FindFromDependencies(IEnumerable<NugetDependency> dependencies)

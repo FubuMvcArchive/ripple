@@ -9,7 +9,6 @@ namespace ripple
     {
         public static Solution ReadFrom(string directory)
         {
-            
             var config = SolutionConfig.LoadFrom(directory);
 
             var solution = new Solution(config, directory);
@@ -31,7 +30,7 @@ namespace ripple
                 .Each(file =>
                 {
                     var spec = NugetSpec.ReadFrom(file);
-                    solution._nugets.Add(spec);
+                    solution.AddNugetSpec(spec);
                 });
         }
 
@@ -49,8 +48,8 @@ namespace ripple
         private readonly SolutionConfig _config;
         private readonly string _directory;
         private readonly IList<Project> _projects = new List<Project>();
-        private readonly IList<NugetSpec> _nugets = new List<NugetSpec>();
-
+        private readonly IList<NugetSpec> _published = new List<NugetSpec>();
+        private readonly IList<NugetSpec> _dependencies = new List<NugetSpec>();
 
         public Solution(SolutionConfig config, string directory)
         {
@@ -76,7 +75,7 @@ namespace ripple
 
         public void AddNugetSpec(NugetSpec spec)
         {
-            _nugets.Add(spec);
+            _published.Add(spec);
             spec.Publisher = this;
         }
 
@@ -94,13 +93,34 @@ namespace ripple
         {
             get
             {
-                return _nugets;
+                return _published;
             }
         }
 
-        public IEnumerable<SolutionDependency> FindImmediateDependencies(Func<string, NugetSpec> nugetSource)
+        public void DetermineDependencies(Func<string, NugetSpec> finder)
         {
-            throw new NotImplementedException();
+            var nugetDependencies = Projects.SelectMany(x => x.NugetDependencies).Distinct();
+            
+            nugetDependencies.Each(x =>
+            {
+                var spec = finder(x.Name);
+                if (spec != null)
+                {
+                    _dependencies.Add(spec);
+                }
+            });
+        }
+
+        public IEnumerable<Solution> Dependencies()
+        {
+            return _dependencies.Select(x => x.Publisher)
+                .Distinct()
+                .OrderBy(x => x.Name);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Solution {0}", Name);
         }
     }
 }

@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ripple.Testing
 {
     [TestFixture]
-    public class SolutionGraphBuilderTester
+    public class IntegratedSolutionGraphTester
     {
         private SolutionGraphBuilder theBuilder;
         private Lazy<SolutionGraph> theGraph;
@@ -53,6 +53,51 @@ namespace ripple.Testing
         {
             theGraph.Value.FindNugetSpec("CommonServiceLocator").ShouldBeNull();
             theGraph.Value.FindNugetSpec("structuremap").ShouldBeNull();
+        }
+
+        [Test]
+        public void has_read_all_the_published_nuget_specs()
+        {
+            theGraph.Value.AllNugets().Select(x => x.Name).ShouldHaveTheSameElementsAs(
+"Bottles.Deployers.IIS",
+"Bottles.Deployers.TopShelf",
+"Bottles.Deployment",
+"Bottles.Host.Packaging",
+"Bottles",
+"Bottles.Tools",
+"FubuMVC.FastPack",
+"FubuCore",
+"FubuLocalization",
+"FubuTestingSupport",
+"FubuMVC.Diagnostics",
+"FubuMVC",
+"FubuMVC.References",
+"FubuMVC.Spark",
+"FubuMVC.WebForms",
+"HtmlTags",
+"FubuValidation"
+
+            
+                );
+
+        }
+
+
+        [Test]
+        public void find_nuget_spec_works()
+        {
+            theGraph.Value.FindNugetSpec("HtmlTags").ShouldNotBeNull();
+        }
+
+
+        [Test]
+        public void solutions_list_their_dependencies()
+        {
+            theGraph.Value["fubucore"].Dependencies().Any().ShouldBeFalse();
+            theGraph.Value["bottles"].Dependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("fubucore", "htmltags");
+            theGraph.Value["fubumvc"].Dependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("bottles", "fubucore", "htmltags");
+            theGraph.Value["fastpack"].Dependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("bottles", "fubucore", "fubumvc", "htmltags", "validation");
+
         }
     }
 }
