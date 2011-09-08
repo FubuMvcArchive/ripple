@@ -6,6 +6,7 @@ namespace ripple
     {
         public static readonly string OpenLogMessage = "Open the build log by typing 'ripple open-log {0}";
         public static readonly string BuildFails = "The build for solution {0} failed.  See the log file.";
+        
         private readonly Solution _solution;
 
         public BuildSolution(Solution solution)

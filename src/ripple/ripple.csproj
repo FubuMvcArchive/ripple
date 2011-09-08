@@ -51,9 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildSolution.cs" />
+    <Compile Include="FileCopyRequest.cs" />
     <Compile Include="GitIgnoreCommand.cs" />
     <Compile Include="InitCommand.cs" />
     <Compile Include="MigrationPath.cs" />
+    <Compile Include="MoveNugetAssemblies.cs" />
     <Compile Include="NugetDependency.cs" />
     <Compile Include="NugetSpec.cs" />
     <Compile Include="Program.cs" />

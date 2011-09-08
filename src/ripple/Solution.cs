@@ -137,5 +137,18 @@ namespace ripple
         {
             return string.Format("Solution {0}", Name);
         }
+
+        public void AddProject(Project project)
+        {
+            _projects.Add(project);
+        }
+
+        public string NugetFolderFor(NugetSpec spec)
+        {
+            var dependency = Projects.SelectMany(x => x.NugetDependencies).Distinct()
+                .Single(x => x.Name == spec.Name);
+
+            return _directory.AppendPath(_config.SourceFolder, "packages", spec.Name + "." + dependency.Version);
+        }
     }
 }

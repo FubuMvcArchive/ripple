@@ -41,7 +41,25 @@ namespace ripple.Testing
             solution.PublishedNugets.ShouldContain(spec);
         }
 
+        [Test]
+        public void get_nuget_directory()
+        {
+            var solution = new Solution(new SolutionConfig()
+            {
+                SourceFolder = "source"
+            }, ".".ToFullPath());
 
+            var project = new Project("something.csproj");
+            var dependency = new NugetDependency("FubuCore", "0.9.1.37");
+            project.AddDependency(dependency);
+            solution.AddProject(project);
+
+            var spec = new NugetSpec("FubuCore", "somefile.nuspec");
+
+            solution.NugetFolderFor(spec)
+                .ShouldEqual(".".ToFullPath().AppendPath(solution.Config.SourceFolder, "packages", "FubuCore.0.9.1.37"));
+        
+        }
     }
 
     [TestFixture]
