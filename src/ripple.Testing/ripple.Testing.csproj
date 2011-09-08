@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataMother.cs" />
+    <Compile Include="IntegratedRipplePlanCreationTester.cs" />
+    <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
     <Compile Include="MakeTestData.cs" />
     <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />

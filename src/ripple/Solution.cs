@@ -118,6 +118,11 @@ namespace ripple
                 .OrderBy(x => x.Name);
         }
 
+        public bool DependsOn(Solution peer)
+        {
+            return _dependencies.Any(x => x.Publisher == peer);
+        }
+
         public override string ToString()
         {
             return string.Format("Solution {0}", Name);

@@ -56,6 +56,20 @@ namespace ripple.Testing
         }
 
         [Test]
+        public void can_return_the_solutions_in_dependency_order()
+        {
+            var names = theGraph.Value.AllSolutions.Select(x => x.Name);
+            names.ShouldHaveTheSameElementsAs(
+"fubucore",
+"htmltags",
+"validation",
+"bottles",
+"fubumvc",
+"fastpack"
+                );
+        }
+
+        [Test]
         public void has_read_all_the_published_nuget_specs()
         {
             theGraph.Value.AllNugets().Select(x => x.Name).ShouldHaveTheSameElementsAs(
