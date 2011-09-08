@@ -107,10 +107,10 @@ namespace ripple.Testing
         [Test]
         public void solutions_list_their_dependencies()
         {
-            theGraph.Value["fubucore"].Dependencies().Any().ShouldBeFalse();
-            theGraph.Value["bottles"].Dependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("fubucore", "htmltags");
-            theGraph.Value["fubumvc"].Dependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("bottles", "fubucore", "htmltags");
-            theGraph.Value["fastpack"].Dependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("bottles", "fubucore", "fubumvc", "htmltags", "validation");
+            theGraph.Value["fubucore"].SolutionDependencies().Any().ShouldBeFalse();
+            theGraph.Value["bottles"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("fubucore", "htmltags");
+            theGraph.Value["fubumvc"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("bottles", "fubucore", "htmltags");
+            theGraph.Value["fastpack"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("bottles", "fubucore", "fubumvc", "htmltags", "validation");
 
         }
     }

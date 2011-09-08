@@ -56,5 +56,11 @@ namespace ripple
             }
             return solutions;
         }
+
+        public RipplePlan BuildPlan(SolutionGraph theGraph)
+        {
+            var allSolutions = SelectSolutions(theGraph);
+            return new RipplePlan(allSolutions);
+        }
     }
 }

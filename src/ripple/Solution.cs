@@ -111,7 +111,12 @@ namespace ripple
             });
         }
 
-        public IEnumerable<Solution> Dependencies()
+        public IEnumerable<NugetSpec> NugetDependencies()
+        {
+            return _dependencies;
+        }
+
+        public IEnumerable<Solution> SolutionDependencies()
         {
             return _dependencies.Select(x => x.Publisher)
                 .Distinct()

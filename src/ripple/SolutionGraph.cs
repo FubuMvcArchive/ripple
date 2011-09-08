@@ -25,7 +25,7 @@ namespace ripple
         
             _orderedSolutions = new Lazy<IList<Solution>>(() =>
             {
-                var graph = new DependencyGraph<Solution>(s => s.Name, s => s.Dependencies().Select(x => x.Name));
+                var graph = new DependencyGraph<Solution>(s => s.Name, s => s.SolutionDependencies().Select(x => x.Name));
                 solutions.Each(graph.RegisterItem);
                 return graph.Ordered().ToList();
             });
