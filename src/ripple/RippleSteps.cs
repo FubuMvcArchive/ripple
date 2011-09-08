@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
-using System.Linq;
 
 namespace ripple
 {
@@ -71,56 +70,6 @@ namespace ripple
         }
     }
 
-
-
-
-    public class RipplePlanRequirements
-    {
-        // If not set, use all
-        public string From { get; set; }
-        public string To { get; set; }
-        public bool Fast { get; set; }
-        public bool Direct { get; set; }
-
-        public IEnumerable<Solution> SelectSolutions(SolutionGraph theGraph)
-        {
-            var start = From.IsEmpty() ? null : theGraph[From];
-            var end = To.IsEmpty() ? null : theGraph[To];
-
-            // TODO -- test this guard condition
-            if (Direct && (To.IsEmpty() || From.IsEmpty()))
-            {
-                throw new InvalidOperationException("If using the Direct option, you must specify bith a From and To solution");
-            }
-
-            if (Direct)
-            {
-                return new Solution[] { start, end };
-            }
-
-            var solutions = theGraph.AllSolutions.ToList();
-            
-            if (start != null)
-            {
-                solutions = solutions
-                    .SkipWhile(x => x != start)
-                    .Where(x => x == start || x.DependsOn(start))
-                    .ToList();
-            }
-            
-            if (end != null)
-            {
-                solutions = solutions.TakeWhile(x => x != end).Where(end.DependsOn).ToList();
-                solutions.Add(end);
-            }
-
-
-
-
-
-            return solutions;
-        }
-    }
 
     // This thing will create a FileCopyPlan
     public class MoveNugetAssemblies : IRippleStep

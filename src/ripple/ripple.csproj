@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishedAssembly.cs" />
     <Compile Include="RippleInput.cs" />
+    <Compile Include="RipplePlanRequirements.cs" />
     <Compile Include="RippleSteps.cs" />
     <Compile Include="Solution.cs" />
     <Compile Include="SolutionConfig.cs" />
