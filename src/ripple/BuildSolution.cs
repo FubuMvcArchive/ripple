@@ -4,6 +4,8 @@ namespace ripple
 {
     public class BuildSolution : IRippleStep
     {
+        public static readonly string OpenLogMessage = "Open the build log by typing 'ripple open-log {0}";
+        public static readonly string BuildFails = "The build for solution {0} failed.  See the log file.";
         private readonly Solution _solution;
 
         public BuildSolution(Solution solution)
@@ -38,7 +40,25 @@ namespace ripple
 
         public RippleStepResult Execute(IRippleRunner runner)
         {
-            throw new NotImplementedException();
+            try
+            {
+                runner.BuildSolution(_solution);
+                return new RippleStepResult
+                {
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RippleStepResult{
+                    Success = false,
+                    Message = ex.ToString()
+                };
+            }
+            finally
+            {
+                runner.Trace(OpenLogMessage, _solution.Name);
+            }
         }
 
         public override string ToString()

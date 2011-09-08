@@ -21,6 +21,7 @@ namespace ripple
         void BuildSolution(Solution solution);
         void CopyFiles(FileCopyPlan plan);
         void CleanDirectory(string directory);
+        void Trace(string format, params string[] parameters);
     }
 
     public interface ICommandRunner
@@ -45,6 +46,11 @@ namespace ripple
         }
 
         public void CleanDirectory(string directory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Trace(string format, params string[] parameters)
         {
             throw new NotImplementedException();
         }
