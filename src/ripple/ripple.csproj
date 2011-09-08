@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildSolution.cs" />
     <Compile Include="GitIgnoreCommand.cs" />
     <Compile Include="InitCommand.cs" />
     <Compile Include="MigrationPath.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishedAssembly.cs" />
     <Compile Include="RippleInput.cs" />
+    <Compile Include="RipplePlan.cs" />
     <Compile Include="RipplePlanRequirements.cs" />
     <Compile Include="RippleSteps.cs" />
     <Compile Include="Solution.cs" />

@@ -1,15 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
-using System.Linq;
 
 namespace ripple
 {
+    public class RippleStepResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
+
     public interface IRippleStep
     {
-        void Execute(IRippleRunner runner);
+        RippleStepResult Execute(IRippleRunner runner);
     }
 
     public interface IRippleRunner
@@ -43,59 +47,6 @@ namespace ripple
         public void CleanDirectory(string directory)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class RipplePlan : IEnumerable<IRippleStep>
-    {
-        private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
-
-        public RipplePlan(IEnumerable<Solution> solutions)
-        {
-            guardCondition(solutions);
-
-            var queue = new Queue<Solution>(solutions); 
-
-            // first step
-            _steps.Add(new BuildSolution(queue.Dequeue()));
-
-            while (queue.Any())
-            {
-                var solution = queue.Dequeue();
-
-                var nugets = solution
-                    .NugetDependencies()
-                    .Where(x => solutions.Contains(x.Publisher))
-                    .OrderBy(x => x.Name)
-                    .Select(x => new MoveNugetAssemblies(x, solution));
-
-                _steps.AddRange(nugets);
-
-                _steps.Add(new BuildSolution(solution));
-            }
-        }
-
-        private static void guardCondition(IEnumerable<Solution> solutions)
-        {
-            if (solutions.Count() < 2)
-            {
-                throw new InvalidOperationException("Cannot execxute a ripple with less than 2 solutions.  It's just plain silly");
-            }
-        }
-
-        public void Execute(IRippleRunner runner)
-        {
-            _steps.Each(x => x.Execute(runner));
-        }
-
-        public IEnumerator<IRippleStep> GetEnumerator()
-        {
-            return _steps.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 
@@ -137,7 +88,7 @@ namespace ripple
             }
         }
 
-        public void Execute(IRippleRunner runner)
+        public RippleStepResult Execute(IRippleRunner runner)
         {
             throw new NotImplementedException();
         }
@@ -148,51 +99,6 @@ namespace ripple
         }
 
 
-    }
-
-    public class BuildSolution : IRippleStep
-    {
-        private readonly Solution _solution;
-
-        public BuildSolution(Solution solution)
-        {
-            _solution = solution;
-        }
-
-        public Solution Solution
-        {
-            get { return _solution; }
-        }
-
-        public bool Equals(BuildSolution other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Equals(other._solution, _solution);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (BuildSolution)) return false;
-            return Equals((BuildSolution) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (_solution != null ? _solution.GetHashCode() : 0);
-        }
-
-        public void Execute(IRippleRunner runner)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Build {0}", _solution);
-        }
     }
 
 

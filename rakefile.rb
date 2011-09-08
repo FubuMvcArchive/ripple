@@ -1,55 +1,91 @@
-require 'buildsupport/nuget.rb'
-@ripple_root = File.dirname(__FILE__)
-@package_root = File.join(@ripple_root, "packages")
-@code_root = File.expand_path(File.join(@ripple_root, "../"))
+COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
+CLR_TOOLS_VERSION = "v4.0.30319"
 
-namespace :ripple do
-  desc "Build project, push, push new package to nuget.org, consume in next project. Repeat"
-  task :start => [:reset] do
-    # 1) Determine dependency graph
-    libs = get_libs_to_ripple
+include FileTest
+require 'albacore'
+load "VERSION.txt"
 
-    # 2) Validate that all dependencies are available locally
-    validate_libs_exist libs
+RESULTS_DIR = "results"
+PRODUCT = "ripple"
+COPYRIGHT = 'Copyright 2011 Jeremy D. Miller, et al. All rights reserved.';
+COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 
-    # 3) Write list of jobs
-    init_ripple_jobs libs
+buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
+buildsupportfiles.each { |ext| load ext }
 
-    # 4) Start the first job
-    Rake::Task["ripple:nextjob"].execute
+@teamcity_build_id = "bt396"
+tc_build_number = ENV["BUILD_NUMBER"]
+build_revision = tc_build_number || Time.new.strftime('5%H%M')
+BUILD_NUMBER = "#{BUILD_VERSION}.#{build_revision}"
+ARTIFACTS = File.expand_path("artifacts")
+
+props = { :stage => File.expand_path("build"), :artifacts => ARTIFACTS }
+
+desc "**Default**, compiles and runs tests"
+task :default => [:compile, :unit_test]
+
+desc "Target used for the CI server"
+task :ci => [:default]
+
+desc "Update the version information for the build"
+assemblyinfo :version do |asm|
+  asm_version = BUILD_VERSION + ".0"
+  
+  begin
+    commit = `git log -1 --pretty=format:%H`
+  rescue
+    commit = "git unavailable"
   end
+  puts "##teamcity[buildNumber '#{BUILD_NUMBER}']" unless tc_build_number.nil?
+  puts "Version: #{BUILD_NUMBER}" if tc_build_number.nil?
+  asm.trademark = commit
+  asm.product_name = PRODUCT
+  asm.description = BUILD_NUMBER
+  asm.version = asm_version
+  asm.file_version = BUILD_NUMBER
+  asm.custom_attributes :AssemblyInformationalVersion => asm_version
+  asm.copyright = COPYRIGHT
+  asm.output_file = COMMON_ASSEMBLY_INFO 
+end
 
-  desc "Build each project and push build output to downstream projects"
-  task :startlocal => [:reset] do
-    libs = get_libs_to_ripple
-    validate_libs_exist libs
-    libs.each do |lib|
-      run_in File.join(@code_root, lib), "rake ripple:local \"NUGET_HUB=#{@package_root}\""
-    end
-  end
+desc "Prepares the working directory for a new build"
+task :clean do
+	#TODO: do any other tasks required to clean/prepare the working directory
+	FileUtils.rm_rf props[:stage]
+    # work around nasty latency issue where folder still exists for a short while after it is removed
+    waitfor { !exists?(props[:stage]) }
+	Dir.mkdir props[:stage]
+    
+	Dir.mkdir props[:artifacts] unless exists?(props[:artifacts])
+end
 
-  def get_libs_to_ripple
-    ['fubucore', 'bottles', 'fubumvc', 'fubuvalidation', 'fubufastpack']
+def waitfor(&block)
+  checks = 0
+  until block.call || checks >10 
+    sleep 0.5
+    checks += 1
   end
+  raise 'waitfor timeout expired' if checks > 10
+end
 
-  def validate_libs_exist(libs)
-    libs.each do |lib|
-      lib_dir = File.join @code_root, lib
-      raise "Could not find dependent library: #{lib_dir}" unless File.directory?(lib_dir)
-    end
-  end
 
-  task :nextjob do
-    next_job = get_next_job 
-    if next_job
-      run_in File.join(@code_root, next_job), "rake ripple:public \"NUGET_HUB=#{@package_root}\""
-    else
-      puts "Ripple complete."
-    end
-  end
+desc "Compiles the app"
+task :compile => [:clean, :version] do
+  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/ripple.sln', :clrversion => CLR_TOOLS_VERSION
+end
 
-  task :reset do
-    rm_rf Dir["#{@package_root}/*"], :verbose => false
-  end
+def copyOutputFiles(fromDir, filePattern, outDir)
+  Dir.glob(File.join(fromDir, filePattern)){|file| 		
+	copy(file, outDir) if File.file?(file)
+  } 
+end
+
+desc "Runs unit tests"
+task :test => [:unit_test]
+
+desc "Runs unit tests"
+task :unit_test => :compile do
+  runner = NUnitRunner.new :compilemode => COMPILE_TARGET, :source => 'src', :platform => 'x86'
+  runner.executeTests ['ripple.Testing']
 end
 

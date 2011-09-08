@@ -65,6 +65,11 @@ namespace ripple
             }
         }
 
+        public SolutionConfig Config
+        {
+            get { return _config; }
+        }
+
         public void Clean(IFileSystem fileSystem)
         {
             var packagesFolder = _directory.AppendPath(_config.SourceFolder, "packages");
