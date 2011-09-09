@@ -1,5 +1,6 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using FubuTestingSupport;
+using ripple.Local;
 
 namespace ripple.Testing
 {

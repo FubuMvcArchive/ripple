@@ -1,6 +1,6 @@
-using System;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Local
 {
     public class BuildSolution : IRippleStep
     {
@@ -39,22 +39,12 @@ namespace ripple
             return (_solution != null ? _solution.GetHashCode() : 0);
         }
 
-        public RippleStepResult Execute(IRippleRunner runner)
+        public void Execute(IRippleStepRunner runner)
         {
             try
             {
                 runner.BuildSolution(_solution);
-                return new RippleStepResult
-                {
-                    Success = true
-                };
-            }
-            catch (Exception ex)
-            {
-                return new RippleStepResult{
-                    Success = false,
-                    Message = ex.ToString()
-                };
+
             }
             finally
             {

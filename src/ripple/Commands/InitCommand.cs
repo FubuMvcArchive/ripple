@@ -1,42 +1,9 @@
-using System;
-using System.ComponentModel;
 using FubuCore.CommandLine;
 using FubuCore;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Commands
 {
-
-
-
-    public class InitInput : RippleInput
-    {
-        [Description("Shorthand name for the project")]
-        public string Name { get; set; }
-
-        [FlagAlias("src")]
-        [Description("Relative path to the solution directory.  Default is 'src'")]
-        public string SourceFolderFlag { get; set; }
-
-        [Description("Open the ripple.config file after creating it")]
-        public bool OpenFlag { get; set; }
-
-        public SolutionConfig BuildConfig()
-        {
-            var config = new SolutionConfig()
-            {
-                Name = Name
-            };
-
-            if (SourceFolderFlag.IsNotEmpty())
-            {
-                config.SourceFolder = SourceFolderFlag;
-            }
-
-            return config;
-        }
-
-    }
-
     [CommandDescription("Initializes a project directory as a 'rippled' project")]
     public class InitCommand : FubuCommand<InitInput>
     {

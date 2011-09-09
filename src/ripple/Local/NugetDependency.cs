@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace ripple
+namespace ripple.Local
 {
     public class NugetDependency
     {

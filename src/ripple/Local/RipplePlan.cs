@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Local
 {
     public class RipplePlan : IEnumerable<IRippleStep>
     {
@@ -32,6 +33,15 @@ namespace ripple
 
                 _steps.Add(new BuildSolution(solution));
             }
+
+        }
+
+        public int Count
+        {
+            get
+            {
+                return _steps.Count;
+            }
         }
 
         private static void guardCondition(IEnumerable<Solution> solutions)
@@ -42,7 +52,7 @@ namespace ripple
             }
         }
 
-        public void Execute(IRippleRunner runner)
+        public void Execute(IRippleStepRunner runner)
         {
             _steps.Each(x => x.Execute(runner));
         }

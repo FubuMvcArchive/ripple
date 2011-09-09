@@ -1,7 +1,8 @@
 using System.ComponentModel;
 using FubuCore;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Commands
 {
     public class RippleInput
     {

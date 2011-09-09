@@ -1,6 +1,6 @@
 using FubuCore;
 
-namespace ripple
+namespace ripple.Local
 {
     public class FileCopyRequest
     {

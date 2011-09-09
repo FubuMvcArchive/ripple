@@ -2,6 +2,8 @@ using System;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FubuTestingSupport;
+using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Testing
 {
@@ -10,8 +12,7 @@ namespace ripple.Testing
     {
         private Solution theSolution;
         private BuildSolution theBuild;
-        private IRippleRunner theRunner;
-        private RippleStepResult theResult;
+        private IRippleStepRunner theRunner;
 
         [SetUp]
         public void SetUp()
@@ -19,15 +20,9 @@ namespace ripple.Testing
             theSolution = new Solution(new SolutionConfig(), "some directory");
             theBuild = new BuildSolution(theSolution);
 
-            theRunner = MockRepository.GenerateMock<IRippleRunner>();
+            theRunner = MockRepository.GenerateMock<IRippleStepRunner>();
 
-            theResult = theBuild.Execute(theRunner);
-        }
-
-        [Test]
-        public void the_result_should_be_successful()
-        {
-            theResult.Success.ShouldBeTrue();
+            theBuild.Execute(theRunner);
         }
 
         [Test]
@@ -48,8 +43,7 @@ namespace ripple.Testing
     {
         private Solution theSolution;
         private BuildSolution theBuild;
-        private IRippleRunner theRunner;
-        private RippleStepResult theResult;
+        private IRippleStepRunner theRunner;
         private NotImplementedException theException;
 
         [SetUp]
@@ -58,24 +52,17 @@ namespace ripple.Testing
             theSolution = new Solution(new SolutionConfig(), "some directory");
             theBuild = new BuildSolution(theSolution);
 
-            theRunner = MockRepository.GenerateMock<IRippleRunner>();
+            theRunner = MockRepository.GenerateMock<IRippleStepRunner>();
             theException = new NotImplementedException();
 
             theRunner.Expect(x => x.BuildSolution(theSolution)).Throw(theException);
 
-            theResult = theBuild.Execute(theRunner);
-        }
+            Exception<NotImplementedException>.ShouldBeThrownBy(() =>
+            {
+                theBuild.Execute(theRunner);
+            }).ShouldBeTheSameAs(theException);
 
-        [Test]
-        public void the_result_should_be_a_failure()
-        {
-            theResult.Success.ShouldBeFalse();
-        }
-
-        [Test]
-        public void the_result_message_should_be_from_the_exception()
-        {
-            theResult.Message.ShouldEqual(theException.ToString());
+            
         }
 
         [Test]

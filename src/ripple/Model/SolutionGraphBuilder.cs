@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using FubuCore;
 
-namespace ripple
+namespace ripple.Model
 {
     public class SolutionGraphBuilder
     {

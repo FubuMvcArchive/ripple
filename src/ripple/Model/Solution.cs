@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FubuCore;
 using System.Linq;
+using FubuCore.CommandLine;
+using ripple.Local;
 
-namespace ripple
+namespace ripple.Model
 {
     public class Solution
     {
@@ -54,7 +57,12 @@ namespace ripple
         public Solution(SolutionConfig config, string directory)
         {
             _config = config;
-            _directory = directory;
+            _directory = directory.ToFullPath();
+        }
+
+        public string Directory
+        {
+            get { return _directory; }
         }
 
         public string Name
@@ -149,6 +157,17 @@ namespace ripple
                 .Single(x => x.Name == spec.Name);
 
             return _directory.AppendPath(_config.SourceFolder, "packages", spec.Name + "." + dependency.Version);
+        }
+
+        public ProcessStartInfo CreateBuildProcess(bool fast)
+        {
+            var cmdLine = fast ? _config.FastBuildCommand : _config.BuildCommand;
+            var commands = StringTokenizer.Tokenize(cmdLine);
+
+            return new ProcessStartInfo(commands.First()){
+                WorkingDirectory = _directory,
+                Arguments = commands.Skip(1).Join(" ")
+            };
         }
     }
 }

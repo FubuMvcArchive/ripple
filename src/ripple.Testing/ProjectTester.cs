@@ -1,7 +1,8 @@
-using FubuCore;
+﻿using FubuCore;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FubuTestingSupport;
+using ripple.Local;
 
 namespace ripple.Testing
 {

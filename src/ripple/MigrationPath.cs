@@ -1,3 +1,5 @@
+using ripple.Local;
+
 namespace ripple
 {
     public class MigrationPath

@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Local
 {
     public class RipplePlanRequirements
     {

@@ -1,17 +1,9 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 
-namespace ripple
+namespace ripple.Commands
 {
-    public class GitIgnoreInput : RippleInput
-    {
-        [RequiredUsage("add")]
-        [Description("A line of text to add to a .gitignore file")]
-        public string Line { get; set; }
-    }
-
     [Usage("list", "List the text in the .gitignore file for this folder")]
     [Usage("add", "Adds a line to the .gitignore file for this folder if it does not already exist")]
     [CommandDescription("Lists or adds values to the .gitignore file in this directory")]

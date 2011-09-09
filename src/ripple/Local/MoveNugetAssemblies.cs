@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using FubuCore;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Local
 {
     
     public class MoveNugetAssemblies : IRippleStep
@@ -40,7 +40,7 @@ namespace ripple
         }
 
         // Tested manually.
-        public RippleStepResult Execute(IRippleRunner runner)
+        public void Execute(IRippleStepRunner runner)
         {
             var packageFolder = _destination.NugetFolderFor(_nuget);
 
@@ -55,10 +55,6 @@ namespace ripple
                 
                 runner.CopyFiles(request);
             });
-
-            return new RippleStepResult{
-                Success = true
-            };
         }
 
         public override string ToString()

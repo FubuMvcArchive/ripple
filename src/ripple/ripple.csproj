@@ -50,32 +50,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildSolution.cs" />
-    <Compile Include="FileCopyRequest.cs" />
-    <Compile Include="GitIgnoreCommand.cs" />
-    <Compile Include="InitCommand.cs" />
+    <Compile Include="Local\BuildSolution.cs" />
+    <Compile Include="Local\FileCopyRequest.cs" />
+    <Compile Include="Commands\GitIgnoreCommand.cs" />
+    <Compile Include="Commands\GitIgnoreInput.cs" />
+    <Compile Include="Commands\InitCommand.cs" />
+    <Compile Include="Commands\InitInput.cs" />
+    <Compile Include="Local\InvalidSolutionException.cs" />
+    <Compile Include="Local\IProcessRunner.cs" />
+    <Compile Include="Local\IRippleLogger.cs" />
+    <Compile Include="Local\IRippleStep.cs" />
+    <Compile Include="Local\IRippleStepRunner.cs" />
     <Compile Include="MigrationPath.cs" />
-    <Compile Include="MoveNugetAssemblies.cs" />
-    <Compile Include="NugetDependency.cs" />
-    <Compile Include="NugetSpec.cs" />
+    <Compile Include="Local\MoveNugetAssemblies.cs" />
+    <Compile Include="Local\NugetDependency.cs" />
+    <Compile Include="Local\NugetSpec.cs" />
+    <Compile Include="Local\ProcessReturn.cs" />
+    <Compile Include="Local\ProcessRunner.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Project.cs" />
+    <Compile Include="Local\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PublishedAssembly.cs" />
-    <Compile Include="RippleInput.cs" />
-    <Compile Include="RipplePlan.cs" />
-    <Compile Include="RipplePlanRequirements.cs" />
-    <Compile Include="RippleSteps.cs" />
-    <Compile Include="Solution.cs" />
-    <Compile Include="SolutionConfig.cs" />
+    <Compile Include="Local\PublishedAssembly.cs" />
+    <Compile Include="Commands\RippleInput.cs" />
+    <Compile Include="Local\RipplePlan.cs" />
+    <Compile Include="Local\RipplePlanRequirements.cs" />
+    <Compile Include="Local\RippleRunner.cs" />
+    <Compile Include="Local\RippleStepRunner.cs" />
+    <Compile Include="Local\RippleLogger.cs" />
+    <Compile Include="Model\Solution.cs" />
+    <Compile Include="Model\SolutionConfig.cs" />
     <Compile Include="SolutionDependency.cs" />
-    <Compile Include="SolutionGraph.cs" />
-    <Compile Include="SolutionGraphBuilder.cs" />
+    <Compile Include="Model\SolutionGraph.cs" />
+    <Compile Include="Model\SolutionGraphBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,12 +5,49 @@ using FubuCore;
 using FubuTestingSupport;
 using System.Linq;
 using System.Collections.Generic;
+using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Testing
 {
     [TestFixture]
     public class SolutionTester
     {
+        [Test]
+        public void create_process_info_for_full_build()
+        {
+            var solution = new Solution(new SolutionConfig()
+            {
+                SourceFolder = "src",
+                BuildCommand = "rake",
+                FastBuildCommand = "rake compile"
+            }, "directory1");
+
+            var processInfo = solution.CreateBuildProcess(false);
+
+            processInfo.WorkingDirectory.ShouldEqual("directory1".ToFullPath());
+            processInfo.FileName.ShouldEqual("rake");
+            processInfo.Arguments.ShouldBeEmpty();
+        }
+
+        [Test]
+        public void create_process_for_fast_build()
+        {
+            var solution = new Solution(new SolutionConfig()
+            {
+                SourceFolder = "src",
+                BuildCommand = "rake",
+                FastBuildCommand = "rake compile"
+            }, "directory1");
+
+            var processInfo = solution.CreateBuildProcess(true);
+
+            processInfo.WorkingDirectory.ShouldEqual("directory1".ToFullPath());
+            processInfo.FileName.ShouldEqual("rake");
+            processInfo.Arguments.ShouldEqual("compile");
+        }
+
+
         [Test]
         public void clean_deletes_the_packages_folder()
         {
@@ -22,7 +59,7 @@ namespace ripple.Testing
 
             solution.Clean(fileSystem);
 
-            fileSystem.AssertWasCalled(x => x.DeleteDirectory("directory1", "src", "packages"));
+            fileSystem.AssertWasCalled(x => x.DeleteDirectory("directory1".ToFullPath(), "src", "packages"));
         }
 
         [Test]

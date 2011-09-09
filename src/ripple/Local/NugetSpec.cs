@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Linq;
+using ripple.Model;
 
-namespace ripple
+namespace ripple.Local
 {
     public class NugetSpec
     {

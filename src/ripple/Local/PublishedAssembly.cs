@@ -1,7 +1,7 @@
 using System.IO;
 using FubuCore;
 
-namespace ripple
+namespace ripple.Local
 {
     public class PublishedAssembly
     {

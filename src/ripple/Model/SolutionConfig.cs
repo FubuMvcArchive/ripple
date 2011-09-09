@@ -1,7 +1,7 @@
 using System.Xml.Serialization;
 using FubuCore;
 
-namespace ripple
+namespace ripple.Model
 {
     [XmlType("ripple")]
     public class SolutionConfig

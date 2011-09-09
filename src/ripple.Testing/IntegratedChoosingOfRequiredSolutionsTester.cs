@@ -5,6 +5,8 @@ using System.Linq;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
+using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Testing
 {

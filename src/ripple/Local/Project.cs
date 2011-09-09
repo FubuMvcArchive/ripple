@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using FubuCore;
 using System.Linq;
 
-namespace ripple
+namespace ripple.Local
 {
     public class Project
     {

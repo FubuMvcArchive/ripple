@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using ripple.Local;
+using ripple.Model;
 
 namespace ripple
 {

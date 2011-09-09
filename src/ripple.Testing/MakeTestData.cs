@@ -4,6 +4,7 @@ using FubuCore;
 using NUnit.Framework;
 using System.Linq;
 using System.Collections.Generic;
+using ripple.Model;
 
 namespace ripple.Testing
 {

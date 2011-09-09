@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using FubuCore.DependencyAnalysis;
 using FubuCore.Util;
 using System.Linq;
-using FubuCore;
+using ripple.Local;
 
-namespace ripple
+namespace ripple.Model
 {
     public class SolutionGraph
     {
@@ -72,13 +72,5 @@ namespace ripple
             return AllNugets().Where(x => dependencies.Any(d => d.Name == x.Name));
         }
 
-    }
-
-    public class InvalidSolutionException : Exception
-    {
-        public InvalidSolutionException(string solutionName)
-            : base("Solution {0} does not exist".ToFormat(solutionName))
-        {
-        }
     }
 }
