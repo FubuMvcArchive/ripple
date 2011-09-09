@@ -133,8 +133,8 @@ namespace ripple.Model
 
         public void DetermineDependencies(Func<string, NugetSpec> finder)
         {
-            var nugetDependencies = Projects.SelectMany(x => x.NugetDependencies).Distinct();
-            
+            IEnumerable<NugetDependency> nugetDependencies = GetAllNugetDependencies();
+
             nugetDependencies.Each(x =>
             {
                 var spec = finder(x.Name);
@@ -143,6 +143,11 @@ namespace ripple.Model
                     _dependencies.Add(spec);
                 }
             });
+        }
+
+        public IEnumerable<NugetDependency> GetAllNugetDependencies()
+        {
+            return Projects.SelectMany(x => x.NugetDependencies).Distinct();
         }
 
         public IEnumerable<NugetSpec> NugetDependencies()
