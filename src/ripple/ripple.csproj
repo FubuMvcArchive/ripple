@@ -64,7 +64,6 @@
     <Compile Include="Local\IRippleStep.cs" />
     <Compile Include="Local\IRippleStepRunner.cs" />
     <Compile Include="RippleFileSystem.cs" />
-    <Compile Include="MigrationPath.cs" />
     <Compile Include="Local\MoveNugetAssemblies.cs" />
     <Compile Include="Local\NugetDependency.cs" />
     <Compile Include="Local\NugetSpec.cs" />
@@ -82,7 +81,6 @@
     <Compile Include="Local\RippleLogger.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\SolutionConfig.cs" />
-    <Compile Include="SolutionDependency.cs" />
     <Compile Include="Model\SolutionGraph.cs" />
     <Compile Include="Model\SolutionGraphBuilder.cs" />
   </ItemGroup>
