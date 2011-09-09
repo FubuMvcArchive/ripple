@@ -28,10 +28,10 @@ namespace ripple.Local
 
             info.RedirectStandardError = info.RedirectStandardOutput = true;
 
-            if (!Path.IsPathRooted(info.FileName))
-            {
-                info.FileName = info.WorkingDirectory.AppendPath(info.FileName);
-            }
+            //if (!Path.IsPathRooted(info.FileName))
+            //{
+            //    info.FileName = info.WorkingDirectory.AppendPath(info.FileName);
+            //}
 
             ProcessReturn returnValue = null;
             var output = new StringBuilder();
@@ -41,7 +41,7 @@ namespace ripple.Local
                 pid = proc.Id;				
                 proc.OutputDataReceived += (sender, outputLine) => 
                 { 
-                    output.Append(outputLine.Data); 
+                    output.AppendLine(outputLine.Data); 
                 };
 				
                 proc.BeginOutputReadLine();

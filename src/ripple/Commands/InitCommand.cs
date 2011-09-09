@@ -1,5 +1,9 @@
+using System;
+using System.Diagnostics;
+using System.IO;
 using FubuCore.CommandLine;
 using FubuCore;
+using ripple.Local;
 using ripple.Model;
 
 namespace ripple.Commands
@@ -8,7 +12,6 @@ namespace ripple.Commands
     public class InitCommand : FubuCommand<InitInput>
     {
 
-        // TODO -- need to do a .gitignore
         public override bool Execute(InitInput input)
         {
             var config = input.BuildConfig();
@@ -20,7 +23,21 @@ namespace ripple.Commands
             writeRippleConfig(rippleFilename, fileSystem, config);
             openRippleConfigFile(input, rippleFilename, fileSystem);
 
-            return writeGitIgnore(config);
+            writeGitIgnore(config);
+
+            removePackagesFromGit(config);
+
+            return true;
+        }
+
+        private static void removePackagesFromGit(SolutionConfig config)
+        {
+
+            var packagesFolder = FileSystem.Combine(config.SourceFolder, "packages");
+
+            var arguments = "rm {0} -r".ToFormat(packagesFolder);
+            CLIRunner.RunGit(arguments);
+            CLIRunner.RunGit("status");
         }
 
         private static void writeRippleConfig(string rippleFilename, FileSystem fileSystem, SolutionConfig config)
@@ -42,6 +59,52 @@ namespace ripple.Commands
             return new GitIgnoreCommand().Execute(new GitIgnoreInput(){
                 Line = config.SourceFolder + "/packages"
             });
+        }
+    }
+
+    // TODO -- clean up the ProcessRunner
+    public static class CLIRunner
+    {
+        public static void RunGit(string command, params object[] parameters)
+        {
+            var runner = new ProcessRunner();
+            var gitFile = RippleFileSystem.CodeDirectory().AppendPath("ripple", "run-git.cmd");
+
+            var processStartInfo = new ProcessStartInfo(){
+                FileName = gitFile,
+                Arguments = command.ToFormat(parameters)
+            };
+
+            var start = Console.ForegroundColor;
+
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            ConsoleWriter.PrintHorizontalLine();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("{0} {1}", processStartInfo.FileName, processStartInfo.Arguments);
+            ConsoleWriter.PrintHorizontalLine();
+
+            
+            var returnValue = runner.Run(processStartInfo);
+            var color = returnValue.ExitCode == 0 ? ConsoleColor.Gray : ConsoleColor.Red;
+
+            
+            Console.ForegroundColor = color;
+
+
+
+            
+
+            Console.WriteLine(returnValue.OutputText);
+            Console.WriteLine("ExitCode:  " + returnValue.ExitCode);
+
+            ConsoleWriter.PrintHorizontalLine();
+
+            Console.ForegroundColor = start;
+            
         }
     }
 }
