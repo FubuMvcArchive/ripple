@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using FubuCore;
+using System.Linq;
 
 namespace ripple
 {
@@ -10,7 +11,12 @@ namespace ripple
         public static string CodeDirectory()
         {
             var location = Assembly.GetExecutingAssembly().Location;
-            return location.ParentDirectory().ParentDirectory();
+            while (location.Contains("ripple"))
+            {
+                location = location.ParentDirectory();
+            }
+
+            return location;
         }
 
         public static string ParentDirectory(this string path)
@@ -59,6 +65,10 @@ namespace ripple
             fileSystem.WriteStringToFile(logsDirectory.AppendPath(filename), contents);
         }
 
-        
+
+        public static string RippleExeLocation()
+        {
+            return Assembly.GetExecutingAssembly().Location;
+        }
     }
 }

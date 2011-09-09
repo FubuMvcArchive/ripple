@@ -11,3 +11,4 @@ src/FubuMVC.6.0.ReSharper
 _combined/
 src/FubuMVC.6.0.ReSharper
 src/CommonAssemblyInfo.cs
+TestResult.xml
