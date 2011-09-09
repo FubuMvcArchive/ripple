@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\OpenLogCommand.cs" />
     <Compile Include="Local\BuildSolution.cs" />
     <Compile Include="Local\FileCopyRequest.cs" />
     <Compile Include="Commands\GitIgnoreCommand.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Local\IRippleLogger.cs" />
     <Compile Include="Local\IRippleStep.cs" />
     <Compile Include="Local\IRippleStepRunner.cs" />
+    <Compile Include="RippleFileSystem.cs" />
     <Compile Include="MigrationPath.cs" />
     <Compile Include="Local\MoveNugetAssemblies.cs" />
     <Compile Include="Local\NugetDependency.cs" />

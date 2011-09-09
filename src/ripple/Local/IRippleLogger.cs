@@ -6,6 +6,6 @@ namespace ripple.Local
     {
         void Indent(Action action);
         void Trace(string format, params object[] parameters);
-        void WriteTo(string filename);
+        void WriteLogFile(string filename);
     }
 }

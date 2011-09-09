@@ -30,9 +30,9 @@ namespace ripple.Local
             Console.WriteLine(text);
         }
 
-        public void WriteTo(string filename)
+        public void WriteLogFile(string filename)
         {
-            new FileSystem().WriteStringToFile(filename, _writer.ToString());
+            new FileSystem().WriteLogFile(filename, _writer.ToString());
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using FubuCore;
 using ripple.Model;
@@ -28,16 +27,7 @@ namespace ripple.Local
             var process = solution.CreateBuildProcess(_requirements.Fast);
             var processReturn = _runner.Run(process);
 
-            var location = Assembly.GetExecutingAssembly().Location;
-
-            // TODO -- wourld really like an extension method in FubuCore for
-            // get director name
-            var logs = Path.GetDirectoryName(location).AppendPath("logs");
-            _fileSystem.CreateDirectory(logs);
-
-            var logFileName = logs.AppendPath(solution.Name + ".log");
-
-            _fileSystem.WriteStringToFile(logFileName, processReturn.OutputText);
+            _fileSystem.WriteLogFile(solution.Name + ".log", processReturn.OutputText);
             
             if (processReturn.ExitCode != 0)
             {

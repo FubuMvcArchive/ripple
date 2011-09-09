@@ -30,8 +30,9 @@ namespace ripple.Local
             {
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine("The log file is at " + "ripple.log".ToFullPath());
-                _logger.WriteTo("ripple.log");
+                Console.WriteLine("The log file is at " + RippleFileSystem.RippleLogsDirectory().AppendPath("ripple.log"));
+                Console.WriteLine("or type 'ripple open-log'");
+                _logger.WriteLogFile("ripple.log");
                 Console.WriteLine();
                 Console.WriteLine();
             }
