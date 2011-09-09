@@ -26,6 +26,11 @@ namespace ripple.Local
             _projectName = _directory.Split(Path.DirectorySeparatorChar).Last();
         }
 
+        public string PackagesFile()
+        {
+            return _directory.AppendPath("packages.config");
+        }
+
         public string ProjectName
         {
             get
@@ -46,8 +51,8 @@ namespace ripple.Local
 
         public void Clean(IFileSystem system)
         {
-            system.CleanDirectory(_directory.AppendPath("bin"));
-            system.CleanDirectory(_directory.AppendPath("obj"));
+            system.CleanWithTracing(_directory.AppendPath("bin"));
+            system.CleanWithTracing(_directory.AppendPath("obj"));
         }
     }
 }

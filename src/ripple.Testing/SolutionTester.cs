@@ -49,7 +49,7 @@ namespace ripple.Testing
 
 
         [Test]
-        public void clean_deletes_the_packages_folder()
+        public void clean_deletes_the_packages_folder_in_all_mode()
         {
             var solution = new Solution(new SolutionConfig(){
                 SourceFolder = "src"
@@ -57,9 +57,39 @@ namespace ripple.Testing
 
             var fileSystem = DataMother.MockedFileSystem();
 
-            solution.Clean(fileSystem);
+            solution.Clean(fileSystem, CleanMode.all);
 
             fileSystem.AssertWasCalled(x => x.DeleteDirectory("directory1".ToFullPath(), "src", "packages"));
+        }
+
+        [Test]
+        public void clean_deletes_the_packages_folder_in_packages_mode()
+        {
+            var solution = new Solution(new SolutionConfig()
+            {
+                SourceFolder = "src"
+            }, "directory1");
+
+            var fileSystem = DataMother.MockedFileSystem();
+
+            solution.Clean(fileSystem, CleanMode.packages);
+
+            fileSystem.AssertWasCalled(x => x.DeleteDirectory("directory1".ToFullPath(), "src", "packages"));
+        }
+
+        [Test]
+        public void clean_does_not_delete_the_packages_folder_in_projects_mode()
+        {
+            var solution = new Solution(new SolutionConfig()
+            {
+                SourceFolder = "src"
+            }, "directory1");
+
+            var fileSystem = DataMother.MockedFileSystem();
+
+            solution.Clean(fileSystem, CleanMode.projects);
+
+            fileSystem.AssertWasNotCalled(x => x.DeleteDirectory("directory1".ToFullPath(), "src", "packages"));
         }
 
         [Test]

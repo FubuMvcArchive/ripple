@@ -50,8 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\LocalCommand.cs" />
     <Compile Include="Commands\OpenLogCommand.cs" />
+    <Compile Include="Commands\RestoreCommand.cs" />
+    <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
     <Compile Include="Local\BuildSolution.cs" />
     <Compile Include="Local\FileCopyRequest.cs" />

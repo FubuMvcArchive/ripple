@@ -67,13 +67,33 @@ namespace ripple.Commands
     {
         public static void RunGit(string command, params object[] parameters)
         {
-            var runner = new ProcessRunner();
+            
             var gitFile = RippleFileSystem.CodeDirectory().AppendPath("ripple", "run-git.cmd");
 
             var processStartInfo = new ProcessStartInfo(){
                 FileName = gitFile,
                 Arguments = command.ToFormat(parameters)
             };
+
+            runProcess(processStartInfo);
+        }
+
+        public static void RunNuget(string command, params object[] parameters)
+        {
+            var nugetFile = RippleFileSystem.CodeDirectory().AppendPath("ripple", "nuget.exe");
+
+            var processStartInfo = new ProcessStartInfo()
+            {
+                FileName = nugetFile,
+                Arguments = command.ToFormat(parameters)
+            };
+
+            runProcess(processStartInfo);
+        }
+
+        private static void runProcess(ProcessStartInfo processStartInfo)
+        {
+            var runner = new ProcessRunner();
 
             var start = Console.ForegroundColor;
 
@@ -104,7 +124,6 @@ namespace ripple.Commands
             ConsoleWriter.PrintHorizontalLine();
 
             Console.ForegroundColor = start;
-            
         }
     }
 }

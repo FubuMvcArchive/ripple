@@ -3,11 +3,18 @@ using System.IO;
 using System.Reflection;
 using FubuCore;
 using System.Linq;
+using ripple.Model;
 
 namespace ripple
 {
     public static class RippleFileSystem
     {
+        public static void CleanWithTracing(this IFileSystem system, string directory)
+        {
+            Console.WriteLine("Cleaning contents of directory " + directory);
+            system.CleanDirectory(directory);
+        }
+
         public static string CodeDirectory()
         {
             var location = Assembly.GetExecutingAssembly().Location;

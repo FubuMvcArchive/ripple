@@ -8,6 +8,13 @@ using ripple.Local;
 
 namespace ripple.Model
 {
+    public enum CleanMode
+    {
+        all,
+        packages,
+        projects
+    }
+
     public class Solution
     {
         public static Solution ReadFrom(string directory)
@@ -78,12 +85,26 @@ namespace ripple.Model
             get { return _config; }
         }
 
-        public void Clean(IFileSystem fileSystem)
+        public void Clean(IFileSystem fileSystem, CleanMode mode)
         {
-            var packagesFolder = _directory.AppendPath(_config.SourceFolder, "packages");
-            fileSystem.DeleteDirectory(packagesFolder);
+            if (mode == CleanMode.all || mode == CleanMode.packages)
+            {
+                var packagesFolder = PackagesFolder();
+                Console.WriteLine("Deleting " + packagesFolder);
+                fileSystem.DeleteDirectory(packagesFolder);
+            }
 
-            _projects.Each(p => p.Clean(fileSystem));
+            if (mode == CleanMode.all || mode == CleanMode.projects)
+            {
+                _projects.Each(p => p.Clean(fileSystem));    
+            }
+
+            
+        }
+
+        public string PackagesFolder()
+        {
+            return _directory.AppendPath(_config.SourceFolder, "packages");
         }
 
         public void AddNugetSpec(NugetSpec spec)
