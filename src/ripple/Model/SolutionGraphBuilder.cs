@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,14 @@ namespace ripple.Model
 {
     public class SolutionGraphBuilder
     {
+        public static SolutionGraph BuildForRippleDirectory()
+        {
+            var builder = new SolutionGraphBuilder(new FileSystem());
+            var codeDirectory = RippleFileSystem.CodeDirectory();
+
+            return builder.ReadFrom(codeDirectory);
+        }
+
         private readonly IFileSystem _fileSystem;
 
         public SolutionGraphBuilder(IFileSystem fileSystem)
@@ -17,6 +26,9 @@ namespace ripple.Model
         public SolutionGraph ReadFrom(string folder)
         {
             folder = findCorrectFolder(folder);
+
+            Console.WriteLine("Trying to read a Ripple SolutionGraph from " + folder);
+
             var solutions = readSolutions(folder);
 
             return new SolutionGraph(solutions);
@@ -27,9 +39,9 @@ namespace ripple.Model
             var config = SolutionConfig.LoadFrom(folder);
             if (config != null)
             {
-                // TODO -- get a decent Extension method in FubuCore for this
-                folder = Path.GetDirectoryName(folder);
+                folder = folder.ParentDirectory();
             }
+
             return folder;
         }
 

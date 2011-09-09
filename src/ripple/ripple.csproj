@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\LocalCommand.cs" />
     <Compile Include="Commands\OpenLogCommand.cs" />
     <Compile Include="Local\BuildSolution.cs" />
     <Compile Include="Local\FileCopyRequest.cs" />

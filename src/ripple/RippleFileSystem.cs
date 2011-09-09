@@ -7,6 +7,17 @@ namespace ripple
 {
     public static class RippleFileSystem
     {
+        public static string CodeDirectory()
+        {
+            var location = Assembly.GetExecutingAssembly().Location;
+            return location.ParentDirectory().ParentDirectory();
+        }
+
+        public static string ParentDirectory(this string path)
+        {
+            return Path.GetDirectoryName(path);
+        }
+        
         public static string RippleLogsDirectory()
         {
             var location = Assembly.GetExecutingAssembly().Location;
@@ -47,5 +58,7 @@ namespace ripple
             fileSystem.CreateDirectory(logsDirectory);
             fileSystem.WriteStringToFile(logsDirectory.AppendPath(filename), contents);
         }
+
+        
     }
 }
