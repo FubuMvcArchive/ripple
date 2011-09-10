@@ -1,10 +1,87 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using FubuCore;
 using ripple.Model;
+using System.Linq;
 
 namespace ripple.Local
 {
+    public class NuspecDocument
+    {
+        static NuspecDocument()
+        {
+            var nameTable = new NameTable();
+
+            _xmlNamespaceManager = new XmlNamespaceManager(nameTable);
+            _xmlNamespaceManager.AddNamespace("nuspec", "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
+        }
+
+        private readonly string _filename;
+        private readonly XmlDocument _document;
+        private static readonly XmlNamespaceManager _xmlNamespaceManager;
+
+        public NuspecDocument(string filename)
+        {
+            _filename = filename;
+
+            _document = new XmlDocument();
+            _document.Load(filename);
+        }
+
+        public void SaveChanges()
+        {
+            _document.Save(_filename);
+        }
+
+        private XmlElement findNugetElement(string name)
+        {
+            var search = "//nuspec:{0}".ToFormat(name);
+            return _document.DocumentElement.SelectSingleNode(search, _xmlNamespaceManager) as XmlElement;
+        }
+
+        private IEnumerable<XmlElement> findNugetElements(string name)
+        {
+            var search = "//nuspec:{0}".ToFormat(name);
+            foreach (XmlElement element in _document.DocumentElement.SelectNodes(search, _xmlNamespaceManager))
+            {
+                yield return element;
+            }
+        }
+
+        public IEnumerable<NugetDependency> FindDependencies()
+        {
+            return findNugetElements("dependency").Select(NugetDependency.ReadFrom);
+        }
+
+        public IEnumerable<string> FindPublishedAssemblies()
+        {
+            foreach (XmlElement element in _document.DocumentElement.SelectNodes("//file"))
+            {
+                if (element.GetAttribute("target") == "lib")
+                {
+                    yield return element.GetAttribute("src").Replace('\\', '/');
+                }
+            }
+        }
+
+
+
+        public string Name
+        {
+            get
+            {
+                return findNugetElement("id").InnerText;
+            }
+            set
+            {
+                findNugetElement("id").InnerText = value;
+            }
+        }
+    }
+
+
     public class NugetSpec
     {
         // Recursive -- thanks Josh
@@ -43,6 +120,11 @@ namespace ripple.Local
             }
         }
 
+        private void alterDocument(Action<NuspecDocument> configure)
+        {
+            
+        }
+
         // do still need this
 
         public Solution Publisher { get; set; }
@@ -51,53 +133,16 @@ namespace ripple.Local
         {
             var nugetDirectory = Path.GetDirectoryName(filename);
 
-            var document = new XmlDocument();
-            document.Load(filename);
+            var document = new NuspecDocument(filename);
+            
 
-            var nameTable = new NameTable();
+            var spec = new NugetSpec(document.Name, filename);
 
-            var xmlNamespaceManager = new XmlNamespaceManager(nameTable);
-            xmlNamespaceManager.AddNamespace("nuspec", "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
-
-            var name = readName(document, xmlNamespaceManager);
-
-            var spec = new NugetSpec(name, filename);
-
-            readDependencies(document, xmlNamespaceManager, spec);
-            readPublishedAssemblies(document, spec, nugetDirectory);
-
+            spec._dependencies.AddRange(document.FindDependencies());
+            spec._publishedAssemblies.AddRange(
+                document.FindPublishedAssemblies().Select(x => new PublishedAssembly(nugetDirectory, x)));
 
             return spec;
-        }
-
-        private static string readName(XmlDocument document, XmlNamespaceManager xmlNamespaceManager)
-        {
-            var idNode = document.DocumentElement.SelectSingleNode("//nuspec:id", xmlNamespaceManager);
-            return idNode.InnerText;
-        }
-
-        private static void readDependencies(XmlDocument document, XmlNamespaceManager xmlNamespaceManager,
-                                             NugetSpec spec)
-        {
-            foreach (
-                XmlElement element in document.DocumentElement.SelectNodes("//nuspec:dependency", xmlNamespaceManager))
-            {
-                var dependency = NugetDependency.ReadFrom(element);
-                spec._dependencies.Add(dependency);
-            }
-        }
-
-        private static void readPublishedAssemblies(XmlDocument document, NugetSpec spec, string nugetDirectory)
-        {
-            foreach (XmlElement element in document.DocumentElement.SelectNodes("//file"))
-            {
-                if (element.GetAttribute("target") == "lib")
-                {
-                    var source = element.GetAttribute("src").Replace('\\', '/');
-                    var assembly = new PublishedAssembly(nugetDirectory, source);
-                    spec._publishedAssemblies.Add(assembly);
-                }
-            }
         }
 
         public override string ToString()

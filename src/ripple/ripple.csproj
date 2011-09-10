@@ -53,7 +53,9 @@
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
     <Compile Include="Commands\LocalCommand.cs" />
+    <Compile Include="Commands\MakeEdgeCommand.cs" />
     <Compile Include="Commands\OpenLogCommand.cs" />
+    <Compile Include="Commands\OpenNugetCommand.cs" />
     <Compile Include="Commands\RestoreCommand.cs" />
     <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />

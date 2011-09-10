@@ -73,6 +73,7 @@
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
     <Compile Include="MakeTestData.cs" />
+    <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="ProjectTester.cs" />
