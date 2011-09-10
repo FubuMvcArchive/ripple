@@ -10,6 +10,8 @@ namespace ripple.Local
 {
     public class NuspecDocument
     {
+        private const string EdgeSuffix = "-Edge";
+
         static NuspecDocument()
         {
             var nameTable = new NameTable();
@@ -67,7 +69,6 @@ namespace ripple.Local
         }
 
 
-
         public string Name
         {
             get
@@ -78,6 +79,29 @@ namespace ripple.Local
             {
                 findNugetElement("id").InnerText = value;
             }
+        }
+
+        public void MakeEdge()
+        {
+            if (Name.EndsWith(EdgeSuffix)) return;
+
+            Console.WriteLine("Changing nuspec file at {0} to '-Edge' mode", _filename);
+
+            Name += EdgeSuffix;
+            SaveChanges();
+        }
+
+        public void MakeRelease()
+        {
+            if (!Name.EndsWith(EdgeSuffix))
+            {
+                return;
+            }
+
+            Console.WriteLine("Changing nuspec file at {0} to release mode", _filename);
+
+            Name = Name.Substring(0, Name.Length - EdgeSuffix.Length);
+            SaveChanges();
         }
     }
 
@@ -148,6 +172,11 @@ namespace ripple.Local
         public override string ToString()
         {
             return string.Format("Nuget {0} from {1}", _name, Publisher);
+        }
+
+        public NuspecDocument ToDocument()
+        {
+            return new NuspecDocument(_filename);
         }
     }
 }

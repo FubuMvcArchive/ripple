@@ -35,5 +35,32 @@ namespace ripple.Testing.Model
             var document2 = new NuspecDocument(theFilename);
             document2.Name.ShouldEqual("FubuCore-Edge");
         }
+
+        [Test]
+        public void make_edge()
+        {
+            theDocument.MakeEdge();
+
+            var document2 = new NuspecDocument(theFilename);
+            document2.Name.ShouldEqual("FubuCore-Edge");
+
+            document2.MakeEdge();
+
+            var document3 = new NuspecDocument(theFilename);
+            document3.Name.ShouldEqual("FubuCore-Edge");
+
+        }
+
+        [Test]
+        public void make_release()
+        {
+            theDocument.MakeEdge();
+            theDocument.MakeRelease();
+
+            theDocument.Name.ShouldEqual("FubuCore");
+
+            var document2 = new NuspecDocument(theFilename);
+            document2.Name.ShouldEqual("FubuCore");
+        }
     }
 }
