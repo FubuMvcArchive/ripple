@@ -87,7 +87,7 @@ namespace ripple.Local
 
             Console.WriteLine("Changing nuspec file at {0} to '-Edge' mode", _filename);
 
-            Name += EdgeSuffix;
+            Name = ChangeNameToEdge(Name);
             SaveChanges();
         }
 
@@ -100,8 +100,25 @@ namespace ripple.Local
 
             Console.WriteLine("Changing nuspec file at {0} to release mode", _filename);
 
-            Name = Name.Substring(0, Name.Length - EdgeSuffix.Length);
+            Name = ChangeNameToRelease(Name);
             SaveChanges();
+        }
+
+        public static string ChangeNameToRelease(string name)
+        {
+            if (!name.EndsWith(EdgeSuffix))
+            {
+                return name;
+            }
+
+            return name.Substring(0, name.Length - EdgeSuffix.Length);
+        }
+
+        public static string ChangeNameToEdge(string name)
+        {
+            if (name.EndsWith(EdgeSuffix)) return name;
+
+            return name + EdgeSuffix;
         }
     }
 
