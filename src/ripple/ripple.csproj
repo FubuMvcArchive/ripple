@@ -58,6 +58,7 @@
     <Compile Include="Commands\OpenNugetCommand.cs" />
     <Compile Include="Commands\RestoreCommand.cs" />
     <Compile Include="Commands\SolutionInput.cs" />
+    <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
     <Compile Include="Local\BuildSolution.cs" />
     <Compile Include="Local\FileCopyRequest.cs" />
