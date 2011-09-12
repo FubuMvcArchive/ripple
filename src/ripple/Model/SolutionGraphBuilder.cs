@@ -47,14 +47,10 @@ namespace ripple.Model
 
         private IEnumerable<Solution> readSolutions(string folder)
         {
-            return _fileSystem.FindFiles(folder, new FileSet{
-                Include = SolutionConfig.FileName
-            }).Select(file =>
-            {
-                var dir = Path.GetDirectoryName(file);
-                return Solution.ReadFrom(dir);
-
-            }).ToList();
+            return _fileSystem.ChildDirectoriesFor(folder)
+                .Where(x => _fileSystem.FileExists(x.AppendPath(SolutionConfig.FileName)))
+                .Select(Solution.ReadFrom)
+                .ToList();
         }
 
 

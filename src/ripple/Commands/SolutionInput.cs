@@ -22,7 +22,7 @@ namespace ripple.Commands
             {
                 yield return _graph.Value[SolutionFlag];
             }
-            else if (AllFlag)
+            else if (AllFlag || ".".ToFullPath() == RippleFileSystem.CodeDirectory())
             {
                 foreach (var solution in _graph.Value.AllSolutions)
                 {

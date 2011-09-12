@@ -19,17 +19,25 @@ namespace ripple.Model
     {
         public static Solution ReadFrom(string directory)
         {
-            var config = SolutionConfig.LoadFrom(directory);
+            try
+            {
+                var config = SolutionConfig.LoadFrom(directory);
 
-            var solution = new Solution(config, directory);
+                var solution = new Solution(config, directory);
 
-            var system = new FileSystem();
-            readProjects(directory, system, solution);
+                var system = new FileSystem();
+                readProjects(directory, system, solution);
 
 
-            readNugetSpecs(directory, config, system, solution);
+                readNugetSpecs(directory, config, system, solution);
 
-            return solution;
+                return solution;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error reading Solution from " + directory);
+                throw;
+            }
         }
 
         private static void readNugetSpecs(string directory, SolutionConfig config, FileSystem system, Solution solution)
