@@ -20,6 +20,9 @@ namespace ripple.Commands
 
             var rippleFilename = input.GetRippleFileName();
 
+            
+            writeRippleCmdFile(rippleFilename, fileSystem);
+
             writeRippleConfig(rippleFilename, fileSystem, config);
             openRippleConfigFile(input, rippleFilename, fileSystem);
 
@@ -28,6 +31,13 @@ namespace ripple.Commands
             removePackagesFromGit(config);
 
             return true;
+        }
+
+        private void writeRippleCmdFile(string rippleFilename, FileSystem fileSystem)
+        {
+            var cmdFile = rippleFilename.ParentDirectory().AppendPath("ripple.cmd");
+            Console.WriteLine("Writing out " + cmdFile);
+            fileSystem.WriteStringToFile(cmdFile, @"..\ripple\ripple.exe %*");
         }
 
         private static void removePackagesFromGit(SolutionConfig config)

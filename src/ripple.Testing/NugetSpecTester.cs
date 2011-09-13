@@ -42,10 +42,10 @@ namespace ripple.Testing
         [Test]
         public void should_read_all_the_published_assemblies()
         {
-            theSpec.PublishedAssemblies.Select(x => x.Name)
-                .ShouldHaveTheSameElementsAs("FubuMVC.Core", "FubuMVC.StructureMap");
-        
-            
+            var names = theSpec.PublishedAssemblies.Select(x => x.Name);
+            names.ShouldContain("FubuMVC.Core");
+            names.ShouldContain("FubuMVC.StructureMap");
+
         }
 
         [Test]
