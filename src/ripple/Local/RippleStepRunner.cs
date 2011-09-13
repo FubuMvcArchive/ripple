@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using FubuCore;
+using ripple.Commands;
 using ripple.Model;
+using System.Linq;
 
 namespace ripple.Local
 {
@@ -12,7 +16,7 @@ namespace ripple.Local
         private readonly IRippleLogger _logger;
         private readonly RipplePlanRequirements _requirements;
         private readonly IProcessRunner _runner;
-
+        private readonly Action<string> _logCallback;
 
         public RippleStepRunner(IProcessRunner runner, IFileSystem fileSystem, IRippleLogger logger, RipplePlanRequirements requirements)
         {
@@ -20,21 +24,47 @@ namespace ripple.Local
             _fileSystem = fileSystem;
             _logger = logger;
             _requirements = requirements;
+
+            _logCallback = requirements.Verbose ? (Action<string>) (text => _logger.Trace(text)) : text => { };
         }
 
         public void BuildSolution(Solution solution)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            if (solution.GetAllNugetDependencies().Any())
+            {
+                _logger.Trace("Pausing to try to let the file system quiet down...");
+                Thread.Sleep(1000);
+            }
+
             var process = solution.CreateBuildProcess(_requirements.Fast);
             _logger.Trace("Trying to run {0} {1} in directory {2}", process.FileName, process.Arguments, process.WorkingDirectory);
-            
-            var processReturn = _runner.Run(process, new TimeSpan(0, 5, 0));
 
-            _fileSystem.WriteLogFile(solution.Name + ".log", processReturn.OutputText);
-            
-            if (processReturn.ExitCode != 0)
+            ProcessReturn processReturn;
+            _logger.Indent(() =>
             {
-                throw new ApplicationException("Command line execution failed!!!!");
-            } 
+                processReturn = _runner.Run(process, new TimeSpan(0, 5, 0), _logCallback);
+
+                _fileSystem.WriteLogFile(solution.Name + ".log", processReturn.OutputText);
+
+                stopwatch.Stop();
+                _logger.Trace("Completed in {0} milliseconds", stopwatch.ElapsedMilliseconds);
+
+                if (processReturn.ExitCode != 0)
+                {
+                    _logger.Trace("Opening the log file for " + solution.Name);
+                    new OpenLogCommand().Execute(new OpenLogInput()
+                    {
+                        Solution = solution.Name
+                    });
+                    throw new ApplicationException("Command line execution failed!!!!");
+                } 
+            });
+            
+
+
         }
 
         public void CopyFiles(FileCopyRequest request)

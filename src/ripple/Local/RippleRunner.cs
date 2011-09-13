@@ -40,6 +40,7 @@ namespace ripple.Local
 
         private void runStep(IRippleStep step, int number, int total)
         {
+            _logger.Trace(string.Empty);
             _logger.Trace("{0} / {1} - {2}", number.ToString().PadLeft(3), total.ToString().PadLeft(3), step.ToString());
 
             _logger.Indent(() =>

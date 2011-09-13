@@ -5,7 +5,7 @@ namespace ripple.Local
 {
     public interface IProcessRunner
     {
-        ProcessReturn Run(ProcessStartInfo info, TimeSpan waitDuration);
-        ProcessReturn Run(ProcessStartInfo info);
+        ProcessReturn Run(ProcessStartInfo info, TimeSpan waitDuration, Action<string> callback);
+        ProcessReturn Run(ProcessStartInfo info, Action<string> callback);
     }
 }

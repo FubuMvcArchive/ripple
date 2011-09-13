@@ -13,6 +13,7 @@ namespace ripple.Local
         public string To { get; set; }
         public bool Fast { get; set; }
         public bool Direct { get; set; }
+        public bool Verbose { get; set; }
 
         public IEnumerable<Solution> SelectSolutions(SolutionGraph theGraph)
         {

@@ -121,7 +121,7 @@ namespace ripple.Commands
             ConsoleWriter.PrintHorizontalLine();
 
             
-            var returnValue = runner.Run(processStartInfo, new TimeSpan(0, 1, 0));
+            var returnValue = runner.Run(processStartInfo, new TimeSpan(0, 1, 0), text => { });
             var color = returnValue.ExitCode == 0 ? ConsoleColor.Gray : ConsoleColor.Red;
 
             

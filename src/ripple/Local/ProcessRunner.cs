@@ -15,16 +15,17 @@ namespace ripple.Local
     // TODO -- move to FubuCore
     public class ProcessRunner : IProcessRunner
     {
-        public ProcessReturn Run(ProcessStartInfo info, TimeSpan waitDuration)
+        public ProcessReturn Run(ProcessStartInfo info, TimeSpan waitDuration, Action<string> callback)
         {
             //use the operating system shell to start the process
             //this allows credentials to flow through.
             //info.UseShellExecute = true; 
             info.UseShellExecute = false;
             info.Verb = "runas";
+            info.WindowStyle = ProcessWindowStyle.Normal;
 
             //don't open a new terminal window
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = false;
 
             info.RedirectStandardError = info.RedirectStandardOutput = true;
 
@@ -40,7 +41,11 @@ namespace ripple.Local
             {
                 pid = proc.Id;				
                 proc.OutputDataReceived += (sender, outputLine) => 
-                { 
+                {
+                    if (outputLine.Data.IsNotEmpty())
+                    {
+                        callback(outputLine.Data);
+                    }
                     output.AppendLine(outputLine.Data); 
                 };
 				
@@ -80,9 +85,9 @@ namespace ripple.Local
             }
         }
 
-        public ProcessReturn Run(ProcessStartInfo info)
+        public ProcessReturn Run(ProcessStartInfo info, Action<string> callback)
         {
-            return Run(info, new TimeSpan(0,0,0,10));
+            return Run(info, new TimeSpan(0,0,0,10), callback);
         }
     }
 }

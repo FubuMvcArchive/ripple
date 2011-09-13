@@ -21,13 +21,17 @@ namespace ripple.Commands
         [Description("Use the 'fast' build option for solutions, i.e. compile but don't run any pesky unit test kinda things")]
         public bool FastFlag { get; set; }
 
+        [Description("Writes out all the build output to the screen")]
+        public bool VerboseFlag { get; set; }
+
         public RipplePlanRequirements ToRequirements()
         {
             return new RipplePlanRequirements(){
                 Direct = DirectFlag,
                 Fast = FastFlag,
                 From = FromFlag,
-                To = ToFlag
+                To = ToFlag,
+                Verbose = VerboseFlag
             };
         }
     }
@@ -37,6 +41,9 @@ namespace ripple.Commands
     {
         public override bool Execute(LocalInput input)
         {
+            new WhereAmICommand().Execute(new WhereAmIInput());
+            Console.WriteLine();
+
             var requirements = input.ToRequirements();
             var solutionGraph = SolutionGraphBuilder.BuildForRippleDirectory();
 
