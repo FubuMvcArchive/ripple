@@ -25,6 +25,16 @@ namespace ripple.Testing
         }
 
         [Test]
+        public void was_able_to_find_published_assemblies_not_directly_in_lib()
+        {
+            var nuspec = theGraph.Value.FindNugetSpec("HtmlTags");
+        
+            nuspec.PublishedAssemblies.Any().ShouldBeTrue();
+
+            nuspec.PublishedAssemblies.Any(x => x.Name == "HtmlTags" && x.SubFolder == "lib/4.0");
+        }
+
+        [Test]
         public void can_read_from_a_ripple_folder_by_going_up_one()
         {
             theBuilder.ReadFrom("data".AppendPath("fubucore"))

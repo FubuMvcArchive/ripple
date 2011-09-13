@@ -198,7 +198,13 @@ namespace ripple.Model
             var cmdLine = fast ? _config.FastBuildCommand : _config.BuildCommand;
             var commands = StringTokenizer.Tokenize(cmdLine);
 
-            return new ProcessStartInfo(commands.First()){
+            var fileName = commands.First();
+            if (fileName == "rake")
+            {
+                fileName = RippleFileSystem.RakeRunnerFile();
+            }
+
+            return new ProcessStartInfo(fileName){
                 WorkingDirectory = _directory,
                 Arguments = commands.Skip(1).Join(" ")
             };

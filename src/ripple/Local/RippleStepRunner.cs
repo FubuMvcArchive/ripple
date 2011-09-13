@@ -25,7 +25,9 @@ namespace ripple.Local
         public void BuildSolution(Solution solution)
         {
             var process = solution.CreateBuildProcess(_requirements.Fast);
-            var processReturn = _runner.Run(process);
+            _logger.Trace("Trying to run {0} {1} in directory {2}", process.FileName, process.Arguments, process.WorkingDirectory);
+            
+            var processReturn = _runner.Run(process, new TimeSpan(0, 5, 0));
 
             _fileSystem.WriteLogFile(solution.Name + ".log", processReturn.OutputText);
             
@@ -37,6 +39,8 @@ namespace ripple.Local
 
         public void CopyFiles(FileCopyRequest request)
         {
+            _fileSystem.CreateDirectory(request.To);
+
             var files = _fileSystem.FindFiles(request.From, request.Matching);
             files.Each(f =>
             {

@@ -19,14 +19,14 @@ namespace ripple.Testing
             var solution = new Solution(new SolutionConfig()
             {
                 SourceFolder = "src",
-                BuildCommand = "rake",
+                BuildCommand = RippleFileSystem.RakeRunnerFile(),
                 FastBuildCommand = "rake compile"
             }, "directory1");
 
             var processInfo = solution.CreateBuildProcess(false);
 
             processInfo.WorkingDirectory.ShouldEqual("directory1".ToFullPath());
-            processInfo.FileName.ShouldEqual("rake");
+            processInfo.FileName.ShouldEqual(RippleFileSystem.RakeRunnerFile());
             processInfo.Arguments.ShouldBeEmpty();
         }
 
@@ -36,14 +36,14 @@ namespace ripple.Testing
             var solution = new Solution(new SolutionConfig()
             {
                 SourceFolder = "src",
-                BuildCommand = "rake",
+                BuildCommand = RippleFileSystem.RakeRunnerFile(),
                 FastBuildCommand = "rake compile"
             }, "directory1");
 
             var processInfo = solution.CreateBuildProcess(true);
 
             processInfo.WorkingDirectory.ShouldEqual("directory1".ToFullPath());
-            processInfo.FileName.ShouldEqual("rake");
+            processInfo.FileName.ShouldEqual(RippleFileSystem.RakeRunnerFile());
             processInfo.Arguments.ShouldEqual("compile");
         }
 

@@ -77,5 +77,10 @@ namespace ripple
         {
             return Assembly.GetExecutingAssembly().Location;
         }
+
+        public static string RakeRunnerFile()
+        {
+            return CodeDirectory().AppendPath("ripple", "run-rake.cmd");
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using ripple.Model;
@@ -22,13 +23,13 @@ namespace ripple.Commands
         {
             Console.WriteLine("Restoring nuget dependencies for solution " + solution.Name);
 
-            var solutionFolder = solution.PackagesFolder();
-
+            var packagesFolder = solution.PackagesFolder();
+            new FileSystem().CreateDirectory(packagesFolder);
 
             solution.Projects.Each(p =>
             {
                 var projectFile = p.PackagesFile();
-                CLIRunner.RunNuget("i {0} -o {1}", projectFile, solutionFolder);
+                CLIRunner.RunNuget("i {0} -o {1}", projectFile, packagesFolder);
             });
         }
     }

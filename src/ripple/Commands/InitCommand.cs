@@ -78,6 +78,19 @@ namespace ripple.Commands
             runProcess(processStartInfo);
         }
 
+        public static void RunRake(string commandLine)
+        {
+            var rakeRunnerFile = RippleFileSystem.RakeRunnerFile();
+
+            var processStartInfo = new ProcessStartInfo()
+            {
+                FileName = rakeRunnerFile,
+                Arguments = commandLine
+            };
+
+            runProcess(processStartInfo);
+        }
+
         public static void RunNuget(string command, params object[] parameters)
         {
             var nugetFile = RippleFileSystem.CodeDirectory().AppendPath("ripple", "nuget.exe");

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using FubuCore;
 using ripple.Model;
 
@@ -50,7 +51,7 @@ namespace ripple.Local
                 var request = new FileCopyRequest{
                     From = x.Directory,
                     Matching = new FileSet{Include = x.Pattern},
-                    To = packageFolder
+                    To = packageFolder.AppendPath(x.SubFolder.Replace('/', Path.DirectorySeparatorChar))
                 };
                 
                 runner.CopyFiles(request);
