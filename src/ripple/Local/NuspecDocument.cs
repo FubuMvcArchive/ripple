@@ -61,9 +61,10 @@ namespace ripple.Local
 
             foreach (XmlElement element in _document.DocumentElement.SelectNodes("//file"))
             {
-                if (element.GetAttribute("target").StartsWith("lib"))
+                var target = element.GetAttribute("target");
+                if (target.StartsWith("lib") || target.StartsWith("tools"))
                 {
-                    var path = element.GetAttribute("target").Replace('\\', '/');
+                    var path = target.Replace('\\', '/');
                     var assemblyReference = element.GetAttribute("src");
 
                     yield return new PublishedAssembly(nuspecDirectory, assemblyReference, path);

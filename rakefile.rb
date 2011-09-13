@@ -89,3 +89,7 @@ task :unit_test => :compile do
   runner.executeTests ['ripple.Testing']
 end
 
+desc "Publish new binaries just by copying the file"
+task :publish do
+  copyOutputFiles 'src/ripple/bin/Debug', '**', '.'
+end
