@@ -12,6 +12,7 @@ namespace ripple.Commands
         public LocalNugetInput()
         {
             VersionFlag = "0.0.0.0";
+            DestinationFlag = RippleFileSystem.LocalNugetDirectory();
         }
 
         [Description("Override the version of the nuget file")]
@@ -28,10 +29,9 @@ namespace ripple.Commands
         public override bool Execute(LocalNugetInput input)
         {
             var commandLine = "pack {0} -Version " + input.VersionFlag;
-            if (input.DestinationFlag.IsNotEmpty())
-            {
-                commandLine += " -o " + input.DestinationFlag;
-            }
+            commandLine += " -o " + input.DestinationFlag;
+
+            new FileSystem().CreateDirectory(input.DestinationFlag);
 
             input.FindSolutions().Each(solution =>
             {

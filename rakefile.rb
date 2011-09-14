@@ -91,5 +91,5 @@ end
 
 desc "Publish new binaries just by copying the file"
 task :publish do
-  copyOutputFiles 'src/ripple/bin/Debug', '**', '.'
+  copyOutputFiles 'src/ripple/bin/Debug', '**', '../buildsupport'
 end

@@ -7,7 +7,18 @@ using ripple.Model;
 
 namespace ripple.Commands
 {
-
+    /*
+     * 
+     * <cli>
+     *   <cmd file="blah" alias="" />
+     *   <dll file="blah" target="nuspec name" /> 
+     * 
+     * 
+     * </cli>
+     * 
+     * 
+     * 
+     */
 
     [CommandDescription("Interacts with nuget to restore all the nuget dependencies in a solution tree")]
     public class RestoreCommand : FubuCommand<SolutionInput>

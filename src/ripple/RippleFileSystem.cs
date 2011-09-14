@@ -18,7 +18,7 @@ namespace ripple
         public static string CodeDirectory()
         {
             var location = Assembly.GetExecutingAssembly().Location;
-            while (location.Contains("ripple"))
+            while (location.Contains("ripple") || location.Contains("buildsupport"))
             {
                 location = location.ParentDirectory();
             }
@@ -81,6 +81,11 @@ namespace ripple
         public static string RakeRunnerFile()
         {
             return CodeDirectory().AppendPath("ripple", "run-rake.cmd");
+        }
+
+        public static string LocalNugetDirectory()
+        {
+            return CodeDirectory().AppendPath("nugets");
         }
     }
 }
