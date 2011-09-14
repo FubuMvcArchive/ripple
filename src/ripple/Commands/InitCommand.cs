@@ -1,9 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using FubuCore.CommandLine;
 using FubuCore;
-using ripple.Local;
 using ripple.Model;
 
 namespace ripple.Commands
@@ -37,7 +35,7 @@ namespace ripple.Commands
         {
             var cmdFile = rippleFilename.ParentDirectory().AppendPath("ripple.cmd");
             Console.WriteLine("Writing out " + cmdFile);
-            fileSystem.WriteStringToFile(cmdFile, @"..\ripple\ripple.exe %*");
+            fileSystem.WriteStringToFile(cmdFile, @"buildsupport\ripple.exe %*");
         }
 
         private static void removePackagesFromGit(SolutionConfig config)
@@ -73,80 +71,4 @@ namespace ripple.Commands
     }
 
     // TODO -- clean up the ProcessRunner
-    public static class CLIRunner
-    {
-        public static void RunGit(string command, params object[] parameters)
-        {
-            
-            var gitFile = RippleFileSystem.CodeDirectory().AppendPath("ripple", "run-git.cmd");
-
-            var processStartInfo = new ProcessStartInfo(){
-                FileName = gitFile,
-                Arguments = command.ToFormat(parameters)
-            };
-
-            runProcess(processStartInfo);
-        }
-
-        public static void RunRake(string commandLine)
-        {
-            var rakeRunnerFile = RippleFileSystem.RakeRunnerFile();
-
-            var processStartInfo = new ProcessStartInfo()
-            {
-                FileName = rakeRunnerFile,
-                Arguments = commandLine
-            };
-
-            runProcess(processStartInfo);
-        }
-
-        public static void RunNuget(string command, params object[] parameters)
-        {
-            var nugetFile = RippleFileSystem.CodeDirectory().AppendPath("ripple", "nuget.exe");
-
-            var processStartInfo = new ProcessStartInfo()
-            {
-                FileName = nugetFile,
-                Arguments = command.ToFormat(parameters)
-            };
-
-            runProcess(processStartInfo);
-        }
-
-        private static void runProcess(ProcessStartInfo processStartInfo)
-        {
-            var runner = new ProcessRunner();
-
-            var start = Console.ForegroundColor;
-
-
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-
-            ConsoleWriter.PrintHorizontalLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("{0} {1}", processStartInfo.FileName, processStartInfo.Arguments);
-            ConsoleWriter.PrintHorizontalLine();
-
-            
-            var returnValue = runner.Run(processStartInfo, new TimeSpan(0, 1, 0), text => { });
-            var color = returnValue.ExitCode == 0 ? ConsoleColor.Gray : ConsoleColor.Red;
-
-            
-            Console.ForegroundColor = color;
-
-
-
-            
-
-            Console.WriteLine(returnValue.OutputText);
-            Console.WriteLine("ExitCode:  " + returnValue.ExitCode);
-
-            ConsoleWriter.PrintHorizontalLine();
-
-            Console.ForegroundColor = start;
-        }
-    }
 }

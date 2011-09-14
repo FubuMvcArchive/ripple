@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using FubuCore;
-using System.Linq;
-using ripple.Model;
 
 namespace ripple
 {
@@ -18,7 +16,12 @@ namespace ripple
         public static string CodeDirectory()
         {
             var location = Assembly.GetExecutingAssembly().Location;
-            while (location.Contains("ripple") || location.Contains("buildsupport"))
+            if (location.Contains("buildsupport"))
+            {
+                return location.ParentDirectory().ParentDirectory().ParentDirectory();
+            }
+
+            while (location.Contains("ripple"))
             {
                 location = location.ParentDirectory();
             }
@@ -30,13 +33,25 @@ namespace ripple
         {
             return Path.GetDirectoryName(path);
         }
-        
+
         public static string RippleLogsDirectory()
         {
             var location = Assembly.GetExecutingAssembly().Location;
             // TODO -- wourld really like an extension method in FubuCore for
             // get director name
             return Path.GetDirectoryName(location).AppendPath("logs");
+        }
+
+        public static string RippleDirectory()
+        {
+            var codeDirectory = CodeDirectory();
+            var system = new FileSystem();
+            if (system.DirectoryExists(codeDirectory.AppendPath("ripple")))
+            {
+                return codeDirectory.AppendPath("ripple");
+            }
+
+            return codeDirectory.AppendPath("buildsupport");
         }
 
         public static string ToLogPath(this string filename)
@@ -55,14 +70,12 @@ namespace ripple
 
             if (fileSystem.FileExists(path))
             {
-                fileSystem.LaunchEditor(path);    
+                fileSystem.LaunchEditor(path);
             }
             else
             {
                 Console.WriteLine("File {0} does not exist", path);
             }
-
-            
         }
 
         public static void WriteLogFile(this IFileSystem fileSystem, string filename, string contents)
@@ -80,12 +93,25 @@ namespace ripple
 
         public static string RakeRunnerFile()
         {
-            return CodeDirectory().AppendPath("ripple", "run-rake.cmd");
+            return LocationOfRunner("run-rake.cmd");
         }
 
         public static string LocalNugetDirectory()
         {
             return CodeDirectory().AppendPath("nugets");
+        }
+
+        public static string LocationOfRunner(string file)
+        {
+            var folder = RippleExeLocation().ParentDirectory();
+            var system = new FileSystem();
+
+            if (system.FileExists(folder.AppendPath(file)))
+            {
+                return folder.AppendPath(file).ToFullPath();
+            }
+
+            return CodeDirectory().AppendPath("ripple", file);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ripple.Commands
 
                 solution.Projects.Where(projectFilter).Each(project =>
                 {
-                    CLIRunner.RunNuget(command, project.PackagesFile(), solution.PackagesFolder());
+                    CLIRunner.RunNuget(command, project.PackagesFile().ToFullPath(), solution.PackagesFolder());
                 });
             });
 

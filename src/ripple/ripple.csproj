@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CleanCommand.cs" />
+    <Compile Include="Commands\CLIRunner.cs" />
     <Compile Include="Commands\ListCommand.cs" />
     <Compile Include="Commands\LocalCommand.cs" />
     <Compile Include="Commands\LocalNugetCommand.cs" />
