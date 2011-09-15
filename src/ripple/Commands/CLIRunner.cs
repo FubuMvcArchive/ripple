@@ -10,10 +10,9 @@ namespace ripple.Commands
     {
         public static void RunGit(string command, params object[] parameters)
         {
-
             var gitFile = RippleFileSystem.LocationOfRunner("run-git.cmd");
 
-            var processStartInfo = new ProcessStartInfo(){
+            var processStartInfo = new ProcessStartInfo{
                 FileName = gitFile,
                 Arguments = command.ToFormat(parameters)
             };
@@ -25,11 +24,10 @@ namespace ripple.Commands
         {
             var rakeRunnerFile = RippleFileSystem.RakeRunnerFile();
 
-            var processStartInfo = new ProcessStartInfo()
-                                   {
-                                       FileName = rakeRunnerFile,
-                                       Arguments = commandLine
-                                   };
+            var processStartInfo = new ProcessStartInfo{
+                FileName = rakeRunnerFile,
+                Arguments = commandLine
+            };
 
             runProcess(processStartInfo);
         }
@@ -39,11 +37,10 @@ namespace ripple.Commands
             var nugetFile = RippleFileSystem.LocationOfRunner("nuget.exe");
 
 
-            var processStartInfo = new ProcessStartInfo()
-                                   {
-                                       FileName = nugetFile,
-                                       Arguments = command.ToFormat(parameters)
-                                   };
+            var processStartInfo = new ProcessStartInfo{
+                FileName = nugetFile,
+                Arguments = command.ToFormat(parameters)
+            };
 
             runProcess(processStartInfo);
         }
@@ -64,16 +61,13 @@ namespace ripple.Commands
             Console.WriteLine("{0} {1}", processStartInfo.FileName, processStartInfo.Arguments);
             ConsoleWriter.PrintHorizontalLine();
 
-            
+
             var returnValue = runner.Run(processStartInfo, new TimeSpan(0, 1, 0), text => { });
             var color = returnValue.ExitCode == 0 ? ConsoleColor.Gray : ConsoleColor.Red;
 
-            
+
             Console.ForegroundColor = color;
 
-
-
-            
 
             Console.WriteLine(returnValue.OutputText);
             Console.WriteLine("ExitCode:  " + returnValue.ExitCode);
