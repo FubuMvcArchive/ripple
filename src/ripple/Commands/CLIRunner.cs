@@ -32,6 +32,11 @@ namespace ripple.Commands
             runProcess(processStartInfo);
         }
 
+        public static string FileEscape(this string file)
+        {
+            return "\"{0}\"".ToFormat(file);
+        }
+
         public static void RunNuget(string command, params object[] parameters)
         {
             var nugetFile = RippleFileSystem.LocationOfRunner("nuget.exe");
@@ -48,7 +53,7 @@ namespace ripple.Commands
         private static void runProcess(ProcessStartInfo processStartInfo)
         {
             var runner = new ProcessRunner();
-
+ 
             var start = Console.ForegroundColor;
 
 

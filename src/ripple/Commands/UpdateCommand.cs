@@ -20,7 +20,7 @@ namespace ripple.Commands
         public override bool Execute(UpdateInput input)
         {
             var system = new FileSystem();
-            var command = "update {0} -r {1}";
+            var command = "update {0} -r {1} -v";
             Func<Project, bool> projectFilter = p => p.NugetDependencies.Any();
 
             if (input.NugetFlag.IsNotEmpty())
@@ -37,7 +37,7 @@ namespace ripple.Commands
 
                 solution.Projects.Where(projectFilter).Each(project =>
                 {
-                    CLIRunner.RunNuget(command, project.PackagesFile().ToFullPath(), solution.PackagesFolder());
+                    CLIRunner.RunNuget(command, project.PackagesFile().ToFullPath().FileEscape(), solution.PackagesFolder().FileEscape());
                 });
             });
 

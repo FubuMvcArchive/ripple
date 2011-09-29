@@ -39,7 +39,7 @@ namespace ripple.Commands
                 {
                     Console.WriteLine("Building the nuget spec file at " + spec.Filename);
 
-                    CLIRunner.RunNuget(commandLine, spec.Filename);
+                    CLIRunner.RunNuget(commandLine, spec.Filename.FileEscape());
                     ConsoleWriter.PrintHorizontalLine();
                 });
             });

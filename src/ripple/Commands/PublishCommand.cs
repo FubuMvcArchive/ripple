@@ -39,11 +39,11 @@ namespace ripple.Commands
                 {
                     Console.WriteLine("Creating and publishing Nuget for " + nuget.Name);
 
-                    CLIRunner.RunNuget("pack {0} -version {1} -o {2}", nuget.Filename, input.Version, artifactDirectory);
+                    CLIRunner.RunNuget("pack {0} -version {1} -o {2}", nuget.Filename.FileEscape(), input.Version, artifactDirectory.FileEscape());
 
                     var nupkgFileName = "{0}.{1}.nupkg".ToFormat(nuget.Name, input.Version);
 
-                    CLIRunner.RunNuget("push {0} {1}", artifactDirectory.AppendPath(nupkgFileName), input.ApiKey);
+                    CLIRunner.RunNuget("push {0} {1}", artifactDirectory.AppendPath(nupkgFileName).FileEscape(), input.ApiKey);
                 });
             });
 

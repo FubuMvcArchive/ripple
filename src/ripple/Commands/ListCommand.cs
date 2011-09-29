@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
+using ripple.Local;
 using ripple.Model;
 using System.Linq;
 
@@ -12,6 +14,7 @@ namespace ripple.Commands
         all,
         published,
         dependencies,
+        projects,
         solutions,
         assemblies
     }
@@ -33,6 +36,9 @@ namespace ripple.Commands
 
         [RequiredUsage("filtered")]
         public ListMode Mode { get; set; }
+
+        [Description("If set, only shows information for a named nuget")]
+        public string NugetFlag { get; set; }
     }
 
     [Usage("all", "list everything")]
@@ -40,17 +46,23 @@ namespace ripple.Commands
     [CommandDescription("lists information about the current ripple environment")]
     public class ListCommand : FubuCommand<ListInput>
     {
+        private Func<NugetDependency, bool> _nugetDependencyFilter = dep => true;
+
+
         public override bool Execute(ListInput input)
         {
+            input.NugetFlag.IfNotNull(x => _nugetDependencyFilter = dep => dep.Name == x);
+
             input.FindSolutions().Each(x => listSolution(x, input.Mode));
 
             return true;
         }
 
-        private static void listSolution(Solution solution, ListMode mode)
+        private void listSolution(Solution solution, ListMode mode)
         {
             writeSolution(solution);
 
+            writeProjects(solution, mode);
             writePublishedNugets(solution, mode);
             writeDependencies(solution, mode);
 
@@ -60,12 +72,29 @@ namespace ripple.Commands
             }
         }
 
+        private void writeProjects(Solution solution, ListMode mode)
+        {
+            if (mode != ListMode.projects) return;
+
+            Console.WriteLine("  Projects");
+
+            solution.Projects.Each(proj =>
+            {
+                Console.WriteLine("    * " + proj.ProjectName + " depends on:");
+
+                proj.NugetDependencies.Where(_nugetDependencyFilter).Each(dep =>
+                {
+                    Console.WriteLine("     - " + dep.Name + " " + dep.Version);
+                });
+            });
+        }
+
         private static void writeSolution(Solution solution)
         {
             Console.WriteLine("{0} ({1})", solution.Name, solution.Directory);
         }
 
-        private static void writePublishedNugets(Solution solution, ListMode mode)
+        private void writePublishedNugets(Solution solution, ListMode mode)
         {
             if (mode == ListMode.assemblies)
             {
@@ -83,7 +112,7 @@ namespace ripple.Commands
             }
         }
 
-        private static void writeAssemblies(Solution solution)
+        private void writeAssemblies(Solution solution)
         {
             if (solution.NugetDependencies().Any())
             {

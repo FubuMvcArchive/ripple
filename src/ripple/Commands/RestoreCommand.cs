@@ -40,7 +40,7 @@ namespace ripple.Commands
             solution.Projects.Each(p =>
             {
                 var projectFile = p.PackagesFile();
-                CLIRunner.RunNuget("i {0} -o {1}", projectFile, packagesFolder);
+                CLIRunner.RunNuget("i {0} -o {1}", projectFile.FileEscape(), packagesFolder.FileEscape());
             });
         }
     }
