@@ -56,6 +56,12 @@ namespace ripple.Nuget
             _packageManager.InstallPackage(dependency.Name, version);
         }
 
+        public void Restore(NugetDependency dependency)
+        {
+            var version = new Version(dependency.Version);
+            _packageManager.InstallPackage(dependency.Name, version, true);
+        }
+
         public void RemoveFromFileSystem(NugetDependency dependency)
         {
             var package = _localRepository.FindPackage(dependency.Name, dependency.Version);

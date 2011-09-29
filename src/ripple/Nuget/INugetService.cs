@@ -11,5 +11,6 @@ namespace ripple.Nuget
 
         void RemoveFromFileSystem(NugetDependency dependency);
         void Update(Project project, IEnumerable<NugetDependency> dependencies);
+        void Restore(NugetDependency dependency);
     }
 }

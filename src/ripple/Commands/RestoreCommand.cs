@@ -4,21 +4,11 @@ using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using ripple.Model;
+using ripple.Nuget;
+using System.Linq;
 
 namespace ripple.Commands
 {
-    /*
-     * 
-     * <cli>
-     *   <cmd file="blah" alias="" />
-     *   <dll file="blah" target="nuspec name" /> 
-     * 
-     * 
-     * </cli>
-     * 
-     * 
-     * 
-     */
 
     [CommandDescription("Interacts with nuget to restore all the nuget dependencies in a solution tree")]
     public class RestoreCommand : FubuCommand<SolutionInput>
@@ -37,11 +27,8 @@ namespace ripple.Commands
             var packagesFolder = solution.PackagesFolder();
             new FileSystem().CreateDirectory(packagesFolder);
 
-            solution.Projects.Each(p =>
-            {
-                var projectFile = p.PackagesFile();
-                CLIRunner.RunNuget("i {0} -o {1}", projectFile.FileEscape(), packagesFolder.FileEscape());
-            });
+            var nugetService = new NugetService(solution);
+            solution.GetAllNugetDependencies().OrderBy(x => x.Name).Each(dep => nugetService.Restore(dep));
         }
     }
 }
