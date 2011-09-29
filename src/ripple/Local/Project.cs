@@ -24,7 +24,10 @@ namespace ripple.Local
         {
             _directory = Path.GetDirectoryName(filename);
             _projectName = _directory.Split(Path.DirectorySeparatorChar).Last();
+            ProjectFile = filename;
         }
+
+        public string ProjectFile { get; private set; }
 
         public string PackagesFile()
         {
