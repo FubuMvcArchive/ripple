@@ -9,25 +9,15 @@ using System.Linq;
 
 namespace ripple.Nuget
 {
-    public interface INugetService
-    {
-        NugetDependency GetLatest(string nugetName);
-
-        void Install(NugetDependency dependency);
-
-        void RemoveFromFileSystem(NugetDependency dependency);
-        void Update(Project project, IEnumerable<NugetDependency> dependencies);
-    }
-
     public class NugetService : INugetService
     {
-        private IPackageRepository _remoteRepository;
-        private IPackageRepository _localRepository;
-        private AggregateRepository _sourceRepository;
-        private PhysicalFileSystem _fileSystem;
-        private PackageManager _packageManager;
-        private Console _console;
-        private DefaultPackagePathResolver _pathResolver;
+        private readonly IPackageRepository _remoteRepository;
+        private readonly IPackageRepository _localRepository;
+        private readonly AggregateRepository _sourceRepository;
+        private readonly PhysicalFileSystem _fileSystem;
+        private readonly PackageManager _packageManager;
+        private readonly Console _console;
+        private readonly DefaultPackagePathResolver _pathResolver;
 
         public NugetService(Solution solution)
         {
