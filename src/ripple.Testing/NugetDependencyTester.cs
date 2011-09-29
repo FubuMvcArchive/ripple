@@ -33,6 +33,21 @@ namespace ripple.Testing
 
         }
 
+        [Test]
+        public void different_version_of()
+        {
+            var dep1 = new NugetDependency("A", "1.0");
+            var dep2 = new NugetDependency("A", "1.1");
+            var dep3 = new NugetDependency("A", "1.1");
+            var dep4 = new NugetDependency("B", "1.1");
+        
+            dep1.DifferentVersionOf(dep2).ShouldBeTrue();
+            dep2.DifferentVersionOf(dep1).ShouldBeTrue();
+        
+            dep2.DifferentVersionOf(dep3).ShouldBeFalse();
+            dep4.DifferentVersionOf(dep3).ShouldBeFalse();
+        }
+
 
     }
 }

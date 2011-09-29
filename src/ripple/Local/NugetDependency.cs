@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml;
 
@@ -77,6 +78,11 @@ namespace ripple.Local
         public override string ToString()
         {
             return string.Format("{0} -- {1}", _name, _version);
+        }
+
+        public bool DifferentVersionOf(NugetDependency dependency)
+        {
+            return Name == dependency.Name && Version != dependency.Version;
         }
     }
 }

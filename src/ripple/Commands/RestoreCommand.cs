@@ -28,7 +28,7 @@ namespace ripple.Commands
             new FileSystem().CreateDirectory(packagesFolder);
 
             var nugetService = new NugetService(solution);
-            solution.GetAllNugetDependencies().OrderBy(x => x.Name).Each(dep => nugetService.Restore(dep));
+            solution.GetAllNugetDependencies().OrderBy(x => x.Name).Each(dep => nugetService.Install(dep));
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using FubuCore;
@@ -17,6 +18,18 @@ namespace ripple.Local
             var project = new Project(file);
             project._nugetDependencies.AddRange(NugetDependency.ReadFrom(file));
 
+            var files = new FileSystem().FindFiles(file.ParentDirectory(), new FileSet(){
+                Include = "*.csproj"
+            });
+
+            var csProjFile = files.FirstOrDefault();
+            if (files.Count() > 1)
+            {
+                csProjFile = files.FirstOrDefault(x => x.StartsWith(project.ProjectName));
+            }
+
+            project.ProjectFile = csProjFile;
+
             return project;
         }
 
@@ -24,7 +37,6 @@ namespace ripple.Local
         {
             _directory = Path.GetDirectoryName(filename);
             _projectName = _directory.Split(Path.DirectorySeparatorChar).Last();
-            ProjectFile = filename;
         }
 
         public string ProjectFile { get; private set; }
@@ -56,6 +68,29 @@ namespace ripple.Local
         {
             system.CleanWithTracing(_directory.AppendPath("bin"));
             system.CleanWithTracing(_directory.AppendPath("obj"));
+        }
+
+        public bool DependsOn(string nugetName)
+        {
+            return _nugetDependencies.Any(x => x.Name == nugetName);
+        }
+
+        public bool ShouldBeUpdated(NugetDependency latest)
+        {
+            if (ProjectFile.IsEmpty()) return false;
+
+            var current = _nugetDependencies.Where(x => x.Name == latest.Name).FirstOrDefault();
+            if (current != null)
+            {
+                return current.Version != latest.Version;
+            }
+
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Project: {0}", _projectName);
         }
     }
 }

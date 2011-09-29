@@ -1,10 +1,14 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using FubuCore;
 using System.Linq;
+using FubuCore.Util;
 using ripple.Local;
+using ripple.Model;
+using ripple.Nuget;
 
 namespace ripple.Commands
 {
@@ -12,6 +16,9 @@ namespace ripple.Commands
     {
         [Description("Only update a specific nuget by name")]
         public string NugetFlag { get; set; }
+
+        [Description("Only show what would be updated")]
+        public bool PreviewFlag { get; set; }
     }
 
     [CommandDescription("Update nuget versions for solutions")]
@@ -20,25 +27,36 @@ namespace ripple.Commands
         public override bool Execute(UpdateInput input)
         {
             var system = new FileSystem();
-            var command = "update {0} -r {1} -v";
-            Func<Project, bool> projectFilter = p => p.NugetDependencies.Any();
-
-            if (input.NugetFlag.IsNotEmpty())
-            {
-                command += " -i " + input.NugetFlag;
-                projectFilter = p => p.NugetDependencies.Any(x => x.Name == input.NugetFlag);
-                
-            }
 
             input.FindSolutions().Each(solution =>
             {
-                system.DeleteDirectory(solution.PackagesFolder());
+                var nugetService = new NugetService(solution);
                 system.CreateDirectory(solution.PackagesFolder());
 
-                solution.Projects.Where(projectFilter).Each(project =>
+                var plan = new NugetUpdatePlan(solution);
+
+
+                IEnumerable<string> allNugetNames = input.NugetFlag.IsNotEmpty()
+                    ? (IEnumerable<string>) new string[]{input.NugetFlag}
+                    : solution.GetAllNugetDependencies().ToList().Select(x => x.Name).Distinct().ToList();
+                    
+                allNugetNames.Each(name =>
                 {
-                    CLIRunner.RunNuget(command, project.PackagesFile().ToFullPath().FileEscape(), solution.PackagesFolder().FileEscape());
+                    var latest = nugetService.GetLatest(name);
+                    Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
+                    plan.UseLatestNuget(latest);
                 });
+
+                if (input.PreviewFlag)
+                {
+                    plan.Preview();                    
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Updating " + solution.Name);
+                    plan.Apply(nugetService);
+                }
             });
 
             var listInput = new ListInput(){
@@ -50,6 +68,53 @@ namespace ripple.Commands
             new ListCommand().Execute(listInput);
 
             return true;
+        }
+    }
+
+    public class NugetUpdatePlan
+    {
+        private readonly Solution _solution;
+        private readonly Cache<Project, IList<NugetDependency>> _updates = new Cache<Project, IList<NugetDependency>>(p => new List<NugetDependency>());
+        private readonly Cache<Project, IList<NugetDependency>> _removes = new Cache<Project, IList<NugetDependency>>(p => new List<NugetDependency>());
+        private readonly IList<NugetDependency> _dependenciesToRemove = new List<NugetDependency>();
+
+        public NugetUpdatePlan(Solution solution)
+        {
+            _solution = solution;
+        }
+
+        public void UseLatestNuget(NugetDependency latest)
+        {
+            var depsToRemove = _solution.GetAllNugetDependencies().Where(x => x.DifferentVersionOf(latest));
+            _dependenciesToRemove.Fill(depsToRemove.ToList());
+
+            _solution.Projects.Where(x => x.ShouldBeUpdated(latest)).Each(proj =>
+            {
+                _updates[proj].Add(latest);
+                _removes[proj].AddRange(proj.NugetDependencies.Where(x => x.DifferentVersionOf(latest)));
+            });
+        }
+
+        public void Apply(INugetService service)
+        {
+            _updates.Each(service.Update);
+
+            _removes.Each(service.RemoveFromProject);
+
+            _dependenciesToRemove.Each(service.RemoveFromFileSystem);
+        }
+
+        public void Preview()
+        {
+            ConsoleWriter.Write(ConsoleColor.Cyan, "Needs to be updated");
+            _updates.Each((proj, deps) =>
+            {
+                ConsoleWriter.Write("  Project {0}", proj.ProjectName);
+                deps.Each(dep => ConsoleWriter.Write("    - to " + dep));
+            });
+
+            ConsoleWriter.Write(ConsoleColor.Cyan, "Remove:");
+            _dependenciesToRemove.Each(x => Console.Write("  " + x));
         }
     }
 
