@@ -76,7 +76,7 @@ namespace ripple.Testing
         [Test]
         public void should_be_updated()
         {
-            DataMother.WriteXmlFile("packages.config", @"
+            DataMother.WriteXmlFile("packages.config".ToFullPath(), @"
 <?xml version='1.0' encoding='utf-8'?>
 <packages>
   <package id='CommonServiceLocator' version='1.0' />
@@ -86,7 +86,9 @@ namespace ripple.Testing
 
 ");
 
+            new FileSystem().WriteStringToFile("Something.csproj", "Something.csproj");
             var project = Project.ReadFrom("packages.config");
+            
 
             project.ShouldBeUpdated(new NugetDependency("CommonServiceLocator", "1.0")).ShouldBeFalse();
             project.ShouldBeUpdated(new NugetDependency("NotCommonServiceLocator", "1.0")).ShouldBeFalse();

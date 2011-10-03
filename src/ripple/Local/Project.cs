@@ -15,6 +15,7 @@ namespace ripple.Local
 
         public static Project ReadFrom(string file)
         {
+            file = file.ToFullPath();
             var project = new Project(file);
             project._nugetDependencies.AddRange(NugetDependency.ReadFrom(file));
 
