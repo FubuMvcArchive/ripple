@@ -94,6 +94,8 @@ namespace ripple.Nuget
                 ConsoleWriter.Write(ConsoleColor.Cyan, "  -- to " + dep);
 
                 projectManager.AddPackageReference(_packages[dep], true);
+
+                projectManager.Project.As<IMSBuildProjectSystem>().Save();
             });
         }
 
