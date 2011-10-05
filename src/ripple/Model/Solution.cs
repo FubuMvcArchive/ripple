@@ -187,8 +187,18 @@ namespace ripple.Model
 
         public string NugetFolderFor(NugetSpec spec)
         {
-            var dependency = Projects.SelectMany(x => x.NugetDependencies).Distinct()
-                .Single(x => x.Name == spec.Name);
+            var nugetDependencies = Projects.SelectMany(x => x.NugetDependencies).Distinct();
+            NugetDependency dependency = null;
+            try
+            {
+                dependency = nugetDependencies
+                    .Single(x => x.Name.EqualsIgnoreCase(spec.Name));
+            }
+            catch (InvalidOperationException ex)
+            {
+                var options = nugetDependencies.Select(d=>d.Name).Aggregate((l,r)=> l+", "+r);
+                throw new InvalidOperationException(string.Format("Couldn't select a single dependency for '{0}'. Couldn't decide between {1}./nTry running 'ripple update'.", spec.Name, options));
+            }
 
             return _directory.AppendPath(_config.SourceFolder, "packages", spec.Name + "." + dependency.Version);
         }
