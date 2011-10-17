@@ -11,6 +11,7 @@ COPYRIGHT = 'Copyright 2011 Jeremy D. Miller, et al. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 
 buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
+raise "Run `git submodule update --init` to populate your buildsupport folder." unless buildsupportfiles.any?
 buildsupportfiles.each { |ext| load ext }
 
 @teamcity_build_id = "bt396"
