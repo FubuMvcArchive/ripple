@@ -1,13 +1,19 @@
 ﻿using NUnit.Framework;
 using FubuTestingSupport;
 using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Testing
 {
     [TestFixture]
     public class NugetDependencyTester
     {
-
+        [Test]
+        public void update_mode_is_locked_by_default()
+        {
+            new NugetDependency("CommonServiceLocator", "1.0").UpdateMode
+                .ShouldEqual(UpdateMode.Locked);
+        }
 
 
         [Test]

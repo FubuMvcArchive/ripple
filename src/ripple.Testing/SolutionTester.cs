@@ -13,6 +13,33 @@ namespace ripple.Testing
     [TestFixture]
     public class SolutionTester
     {
+
+        [Test]
+        public void adding_a_project_should_set_the_update_mode_on_all_nuget_dependencies()
+        {
+            var solution = new Solution(new SolutionConfig()
+            {
+                SourceFolder = "src",
+                BuildCommand = RippleFileSystem.RakeRunnerFile(),
+                FastBuildCommand = "rake compile",
+                Floats = new string[]{"Nug1", "Nug2"},
+            }, "directory1");
+
+
+            var project = new Project("something.csproj");
+            project.AddDependency(new NugetDependency("Nug1"));
+            project.AddDependency(new NugetDependency("Nug2"));
+            project.AddDependency(new NugetDependency("Nug3"));
+            project.AddDependency(new NugetDependency("Nug4"));
+        
+            solution.AddProject(project);
+
+            project.FindDependency("Nug1").UpdateMode.ShouldEqual(UpdateMode.Float);
+            project.FindDependency("Nug2").UpdateMode.ShouldEqual(UpdateMode.Float);
+            project.FindDependency("Nug3").UpdateMode.ShouldEqual(UpdateMode.Locked);
+            project.FindDependency("Nug4").UpdateMode.ShouldEqual(UpdateMode.Locked);
+        }
+
         [Test]
         public void create_process_info_for_full_build()
         {

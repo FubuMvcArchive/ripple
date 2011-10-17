@@ -31,6 +31,8 @@ namespace ripple.Model
 
                 readNugetSpecs(directory, config, system, solution);
 
+
+
                 return solution;
             }
             catch (Exception)
@@ -59,7 +61,8 @@ namespace ripple.Model
             }).Each(file =>
             {
                 var project = Project.ReadFrom(file);
-                solution._projects.Add(project);
+
+                solution.AddProject(project);
             });
         }
 
@@ -183,6 +186,10 @@ namespace ripple.Model
         public void AddProject(Project project)
         {
             _projects.Add(project);
+            project.NugetDependencies.Each(dep =>
+            {
+                dep.UpdateMode = _config.ModeForNuget(dep.Name);
+            });
         }
 
         public string NugetFolderFor(NugetSpec spec)

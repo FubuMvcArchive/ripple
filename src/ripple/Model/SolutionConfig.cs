@@ -1,8 +1,17 @@
+using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using FubuCore;
+using System.Linq;
 
 namespace ripple.Model
 {
+    public enum UpdateMode
+    {
+        Locked,
+        Float
+    }
+
     [XmlType("ripple")]
     public class SolutionConfig
     {
@@ -14,7 +23,7 @@ namespace ripple.Model
             SourceFolder = "src";
             BuildCommand = "rake";
             FastBuildCommand = "rake compile";
-        }
+        } 
 
         public string Name { get; set; }
         public string NugetSpecFolder { get; set; }
@@ -22,6 +31,26 @@ namespace ripple.Model
 
         public string BuildCommand { get; set; }
         public string FastBuildCommand { get; set; }
+
+        private readonly IList<string> _floats = new List<string>();
+
+        public string[] Floats
+        {
+            get
+            {
+                return _floats.ToArray();
+            }
+            set
+            {
+                _floats.Clear();
+                _floats.AddRange(value);
+            }
+        }
+
+        public UpdateMode ModeForNuget(string nugetName)
+        {
+            return _floats.Contains(nugetName) ? UpdateMode.Float : UpdateMode.Locked;
+        }
 
         public static SolutionConfig LoadFrom(string directory)
         {

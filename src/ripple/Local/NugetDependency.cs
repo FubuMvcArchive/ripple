@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using ripple.Model;
 
 namespace ripple.Local
 {
@@ -32,12 +33,14 @@ namespace ripple.Local
 
         public NugetDependency(string name)
         {
+            UpdateMode = UpdateMode.Locked;
             _name = name;
             _version = string.Empty;
         }
 
         public NugetDependency(string name, string version)
         {
+            UpdateMode = UpdateMode.Locked;
             _name = name;
             _version = version ?? string.Empty;
         }
@@ -51,6 +54,8 @@ namespace ripple.Local
         {
             get { return _version; }
         }
+
+        public UpdateMode UpdateMode { get; set; }
 
         public bool Equals(NugetDependency other)
         {
@@ -77,7 +82,7 @@ namespace ripple.Local
 
         public override string ToString()
         {
-            return string.Format("{0} -- {1}", _name, _version);
+            return string.Format("{0} -- {1} ({2})", _name, _version, UpdateMode);
         }
 
         public bool DifferentVersionOf(NugetDependency dependency)

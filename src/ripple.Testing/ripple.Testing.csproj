@@ -77,6 +77,7 @@
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
     <Compile Include="MakeTestData.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
+    <Compile Include="Model\SolutionConfigTester.cs" />
     <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="play.cs" />

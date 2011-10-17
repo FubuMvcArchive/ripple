@@ -93,5 +93,10 @@ namespace ripple.Local
         {
             return string.Format("Project: {0}", _projectName);
         }
+
+        public NugetDependency FindDependency(string nugetName)
+        {
+            return _nugetDependencies.FirstOrDefault(x => x.Name == nugetName);
+        }
     }
 }
