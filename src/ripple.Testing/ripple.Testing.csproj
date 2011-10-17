@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildSolutionTester.cs" />
+    <Compile Include="Commands\UpdateInputTester.cs" />
     <Compile Include="DataMother.cs" />
     <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />

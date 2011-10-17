@@ -19,6 +19,26 @@ namespace ripple.Commands
 
         [Description("Only show what would be updated")]
         public bool PreviewFlag { get; set; }
+
+        [Description("Forces the update command to override all dependencies even if they are locked")]
+        public bool ForceFlag { get; set; }
+
+        public IEnumerable<string> GetAllNugetNames(Solution solution)
+        {
+            if (NugetFlag.IsNotEmpty())
+            {
+                return new string[]{NugetFlag};
+            }
+
+            if (ForceFlag)
+            {
+                return solution.GetAllNugetDependencies().Select(x => x.Name).Distinct().ToList();
+            }
+
+            return solution.GetAllNugetDependencies()
+                .Where(x => x.UpdateMode == UpdateMode.Float)
+                .Select(x => x.Name).Distinct().ToList();
+        }
     }
 
     [CommandDescription("Update nuget versions for solutions")]
@@ -35,11 +55,8 @@ namespace ripple.Commands
 
                 var plan = new NugetUpdatePlan(solution);
 
+                var allNugetNames = input.GetAllNugetNames(solution);
 
-                IEnumerable<string> allNugetNames = input.NugetFlag.IsNotEmpty()
-                    ? (IEnumerable<string>) new string[]{input.NugetFlag}
-                    : solution.GetAllNugetDependencies().ToList().Select(x => x.Name).Distinct().ToList();
-                    
                 allNugetNames.Each(name =>
                 {
                     var latest = nugetService.GetLatest(name);
