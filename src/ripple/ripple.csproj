@@ -55,11 +55,11 @@
   <ItemGroup>
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\CLIRunner.cs" />
+    <Compile Include="Commands\FloatCommand.cs" />
     <Compile Include="Commands\HistoryCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
     <Compile Include="Commands\LocalCommand.cs" />
     <Compile Include="Commands\LocalNugetCommand.cs" />
-    <Compile Include="Commands\MakeEdgeCommand.cs" />
     <Compile Include="Commands\OpenLogCommand.cs" />
     <Compile Include="Commands\OpenNugetCommand.cs" />
     <Compile Include="Commands\OpenRakeCommand.cs" />

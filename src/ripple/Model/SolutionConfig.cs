@@ -34,6 +34,16 @@ namespace ripple.Model
 
         private readonly IList<string> _floats = new List<string>();
 
+        public void FloatNuget(string nugetName)
+        {
+            _floats.Fill(nugetName);
+        }
+
+        public void LockNuget(string nugetName)
+        {
+            _floats.Remove(nugetName);
+        }
+
         public string[] Floats
         {
             get

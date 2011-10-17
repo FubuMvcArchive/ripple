@@ -78,6 +78,15 @@ namespace ripple.Model
             _directory = directory.ToFullPath();
         }
 
+        public void AlterConfig(Action<SolutionConfig> alteration)
+        {
+            alteration(_config);
+
+            var file = _directory.AppendPath(SolutionConfig.FileName);
+            Console.WriteLine("Writing changes to " + file);
+            new FileSystem().PersistToFile(_config, file);
+        }
+
         public string Directory
         {
             get { return _directory; }
