@@ -31,7 +31,13 @@ namespace ripple.Commands
             }
             else
             {
-                yield return Solution.ReadFrom(".");
+                if (new FileSystem().FileExists(".".ToFullPath(), SolutionConfig.FileName))
+                {
+                    yield return Solution.ReadFrom(".");
+                }
+
+
+                
             }
         }
     }

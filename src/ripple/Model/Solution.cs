@@ -57,7 +57,7 @@ namespace ripple.Model
         private static void readProjects(string directory, FileSystem system, Solution solution)
         {
             system.FindFiles(directory, new FileSet(){
-                Include = "packages.config"
+                Include = "*.csproj"
             }).Each(file =>
             {
                 var project = Project.ReadFrom(file);

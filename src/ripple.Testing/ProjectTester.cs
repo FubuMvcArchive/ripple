@@ -44,8 +44,8 @@ namespace ripple.Testing
 </packages>
 
 ");
-
-            var project = Project.ReadFrom("packages.config");
+            new FileSystem().WriteStringToFile("project.csproj", "");
+            var project = Project.ReadFrom("project.csproj");
 
             project.NugetDependencies.ShouldHaveTheSameElementsAs(
                 new NugetDependency("CommonServiceLocator", "1.0"),
@@ -67,7 +67,9 @@ namespace ripple.Testing
 
 ");
 
-            var project = Project.ReadFrom("packages.config");
+            new FileSystem().WriteStringToFile("project.csproj", "");
+
+            var project = Project.ReadFrom("project.csproj");
 
             project.DependsOn("CommonServiceLocator").ShouldBeTrue();
             project.DependsOn("Random").ShouldBeFalse();
@@ -87,7 +89,7 @@ namespace ripple.Testing
 ");
 
             new FileSystem().WriteStringToFile("Something.csproj", "Something.csproj");
-            var project = Project.ReadFrom("packages.config");
+            var project = Project.ReadFrom("Something.csproj");
             
 
             project.ShouldBeUpdated(new NugetDependency("CommonServiceLocator", "1.0")).ShouldBeFalse();

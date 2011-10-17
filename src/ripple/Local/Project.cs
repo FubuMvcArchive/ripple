@@ -15,27 +15,28 @@ namespace ripple.Local
 
         public static Project ReadFrom(string file)
         {
-            file = file.ToFullPath();
-            var project = new Project(file);
-            project._nugetDependencies.AddRange(NugetDependency.ReadFrom(file));
-
-            var files = new FileSystem().FindFiles(file.ParentDirectory(), new FileSet(){
-                Include = "*.csproj"
-            });
-
-            var csProjFile = files.FirstOrDefault();
-            if (files.Count() > 1)
+            if (Path.GetExtension(file) != ".csproj")
             {
-                csProjFile = files.FirstOrDefault(x => x.StartsWith(project.ProjectName));
+                throw new ArgumentOutOfRangeException("You can only use the csproj file here");
             }
 
-            project.ProjectFile = csProjFile;
+            file = file.ToFullPath();
+            var project = new Project(file);
+
+            var packagesFile = project.PackagesFile();
+            if (new FileSystem().FileExists(packagesFile))
+            {
+                project._nugetDependencies.AddRange(NugetDependency.ReadFrom(packagesFile));
+            }
+
+            
 
             return project;
         }
 
         public Project(string filename)
         {
+            ProjectFile = filename;
             _directory = Path.GetDirectoryName(filename);
             _projectName = _directory.Split(Path.DirectorySeparatorChar).Last();
         }
