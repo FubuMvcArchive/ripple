@@ -29,6 +29,7 @@ namespace ripple.Model
         public string NugetSpecFolder { get; set; }
         public string SourceFolder { get; set; } // look for packages.config underneath this
 
+
         public string BuildCommand { get; set; }
         public string FastBuildCommand { get; set; }
 
@@ -72,6 +73,12 @@ namespace ripple.Model
                 : null;
             
             
+        }
+
+        public string GetSolutionFolder(string directory)
+        {
+            var source = SourceFolder ?? "src";
+            return directory.AppendPath(source);
         }
     }
 }

@@ -26,9 +26,7 @@ namespace ripple.Model
                 var solution = new Solution(config, directory);
 
                 var system = new FileSystem();
-                readProjects(directory, system, solution);
-
-
+                readProjects(config.GetSolutionFolder(directory), system, solution);
                 readNugetSpecs(directory, config, system, solution);
 
 
@@ -56,9 +54,11 @@ namespace ripple.Model
 
         private static void readProjects(string directory, FileSystem system, Solution solution)
         {
-            system.FindFiles(directory, new FileSet(){
+            var csProjSet = new FileSet(){
                 Include = "*.csproj"
-            }).Each(file =>
+            };
+
+            system.FindFiles(directory, csProjSet).Each(file =>
             {
                 var project = Project.ReadFrom(file);
 
