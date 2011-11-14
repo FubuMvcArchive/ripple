@@ -71,6 +71,16 @@ namespace ripple.Local
         {
             _fileSystem.CreateDirectory(request.To);
 
+            // Hack!
+            if (!_fileSystem.DirectoryExists(request.From) && request.From.Contains("release"))
+            {
+                var dir = request.From.Replace("release", "debug");
+                if (_fileSystem.DirectoryExists(dir))
+                {
+                    request.From = dir;
+                }
+            }
+
             var files = _fileSystem.FindFiles(request.From, request.Matching);
             files.Each(f =>
             {
