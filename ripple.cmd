@@ -1,1 +1,1 @@
-buildsupport\ripple.exe %*
+src\ripple\bin\debug\ripple.exe %*

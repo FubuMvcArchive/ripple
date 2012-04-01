@@ -1,12 +1,11 @@
 using System;
-using System.ComponentModel;
-using FubuCore.CommandLine;
 using System.Collections.Generic;
+using System.ComponentModel;
 using FubuCore;
+using FubuCore.CommandLine;
 
 namespace ripple.Commands
 {
-
     public class LocalNugetInput : SolutionInput
     {
         public LocalNugetInput()
@@ -20,7 +19,6 @@ namespace ripple.Commands
 
         [Description("Specify where the nuget file should be written, otherwise it just goes to the nuget default")]
         public string DestinationFlag { get; set; }
-    
     }
 
     [CommandDescription("Creates the nuget files locally", Name = "local-nuget")]
@@ -29,7 +27,7 @@ namespace ripple.Commands
         public override bool Execute(LocalNugetInput input)
         {
             var commandLine = "pack {0} -Version " + input.VersionFlag;
-            commandLine += " -o " + input.DestinationFlag;
+            commandLine += " -o " + input.DestinationFlag.FileEscape();
 
             new FileSystem().CreateDirectory(input.DestinationFlag);
 
