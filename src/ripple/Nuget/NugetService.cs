@@ -44,20 +44,20 @@ namespace ripple.Nuget
             _packages = new Cache<NugetDependency, IPackage>(dep =>
             {
                 Install(dep);
-                return _sourceRepository.FindPackage(dep.Name, dep.Version);
+                return _sourceRepository.FindPackage(dep.Name, new SemanticVersion(dep.Version));
             });
         }
 
         public NugetDependency GetLatest(string nugetName)
         {
-            var package = _remoteRepository.Search(nugetName).Where(x => x.Id == nugetName && x.IsLatestVersion).FirstOrDefault();
+            var package = _remoteRepository.Search(nugetName, false).Where(x => x.Id == nugetName && x.IsLatestVersion).FirstOrDefault();
             return package == null ? null : new NugetDependency(package.Id, package.Version.ToString());
         }
 
         public void Install(NugetDependency dependency)
         {
             var version = new Version(dependency.Version);
-            _packageManager.InstallPackage(dependency.Name, version, true);
+            _packageManager.InstallPackage(dependency.Name, new SemanticVersion(version), true, false);
         }
 
         public void RemoveFromFileSystem(NugetDependency dependency)
@@ -66,7 +66,7 @@ namespace ripple.Nuget
             ConsoleWriter.Write(ConsoleColor.Cyan, "Removing " + dependency);
 
 
-            var package = _localRepository.FindPackage(dependency.Name, dependency.Version);
+            var package = _localRepository.FindPackage(dependency.Name, new SemanticVersion(dependency.Version));
 
             if (package != null) _localRepository.RemovePackage(package);
         }
@@ -83,7 +83,7 @@ namespace ripple.Nuget
                 ConsoleWriter.PrintHorizontalLine();
                 ConsoleWriter.Write(ConsoleColor.Cyan, "  -- to " + dep);
 
-                projectManager.AddPackageReference(_packages[dep], true);
+                projectManager.AddPackageReference(_packages[dep], true, false);
 
                 projectManager.Project.As<IMSBuildProjectSystem>().Save();
             });
