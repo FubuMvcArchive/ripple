@@ -122,6 +122,11 @@ namespace ripple.Model
             
         }
 
+        public NugetDependency GetLatestNugetOf(string nugetName)
+        {
+            return GetAllNugetDependencies().OrderByDescending(x => x.Version).FirstOrDefault(x => x.Name == nugetName);
+        }
+
         public string PackagesFolder()
         {
             return _directory.AppendPath(_config.SourceFolder, "packages");

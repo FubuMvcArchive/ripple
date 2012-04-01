@@ -67,5 +67,11 @@ namespace ripple.Local
         {
             return new NuspecDocument(_filename);
         }
+
+        public bool DependsOn(string nuget)
+        {
+            return Dependencies.Any(x => x.Name == nuget);
+        }
+
     }
 }

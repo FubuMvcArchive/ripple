@@ -124,5 +124,16 @@ namespace ripple.Local
 
             return name + EdgeSuffix;
         }
+
+        public void SetVersion(string dependency, string version)
+        {
+            var element = findNugetElement("dependency[@id='" + dependency + "']");
+            if (element == null)
+            {
+                throw new NotImplementedException("Unable to find dependency " + dependency);
+            }
+
+            element.SetAttribute("version", version);
+        }
     }
 }
