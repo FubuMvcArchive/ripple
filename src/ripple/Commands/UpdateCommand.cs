@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using FubuCore;
 using System.Linq;
 using FubuCore.Util;
+using ripple.Directives;
 using ripple.Local;
 using ripple.Model;
 using ripple.Nuget;
@@ -52,31 +53,7 @@ namespace ripple.Commands
 
             input.FindSolutions().Each(solution =>
             {
-                var feeds = input.FeedsFlag.ParseFeeds();
-                var nugetService = new NugetService(solution, feeds);
-                system.CreateDirectory(solution.PackagesFolder());
-
-                var plan = new NugetUpdatePlan(solution);
-
-                var allNugetNames = input.GetAllNugetNames(solution);
-
-                allNugetNames.Each(name =>
-                {
-                    var latest = nugetService.GetLatest(name);
-                    Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
-                    plan.UseLatestNuget(latest);
-                });
-
-                if (input.PreviewFlag)
-                {
-                    plan.Preview();                    
-                }
-                else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("Updating " + solution.Name);
-                    plan.Apply(nugetService);
-                }
+                updateSolution(input, solution, system);
             });
 
             var listInput = new ListInput(){
@@ -88,6 +65,37 @@ namespace ripple.Commands
             new ListCommand().Execute(listInput);
 
             return true;
+        }
+
+        private void updateSolution(UpdateInput input, Solution solution, FileSystem system)
+        {
+            var feeds = input.FeedsFlag.ParseFeeds();
+            var nugetService = new NugetService(solution, feeds);
+            system.CreateDirectory(solution.PackagesFolder());
+
+            var plan = new NugetUpdatePlan(solution);
+
+            var allNugetNames = input.GetAllNugetNames(solution);
+
+            allNugetNames.Each(name =>
+            {
+                var latest = nugetService.GetLatest(name);
+                Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
+                plan.UseLatestNuget(latest);
+            });
+
+            if (input.PreviewFlag)
+            {
+                plan.Preview();                    
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Updating " + solution.Name);
+                plan.Apply(nugetService);
+            }
+
+            DirectiveProcessor.ProcessDirectives(solution);
         }
     }
 

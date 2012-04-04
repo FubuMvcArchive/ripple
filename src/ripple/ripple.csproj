@@ -77,8 +77,10 @@
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Commands\UseTheirsCommand.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
-    <Compile Include="Directives\DirectiveClasses.cs" />
+    <Compile Include="Directives\DirectiveProcessor.cs" />
     <Compile Include="Directives\DirectiveParser.cs" />
+    <Compile Include="Directives\DirectiveRunner.cs" />
+    <Compile Include="Directives\IDirectiveRunner.cs" />
     <Compile Include="Local\BuildSolution.cs" />
     <Compile Include="Local\FileCopyRequest.cs" />
     <Compile Include="Commands\GitIgnoreCommand.cs" />

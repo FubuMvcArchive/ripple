@@ -20,6 +20,7 @@ namespace ripple.Model
         string NugetFolderFor(string nugetName);
         string Directory { get; }
         void IgnoreFile(string file);
+        IEnumerable<string> AllNugetDependencyNames();
     }
 
     public class Solution : ISolution
@@ -181,6 +182,11 @@ namespace ripple.Model
                     _dependencies.Add(spec);
                 }
             });
+        }
+
+        public IEnumerable<string> AllNugetDependencyNames()
+        {
+            return GetAllNugetDependencies().Select(x => x.Name).Distinct().ToList();
         }
 
         public IEnumerable<NugetDependency> GetAllNugetDependencies()

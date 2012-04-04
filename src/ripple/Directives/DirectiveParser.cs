@@ -3,7 +3,12 @@ using System.Xml;
 
 namespace ripple.Directives
 {
-    public class DirectiveParser
+    public interface IDirectiveParser
+    {
+        void Read(string file, IDirectiveRunner runner);
+    }
+
+    public class DirectiveParser : IDirectiveParser
     {
         public void Read(XmlDocument document, IDirectiveRunner runner)
         {

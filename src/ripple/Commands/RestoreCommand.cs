@@ -3,6 +3,7 @@ using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
+using ripple.Directives;
 using ripple.Model;
 using ripple.Nuget;
 using System.Linq;
@@ -38,6 +39,8 @@ namespace ripple.Commands
             var nugetService = new NugetService(solution, feeds);
             
             solution.GetAllNugetDependencies().OrderBy(x => x.Name).Each(nugetService.Install);
+
+            DirectiveProcessor.ProcessDirectives(solution);
         }
     }
 

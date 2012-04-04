@@ -4,15 +4,6 @@ using ripple.Model;
 
 namespace ripple.Directives
 {
-    public interface IDirectiveRunner
-    {
-        void CreateRunner(string file, string alias);
-        void Copy(string file, string relativePath, string nuget);
-
-
-        void SetCurrentDirectory(string current, string relativeFromNuget);
-    }
-
     public class DirectiveRunner : IDirectiveRunner
     {
         private readonly IFileSystem _fileSystem;
@@ -40,11 +31,13 @@ namespace ripple.Directives
             if (IsUnix())
             {
                 runnerName = alias + ".sh";
-                text = "ln -s {0} $*".ToFormat(file);
+                text = "ln -s #!/bin/sh {0} $*".ToFormat(file);
             }
 
-            _fileSystem.WriteStringToFile(_solution.Directory.AppendPath(runnerName), text);
+            var runnerFile = _solution.Directory.AppendPath(runnerName);
+            _fileSystem.WriteStringToFile(runnerFile, text);
             _solution.IgnoreFile(runnerName);
+            Console.WriteLine("Writing file to " + runnerFile);
         }
 
         public void Copy(string file, string relativePath, string nuget)
@@ -64,7 +57,7 @@ namespace ripple.Directives
             }
 
 
-
+            Console.WriteLine("Copying {0} to {1}", from, to);
             _fileSystem.Copy(from, to);
         }
 
