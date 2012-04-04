@@ -72,9 +72,9 @@ namespace ripple.Local
             _fileSystem.CreateDirectory(request.To);
 
             // Hack!
-            if (!_fileSystem.DirectoryExists(request.From) && request.From.Contains("release"))
+            if (!_fileSystem.DirectoryExists(request.From) && request.From.ToLower().Contains("release"))
             {
-                var dir = request.From.Replace("release", "debug");
+                var dir = request.From.ToLower().Replace("release", "debug");
                 if (_fileSystem.DirectoryExists(dir))
                 {
                     request.From = dir;
@@ -82,6 +82,11 @@ namespace ripple.Local
             }
 
             var files = _fileSystem.FindFiles(request.From, request.Matching);
+            if (!files.Any())
+            {
+                throw new ApplicationException("Unable to find any files matching {1} in {0}".ToFormat(request.From, request.Matching.Include));
+            }
+
             files.Each(f =>
             {
                 _logger.Trace("Copying {0} to {1}", f, request.To);
