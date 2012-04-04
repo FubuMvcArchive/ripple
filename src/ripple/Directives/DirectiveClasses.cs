@@ -1,6 +1,6 @@
 using System;
-using System.IO;
-using System.Xml;
+using FubuCore;
+using ripple.Model;
 
 namespace ripple.Directives
 {
@@ -8,37 +8,70 @@ namespace ripple.Directives
     {
         void CreateRunner(string file, string alias);
         void Copy(string file, string relativePath, string nuget);
+
+
+        void SetCurrentDirectory(string current, string relativeFromNuget);
     }
 
-    public class DirectiveParser
+    public class DirectiveRunner : IDirectiveRunner
     {
-        public void Read(XmlDocument document, IDirectiveRunner runner)
+        private readonly IFileSystem _fileSystem;
+        private readonly ISolution _solution;
+        private string _current;
+        private string _relativeFromNuget;
+
+        public DirectiveRunner(IFileSystem fileSystem, ISolution solution)
         {
-            foreach (XmlElement element in document.DocumentElement.SelectNodes("runner"))
-            {
-                var file = element.GetAttribute("file");
-                var alias = element.HasAttribute("alias")
-                    ? element.GetAttribute("alias") : Path.GetFileNameWithoutExtension(file);
-
-                runner.CreateRunner(file, alias);
-            }
-
-            foreach (XmlElement element in document.DocumentElement.SelectNodes("copy"))
-            {
-                var file = element.GetAttribute("file");
-                var location = element.HasAttribute("location") ? element.GetAttribute("location") : null;
-                var nuget = element.HasAttribute("nuget") ? element.GetAttribute("nuget") : null;
-
-                runner.Copy(file, location, nuget);
-            }
+            _fileSystem = fileSystem;
+            _solution = solution;
         }
 
-        public void Read(string file, IDirectiveRunner runner)
+        public void SetCurrentDirectory(string current, string relativeFromNuget)
         {
-            var document = new XmlDocument();
-            document.Load(file);
+            _current = current;
+            _relativeFromNuget = relativeFromNuget;
+        }
 
-            Read(document, runner);
+        public void CreateRunner(string file, string alias)
+        {
+            var text = "{0} %*".ToFormat(_current.AppendPath(file));
+            var runnerName = alias + ".cmd";
+
+            if (IsUnix())
+            {
+                runnerName = alias + ".sh";
+                text = "ln -s {0} $*".ToFormat(file);
+            }
+
+            _fileSystem.WriteStringToFile(_solution.Directory.AppendPath(runnerName), text);
+            _solution.IgnoreFile(runnerName);
+        }
+
+        public void Copy(string file, string relativePath, string nuget)
+        {
+            var from = _current.AppendPath(file);
+
+            var to = nuget.IsEmpty() ? _solution.Directory : _solution.NugetFolderFor(nuget);
+
+            if (relativePath.IsEmpty() && nuget.IsNotEmpty())
+            {
+                relativePath = _relativeFromNuget;
+            }
+
+            if (relativePath.IsNotEmpty())
+            {
+                to = to.AppendPath(relativePath);
+            }
+
+
+
+            _fileSystem.Copy(from, to);
+        }
+
+        public static bool IsUnix()
+        {
+            var pf = Environment.OSVersion.Platform;
+            return pf == PlatformID.Unix || pf == PlatformID.MacOSX;
         }
     }
 }

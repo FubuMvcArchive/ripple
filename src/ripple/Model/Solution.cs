@@ -15,7 +15,14 @@ namespace ripple.Model
         projects
     }
 
-    public class Solution
+    public interface ISolution
+    {
+        string NugetFolderFor(string nugetName);
+        string Directory { get; }
+        void IgnoreFile(string file);
+    }
+
+    public class Solution : ISolution
     {
         public static Solution ReadFrom(string directory)
         {
@@ -90,6 +97,12 @@ namespace ripple.Model
         public string Directory
         {
             get { return _directory; }
+        }
+
+        public void IgnoreFile(string file)
+        {
+            var gitIgnoreFile = _directory.AppendPath(".gitignore");
+            new FileSystem().AlterFlatFile(gitIgnoreFile, list => list.Fill(file));
         }
 
         public string Name

@@ -76,6 +76,7 @@
     <Compile Include="Commands\UpdateInputTester.cs" />
     <Compile Include="DataMother.cs" />
     <Compile Include="Directives\DirectiveParserTester.cs" />
+    <Compile Include="Directives\DirectiveRunnerTester.cs" />
     <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
