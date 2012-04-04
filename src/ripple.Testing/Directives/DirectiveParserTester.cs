@@ -3,6 +3,7 @@ using NUnit.Framework;
 using FubuCore.Configuration;
 using Rhino.Mocks;
 using ripple.Directives;
+using ripple.Model;
 
 namespace ripple.Testing.Directives
 {
@@ -23,7 +24,7 @@ namespace ripple.Testing.Directives
 
         private void parse()
         {
-            new DirectiveParser().Read(theRoot.OwnerDocument, theRunner);
+            DirectiveParser.Read(theRoot.OwnerDocument, theRunner);
         }
 
         [Test]

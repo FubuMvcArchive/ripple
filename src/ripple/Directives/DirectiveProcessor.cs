@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using FubuCore;
 using ripple.Model;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace ripple.Directives
         {
             var fileSystem = new FileSystem();
             var processor = new DirectiveProcessor(fileSystem, solution, new DirectiveRunner(fileSystem, solution),
-                                                   new DirectiveParser());
+                                                   new DirectiveParser(solution));
 
             processor.ProcessAll();
         }
@@ -45,14 +46,15 @@ namespace ripple.Directives
                 Include = "ripple.xml"
             });
 
-            files.Each(file => ProcessDirectives(file, directory));
+            files.Each(file => ProcessDirectives(file.PathRelativeTo(_solution.Directory), directory.PathRelativeTo(_solution.Directory)));
         }
 
-        private void ProcessDirectives(string file, string directory)
+        private void ProcessDirectives(string file, string nugetDirectory)
         {
             Console.WriteLine("Processing directives at " + file);
 
-            var relative = file.PathRelativeTo(directory);
+            var directory = Path.GetDirectoryName(file);
+            var relative = directory.PathRelativeTo(nugetDirectory);
             _runner.SetCurrentDirectory(directory, relative);
 
             _parser.Read(file, _runner);

@@ -1,5 +1,7 @@
 using System.IO;
 using System.Xml;
+using ripple.Model;
+using FubuCore;
 
 namespace ripple.Directives
 {
@@ -10,7 +12,14 @@ namespace ripple.Directives
 
     public class DirectiveParser : IDirectiveParser
     {
-        public void Read(XmlDocument document, IDirectiveRunner runner)
+        private readonly ISolution _solution;
+
+        public DirectiveParser(ISolution solution)
+        {
+            _solution = solution;
+        }
+
+        public static void Read(XmlDocument document, IDirectiveRunner runner)
         {
             foreach (XmlElement element in document.DocumentElement.SelectNodes("runner"))
             {
@@ -34,7 +43,7 @@ namespace ripple.Directives
         public void Read(string file, IDirectiveRunner runner)
         {
             var document = new XmlDocument();
-            document.Load(file);
+            document.Load(_solution.Directory.AppendPath(file));
 
             Read(document, runner);
         }
