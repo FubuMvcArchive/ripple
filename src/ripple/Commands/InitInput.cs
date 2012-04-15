@@ -10,7 +10,7 @@ namespace ripple.Commands
         [Description("Shorthand name for the project")]
         public string Name { get; set; }
 
-        [FlagAlias("src")]
+        [FlagAlias("src", 's')]
         [Description("Relative path to the solution directory.  Default is 'src'")]
         public string SourceFolderFlag { get; set; }
 

@@ -24,7 +24,7 @@ namespace ripple.Commands
         public string ArtifactsFlag { get; set; }
 
         [Description("Custom url for the NuGet server")]
-        [FlagAlias("s")]
+        [FlagAlias("server", 's')]
         public string ServerFlag { get; set; }
     }
     
