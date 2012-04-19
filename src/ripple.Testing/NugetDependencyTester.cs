@@ -24,7 +24,7 @@ namespace ripple.Testing
 <packages>
   <package id='CommonServiceLocator' version='1.0' />
   <package id='HtmlTags' version='1.0.0.23' />
-  <package id='DotNetZip' version='1.9' />
+  <package id='DotNetZip' version='1.9.1.8' />
 </packages>
 
 ");
@@ -34,7 +34,7 @@ namespace ripple.Testing
             dependencies.ShouldHaveTheSameElementsAs(
                 new NugetDependency("CommonServiceLocator", "1.0"),
                 new NugetDependency("HtmlTags", "1.0.0.23"),
-                new NugetDependency("DotNetZip", "1.9")
+                new NugetDependency("DotNetZip", "1.9.1.8")
                 );
 
         }
