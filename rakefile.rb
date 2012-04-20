@@ -11,7 +11,16 @@ COPYRIGHT = 'Copyright 2011 Jeremy D. Miller, et al. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 
 buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
+
+if( ! buildsupportfiles.any? )
+  # no buildsupport, let's go get it for them.
+  sh 'git submodule update --init' unless buildsupportfiles.any?
+  buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
+end
+
+# nope, we still don't have buildsupport. Something went wrong.
 raise "Run `git submodule update --init` to populate your buildsupport folder." unless buildsupportfiles.any?
+
 buildsupportfiles.each { |ext| load ext }
 
 @teamcity_build_id = "bt396"
@@ -50,8 +59,8 @@ assemblyinfo :version do |asm|
 end
 
 desc "Prepares the working directory for a new build"
-task :clean do
-	#TODO: do any other tasks required to clean/prepare the working directory
+task :clean => [:update_buildsupport] do
+	
 	FileUtils.rm_rf props[:stage]
     # work around nasty latency issue where folder still exists for a short while after it is removed
     waitfor { !exists?(props[:stage]) }
