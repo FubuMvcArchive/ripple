@@ -21,9 +21,11 @@ namespace ripple.Commands
         public bool PreviewFlag { get; set; }
 
         [Description("Forces the update command to override all dependencies even if they are locked")]
+        [FlagAlias("force", 'f')]
         public bool ForceFlag { get; set; }
 
         [Description("Additional NuGet feed urls separated by '#'")]
+        [FlagAlias("feeds", 'z')]
         public string FeedsFlag { get; set; }
 
         public IEnumerable<string> GetAllNugetNames(Solution solution)

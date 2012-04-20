@@ -21,6 +21,7 @@ namespace ripple.Commands
         public string ApiKey { get; set; }
 
         [Description("Overrides the location of the artifacts folder")]
+        [FlagAlias("artifacts", 'r')]
         public string ArtifactsFlag { get; set; }
 
         [Description("Custom url for the NuGet server")]

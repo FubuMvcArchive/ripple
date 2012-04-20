@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using FubuCore;
+using FubuCore.CommandLine;
 using ripple.Model;
 
 namespace ripple.Commands
@@ -12,6 +12,7 @@ namespace ripple.Commands
         private readonly Lazy<SolutionGraph> _graph = new Lazy<SolutionGraph>(SolutionGraphBuilder.BuildForRippleDirectory);
 
         [Description("override the solution to be cleaned")]
+        [FlagAlias("solution", 'l')]
         public string SolutionFlag { get; set; }
 
         [Description("Apply restore to all solutions")]

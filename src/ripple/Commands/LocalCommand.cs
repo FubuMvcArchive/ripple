@@ -10,6 +10,7 @@ namespace ripple.Commands
     public class LocalInput
     {
         [Description("Optionally specifies a solution to start from")]
+        [FlagAlias("from", 'f')]
         public string FromFlag { get; set; }
         
         [Description("Optionally specifies a solution to stop at")]
@@ -19,6 +20,7 @@ namespace ripple.Commands
         public bool DirectFlag { get; set; }
 
         [Description("Use the 'fast' build option for solutions, i.e. compile but don't run any pesky unit test kinda things")]
+        [FlagAlias("fast", 'x')]
         public bool FastFlag { get; set; }
 
         [Description("Writes out all the build output to the screen")]

@@ -14,6 +14,7 @@ namespace ripple.Commands
         }
 
         [Description("Override the local folder where the dependency-history.txt file will be written")]
+        [FlagAlias("artifacts", 'r')]
         public string ArtifactsFlag { get; set; }
     }
 
