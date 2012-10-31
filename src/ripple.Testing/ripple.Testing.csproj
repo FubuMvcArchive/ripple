@@ -120,7 +120,9 @@
     <None Include="data\fubucore\src\FubuCore.Testing\packages.config" />
     <None Include="data\fubucore\src\FubuCore\packages.config" />
     <None Include="data\fubucore\src\FubuLocalization.Tests\packages.config" />
-    <None Include="data\fubucore\src\FubuTestingSupport\packages.config" />
+    <None Include="data\fubucore\src\FubuTestingSupport\packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="data\fubumvc\packaging\nuget\ConfigureFubuMVC.cs.pp" />
     <None Include="data\fubumvc\packaging\nuget\FubuMVC.cs.pp" />
     <None Include="data\fubumvc\packaging\nuget\fubumvc.diagnostics.nuspec" />

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\CLIRunner.cs" />
+    <Compile Include="Commands\CsProjFile.cs" />
     <Compile Include="Commands\Samples\ExtractSampleCommand.cs" />
     <Compile Include="Commands\FloatCommand.cs" />
     <Compile Include="Commands\FloCommand.cs" />

@@ -43,16 +43,16 @@ namespace ripple.Commands
 
                 removeAssemblies(assemblies, solution.Directory);
 
-                removeFromPackageConfigFiles(input.Nuget, solution.Directory);
+                RemoveFromPackageConfigFiles(input.Nuget, solution.Directory);
             });
 
 
             return true;
         }
 
-        private void removeFromPackageConfigFiles(string nugetName, string directory)
+        public static void RemoveFromPackageConfigFiles(string nugetName, string directory)
         {
-            files.FindFiles(directory, new FileSet{
+            new FileSystem().FindFiles(directory, new FileSet{
                 Include = "packages.config",
                 DeepSearch = true
             }).Each(file =>
@@ -78,42 +78,12 @@ namespace ripple.Commands
             files.FindFiles(directory, new FileSet{
                 Include = "*.csproj",
                 DeepSearch = true
-            }).Each(csProjFile =>
-            {
-                var document = new XmlDocument();
-                document.Load(csProjFile);
-
-                //foreach (XmlElement reference in document.DocumentElement.SelectNodes("//Reference", manager))
-                // I can't stand Xml namespaces.  Not sure I've ever managed to get the DOM to work with one
-                var elements = findReferences(assemblies, document).ToList();
-                elements.Each(elem =>
-                {
-                    Console.WriteLine("    - removing {0} from {1}", elem.GetAttribute("Include"), csProjFile);
-                    elem.ParentNode.RemoveChild(elem);
-                });
-
-                if (elements.Any())
-                {
-                    document.Save(csProjFile);
-                }
+            }).Each(csProjFile => {
+                var project = new CsProjFile(csProjFile);
+                project.RemoveAssemblies(assemblies);
             });
         }
 
-        private IEnumerable<XmlElement> findReferences(IEnumerable<string> assemblies, XmlDocument document)
-        {
-            foreach (XmlElement element in document.DocumentElement.SelectNodes("//*"))
-            {
-                if (element.Name == "Reference")
-                {
-                    var reference = element.GetAttribute("Include");
-
-                    if (assemblies.Contains(reference))
-                    {
-                        yield return element;
-                    }
-                }
-            }
-        }
 
         private IEnumerable<string> removePackageFolder(string dir)
         {

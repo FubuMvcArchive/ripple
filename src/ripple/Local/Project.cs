@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FubuCore;
 using System.Linq;
+using ripple.Commands;
 
 namespace ripple.Local
 {
@@ -12,6 +13,7 @@ namespace ripple.Local
         public static readonly string PackagesConfig = "packages.config";
         private readonly string _directory;
         private readonly string _projectName;
+        private readonly Lazy<CsProjFile> _csProjFile; 
 
         public static Project ReadFrom(string file)
         {
@@ -39,6 +41,13 @@ namespace ripple.Local
             ProjectFile = filename;
             _directory = Path.GetDirectoryName(filename);
             _projectName = _directory.Split(Path.DirectorySeparatorChar).Last();
+
+            _csProjFile = new Lazy<CsProjFile>(() => new CsProjFile(filename));
+        }
+
+        public CsProjFile CsProjFile
+        {
+            get { return _csProjFile.Value; }
         }
 
         public string ProjectFile { get; private set; }

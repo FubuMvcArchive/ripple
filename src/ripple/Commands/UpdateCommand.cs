@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Xml;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using FubuCore;
@@ -75,16 +77,7 @@ namespace ripple.Commands
             var nugetService = new NugetService(solution, feeds);
             system.CreateDirectory(solution.PackagesFolder());
 
-            var plan = new NugetUpdatePlan(solution);
-
-            var allNugetNames = input.GetAllNugetNames(solution);
-
-            allNugetNames.Each(name =>
-            {
-                var latest = nugetService.GetLatest(name);
-                Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
-                plan.UseLatestNuget(latest);
-            });
+            var plan = buildUpdatePlan(input, solution, nugetService);
 
             if (input.PreviewFlag)
             {
@@ -99,39 +92,109 @@ namespace ripple.Commands
 
             DirectiveProcessor.ProcessDirectives(solution);
         }
+
+        private static NugetUpdatePlan buildUpdatePlan(UpdateInput input, Solution solution, NugetService nugetService)
+        {
+            var plan = new NugetUpdatePlan(solution);
+
+            var allNugetNames = new Queue<string>(input.GetAllNugetNames(solution));
+
+            var builder = new UpdatePlanBuilder(plan, nugetService, allNugetNames);
+            builder.Configure();
+
+            return plan;
+        }
+
+        
     }
+
+    public class UpdatePlanBuilder
+    {
+        private readonly INugetService _nugetService;
+        private readonly Queue<string> _nugetNames;
+        private readonly NugetUpdatePlan _plan;
+        private readonly IList<Task> _writeTasks = new List<Task>(); 
+
+        public UpdatePlanBuilder(NugetUpdatePlan plan, INugetService nugetService, IEnumerable<string> nugetNames)
+        {
+            _plan = plan;
+            _nugetService = nugetService;
+            _nugetNames = new Queue<string>(nugetNames);
+        }
+
+        public void Configure()
+        {
+            _writeTasks.Add(Task.Factory.StartNew(() => { }));
+
+            while (_nugetNames.Any())
+            {
+                var nugetName = _nugetNames.Dequeue();
+                var latest = _nugetService.GetLatest(nugetName);
+                Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
+
+                Action action = () => {
+                    var projects = _plan.UseLatestNuget(latest);
+                    Console.WriteLine("Trying to remove assemblies from package {0} from project(s) {1}", nugetName, projects.Select(x => x.ProjectName).Join(", "));
+                    projects.Each(proj => proj.CsProjFile.RemoveAssembliesFromPackage(nugetName));
+                };
+
+                var task = _writeTasks.Last().ContinueWith(t => action());
+            
+                _writeTasks.Add(task);
+            }
+
+            Task.WaitAll(_writeTasks.ToArray());
+        }
+    }
+
 
     public class NugetUpdatePlan
     {
         private readonly Solution _solution;
         private readonly Cache<Project, IList<NugetDependency>> _updates = new Cache<Project, IList<NugetDependency>>(p => new List<NugetDependency>());
-        private readonly Cache<Project, IList<NugetDependency>> _removes = new Cache<Project, IList<NugetDependency>>(p => new List<NugetDependency>());
         private readonly IList<NugetDependency> _dependenciesToRemove = new List<NugetDependency>();
+        
 
         public NugetUpdatePlan(Solution solution)
         {
             _solution = solution;
         }
 
-        public void UseLatestNuget(NugetDependency latest)
+        public IEnumerable<Project> UseLatestNuget(NugetDependency latest)
         {
             var depsToRemove = _solution.GetAllNugetDependencies().Where(x => x.DifferentVersionOf(latest));
             _dependenciesToRemove.Fill(depsToRemove.ToList());
 
-            _solution.Projects.Where(x => x.ShouldBeUpdated(latest)).Each(proj =>
+            foreach (var proj in _solution.Projects.Where(x => x.ShouldBeUpdated(latest)))
             {
                 _updates[proj].Add(latest);
-                _removes[proj].AddRange(proj.NugetDependencies.Where(x => x.DifferentVersionOf(latest)));
-            });
+
+                yield return proj;
+            }
         }
 
         public void Apply(INugetService service)
         {
             _updates.Each(service.Update);
 
-            _removes.Each(service.RemoveFromProject);
-
             _dependenciesToRemove.Each(service.RemoveFromFileSystem);
+
+            _solution.Projects.Each(proj => {
+                var document = new XmlDocument();
+                document.Load(proj.PackagesFile());
+
+                _dependenciesToRemove.Each(dep => {
+                    var xpath = "//package[@id='{0}' and @version='{1}']".ToFormat(dep.Name, dep.Version);
+                    var element = document.DocumentElement.SelectSingleNode(xpath);
+                    if (element != null)
+                    {
+                        Console.WriteLine("Removing {0} from {1}", dep, proj.PackagesFile());
+                        element.ParentNode.RemoveChild(element);
+                    }
+                });
+
+                document.Save(proj.PackagesFile());
+            });
         }
 
         public void Preview()

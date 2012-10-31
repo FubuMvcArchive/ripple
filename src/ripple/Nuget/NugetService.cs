@@ -70,6 +70,8 @@ namespace ripple.Nuget
             var package = _localRepository.FindPackage(dependency.Name, new SemanticVersion(dependency.Version));
 
             if (package != null) _localRepository.RemovePackage(package);
+
+
         }
 
         public void Update(Project project, IEnumerable<NugetDependency> dependencies)
@@ -84,6 +86,7 @@ namespace ripple.Nuget
                 ConsoleWriter.PrintHorizontalLine();
                 ConsoleWriter.Write(ConsoleColor.Cyan, "  -- to " + dep);
 
+                // TODO -- make _packages return Task<result>
                 projectManager.AddPackageReference(_packages[dep], true, false);
 
                 projectManager.Project.As<IMSBuildProjectSystem>().Save();
