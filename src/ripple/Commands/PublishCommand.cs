@@ -39,6 +39,9 @@ namespace ripple.Commands
                 Console.WriteLine("Building nuget files for " + solution.Name);
                 var artifactDirectory = solution.Directory.AppendPath(input.ArtifactsFlag);
 
+                Console.WriteLine("Cleaning out any existing nuget files before continuing");
+                new FileSystem().CleanDirectory(artifactDirectory);
+
                 solution.PublishedNugets.Each(nuget =>
                 {
                     Console.WriteLine("Creating and publishing Nuget for " + nuget.Name);

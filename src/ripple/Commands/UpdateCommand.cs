@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using FubuCore.CommandLine;
@@ -181,19 +182,24 @@ namespace ripple.Commands
 
             _solution.Projects.Each(proj => {
                 var document = new XmlDocument();
-                document.Load(proj.PackagesFile());
+                var packagesFile = proj.PackagesFile();
+
+                // Don't do anything if there's no packages.config file.  Duh.
+                if (!File.Exists(packagesFile)) return;
+
+                document.Load(packagesFile);
 
                 _dependenciesToRemove.Each(dep => {
                     var xpath = "//package[@id='{0}' and @version='{1}']".ToFormat(dep.Name, dep.Version);
                     var element = document.DocumentElement.SelectSingleNode(xpath);
                     if (element != null)
                     {
-                        Console.WriteLine("Removing {0} from {1}", dep, proj.PackagesFile());
+                        Console.WriteLine("Removing {0} from {1}", dep, packagesFile);
                         element.ParentNode.RemoveChild(element);
                     }
                 });
 
-                document.Save(proj.PackagesFile());
+                document.Save(packagesFile);
             });
         }
 

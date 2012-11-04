@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using FubuCore.CommandLine;
 using FubuCore.Util;
@@ -109,6 +110,10 @@ namespace ripple.Nuget
         {
             var projectManager = buildProjectManager(project);
             var document = new XmlDocument();
+
+            // Don't do anything if packages.config does not exist.  Duh.
+            if (!File.Exists(project.PackagesFile())) return;
+
             document.Load(project.PackagesFile());
             
             dependencies.Each(dep =>
