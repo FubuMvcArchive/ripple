@@ -80,7 +80,7 @@ end
 
 
 desc "Compiles the app"
-task :compile => [:clean, :version] do
+task :compile => [:clean, :restore_if_missing, :version] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/ripple.sln', :clrversion => CLR_TOOLS_VERSION
 end
 
