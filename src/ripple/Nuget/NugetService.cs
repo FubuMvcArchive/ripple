@@ -58,8 +58,7 @@ namespace ripple.Nuget
 
         public void Install(NugetDependency dependency)
         {
-            var version = new Version(dependency.Version);
-            _packageManager.InstallPackage(dependency.Name, new SemanticVersion(version), true, true);
+            _packageManager.InstallPackage(dependency.Name, new SemanticVersion(dependency.Version), true, true);
         }
 
         public void RemoveFromFileSystem(NugetDependency dependency)
