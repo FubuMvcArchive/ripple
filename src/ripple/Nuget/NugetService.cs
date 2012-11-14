@@ -51,7 +51,7 @@ namespace ripple.Nuget
 
         public NugetDependency GetLatest(string nugetName)
         {
-            var candidates = _remoteRepository.Search(nugetName, false).Where(x => x.Id == nugetName).OrderBy(x => x.Id).ToList();
+            var candidates = _remoteRepository.Search(nugetName, true).Where(x => x.Id == nugetName).OrderBy(x => x.Id).ToList();
             var package = candidates.Where(x => x.IsLatestVersion).FirstOrDefault();
             return package == null ? null : new NugetDependency(package.Id, package.Version.ToString());
         }
@@ -59,7 +59,7 @@ namespace ripple.Nuget
         public void Install(NugetDependency dependency)
         {
             var version = new Version(dependency.Version);
-            _packageManager.InstallPackage(dependency.Name, new SemanticVersion(version), true, false);
+            _packageManager.InstallPackage(dependency.Name, new SemanticVersion(version), true, true);
         }
 
         public void RemoveFromFileSystem(NugetDependency dependency)
@@ -88,7 +88,7 @@ namespace ripple.Nuget
                 ConsoleWriter.Write(ConsoleColor.Cyan, "  -- to " + dep);
 
                 // TODO -- make _packages return Task<result>
-                projectManager.AddPackageReference(_packages[dep], true, false);
+                projectManager.AddPackageReference(_packages[dep], true, true);
 
                 projectManager.Project.As<IMSBuildProjectSystem>().Save();
             });

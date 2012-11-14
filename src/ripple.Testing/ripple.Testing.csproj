@@ -146,7 +146,9 @@
     <None Include="data\fubumvc\src\FubuMVC.StructureMap\packages.config" />
     <None Include="data\fubumvc\src\FubuMVC.Tests\packages.config" />
     <None Include="data\fubumvc\src\FubuMVC.WebForms.Testing\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.WebForms\packages.config" />
+    <None Include="data\fubumvc\src\FubuMVC.WebForms\packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="data\fubumvc\src\FubuTestApplication\packages.config" />
     <None Include="data\fubumvc\src\Fubu\packages.config" />
     <None Include="data\fubumvc\src\StoryTellerTesting\packages.config" />
