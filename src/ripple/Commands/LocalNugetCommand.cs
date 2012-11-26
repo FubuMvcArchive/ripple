@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
+using System.Linq;
 
 namespace ripple.Commands
 {
@@ -26,18 +27,22 @@ namespace ripple.Commands
     {
         public override bool Execute(LocalNugetInput input)
         {
-            var commandLine = "pack {0} -Version " + input.VersionFlag;
+            var commandLine = "pack {0} -Version {1}";
             commandLine += " -o " + input.DestinationFlag.FileEscape();
 
             new FileSystem().CreateDirectory(input.DestinationFlag);
 
             input.FindSolutions().Each(solution =>
             {
-                solution.PublishedNugets.Each(spec =>
-                {
-                    Console.WriteLine("Building the nuget spec file at " + spec.Filename);
+                solution.PublishedNugets.Each(spec => {
+                    var version = spec.Dependencies.Any(x => x.Version.Contains("-"))
+                                      ? input.VersionFlag + "-alpha"
+                                      : input.VersionFlag;
 
-                    CLIRunner.RunNuget(commandLine, spec.Filename.FileEscape());
+
+                    Console.WriteLine("Building the nuget spec file at " + spec.Filename + " as version " + version);
+
+                    CLIRunner.RunNuget(commandLine, spec.Filename.FileEscape(), version);
                     ConsoleWriter.PrintHorizontalLine();
                 });
             });
