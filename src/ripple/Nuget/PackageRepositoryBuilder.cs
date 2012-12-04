@@ -13,7 +13,7 @@ namespace ripple.Nuget
 
     public class PackageRepositoryBuilder : IPackageRepositoryBuilder
     {
-        public const string GalleryUrl = "http://packages.nuget.org/v1/FeedService.svc";
+        public const string GalleryUrl = "http://packages.nuget.org/v1/FeedService.svc/";
         private readonly IPackageRepositoryFactory _factory;
 
         public PackageRepositoryBuilder() : this(new PackageRepositoryFactory()) {}

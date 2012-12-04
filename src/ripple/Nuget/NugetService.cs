@@ -52,8 +52,14 @@ namespace ripple.Nuget
         public NugetDependency GetLatest(string nugetName)
         {
             var candidates = _remoteRepository.Search(nugetName, true).Where(x => x.Id == nugetName).OrderBy(x => x.Id).ToList();
-            var package = candidates.Where(x => x.IsLatestVersion).FirstOrDefault();
+            var package = findLatestPackage(candidates);
             return package == null ? null : new NugetDependency(package.Id, package.Version.ToString());
+        }
+
+        private IPackage findLatestPackage(IEnumerable<IPackage> candidates)
+        {
+            return candidates.FirstOrDefault(x => x.IsAbsoluteLatestVersion)
+                   ?? candidates.FirstOrDefault(x => x.IsLatestVersion);
         }
 
         public void Install(NugetDependency dependency)
