@@ -91,6 +91,7 @@
     <Compile Include="Local\IRippleStep.cs" />
     <Compile Include="Local\IRippleStepRunner.cs" />
     <Compile Include="Local\NuspecDocument.cs" />
+    <Compile Include="MSBuild\Classes.cs" />
     <Compile Include="Nuget\INugetService.cs" />
     <Compile Include="Nuget\NugetService.cs" />
     <Compile Include="Nuget\PackageRepositoryBuilder.cs" />
@@ -119,6 +120,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
