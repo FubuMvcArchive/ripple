@@ -32,12 +32,21 @@ namespace ripple.MSBuild
 
         private void fixProject(Project project)
         {
+            project = Project.ReadFrom(project.ProjectFile);
             var file = new CsProjFile(project.ProjectFile);
             bool needsSaved = false;
 
             project.NugetDependencies.Each(dep => {
                 var package = _packages[dep.Name];
+                if (package == null)
+                {
+                    Console.WriteLine("Could not find the IPackage for " + dep.Name);
+                    return;
+                }
+
                 var assemblies = package.AssemblyReferences;
+                if (assemblies == null) return;
+
                 assemblies.Each(assem => {
                     var hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
 
