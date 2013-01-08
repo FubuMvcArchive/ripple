@@ -49,8 +49,9 @@ namespace ripple.MSBuild
 
                 assemblies.Each(assem => {
                     var hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
+                    var assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
 
-                    if (file.AddReference(dep.Name, hintPath) == ReferenceStatus.Changed)
+                    if (file.AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
                     {
                         Console.WriteLine("Updated reference for {0} to {1}", project.ProjectFile, hintPath);
                         needsSaved = true;
