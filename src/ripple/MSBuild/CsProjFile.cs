@@ -1,34 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml;
 using System.Linq;
+using System.Xml;
 using FubuCore;
 
 namespace ripple.MSBuild
 {
-    public class Harness
-    {
-        public void TryIt()
-        {
-            var file = new CsProjFile(@"C:\code\fubumvc\src\FubuMVC.Core\FubuMVC.Core.csproj");
-
-            file.References.Each(x => Debug.WriteLine(x));
-
-            file.AddReference("FubuCore", "c:\\code\\FubuCore\\src\\FubuCore\\bin\\debug\\FubuCore.dll");
-
-            file.Write();
-
-            Debug.WriteLine(file);
-        }
-    }
-
-    public enum ReferenceStatus
-    {
-        Unchanged,
-        Changed
-    }
-
     public class CsProjFile
     {
         public const string Schema = "http://schemas.microsoft.com/developer/msbuild/2003";
@@ -156,17 +133,6 @@ namespace ripple.MSBuild
         public override string ToString()
         {
             return string.Format("Filename: {0}", _filename);
-        }
-    }
-
-    public class Reference
-    {
-        public string Name { get; set; }
-        public string HintPath { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("Name: {0}, HintPath: {1}", Name, HintPath);
         }
     }
 }
