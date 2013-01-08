@@ -45,6 +45,11 @@ namespace ripple.Local
             _version = version ?? string.Empty;
         }
 
+        public string ToNugetFolderName()
+        {
+            return Name + "." + _version;
+        }
+
         public string Name
         {
             get { return _name; }

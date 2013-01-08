@@ -91,6 +91,7 @@
     <Compile Include="Local\IRippleStep.cs" />
     <Compile Include="Local\IRippleStepRunner.cs" />
     <Compile Include="Local\NuspecDocument.cs" />
+    <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\Classes.cs" />
     <Compile Include="Nuget\INugetService.cs" />
     <Compile Include="Nuget\NugetService.cs" />

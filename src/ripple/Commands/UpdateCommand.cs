@@ -10,6 +10,7 @@ using System.Linq;
 using FubuCore.Util;
 using ripple.Directives;
 using ripple.Local;
+using ripple.MSBuild;
 using ripple.Model;
 using ripple.Nuget;
 
@@ -59,6 +60,8 @@ namespace ripple.Commands
             input.FindSolutions().Each(solution =>
             {
                 updateSolution(input, solution, system);
+
+                new ReferenceAttacher(solution).Attach();
             });
 
             var listInput = new ListInput(){
