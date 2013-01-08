@@ -47,6 +47,7 @@ namespace ripple.Commands
                     Console.WriteLine("Creating and publishing Nuget for " + nuget.Name);
 
                     CLIRunner.RunNuget(BuildPack(nuget, input, artifactDirectory));
+
                     CLIRunner.RunNuget(BuildPush(nuget, input, artifactDirectory));
                 });
             });

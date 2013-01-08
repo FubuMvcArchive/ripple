@@ -1,36 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Xml;
 using FubuCore;
 using FubuCore.CommandLine;
-using System.Linq;
 
 namespace ripple.Extract
 {
-    // /guestAuth/app/nuget/v1/FeedService.svc/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip=0&$top=30
-
-    public class ExtractInput
-    {
-        public ExtractInput()
-        {
-            FeedFlag = RippleConstants.FubuTeamCityFeed;
-            MaxFlag = 200;
-        }
-
-        [Description("Directory to dump the nuget files")]
-        public string Directory { get; set; }
-
-        [Description("Nuget feed.  If not specified, will use the Fubu TeamCity")]
-        public string FeedFlag { get; set; }
-        
-
-        [Description("Maximum number of nugets to download, capped at 200 by default")]
-        public int MaxFlag { get; set; }
-    }
-
     [CommandDescription("Extracts all the latest nugets from a remote feed ")]
     public class ExtractCommand : FubuCommand<ExtractInput>
     {
@@ -85,35 +60,6 @@ namespace ripple.Extract
             document.LoadXml(text);
 
             return document;
-        }
-    }
-
-
-    public class NugetFeed
-    {
-        public NugetFeed(string url)
-        {
-            Url = url;
-            File = url.Split('/').Last();
-            Name = File.Split('.').First();
-        }
-
-        public string File { get; set; }
-        public string Name { get; set; }
-        public string Url { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("Name: {0}, Url: {1}, File: {2}", Name, Url, File);
-        }
-
-        public void DownloadTo(string directory)
-        {
-            var file = directory.AppendPath(File);
-            var client = new WebClient();
-
-            Console.WriteLine("Downloading {0} to {1}", Url, file);
-            client.DownloadFile(Url, file);
         }
     }
 }
