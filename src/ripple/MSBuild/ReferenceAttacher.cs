@@ -48,8 +48,15 @@ namespace ripple.MSBuild
                 if (assemblies == null) return;
 
                 assemblies.Each(assem => {
-                    var hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
                     var assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
+
+                    if (assemblyName.StartsWith("System.")) return;
+                    if (assemblyName == "_._") return;
+
+                    var hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
+                    
+
+                    if (file.References.Any(x => x.Matches(assemblyName))) return;
 
                     if (file.AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
                     {
