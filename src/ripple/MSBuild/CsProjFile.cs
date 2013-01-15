@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Xml;
 using FubuCore;
+using NuGet;
+using ripple.Local;
 
 namespace ripple.MSBuild
 {
+    public class TryIt
+    {
+        public void DoIt()
+        {
+            var file = new CsProjFile(@"C:\code\fubumvc\src\FubuMVC.Core\FubuMVC.Core.csproj");
+            Console.WriteLine(file.ToolsVersion);
+        }
+    }
+
     public class CsProjFile
     {
         public const string Schema = "http://schemas.microsoft.com/developer/msbuild/2003";
@@ -29,21 +42,29 @@ namespace ripple.MSBuild
             _document.PreserveWhitespace = false;
             _document.Load(filename);
 
-            _references = new Lazy<IList<Reference>>(() => {
-                return new List<Reference>(readReferences());
-            });
+            _references = new Lazy<IList<Reference>>(() => { return new List<Reference>(readReferences()); });
+        }
+
+        public string ToolsVersion
+        {
+            get { return _document.DocumentElement.GetAttribute("ToolsVersion"); }
+        }
+
+        public IEnumerable<Reference> References
+        {
+            get { return _references.Value; }
         }
 
         public ReferenceStatus AddReference(string name, string hintPath)
         {
-            var reference = FindReference(name);
+            Reference reference = FindReference(name);
             if (reference == null)
             {
-                reference = new Reference{Name = name};
+                reference = new Reference {Name = name};
                 _references.Value.Add(reference);
             }
 
-            var original = reference.HintPath;
+            string original = reference.HintPath;
             reference.HintPath = hintPath;
 
             return original == hintPath ? ReferenceStatus.Unchanged : ReferenceStatus.Changed;
@@ -56,7 +77,7 @@ namespace ripple.MSBuild
 
         public bool RemoveReference(string name)
         {
-            var reference = FindReference(name);
+            Reference reference = FindReference(name);
             if (reference == null) return false;
 
             _references.Value.Remove(reference);
@@ -68,20 +89,20 @@ namespace ripple.MSBuild
         {
             if (_references.IsValueCreated)
             {
-                var nodes = findReferenceNodes();
+                XmlNodeList nodes = findReferenceNodes();
                 foreach (XmlNode node in nodes)
                 {
                     node.ParentNode.RemoveChild(node);
                 }
 
-                var itemGroup = _document.DocumentElement.SelectSingleNode("tns:ItemGroup", _manager);
+                XmlNode itemGroup = _document.DocumentElement.SelectSingleNode("tns:ItemGroup", _manager);
                 _references.Value.OrderBy(x => x.Name).Each(reference => {
-                    var node = (XmlElement) _document.CreateElement(null, "Reference", Schema);
+                    XmlElement node = _document.CreateElement(null, "Reference", Schema);
                     node.SetAttribute("Include", reference.Name);
 
                     if (reference.HintPath.IsNotEmpty())
                     {
-                        var hintPath = _document.CreateElement(null, "HintPath", Schema);
+                        XmlElement hintPath = _document.CreateElement(null, "HintPath", Schema);
                         hintPath.InnerText = reference.HintPath;
                         node.AppendChild(hintPath);
                     }
@@ -91,13 +112,12 @@ namespace ripple.MSBuild
             }
 
 
-
             _document.Save(_filename);
         }
 
         private IEnumerable<Reference> readReferences()
         {
-            var nodes = findReferenceNodes();
+            XmlNodeList nodes = findReferenceNodes();
             foreach (XmlElement node in nodes)
             {
                 var reference = new Reference
@@ -121,18 +141,57 @@ namespace ripple.MSBuild
 
         private XmlNodeList findReferenceNodes()
         {
-            var nodes = _document.DocumentElement.SelectNodes("tns:ItemGroup/tns:Reference", _manager);
+            XmlNodeList nodes = _document.DocumentElement.SelectNodes("tns:ItemGroup/tns:Reference", _manager);
             return nodes;
         }
-
-        public IEnumerable<Reference> References
-        {
-            get { return _references.Value; }
-        } 
 
         public override string ToString()
         {
             return string.Format("Filename: {0}", _filename);
+        }
+
+        public void AddAssemblies(NugetDependency dep, IEnumerable<IPackageAssemblyReference> assemblies)
+        {
+            bool needsSaved = false;
+
+            assemblies = GetCompatibleItemsCore(assemblies).ToList();
+
+            assemblies.Each(assem => {
+                string assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
+
+                if (assemblyName.StartsWith("System.")) return;
+                if (assemblyName == "_._") return;
+
+                string hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
+
+
+                if (References.Any(x => x.Matches(assemblyName))) return;
+
+                if (AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
+                {
+                    Console.WriteLine("Updated reference for {0} to {1}", _filename, hintPath);
+                    needsSaved = true;
+                }
+            });
+
+            if (needsSaved)
+            {
+                Console.WriteLine("Writing changes to " + _filename);
+                Write();
+            }
+        }
+
+        internal static IEnumerable<T> GetCompatibleItemsCore<T>(IEnumerable<T> items) where T : IFrameworkTargetable
+        {
+            IEnumerable<T> compatibleItems;
+
+            // TODO -- this obviously isn't good enough.
+            if (VersionUtility.TryGetCompatibleItems(new FrameworkName(".NETFramework, Version=4.0"), items,
+                                                     out compatibleItems))
+            {
+                return compatibleItems;
+            }
+            return Enumerable.Empty<T>();
         }
     }
 }

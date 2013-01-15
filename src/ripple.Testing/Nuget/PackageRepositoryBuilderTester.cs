@@ -11,7 +11,7 @@ namespace ripple.Testing.Nuget
     [TestFixture]
     public class PackageRepositoryBuilderTester : InteractionContext<PackageRepositoryBuilder>
     {
-        private readonly IEnumerable<string> _extraFeeds = new List<string> { "http://p1.org/", PackageRepositoryBuilder.GalleryUrl };
+        private readonly IEnumerable<string> _extraFeeds = new List<string> { "http://p1.org/", RippleConstants.NugetOrgFeed.First() };
 
         [Test]
         public void build_remote_returns_aggregate()

@@ -13,7 +13,6 @@ namespace ripple.Nuget
 
     public class PackageRepositoryBuilder : IPackageRepositoryBuilder
     {
-        public const string GalleryUrl = "http://packages.nuget.org/v1/FeedService.svc/";
         private readonly IPackageRepositoryFactory _factory;
 
         public PackageRepositoryBuilder() : this(new PackageRepositoryFactory()) {}
@@ -24,7 +23,7 @@ namespace ripple.Nuget
 
         public IPackageRepository BuildRemote(IEnumerable<string> packageSources)
         {
-            var feeds = packageSources.Concat(new[] { GalleryUrl }).Distinct();
+            var feeds = packageSources.Any() ? packageSources.Distinct() : RippleConstants.NugetOrgFeed;
             var repos = new List<IPackageRepository>();
             feeds.Each(f =>
             {

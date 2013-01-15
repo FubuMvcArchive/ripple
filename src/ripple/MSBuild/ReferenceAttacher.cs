@@ -16,6 +16,7 @@ namespace ripple.MSBuild
         private readonly Solution _solution;
         private readonly LocalPackageRepository _repository;
         private readonly Cache<string, IPackage> _packages;
+        private readonly Cache<string, string> _toolsVersionMatch = new Cache<string, string>();
 
         public ReferenceAttacher(Solution solution)
         {
@@ -23,6 +24,7 @@ namespace ripple.MSBuild
             _repository = new LocalPackageRepository(_solution.PackagesFolder());
 
             _packages = new Cache<string, IPackage>(name => _repository.FindPackage(name));
+            _toolsVersionMatch["4.0"] = "net40";
         }
 
         public void Attach()
@@ -34,7 +36,7 @@ namespace ripple.MSBuild
         {
             project = Project.ReadFrom(project.ProjectFile);
             var file = new CsProjFile(project.ProjectFile);
-            bool needsSaved = false;
+            
 
             project.NugetDependencies.Each(dep => {
                 var package = _packages[dep.Name];
@@ -47,30 +49,12 @@ namespace ripple.MSBuild
                 var assemblies = package.AssemblyReferences;
                 if (assemblies == null) return;
 
-                assemblies.Each(assem => {
-                    var assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
+                file.AddAssemblies(dep, assemblies);
 
-                    if (assemblyName.StartsWith("System.")) return;
-                    if (assemblyName == "_._") return;
 
-                    var hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
-                    
-
-                    if (file.References.Any(x => x.Matches(assemblyName))) return;
-
-                    if (file.AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
-                    {
-                        Console.WriteLine("Updated reference for {0} to {1}", project.ProjectFile, hintPath);
-                        needsSaved = true;
-                    }
-                });
             });
 
-            if (needsSaved)
-            {
-                Console.WriteLine("Writing changes to " + file);
-                file.Write();
-            }
+
         }   
     }
 }

@@ -32,6 +32,38 @@ namespace ripple.Commands
         [FlagAlias("feeds", 'z')]
         public string FeedsFlag { get; set; }
 
+        [Description("Include the default nuget.org feeds")]
+        [FlagAlias("nuget-org", 'd')]
+        public bool NugetOrgFeedFlag { get; set; }
+
+        [Description("Include the Fubu TeamCity Nuget feed")]
+        [FlagAlias("fubu", 't')]
+        public bool FubuTeamCityFeedFlag { get; set; }
+
+        public IEnumerable<string> GetFeeds()
+        {
+            if (FubuTeamCityFeedFlag)
+            {
+                yield return RippleConstants.FubuTeamCityFeed;
+            }
+
+            if (NugetOrgFeedFlag)
+            {
+                foreach (var feed in RippleConstants.NugetOrgFeed)
+                {
+                    yield return feed;
+                }
+            }
+
+            if (FeedsFlag.IsNotEmpty())
+            {
+                foreach (var feed in FeedsFlag.ParseFeeds())
+                {
+                    yield return feed;
+                }
+            }
+        } 
+
         public IEnumerable<string> GetAllNugetNames(Solution solution)
         {
             if (NugetFlag.IsNotEmpty())
@@ -77,7 +109,9 @@ namespace ripple.Commands
 
         private void updateSolution(UpdateInput input, Solution solution, FileSystem system)
         {
-            var feeds = input.FeedsFlag.ParseFeeds();
+            var feeds = input.GetFeeds().Distinct().ToList();
+
+
             var nugetService = new NugetService(solution, feeds);
             system.CreateDirectory(solution.PackagesFolder());
 
