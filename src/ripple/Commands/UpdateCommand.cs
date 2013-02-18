@@ -168,9 +168,17 @@ namespace ripple.Commands
             {
                 var nugetName = _nugetNames.Dequeue();
                 var latest = _nugetService.GetLatest(nugetName);
-                Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
 
-                Action action = () => {
+	            if (latest == null)
+	            {
+		            Console.WriteLine("Could not find {0}", nugetName);
+	            }
+	            else
+	            {
+		            Console.WriteLine("Latest of {0} is {1}", latest.Name, latest.Version);
+	            }
+
+	            Action action = () => {
                     var projects = _plan.UseLatestNuget(latest);
                     Console.WriteLine("Trying to remove assemblies from package {0} from project(s) {1}", nugetName, projects.Select(x => x.ProjectName).Join(", "));
                     projects.Each(proj => proj.CsProjFile.RemoveAssembliesFromPackage(nugetName));

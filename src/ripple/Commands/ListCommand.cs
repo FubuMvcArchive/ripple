@@ -34,20 +34,22 @@ namespace ripple.Commands
             Mode = ListMode.all;
         }
 
-        [RequiredUsage("filtered")]
         public ListMode Mode { get; set; }
 
         [Description("If set, only shows information for a named nuget")]
         public string NugetFlag { get; set; }
     }
 
-    [Usage("all", "list everything")]
-    [Usage("filtered", "filters the information shown")]
     [CommandDescription("lists information about the current ripple environment")]
     public class ListCommand : FubuCommand<ListInput>
     {
         private Func<NugetDependency, bool> _nugetDependencyFilter = dep => true;
 
+	    public ListCommand()
+	    {
+		    Usage("lists all projects");
+		    Usage("filters the information shown").Arguments(x => x.Mode, x => x.NugetFlag);
+	    }
 
         public override bool Execute(ListInput input)
         {

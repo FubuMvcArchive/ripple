@@ -4,11 +4,15 @@ using FubuCore.CommandLine;
 
 namespace ripple.Commands
 {
-    [Usage("list", "List the text in the .gitignore file for this folder")]
-    [Usage("add", "Adds a line to the .gitignore file for this folder if it does not already exist")]
     [CommandDescription("Lists or adds values to the .gitignore file in this directory")]
     public class GitIgnoreCommand : FubuCommand<GitIgnoreInput>
     {
+	    public GitIgnoreCommand()
+	    {
+		    Usage("List the text in the .gitignore file for this folder");
+		    Usage("Adds a line to the .gitignore file for this folder if it does not already exist").Arguments(x => x.Line);
+	    }
+
         public override bool Execute(GitIgnoreInput input)
         {
             var fileSystem = new FileSystem();
