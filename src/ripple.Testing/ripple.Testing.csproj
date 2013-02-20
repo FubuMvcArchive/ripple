@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildSolutionTester.cs" />
+    <Compile Include="CheckXmlPersistence.cs" />
     <Compile Include="Commands\ExtractSampleCommandTester.cs" />
     <Compile Include="Commands\PublishCommandTester.cs" />
     <Compile Include="Commands\UpdateInputTester.cs" />
@@ -74,6 +75,9 @@
     <Compile Include="MakeTestData.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
+    <Compile Include="New\ProjectReaderTester.cs" />
+    <Compile Include="New\SolutionPersistence.cs" />
+    <Compile Include="New\SolutionTester.cs" />
     <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\PackageRepositoryBuilderTester.cs" />

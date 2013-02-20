@@ -13,3 +13,6 @@ src/FubuMVC.6.0.ReSharper
 src/CommonAssemblyInfo.cs
 TestResult.xml
 results/
+bottles.cmd
+storyteller.cmd
+run_st.cmd

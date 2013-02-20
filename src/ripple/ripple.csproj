@@ -99,6 +99,17 @@
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
+    <Compile Include="New\Feed.cs" />
+    <Compile Include="New\IDependencyReader.cs" />
+    <Compile Include="New\ProjectFiles.cs" />
+    <Compile Include="New\IProjectReader.cs" />
+    <Compile Include="New\ISolutionBuilder.cs" />
+    <Compile Include="New\ISolutionFiles.cs" />
+    <Compile Include="New\NugetDependency.cs" />
+    <Compile Include="New\Project.cs" />
+    <Compile Include="New\Solution.cs" />
+    <Compile Include="New\DescribeCommand.cs" />
+    <Compile Include="New\UpdateMode.cs" />
     <Compile Include="Nuget\INugetService.cs" />
     <Compile Include="Nuget\NugetService.cs" />
     <Compile Include="Nuget\PackageRepositoryBuilder.cs" />
