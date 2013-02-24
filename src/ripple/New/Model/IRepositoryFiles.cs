@@ -4,25 +4,25 @@ using System.IO;
 using System.Reflection;
 using FubuCore;
 
-namespace ripple.New
+namespace ripple.New.Model
 {
-	public interface ISolutionFiles
+	public interface IRepositoryFiles
 	{
 		string RootDir { get; }
 		string BuildSupportDir { get; }
 
 		void ForProjects(Action<ProjectFiles> action);
 
-		Solution LoadSolution();
+		Repository LoadSolution();
 	}
 
-	public class SolutionFiles : ISolutionFiles
+	public class RepositoryFiles : IRepositoryFiles
 	{
 		public const string ConfigFile = "ripple.config";
 
 		private readonly IFileSystem _fileSystem;
 
-		public SolutionFiles()
+		public RepositoryFiles()
 		{
 			BuildSupportDir = Assembly.GetExecutingAssembly().Location.ToFullPath();
 			RootDir = BuildSupportDir.ParentDirectory().ParentDirectory();
@@ -50,11 +50,11 @@ namespace ripple.New
 			});
 		}
 
-		public Solution LoadSolution()
+		public Repository LoadSolution()
 		{
 			var file = Path.Combine(RootDir, ConfigFile);
 			
-			var solution = _fileSystem.LoadFromFile<Solution>(file);
+			var solution = _fileSystem.LoadFromFile<Repository>(file);
 			solution.Path = file;
 
 			return solution;

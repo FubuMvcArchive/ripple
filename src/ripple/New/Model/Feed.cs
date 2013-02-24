@@ -1,8 +1,9 @@
 ﻿using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.Descriptions;
+using ripple.New.Nuget;
 
-namespace ripple.New
+namespace ripple.New.Model
 {
 	public class Feed : DescribesItself
 	{
@@ -29,6 +30,27 @@ namespace ripple.New
 		public string Url { get; set; }
 		[XmlAttribute]
 		public UpdateMode Mode { get; set; }
+
+		public INugetFeed GetNugetFeed()
+		{
+			if (Mode == UpdateMode.Fixed)
+			{
+				return new NugetFeed(Url);
+			}
+
+			return new FloatingFeed(Url);
+		}
+
+		public IRemoteNuget Find(NugetQuery query)
+		{
+			var feed = GetNugetFeed();
+			if (Mode == UpdateMode.Float || query.IsFloat())
+			{
+				return feed.FindLatest(query);
+			}
+
+			return feed.Find(query);
+		}
 
 		protected bool Equals(Feed other)
 		{

@@ -37,8 +37,9 @@
     <Reference Include="FubuTestingSupport">
       <HintPath>..\packages\FubuTestingSupport.1.0.1.228\lib\FubuTestingSupport.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet">
-      <HintPath>..\..\NuGet.exe</HintPath>
+    <Reference Include="NuGet.Core, Version=2.2.31210.9045, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nuget.Core.2.2.0\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
@@ -75,9 +76,14 @@
     <Compile Include="MakeTestData.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
+    <Compile Include="New\Nuget\NugetFeedSmokeTester.cs" />
+    <Compile Include="New\Nuget\NugetFileTester.cs" />
+    <Compile Include="New\Nuget\NugetFolderCacheTester.cs" />
+    <Compile Include="New\Nuget\NugetXmlFeedTester.cs" />
+    <Compile Include="New\Nuget\RemoteNugetTester.cs" />
     <Compile Include="New\ProjectReaderTester.cs" />
     <Compile Include="New\SolutionPersistence.cs" />
-    <Compile Include="New\SolutionTester.cs" />
+    <Compile Include="New\RepositoryTester.cs" />
     <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\PackageRepositoryBuilderTester.cs" />

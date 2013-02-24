@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ripple.New
+namespace ripple.New.Model
 {
 	public interface IProjectReader
 	{

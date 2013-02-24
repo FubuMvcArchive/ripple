@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Rhino.Mocks;
 using ripple.New;
+using ripple.New.Model;
 
 namespace ripple.Testing.New
 {

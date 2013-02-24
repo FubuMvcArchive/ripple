@@ -1,8 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using NuGet;
-using NuGet.Common;
 using NUnit.Framework;
 
 

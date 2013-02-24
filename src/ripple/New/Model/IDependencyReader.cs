@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml;
 using FubuCore;
 
-namespace ripple.New
+namespace ripple.New.Model
 {
 	public interface IDependencyReader
 	{

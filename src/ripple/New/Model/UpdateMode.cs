@@ -1,4 +1,4 @@
-﻿namespace ripple.New
+﻿namespace ripple.New.Model
 {
 	public enum UpdateMode
 	{

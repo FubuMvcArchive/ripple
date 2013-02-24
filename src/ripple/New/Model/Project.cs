@@ -5,7 +5,7 @@ using FubuCore;
 using FubuCore.Descriptions;
 using ripple.MSBuild;
 
-namespace ripple.New
+namespace ripple.New.Model
 {
 	public class Project : DescribesItself
 	{
@@ -23,7 +23,7 @@ namespace ripple.New
 		public string Name { get; private set; }
 		public string FilePath { get; private set; }
 		public CsProjFile CsProj { get { return _csProj.Value; } }
-		public Solution Solution { get; set; }
+		public Repository Repository { get; set; }
 
 		public IEnumerable<NugetDependency> Dependencies
 		{

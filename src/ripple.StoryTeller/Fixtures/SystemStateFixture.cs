@@ -2,6 +2,7 @@
 using StoryTeller;
 using StoryTeller.Engine;
 using ripple.New;
+using ripple.New.Model;
 
 namespace ripple.StoryTeller.Fixtures
 {
@@ -9,7 +10,7 @@ namespace ripple.StoryTeller.Fixtures
 	{
 		public const string SolutionName = "ripple-test";
 
-		private Solution _config;
+		private Repository _config;
 
 		public SystemStateFixture()
 		{
@@ -18,7 +19,7 @@ namespace ripple.StoryTeller.Fixtures
 
 		public override void SetUp(ITestContext context)
 		{
-			_config = new Solution { Name = SolutionName };
+			_config = new Repository { Name = SolutionName };
 		}
 
 		public override void TearDown()
@@ -48,7 +49,7 @@ namespace ripple.StoryTeller.Fixtures
 			var project = _config.FindProject(Name);
 			if (project == null)
 			{
-				project = new Project(FilePath) { Solution = _config};
+				project = new Project(FilePath) { Repository = _config};
 				_config.AddProject(project);
 			}
 

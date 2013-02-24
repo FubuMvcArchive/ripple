@@ -1,9 +1,5 @@
-﻿using System.Diagnostics;
-using System.IO;
-using FubuCore.Util;
+﻿using FubuCore.Util;
 using NuGet;
-using System.Linq;
-using NuGet.Common;
 using ripple.Local;
 using ripple.Model;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿using FubuCore;
 using FubuCore.Descriptions;
 
-namespace ripple.New
+namespace ripple.New.Model
 {
 	public class NugetDependency : DescribesItself
 	{

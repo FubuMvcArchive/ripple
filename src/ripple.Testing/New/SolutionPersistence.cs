@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using ripple.New;
+using ripple.New.Model;
 
 namespace ripple.Testing.New
 {
@@ -9,7 +9,7 @@ namespace ripple.Testing.New
 		[Test]
 		public void persists_and_retrieves_the_solution()
 		{
-			var solution = new Solution
+			var solution = new Repository
 				{
 					Name = "Test",
 					BuildCommand = "rake",

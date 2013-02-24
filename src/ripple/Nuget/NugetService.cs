@@ -5,10 +5,8 @@ using System.Xml;
 using FubuCore.CommandLine;
 using FubuCore.Util;
 using NuGet;
-using NuGet.Common;
 using ripple.Local;
 using ripple.Model;
-using Console = NuGet.Common.Console;
 using System.Linq;
 using FubuCore;
 
@@ -22,7 +20,7 @@ namespace ripple.Nuget
 
         private readonly PhysicalFileSystem _fileSystem;
         private readonly PackageManager _packageManager;
-        private readonly Console _console;
+        private readonly NullLogger _logger;
         private readonly DefaultPackagePathResolver _pathResolver;
         private readonly Cache<NugetDependency, IPackage> _packages;
 
@@ -37,9 +35,9 @@ namespace ripple.Nuget
             _fileSystem = new PhysicalFileSystem(solution.PackagesFolder());
             _pathResolver = new DefaultPackagePathResolver(_fileSystem);
             
-            _console = new Console();
+            _logger = new NullLogger();
             _packageManager = new PackageManager(_sourceRepository, _pathResolver, _fileSystem, _localRepository){
-                Logger = _console
+                Logger = _logger
             };
 
             _packages = new Cache<NugetDependency, IPackage>(dep =>
@@ -95,19 +93,19 @@ namespace ripple.Nuget
                 // TODO -- make _packages return Task<result>
                 projectManager.AddPackageReference(_packages[dep], true, true);
 
-                projectManager.Project.As<IMSBuildProjectSystem>().Save();
+                //projectManager.Project.As<IMSBuildProjectSystem>().Save();
             });
         }
 
         private ProjectManager buildProjectManager(Project project)
         {
-            var projectSystem = new MSBuildProjectSystem(project.ProjectFile);
+            //var projectSystem = new MSBuildProjectSystem(project.ProjectFile);
             var fileSystem = new PhysicalFileSystem(project.ProjectFile.ParentDirectory());
-            var sharedPackageRepository = new SharedPackageRepository(_pathResolver, fileSystem);
+            var sharedPackageRepository = new SharedPackageRepository(_pathResolver, fileSystem, _fileSystem);
             var projectRepository = new PackageReferenceRepository(fileSystem, sharedPackageRepository);
 
-            return new ProjectManager(_sourceRepository, _pathResolver, projectSystem, projectRepository){
-                Logger = _console
+            return new ProjectManager(_sourceRepository, _pathResolver, null, projectRepository){
+                Logger = _logger
             };
         }
 

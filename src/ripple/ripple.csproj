@@ -38,8 +38,9 @@
     <Reference Include="FubuCore">
       <HintPath>..\packages\FubuCore.1.0.1.228\lib\FubuCore.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet">
-      <HintPath>..\..\NuGet.exe</HintPath>
+    <Reference Include="NuGet.Core, Version=1.6.30117.9648, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nuget.Core.2.2.0\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -99,17 +100,45 @@
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
-    <Compile Include="New\Feed.cs" />
-    <Compile Include="New\IDependencyReader.cs" />
-    <Compile Include="New\ProjectFiles.cs" />
-    <Compile Include="New\IProjectReader.cs" />
-    <Compile Include="New\ISolutionBuilder.cs" />
-    <Compile Include="New\ISolutionFiles.cs" />
-    <Compile Include="New\NugetDependency.cs" />
-    <Compile Include="New\Project.cs" />
-    <Compile Include="New\Solution.cs" />
-    <Compile Include="New\DescribeCommand.cs" />
-    <Compile Include="New\UpdateMode.cs" />
+    <Compile Include="New\Commands\RestoreCommand.cs" />
+    <Compile Include="New\Model\Feed.cs" />
+    <Compile Include="New\Model\IDependencyReader.cs" />
+    <Compile Include="New\Model\IRippleStep.cs" />
+    <Compile Include="New\Model\IRippleStepRunner.cs" />
+    <Compile Include="New\Model\ProjectFiles.cs" />
+    <Compile Include="New\Model\IProjectReader.cs" />
+    <Compile Include="New\Model\IRepositoryBuilder.cs" />
+    <Compile Include="New\Model\IRepositoryFiles.cs" />
+    <Compile Include="New\Model\NugetDependency.cs" />
+    <Compile Include="New\Model\Project.cs" />
+    <Compile Include="New\Model\Repository.cs" />
+    <Compile Include="New\Commands\DescribeCommand.cs" />
+    <Compile Include="New\Model\RippleException.cs" />
+    <Compile Include="New\Model\RipplePlan.cs" />
+    <Compile Include="New\Model\UpdateMode.cs" />
+    <Compile Include="New\Nuget\FloatingFeed.cs" />
+    <Compile Include="New\Nuget\IFloatingFeed.cs" />
+    <Compile Include="New\Nuget\INugetCache.cs" />
+    <Compile Include="New\Nuget\INugetDownloader.cs" />
+    <Compile Include="New\Nuget\INugetFeed.cs" />
+    <Compile Include="New\Nuget\INugetFile.cs" />
+    <Compile Include="New\Nuget\INugetStorage.cs" />
+    <Compile Include="New\Nuget\IRemoteNuget.cs" />
+    <Compile Include="New\Nuget\NugetFeed.cs" />
+    <Compile Include="New\Nuget\NugetFile.cs" />
+    <Compile Include="New\Nuget\NugetFolderCache.cs" />
+    <Compile Include="New\Nuget\NugetQuery.cs" />
+    <Compile Include="New\Nuget\NugetStability.cs" />
+    <Compile Include="New\Nuget\NugetXmlFeed.cs" />
+    <Compile Include="New\Nuget\RemoteNuget.cs" />
+    <Compile Include="New\Nuget\RemotePackageDownloader.cs" />
+    <Compile Include="New\Nuget\UrlNugetDownloader.cs" />
+    <Compile Include="New\RippleLog.cs" />
+    <Compile Include="New\Steps\DownloadMissingNugets.cs" />
+    <Compile Include="New\Steps\EnsurePackagesDirectory.cs" />
+    <Compile Include="New\Steps\ExplodeDownloadedNugets.cs" />
+    <Compile Include="New\Steps\MissingNugets.cs" />
+    <Compile Include="New\Steps\ValidateRepository.cs" />
     <Compile Include="Nuget\INugetService.cs" />
     <Compile Include="Nuget\NugetService.cs" />
     <Compile Include="Nuget\PackageRepositoryBuilder.cs" />
