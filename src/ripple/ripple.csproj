@@ -124,6 +124,7 @@
     <Compile Include="New\Nuget\INugetFile.cs" />
     <Compile Include="New\Nuget\INugetStorage.cs" />
     <Compile Include="New\Nuget\IRemoteNuget.cs" />
+    <Compile Include="New\Nuget\LocalDependencies.cs" />
     <Compile Include="New\Nuget\NugetFeed.cs" />
     <Compile Include="New\Nuget\NugetFile.cs" />
     <Compile Include="New\Nuget\NugetFolderCache.cs" />

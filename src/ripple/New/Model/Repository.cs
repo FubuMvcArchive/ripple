@@ -110,6 +110,13 @@ namespace ripple.New.Model
 			var projectsList = description.AddList("Projects", Projects);
 			projectsList.Label = "Projects";
 
+			var local = LocalDependencies();
+			if (local.Any())
+			{
+				var localList = description.AddList("Local", local.All());
+				localList.Label = "Local";
+			}
+
 			var missing = MissingNugets();
 			if (missing.Any())
 			{
@@ -138,6 +145,11 @@ namespace ripple.New.Model
 			{
 				throw exception;
 			}
+		}
+
+		public LocalDependencies LocalDependencies()
+		{
+			return Storage.Dependencies(this);
 		}
 
 		public static Repository For(SolutionInput input)

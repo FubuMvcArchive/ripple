@@ -2,12 +2,13 @@
 using System.IO;
 using System.Linq;
 using FubuCore;
+using FubuCore.Descriptions;
 using NuGet;
 
 namespace ripple.New.Nuget
 {
 	// TODO -- Maybe we have a separate implementation to do the NuGet style?
-    public class NugetFile : INugetFile
+    public class NugetFile : INugetFile, DescribesItself
     {
         private readonly string _path;
 
@@ -61,5 +62,11 @@ namespace ripple.New.Nuget
             var repository = new LocalPackageRepository(directory);
             return repository.FindPackagesById(Name).Single();
         }
+
+	    public void Describe(Description description)
+	    {
+		    description.Title = Name;
+		    description.ShortDescription = "Version: {0}, IsPreRelease: {1}".ToFormat(Version, IsPreRelease);
+	    }
     }
 }

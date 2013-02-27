@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FubuCore;
 using ripple.New.Model;
 
@@ -10,8 +11,7 @@ namespace ripple.New.Nuget
 		// Gonna use this for the ripple clean command
 		void Clean(Repository repository);
 
-		// Don't need to expose the pathing information here
-		void Download(Repository repository, INugetFile file);
+		LocalDependencies Dependencies(Repository repository);
 
 		IEnumerable<NugetQuery> MissingFiles(Repository repository);
 	}
@@ -25,9 +25,17 @@ namespace ripple.New.Nuget
 			_fileSystem.CleanDirectory(repository.PackagesDirectory());
 		}
 
-		public void Download(Repository repository, INugetFile file)
+		public LocalDependencies Dependencies(Repository repository)
 		{
-			file.ExplodeTo(repository.PackagesDirectory());
+			var nupkgSet = new FileSet
+			{
+				DeepSearch = true,
+				Include = "*.nupkg"
+			};
+
+			return new LocalDependencies(_fileSystem
+				.FindFiles(repository.PackagesDirectory(), nupkgSet)
+				.Select(x => new NugetFile(x)).ToList());
 		}
 
 		public IEnumerable<NugetQuery> MissingFiles(Repository repository)

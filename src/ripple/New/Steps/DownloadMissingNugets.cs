@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Descriptions;
 using ripple.New.Commands;
@@ -20,34 +21,40 @@ namespace ripple.New.Steps
 
 			if (missing.Any())
 			{
-				var feeds = Repository.Feeds;
-				missing.Each(query =>
-				{
-					IRemoteNuget nuget = null;
-					foreach (var feed in feeds)
-					{
-						try
-						{
-							nuget = feed.Find(query);
-							break;
-						}
-						catch (ArgumentOutOfRangeException)
-						{
-						}
-					}
+				var tasks = missing.Select(x => restore(x, Repository, nugets)).ToArray();
 
-					if (nuget == null)
-					{
-						RippleLog.Error("Could not find {0}".ToFormat(query), new ArgumentOutOfRangeException());
-						return;
-					}
-
-					RippleLog.Debug("Downloading " + nuget.ToString());
-					nugets.Add(nuget.DownloadTo(Repository.PackagesDirectory()));
-				});
+				Task.WaitAll(tasks);
 			}
 
 			runner.Set(new MissingNugets(nugets));
+		}
+
+		private static Task restore(NugetQuery query, Repository repository, List<INugetFile> nugets)
+		{
+			return Task.Factory.StartNew(() =>
+			{
+				IRemoteNuget nuget = null;
+				foreach (var feed in repository.Feeds)
+				{
+					try
+					{
+						nuget = feed.Find(query);
+						break;
+					}
+					catch (ArgumentOutOfRangeException)
+					{
+					}
+				}
+
+				if (nuget == null)
+				{
+					RippleLog.Error("Could not find {0}".ToFormat(query), new ArgumentOutOfRangeException());
+					return;
+				}
+
+				RippleLog.Debug("Downloading " + nuget);
+				nugets.Add(nuget.DownloadTo(repository.PackagesDirectory()));
+			});
 		}
 
 		public void Describe(Description description)
