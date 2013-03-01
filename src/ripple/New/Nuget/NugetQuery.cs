@@ -52,7 +52,7 @@ namespace ripple.New.Nuget
 			}
 		}
 
-		public static NugetQuery For(NugetDependency dependency)
+		public static NugetQuery For(Dependency dependency)
 		{
 			return new NugetQuery
 			{

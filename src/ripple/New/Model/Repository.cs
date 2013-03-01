@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.Descriptions;
@@ -16,6 +17,7 @@ namespace ripple.New.Model
 		private readonly IList<Project> _projects = new List<Project>();
 		private readonly IList<Feed> _feeds = new List<Feed>();
 		private readonly Lazy<IEnumerable<NugetQuery>> _missing;
+		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates; 
 
 		public Repository()
 		{
@@ -25,6 +27,7 @@ namespace ripple.New.Model
 			FastBuildCommand = "rake compile";
 
 			_missing = new Lazy<IEnumerable<NugetQuery>>(() => Storage.MissingFiles(this));
+			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
 		}
 
 		public string Name { get; set; }
@@ -84,7 +87,7 @@ namespace ripple.New.Model
 			_feeds.Clear();
 		}
 
-		public IEnumerable<NugetDependency> AllDependencies()
+		public IEnumerable<Dependency> AllDependencies()
 		{
 			return _projects.SelectMany(x => x.Dependencies);
 		}
@@ -151,6 +154,39 @@ namespace ripple.New.Model
 		{
 			return Storage.Dependencies(this);
 		}
+
+		public IEnumerable<IRemoteNuget> Updates()
+		{
+			return _updates.Value;
+		}
+
+		private IEnumerable<IRemoteNuget> findUpdates()
+		{
+			var nugets = new List<IRemoteNuget>();
+			var tasks = AllDependencies().Select(x => updateDependency(nugets, x)).ToArray();
+
+			Task.WaitAll(tasks);
+
+			return nugets;
+		}
+
+		public IRemoteNuget LatestFor(Dependency dependency)
+		{
+			var query = NugetQuery.For(dependency);
+			var local = LocalDependencies().Get(dependency);
+
+			return _feeds
+				.Select(feed => feed.FindLatest(query))
+				.Where(x => x.Version > local.Version)
+				.OrderByDescending(x => x.Version)
+				.FirstOrDefault();
+		}
+
+		private Task updateDependency(IList<IRemoteNuget> nugets, Dependency dependency)
+		{
+			return Task.Factory.StartNew(() => LatestFor(dependency).CallIfNotNull(nugets.Add));
+		}
+
 
 		public static Repository For(SolutionInput input)
 		{

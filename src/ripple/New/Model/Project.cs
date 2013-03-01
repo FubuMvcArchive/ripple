@@ -9,7 +9,7 @@ namespace ripple.New.Model
 {
 	public class Project : DescribesItself
 	{
-		private readonly IList<NugetDependency> _dependencies = new List<NugetDependency>();
+		private readonly IList<Dependency> _dependencies = new List<Dependency>();
 		private readonly Lazy<CsProjFile> _csProj;
 
 		public Project(string filePath)
@@ -25,7 +25,7 @@ namespace ripple.New.Model
 		public CsProjFile CsProj { get { return _csProj.Value; } }
 		public Repository Repository { get; set; }
 
-		public IEnumerable<NugetDependency> Dependencies
+		public IEnumerable<Dependency> Dependencies
 		{
 			get { return _dependencies; }
 			set
@@ -35,12 +35,12 @@ namespace ripple.New.Model
 			}
 		}
 
-		public void AddDependency(NugetDependency dependency)
+		public void AddDependency(Dependency dependency)
 		{
 			_dependencies.Fill(dependency);
 		}
 
-		public void RemoveDependency(NugetDependency dependency)
+		public void RemoveDependency(Dependency dependency)
 		{
 			_dependencies.Remove(dependency);
 		}

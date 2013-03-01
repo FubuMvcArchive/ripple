@@ -13,8 +13,8 @@ namespace ripple.Testing.New
 		private IDependencyReader r2;
 		private ProjectReader theReader;
 
-		private NugetDependency d1;
-		private NugetDependency d2;
+		private Dependency d1;
+		private Dependency d2;
 
 		private Project theProject;
 		
@@ -24,8 +24,8 @@ namespace ripple.Testing.New
 			r1 = MockRepository.GenerateStub<IDependencyReader>();
 			r2 = MockRepository.GenerateStub<IDependencyReader>();
 
-			d1 = new NugetDependency("FubuCore", "1.0.0.215");
-			d2 = new NugetDependency("Bottles", "1.0.0.212");
+			d1 = new Dependency("FubuCore", "1.0.0.215");
+			d2 = new Dependency("Bottles", "1.0.0.212");
 
 			var project = new Project("MyProject.csproj");
 

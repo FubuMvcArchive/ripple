@@ -26,7 +26,7 @@ namespace ripple.New.Steps
 				Task.WaitAll(tasks);
 			}
 
-			runner.Set(new MissingNugets(nugets));
+			runner.Set(new DownloadedNugets(nugets));
 		}
 
 		private static Task restore(NugetQuery query, Repository repository, List<INugetFile> nugets)

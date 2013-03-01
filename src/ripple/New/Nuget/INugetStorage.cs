@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FubuCore;
 using ripple.New.Model;
@@ -33,27 +32,21 @@ namespace ripple.New.Nuget
 				Include = "*.nupkg"
 			};
 
-			return new LocalDependencies(_fileSystem
+			var files = _fileSystem
 				.FindFiles(repository.PackagesDirectory(), nupkgSet)
-				.Select(x => new NugetFile(x)).ToList());
+				.Select(x => new NugetFile(x)).ToList();
+
+			return new LocalDependencies(files);
 		}
 
 		public IEnumerable<NugetQuery> MissingFiles(Repository repository)
 		{
-			var missing = new List<NugetQuery>();
+			var dependencies = Dependencies(repository);
 
-			repository.AllDependencies().Each(nuget =>
-			{
-				var packages = repository.PackagesDirectory();
-				var packageDir = Path.Combine(packages, nuget.Name);
-
-				if (!_fileSystem.DirectoryExists(packageDir))
-				{
-					missing.Fill(NugetQuery.For(nuget));
-				}
-			});
-
-			return missing;
+			return repository
+				.AllDependencies()
+				.Where(dependency => !dependencies.Has(dependency))
+				.Select(NugetQuery.For);
 		}
 	}
 }

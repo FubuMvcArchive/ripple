@@ -9,7 +9,7 @@ namespace ripple.New.Model
 	public interface IDependencyReader
 	{
 		bool Matches(Project project, string projectDir);
-		IEnumerable<NugetDependency> Read(Project project, string projectDir);
+		IEnumerable<Dependency> Read(Project project, string projectDir);
 	}
 
 	public class NuGetDependencyReader : IDependencyReader
@@ -23,7 +23,7 @@ namespace ripple.New.Model
 			return _fileSystem.FileExists(projectDir, PackagesConfig);
 		}
 
-		public IEnumerable<NugetDependency> Read(Project project, string projectDir)
+		public IEnumerable<Dependency> Read(Project project, string projectDir)
 		{
 			var document = new XmlDocument();
 			document.Load(Path.Combine(projectDir, PackagesConfig));
@@ -31,7 +31,7 @@ namespace ripple.New.Model
 			return ReadFrom(document);
 		}
 
-		public static IEnumerable<NugetDependency> ReadFrom(XmlDocument document)
+		public static IEnumerable<Dependency> ReadFrom(XmlDocument document)
 		{
 			foreach (XmlElement element in document.SelectNodes("//package"))
 			{
@@ -39,9 +39,9 @@ namespace ripple.New.Model
 			}
 		}
 
-		public static NugetDependency ReadFrom(XmlElement element)
+		public static Dependency ReadFrom(XmlElement element)
 		{
-			return new NugetDependency(element.GetAttribute("id"), element.GetAttribute("version"));
+			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"));
 		}
 	}
 
@@ -56,9 +56,9 @@ namespace ripple.New.Model
 			return _fileSystem.FileExists(projectDir, RippleDependenciesConfig);
 		}
 
-		public IEnumerable<NugetDependency> Read(Project project, string projectDir)
+		public IEnumerable<Dependency> Read(Project project, string projectDir)
 		{
-			var dependencies = new List<NugetDependency>();
+			var dependencies = new List<Dependency>();
 			_fileSystem.ReadTextFile(Path.Combine(projectDir, RippleDependenciesConfig), line =>
 			{
 				if (line.IsEmpty()) return;
@@ -71,7 +71,7 @@ namespace ripple.New.Model
 					version = values[1].Trim();
 				}
 
-				dependencies.Add(new NugetDependency(values[0].Trim(), version));
+				dependencies.Add(new Dependency(values[0].Trim(), version));
 			});
 			
 			return dependencies;

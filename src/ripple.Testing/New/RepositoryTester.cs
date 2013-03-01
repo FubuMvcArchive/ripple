@@ -24,8 +24,8 @@ namespace ripple.Testing.New
 		public void all_dependencies()
 		{
 			var repository = new Repository();
-			var d1 = new NugetDependency("D1");
-			var d2 = new NugetDependency("D2");
+			var d1 = new Dependency("D1");
+			var d2 = new Dependency("D2");
 
 			var p1 = new Project("Project1.csproj");
 			p1.AddDependency(d1);

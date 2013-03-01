@@ -4,11 +4,11 @@ using ripple.New.Nuget;
 
 namespace ripple.New.Steps
 {
-	public class MissingNugets : IEnumerable<INugetFile>
+	public class DownloadedNugets : IEnumerable<INugetFile>
 	{
 		private readonly IEnumerable<INugetFile> _nugets;
 
-		public MissingNugets(IEnumerable<INugetFile> nugets)
+		public DownloadedNugets(IEnumerable<INugetFile> nugets)
 		{
 			_nugets = nugets;
 		}

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using FubuCore.Descriptions;
 
 namespace ripple.New.Nuget
 {
-    public class UrlNugetDownloader : INugetDownloader
+    public class UrlNugetDownloader : INugetDownloader, DescribesItself
     {
         private readonly string _url;
 
@@ -51,5 +52,10 @@ namespace ripple.New.Nuget
         {
             get { return UrlComparerInstance; }
         }
+
+	    public void Describe(Description description)
+	    {
+		    description.ShortDescription = "Download from " + _url;
+	    }
     }
 }

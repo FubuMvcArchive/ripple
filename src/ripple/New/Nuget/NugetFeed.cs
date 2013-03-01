@@ -38,6 +38,7 @@ namespace ripple.New.Nuget
 
         public IRemoteNuget FindLatest(NugetQuery query)
         {
+			RippleLog.Debug("Searching for " + query);
             var candidates = _repository.Search(query.Name, query.Stability == NugetStability.Anything)
                                         .Where(x => x.Id == query.Name).OrderBy(x => x.Id).ToList();
 

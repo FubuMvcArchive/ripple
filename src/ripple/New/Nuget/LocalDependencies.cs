@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -17,20 +18,19 @@ namespace ripple.New.Nuget
 			return _dependencies.Any();
 		}
 
+		public INugetFile Get(Dependency dependency)
+		{
+			return _dependencies.Single(x => x.Name == dependency.Name);
+		}
+
+		public bool Has(Dependency dependency)
+		{
+			return _dependencies.Any(x => x.Name == dependency.Name);
+		}
+
 		public IEnumerable<INugetFile> All()
 		{
 			return _dependencies;
-		}
-
-		public bool ShouldUpdate(IRemoteNuget nuget)
-		{
-			var dependency = _dependencies.SingleOrDefault(x => x.Name == nuget.Name);
-			if (dependency == null)
-			{
-				return false;
-			}
-
-			return nuget.Version > dependency.Version;
 		}
 	}
 }

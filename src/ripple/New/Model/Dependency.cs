@@ -1,20 +1,21 @@
 ﻿using FubuCore;
 using FubuCore.Descriptions;
+using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
-	public class NugetDependency : DescribesItself
+	public class Dependency : DescribesItself
 	{
 		private readonly string _name;
 		private readonly string _version;
 
-		public NugetDependency(string name)
+		public Dependency(string name)
 		{
 			_name = name;
 			_version = string.Empty;
 		}
 
-		public NugetDependency(string name, string version)
+		public Dependency(string name, string version)
 		{
 			_name = name;
 			_version = version ?? string.Empty;
@@ -30,7 +31,7 @@ namespace ripple.New.Model
 			get { return _version; }
 		}
 
-		public bool Equals(NugetDependency other)
+		public bool Equals(Dependency other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
@@ -41,8 +42,8 @@ namespace ripple.New.Model
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != typeof(NugetDependency)) return false;
-			return Equals((NugetDependency)obj);
+			if (obj.GetType() != typeof(Dependency)) return false;
+			return Equals((Dependency)obj);
 		}
 
 		public override int GetHashCode()
@@ -62,6 +63,11 @@ namespace ripple.New.Model
 		{
 			description.Title = Name;
 			description.ShortDescription = Version.IsEmpty() ? UpdateMode.Float.ToString() : Version;
+		}
+
+		public bool HasUpdate(IRemoteNuget nuget)
+		{
+			return false;
 		}
 	}
 }

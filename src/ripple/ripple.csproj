@@ -16,7 +16,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -101,6 +101,7 @@
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
     <Compile Include="New\Commands\RestoreCommand.cs" />
+    <Compile Include="New\Commands\UpdateCommand.cs" />
     <Compile Include="New\Model\Feed.cs" />
     <Compile Include="New\Model\IDependencyReader.cs" />
     <Compile Include="New\Model\IRippleStep.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="New\Model\IProjectReader.cs" />
     <Compile Include="New\Model\IRepositoryBuilder.cs" />
     <Compile Include="New\Model\IRepositoryFiles.cs" />
-    <Compile Include="New\Model\NugetDependency.cs" />
+    <Compile Include="New\Model\Dependency.cs" />
     <Compile Include="New\Model\Project.cs" />
     <Compile Include="New\Model\Repository.cs" />
     <Compile Include="New\Commands\DescribeCommand.cs" />
@@ -131,14 +132,15 @@
     <Compile Include="New\Nuget\NugetQuery.cs" />
     <Compile Include="New\Nuget\NugetStability.cs" />
     <Compile Include="New\Nuget\NugetXmlFeed.cs" />
+    <Compile Include="New\Nuget\RemoteDependencies.cs" />
     <Compile Include="New\Nuget\RemoteNuget.cs" />
     <Compile Include="New\Nuget\RemotePackageDownloader.cs" />
     <Compile Include="New\Nuget\UrlNugetDownloader.cs" />
     <Compile Include="New\RippleLog.cs" />
     <Compile Include="New\Steps\DownloadMissingNugets.cs" />
-    <Compile Include="New\Steps\EnsurePackagesDirectory.cs" />
     <Compile Include="New\Steps\ExplodeDownloadedNugets.cs" />
-    <Compile Include="New\Steps\MissingNugets.cs" />
+    <Compile Include="New\Steps\DownloadedNugets.cs" />
+    <Compile Include="New\Steps\UpdateDependencies.cs" />
     <Compile Include="New\Steps\ValidateRepository.cs" />
     <Compile Include="Nuget\INugetService.cs" />
     <Compile Include="Nuget\NugetService.cs" />

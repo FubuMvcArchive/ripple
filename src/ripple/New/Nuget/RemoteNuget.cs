@@ -1,9 +1,10 @@
 ﻿using FubuCore;
+using FubuCore.Descriptions;
 using NuGet;
 
 namespace ripple.New.Nuget
 {
-    public class RemoteNuget : IRemoteNuget
+    public class RemoteNuget : IRemoteNuget, DescribesItself
     {
         private readonly INugetDownloader _downloader;
 
@@ -51,5 +52,10 @@ namespace ripple.New.Nuget
                 return "{0}.{1}-{2}.nupkg".ToFormat(Name, Version.Version.ToString(), Version.SpecialVersion);
             }    
         }
+
+	    public void Describe(Description description)
+	    {
+		    description.ShortDescription = "Download {0}".ToFormat(Filename);
+	    }
     }
 }

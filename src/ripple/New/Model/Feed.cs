@@ -31,6 +31,7 @@ namespace ripple.New.Model
 		[XmlAttribute]
 		public UpdateMode Mode { get; set; }
 
+		// This is stupid
 		public INugetFeed GetNugetFeed()
 		{
 			if (Mode == UpdateMode.Fixed)
@@ -41,6 +42,7 @@ namespace ripple.New.Model
 			return new FloatingFeed(Url);
 		}
 
+		// This is stupid
 		public IRemoteNuget Find(NugetQuery query)
 		{
 			var feed = GetNugetFeed();
@@ -50,6 +52,13 @@ namespace ripple.New.Model
 			}
 
 			return feed.Find(query);
+		}
+
+		// This is stupid
+		public IRemoteNuget FindLatest(NugetQuery query)
+		{
+			var feed = GetNugetFeed();
+			return feed.FindLatest(query);
 		}
 
 		protected bool Equals(Feed other)

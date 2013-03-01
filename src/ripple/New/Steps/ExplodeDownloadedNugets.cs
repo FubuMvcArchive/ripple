@@ -11,7 +11,7 @@ namespace ripple.New.Steps
 
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
-			var missing = runner.Get<MissingNugets>();
+			var missing = runner.Get<DownloadedNugets>();
 			missing.Each(nuget =>
 			{
 				var dir = Repository.PackagesDirectory();

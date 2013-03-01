@@ -53,7 +53,7 @@ namespace ripple.StoryTeller.Fixtures
 				_config.AddProject(project);
 			}
 
-			project.AddDependency(new NugetDependency(Dependency, DependencyVersion));
+			project.AddDependency(new Dependency(Dependency, DependencyVersion));
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using ripple.New.Nuget;
+﻿using FubuCore;
+using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
@@ -11,11 +12,14 @@ namespace ripple.New.Model
 	{
 		private readonly IRepositoryFiles _files;
 		private readonly IProjectReader _project;
+		private readonly IFileSystem _fileSystem;
 
 		public RepositoryBuilder(IRepositoryFiles files, IProjectReader project)
 		{
 			_files = files;
 			_project = project;
+
+			_fileSystem = new FileSystem();
 		}
 
 		public Repository Build()
@@ -30,6 +34,8 @@ namespace ripple.New.Model
 
 			// Maybe switch on the configure mode? Nuget vs. Ripple
 			repository.UseStorage(new RippleStorage());
+
+			_fileSystem.CreateDirectory(repository.PackagesDirectory());
 
 			return repository;
 		}
