@@ -25,7 +25,7 @@ namespace ripple.New.Commands
 	{
 		public override bool Execute(ReReInput input)
 		{
-			var repository = Repository.For(input);
+			var repository = Solution.For(input);
 			var packagesDir = repository.PackagesDirectory();
 
 			RippleLog.Info("Restoring dependencies for solution {0} to {1}".ToFormat(repository.Name, packagesDir));

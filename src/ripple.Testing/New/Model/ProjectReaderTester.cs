@@ -1,10 +1,9 @@
 ﻿using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
-using ripple.New;
 using ripple.New.Model;
 
-namespace ripple.Testing.New
+namespace ripple.Testing.New.Model
 {
 	[TestFixture]
 	public class ProjectReaderTester
@@ -29,13 +28,13 @@ namespace ripple.Testing.New
 
 			var project = new Project("MyProject.csproj");
 
-			r1.Stub(x => x.Matches(project, "MyProject")).Return(false);
-			r2.Stub(x => x.Matches(project, "MyProject")).Return(true);
+			r1.Stub(x => x.Matches(project)).Return(false);
+			r2.Stub(x => x.Matches(project)).Return(true);
 
-			r2.Stub(x => x.Read(project, "MyProject")).Return(new[] {d1, d2});
+			r2.Stub(x => x.Read(project)).Return(new[] {d1, d2});
 
 			theReader = new ProjectReader(new[] {r1, r2});
-			theProject = theReader.Read(new ProjectFiles("MyProject.csproj", "MyProject"));
+			theProject = theReader.Read("MyProject.csproj");
 		}
 
 		[Test]

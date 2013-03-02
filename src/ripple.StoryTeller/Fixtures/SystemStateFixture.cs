@@ -10,16 +10,16 @@ namespace ripple.StoryTeller.Fixtures
 	{
 		public const string SolutionName = "ripple-test";
 
-		private Repository _config;
+		private Solution _config;
 
 		public SystemStateFixture()
 		{
-			Title = "The repository";
+			Title = "The Solution";
 		}
 
 		public override void SetUp(ITestContext context)
 		{
-			_config = new Repository { Name = SolutionName };
+			_config = new Solution { Name = SolutionName };
 		}
 
 		public override void TearDown()
@@ -49,7 +49,7 @@ namespace ripple.StoryTeller.Fixtures
 			var project = _config.FindProject(Name);
 			if (project == null)
 			{
-				project = new Project(FilePath) { Repository = _config};
+				project = new Project(FilePath) { Solution = _config};
 				_config.AddProject(project);
 			}
 

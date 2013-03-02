@@ -13,7 +13,7 @@ namespace ripple.New.Commands
 	{
 		public override bool Execute(ReUpdateInput input)
 		{
-			var repository = Repository.For(input);
+			var repository = Solution.For(input);
 
 			RippleLog.Info("Updating dependencies for solution {0}".ToFormat(repository.Name));
 

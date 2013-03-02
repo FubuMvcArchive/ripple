@@ -1,23 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 using ripple.New.Commands;
+using ripple.New.Model;
 using ripple.New.Steps;
 
-namespace ripple.New.Model
+namespace ripple.New
 {
 	public class RipplePlan : DescribesItself, LogTopic
 	{
-		private readonly Repository _repository;
+		private readonly Solution _solution;
 		private readonly SolutionInput _input;
 		private readonly IRippleStepRunner _runner;
 		private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
 
-		public RipplePlan(Repository repository, SolutionInput input, IRippleStepRunner runner)
+		public RipplePlan(Solution solution, SolutionInput input, IRippleStepRunner runner)
 		{
-			_repository = repository;
+			_solution = solution;
 			_input = input;
 			_runner = runner;
 		}
@@ -25,13 +26,13 @@ namespace ripple.New.Model
 		public RipplePlan Step<T>()
 			where T : IRippleStep, new()
 		{
-			_steps.Add(new T { Repository = _repository });
+			_steps.Add(new T { Solution = _solution });
 			return this;
 		}
 
 		public void Describe(Description description)
 		{
-			description.ShortDescription = _repository.Name;
+			description.ShortDescription = _solution.Name;
 
 			var list = description.AddList("RippleSteps", _steps);
 			list.Label = "Ripple Steps";
@@ -49,7 +50,7 @@ namespace ripple.New.Model
 				catch (Exception ex)
 				{
 					RippleLog.Error("Error executing {0}".ToFormat(step.GetType().Name), ex);
-					RippleLog.InfoMessage(_repository);
+					RippleLog.InfoMessage(_solution);
 					return false;
 				}
 			}
@@ -57,10 +58,10 @@ namespace ripple.New.Model
 			return true;
 		}
 
-		public static RipplePlan For<T>(SolutionInput input, Repository repository)
+		public static RipplePlan For<T>(SolutionInput input, Solution solution)
 		{
 			var runner = new RippleStepRunner(new FileSystem());
-			return new RipplePlan(repository, input, runner).Step<ValidateRepository>();
+			return new RipplePlan(solution, input, runner).Step<ValidateRepository>();
 		}
 	}
 }

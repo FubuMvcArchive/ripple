@@ -8,13 +8,13 @@ namespace ripple.New.Model
 {
 	public class RippleException : FubuAssertionException, DescribesItself
 	{
-		private readonly Repository _repository;
+		private readonly Solution _solution;
 		private readonly IList<RippleProblem> _problems = new List<RippleProblem>();
  
-		public RippleException(Repository repository) 
-			: base("Problems found for " + repository.Name)
+		public RippleException(Solution solution) 
+			: base("Problems found for " + solution.Name)
 		{
-			_repository = repository;
+			_solution = solution;
 		}
 
 		protected RippleException(SerializationInfo info, StreamingContext context) 
@@ -34,7 +34,7 @@ namespace ripple.New.Model
 
 		public void Describe(Description description)
 		{
-			description.ShortDescription = "Problems were found for " + _repository.Name;
+			description.ShortDescription = "Problems were found for " + _solution.Name;
 
 			var list = description.AddList("Problems", _problems);
 			list.Label = "Problems";

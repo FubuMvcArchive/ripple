@@ -16,14 +16,16 @@ namespace ripple.New.Model
 		{
 			FilePath = filePath;
 			Name = Path.GetFileNameWithoutExtension(filePath);
-			
+			Directory = filePath.DirectoryPath();
+
 			_csProj = new Lazy<CsProjFile>(() => new CsProjFile(filePath));
 		}
 
 		public string Name { get; private set; }
+		public string Directory { get; private set; }
 		public string FilePath { get; private set; }
 		public CsProjFile CsProj { get { return _csProj.Value; } }
-		public Repository Repository { get; set; }
+		public Solution Solution { get; set; }
 
 		public IEnumerable<Dependency> Dependencies
 		{

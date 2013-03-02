@@ -1,48 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using FubuCore;
 
 namespace ripple.New.Model
 {
 	public interface IDependencyReader
 	{
-		bool Matches(Project project, string projectDir);
-		IEnumerable<Dependency> Read(Project project, string projectDir);
-	}
-
-	public class NuGetDependencyReader : IDependencyReader
-	{
-		public const string PackagesConfig = "packages.config";
-
-		private readonly IFileSystem _fileSystem = new FileSystem();
-
-		public bool Matches(Project project, string projectDir)
-		{
-			return _fileSystem.FileExists(projectDir, PackagesConfig);
-		}
-
-		public IEnumerable<Dependency> Read(Project project, string projectDir)
-		{
-			var document = new XmlDocument();
-			document.Load(Path.Combine(projectDir, PackagesConfig));
-
-			return ReadFrom(document);
-		}
-
-		public static IEnumerable<Dependency> ReadFrom(XmlDocument document)
-		{
-			foreach (XmlElement element in document.SelectNodes("//package"))
-			{
-				yield return ReadFrom(element);
-			}
-		}
-
-		public static Dependency ReadFrom(XmlElement element)
-		{
-			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"));
-		}
+		bool Matches(Project project);
+		IEnumerable<Dependency> Read(Project project);
 	}
 
 	public class RippleDependencyReader : IDependencyReader
@@ -51,15 +17,15 @@ namespace ripple.New.Model
 
 		private readonly IFileSystem _fileSystem = new FileSystem();
 
-		public bool Matches(Project project, string projectDir)
+		public bool Matches(Project project)
 		{
-			return _fileSystem.FileExists(projectDir, RippleDependenciesConfig);
+			return _fileSystem.FileExists(project.Directory, RippleDependenciesConfig);
 		}
 
-		public IEnumerable<Dependency> Read(Project project, string projectDir)
+		public IEnumerable<Dependency> Read(Project project)
 		{
 			var dependencies = new List<Dependency>();
-			_fileSystem.ReadTextFile(Path.Combine(projectDir, RippleDependenciesConfig), line =>
+			_fileSystem.ReadTextFile(Path.Combine(project.Directory, RippleDependenciesConfig), line =>
 			{
 				if (line.IsEmpty()) return;
 

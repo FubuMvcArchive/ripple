@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using FubuCore;
 using FubuCore.Util;
 
-namespace ripple.New.Model
+namespace ripple.New
 {
 	public interface IRippleStepRunner
 	{

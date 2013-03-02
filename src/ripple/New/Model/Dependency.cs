@@ -1,6 +1,5 @@
 ﻿using FubuCore;
 using FubuCore.Descriptions;
-using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
@@ -63,11 +62,6 @@ namespace ripple.New.Model
 		{
 			description.Title = Name;
 			description.ShortDescription = Version.IsEmpty() ? UpdateMode.Float.ToString() : Version;
-		}
-
-		public bool HasUpdate(IRemoteNuget nuget)
-		{
-			return false;
 		}
 	}
 }

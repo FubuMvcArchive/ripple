@@ -5,7 +5,7 @@ namespace ripple.New.Model
 {
 	public interface IProjectReader
 	{
-		Project Read(ProjectFiles files);
+		Project Read(string projectFile);
 	}
 
 	public class ProjectReader : IProjectReader
@@ -17,12 +17,12 @@ namespace ripple.New.Model
 			_dependencies = dependencies;
 		}
 
-		public Project Read(ProjectFiles files)
+		public Project Read(string projectFile)
 		{
-			var project = new Project(files.ProjectFile);
+			var project = new Project(projectFile);
 
-			var reader = _dependencies.First(x => x.Matches(project, files.ProjectDir));
-			var dependencies = reader.Read(project, files.ProjectDir);
+			var reader = _dependencies.First(x => x.Matches(project));
+			var dependencies = reader.Read(project);
 
 			dependencies.Each(d => project.AddDependency(d));
 

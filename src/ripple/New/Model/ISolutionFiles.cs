@@ -6,58 +6,59 @@ using FubuCore;
 
 namespace ripple.New.Model
 {
-	public interface IRepositoryFiles
+	public interface ISolutionFiles
 	{
 		string RootDir { get; }
 		string BuildSupportDir { get; }
 
-		void ForProjects(Action<ProjectFiles> action);
+		void ForProjects(Action<string> action);
 
-		Repository LoadSolution();
+		Solution LoadSolution();
 	}
 
-	public class RepositoryFiles : IRepositoryFiles
+	public class SolutionFiles : ISolutionFiles
 	{
 		public const string ConfigFile = "ripple.config";
 
 		private readonly IFileSystem _fileSystem;
 
-		public RepositoryFiles()
+		public SolutionFiles(IFileSystem fileSystem)
 		{
 			BuildSupportDir = Assembly.GetExecutingAssembly().Location.ToFullPath();
 			RootDir = BuildSupportDir.ParentDirectory().ParentDirectory();
 
 			SrcDir = Path.Combine(RootDir, "src");
 
-			_fileSystem = new FileSystem();
+			_fileSystem = fileSystem;
 		}
 
-		public string RootDir { get; private set; }
-		public string BuildSupportDir { get; private set; }
-		public string SrcDir { get; private set; }
+		public string RootDir { get; set; }
+		public string BuildSupportDir { get; set; }
+		public string SrcDir { get; set; }
 
-		public void ForProjects(Action<ProjectFiles> action)
+		public void ForProjects(Action<string> action)
 		{
 			var csProjSet = new FileSet()
 			{
 				Include = "*.csproj"
 			};
 
-			_fileSystem.FindFiles(SrcDir, csProjSet).Each(file =>
-			{
-				var projectFiles = new ProjectFiles(file, file.DirectoryPath());
-				action(projectFiles);
-			});
+			_fileSystem.FindFiles(SrcDir, csProjSet).Each(action);
 		}
 
-		public Repository LoadSolution()
+		public Solution LoadSolution()
 		{
 			var file = Path.Combine(RootDir, ConfigFile);
 			
-			var solution = _fileSystem.LoadFromFile<Repository>(file);
+			var solution = _fileSystem.LoadFromFile<Solution>(file);
 			solution.Path = file;
 
 			return solution;
+		}
+
+		public static SolutionFiles Basic()
+		{
+			return new SolutionFiles(new FileSystem());
 		}
 	}
 }

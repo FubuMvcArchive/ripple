@@ -8,23 +8,23 @@ namespace ripple.New.Nuget
 	public interface INugetStorage
 	{
 		// Gonna use this for the ripple clean command
-		void Clean(Repository repository);
+		void Clean(Solution solution);
 
-		LocalDependencies Dependencies(Repository repository);
+		LocalDependencies Dependencies(Solution solution);
 
-		IEnumerable<NugetQuery> MissingFiles(Repository repository);
+		IEnumerable<NugetQuery> MissingFiles(Solution solution);
 	}
 
 	public class RippleStorage : INugetStorage
 	{
 		private readonly IFileSystem _fileSystem = new FileSystem();
 
-		public void Clean(Repository repository)
+		public void Clean(Solution solution)
 		{
-			_fileSystem.CleanDirectory(repository.PackagesDirectory());
+			_fileSystem.CleanDirectory(solution.PackagesDirectory());
 		}
 
-		public LocalDependencies Dependencies(Repository repository)
+		public LocalDependencies Dependencies(Solution solution)
 		{
 			var nupkgSet = new FileSet
 			{
@@ -33,17 +33,17 @@ namespace ripple.New.Nuget
 			};
 
 			var files = _fileSystem
-				.FindFiles(repository.PackagesDirectory(), nupkgSet)
+				.FindFiles(solution.PackagesDirectory(), nupkgSet)
 				.Select(x => new NugetFile(x)).ToList();
 
 			return new LocalDependencies(files);
 		}
 
-		public IEnumerable<NugetQuery> MissingFiles(Repository repository)
+		public IEnumerable<NugetQuery> MissingFiles(Solution solution)
 		{
-			var dependencies = Dependencies(repository);
+			var dependencies = Dependencies(solution);
 
-			return repository
+			return solution
 				.AllDependencies()
 				.Where(dependency => !dependencies.Has(dependency))
 				.Select(NugetQuery.For);

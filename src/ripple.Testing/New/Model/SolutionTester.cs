@@ -1,29 +1,28 @@
 ﻿using FubuTestingSupport;
 using NUnit.Framework;
-using ripple.New;
 using ripple.New.Model;
 
-namespace ripple.Testing.New
+namespace ripple.Testing.New.Model
 {
 	[TestFixture]
-	public class RepositoryTester
+	public class SolutionTester
 	{
 		[Test]
 		public void adding_a_project_sets_the_solution()
 		{
-			var solution = new Repository();
+			var solution = new Solution();
 			var project = new Project("MyProject.csproj");
 
 			solution.AddProject(project);
 			solution.Projects.ShouldHaveTheSameElementsAs(project);
 
-			project.Repository.ShouldBeTheSameAs(solution);
+			project.Solution.ShouldBeTheSameAs(solution);
 		}
 
 		[Test]
 		public void all_dependencies()
 		{
-			var repository = new Repository();
+			var repository = new Solution();
 			var d1 = new Dependency("D1");
 			var d2 = new Dependency("D2");
 

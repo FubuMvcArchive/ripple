@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using ripple.New.Model;
 
-namespace ripple.Testing.New
+namespace ripple.Testing.New.Model
 {
 	[TestFixture]
 	public class SolutionPersistence
@@ -9,7 +9,7 @@ namespace ripple.Testing.New
 		[Test]
 		public void persists_and_retrieves_the_solution()
 		{
-			var solution = new Repository
+			var solution = new Solution
 				{
 					Name = "Test",
 					BuildCommand = "rake",

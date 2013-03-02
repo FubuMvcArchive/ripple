@@ -7,14 +7,14 @@ namespace ripple.New.Steps
 {
 	public class ExplodeDownloadedNugets : IRippleStep, DescribesItself
 	{
-		public Repository Repository { get; set; }
+		public Solution Solution { get; set; }
 
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
 			var missing = runner.Get<DownloadedNugets>();
 			missing.Each(nuget =>
 			{
-				var dir = Repository.PackagesDirectory();
+				var dir = Solution.PackagesDirectory();
 				RippleLog.Debug("Exploding " + nuget.ToString());
 				nuget.ExplodeTo(dir);
 			});
@@ -22,7 +22,7 @@ namespace ripple.New.Steps
 
 		public void Describe(Description description)
 		{
-			description.ShortDescription = "Explode nugets at " + Repository.PackagesDirectory();
+			description.ShortDescription = "Explode nugets at " + Solution.PackagesDirectory();
 		}
 	}
 }

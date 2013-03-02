@@ -12,14 +12,14 @@ using ripple.New.Nuget;
 namespace ripple.New.Model
 {
 	[XmlType("ripple")]
-	public class Repository : DescribesItself, LogTopic
+	public class Solution : DescribesItself, LogTopic
 	{
 		private readonly IList<Project> _projects = new List<Project>();
 		private readonly IList<Feed> _feeds = new List<Feed>();
 		private readonly Lazy<IEnumerable<NugetQuery>> _missing;
 		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates; 
 
-		public Repository()
+		public Solution()
 		{
 			NugetSpecFolder = "packaging/nuget";
 			SourceFolder = "src";
@@ -78,7 +78,7 @@ namespace ripple.New.Model
 
 		public void AddProject(Project project)
 		{
-			project.Repository = this;
+			project.Solution = this;
 			_projects.Fill(project);
 		}
 
@@ -104,7 +104,7 @@ namespace ripple.New.Model
 
 		public void Describe(Description description)
 		{
-			description.Title = "Repository \"{0}\"".ToFormat(Name);
+			description.Title = "Solution \"{0}\"".ToFormat(Name);
 			description.ShortDescription = Path;
 
 			var feedsList = description.AddList("Feeds", Feeds);
@@ -188,9 +188,9 @@ namespace ripple.New.Model
 		}
 
 
-		public static Repository For(SolutionInput input)
+		public static Solution For(SolutionInput input)
 		{
-			var builder = RepositoryBuilder.Basic();
+			var builder = SolutionBuilder.Basic();
 
 			// TODO -- Need to allow a specific solution
 			return builder.Build();

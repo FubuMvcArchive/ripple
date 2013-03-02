@@ -6,16 +6,16 @@ namespace ripple.New.Steps
 {
 	public class ValidateRepository : IRippleStep, DescribesItself
 	{
-		public Repository Repository { get; set; }
+		public Solution Solution { get; set; }
 
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
-			Repository.AssertIsValid();
+			Solution.AssertIsValid();
 		}
 
 		public void Describe(Description description)
 		{
-			description.ShortDescription = "Validate " + Repository.Name;
+			description.ShortDescription = "Validate " + Solution.Name;
 		}
 	}
 }
