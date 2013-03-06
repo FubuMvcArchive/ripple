@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -20,14 +21,14 @@ namespace ripple.New.Nuget
             get { return _url; }
         }
 
-        public IRemoteNuget Find(NugetQuery query)
+		public IRemoteNuget Find(Dependency query)
         {
             var versionSpec = new VersionSpec(SemanticVersion.Parse(query.Version));
             var package = _repository.FindPackages(query.Name, versionSpec, query.Stability == NugetStability.Anything, true).SingleOrDefault();
 
             if (package == null)
             {
-                throw new ArgumentOutOfRangeException("query", "Could not find " + query);
+	            return null;
             }
             
             return new RemoteNuget(package);
@@ -36,7 +37,7 @@ namespace ripple.New.Nuget
         }
 
 
-        public IRemoteNuget FindLatest(NugetQuery query)
+		public IRemoteNuget FindLatest(Dependency query)
         {
 			RippleLog.Debug("Searching for " + query);
             var candidates = _repository.Search(query.Name, query.Stability == NugetStability.Anything)
@@ -48,7 +49,7 @@ namespace ripple.New.Nuget
 
             if (candidate == null)
             {
-                throw new ArgumentOutOfRangeException("query", "Could not find " + query);
+	            return null;
             }
 
             return new RemoteNuget(candidate);

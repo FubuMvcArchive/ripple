@@ -16,7 +16,8 @@ namespace ripple.New.Model
 	{
 		private readonly IList<Project> _projects = new List<Project>();
 		private readonly IList<Feed> _feeds = new List<Feed>();
-		private readonly Lazy<IEnumerable<NugetQuery>> _missing;
+		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
+		private readonly Lazy<IEnumerable<Dependency>> _missing;
 		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates; 
 
 		public Solution()
@@ -26,7 +27,14 @@ namespace ripple.New.Model
 			BuildCommand = "rake";
 			FastBuildCommand = "rake compile";
 
-			_missing = new Lazy<IEnumerable<NugetQuery>>(() => Storage.MissingFiles(this));
+			AddFeed(Feed.Fubu);
+			AddFeed(Feed.NuGetV2);
+			AddFeed(Feed.NuGetV1);
+
+			UseStorage(new RippleStorage());
+			UseFeedService(new FeedService());
+
+			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
 		}
 
@@ -39,6 +47,8 @@ namespace ripple.New.Model
 
 		[XmlIgnore]
 		public INugetStorage Storage { get; private set; }
+		[XmlIgnore]
+		public IFeedService FeedService { get; private set; }
 
 		public string PackagesDirectory()
 		{
@@ -48,6 +58,11 @@ namespace ripple.New.Model
 		public void UseStorage(INugetStorage storage)
 		{
 			Storage = storage;
+		}
+
+		public void UseFeedService(IFeedService service)
+		{
+			FeedService = service;
 		}
 
 		[XmlIgnore]
@@ -71,6 +86,16 @@ namespace ripple.New.Model
 			}
 		}
 
+		public Dependency[] Dependencies
+		{
+			get { return _configuredDependencies.ToArray(); }
+			set
+			{
+				_configuredDependencies.Clear();
+				_configuredDependencies.AddRange(value);
+			}
+		}
+
 		public void AddFeed(Feed feed)
 		{
 			_feeds.Fill(feed);
@@ -82,19 +107,29 @@ namespace ripple.New.Model
 			_projects.Fill(project);
 		}
 
+		public void AddDependency(Dependency dependency)
+		{
+			_configuredDependencies.Fill(dependency);
+		}
+
+		public Dependency FindDependency(string name)
+		{
+			return _configuredDependencies.SingleOrDefault(x => x.Name == name);
+		}
+
 		public void ClearFeeds()
 		{
 			_feeds.Clear();
 		}
 
-		public IEnumerable<Dependency> AllDependencies()
-		{
-			return _projects.SelectMany(x => x.Dependencies);
-		}
-
-		public IEnumerable<NugetQuery> MissingNugets()
+		public IEnumerable<Dependency> MissingNugets()
 		{
 			return _missing.Value;
+		}
+
+		public IRemoteNuget Restore(Dependency dependency)
+		{
+			return FeedService.NugetFor(this, dependency);
 		}
 
 		public Project FindProject(string name)
@@ -162,31 +197,8 @@ namespace ripple.New.Model
 
 		private IEnumerable<IRemoteNuget> findUpdates()
 		{
-			var nugets = new List<IRemoteNuget>();
-			var tasks = AllDependencies().Select(x => updateDependency(nugets, x)).ToArray();
-
-			Task.WaitAll(tasks);
-
-			return nugets;
+			return FeedService.UpdatesFor(this);
 		}
-
-		public IRemoteNuget LatestFor(Dependency dependency)
-		{
-			var query = NugetQuery.For(dependency);
-			var local = LocalDependencies().Get(dependency);
-
-			return _feeds
-				.Select(feed => feed.FindLatest(query))
-				.Where(x => x.Version > local.Version)
-				.OrderByDescending(x => x.Version)
-				.FirstOrDefault();
-		}
-
-		private Task updateDependency(IList<IRemoteNuget> nugets, Dependency dependency)
-		{
-			return Task.Factory.StartNew(() => LatestFor(dependency).CallIfNotNull(nugets.Add));
-		}
-
 
 		public static Solution For(SolutionInput input)
 		{

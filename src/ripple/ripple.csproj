@@ -101,11 +101,14 @@
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
     <Compile Include="New\Commands\RestoreCommand.cs" />
+    <Compile Include="New\Commands\SolutionInput.cs" />
     <Compile Include="New\Commands\UpdateCommand.cs" />
     <Compile Include="New\IRippleStep.cs" />
     <Compile Include="New\IRippleStepRunner.cs" />
     <Compile Include="New\Model\Feed.cs" />
+    <Compile Include="New\Model\FeedRegistry.cs" />
     <Compile Include="New\Model\IDependencyReader.cs" />
+    <Compile Include="New\Model\IFeedService.cs" />
     <Compile Include="New\Model\NuGetDependencyReader.cs" />
     <Compile Include="New\Model\IProjectReader.cs" />
     <Compile Include="New\Model\ISolutionBuilder.cs" />
@@ -128,7 +131,6 @@
     <Compile Include="New\Nuget\NugetFeed.cs" />
     <Compile Include="New\Nuget\NugetFile.cs" />
     <Compile Include="New\Nuget\NugetFolderCache.cs" />
-    <Compile Include="New\Nuget\NugetQuery.cs" />
     <Compile Include="New\Nuget\NugetStability.cs" />
     <Compile Include="New\Nuget\NugetXmlFeed.cs" />
     <Compile Include="New\Nuget\RemoteDependencies.cs" />

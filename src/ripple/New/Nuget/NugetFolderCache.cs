@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using FubuCore.Util;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -35,7 +36,7 @@ namespace ripple.New.Nuget
             });
         }
 
-        public INugetFile Latest(NugetQuery query)
+		public INugetFile Latest(Dependency query)
         {
             IEnumerable<INugetFile> files = AllFiles().Where(x => x.Name == query.Name).ToList();
             if (query.Stability == NugetStability.ReleasedOnly)
@@ -56,9 +57,9 @@ namespace ripple.New.Nuget
             return
                 new FileSystem().FindFiles(_folder, new FileSet {Include = "*.nupkg"})
                                 .Select(file => new NugetFile(file));
-        } 
+        }
 
-        public INugetFile Find(NugetQuery query)
+		public INugetFile Find(Dependency query)
         {
             return
                 AllFiles()

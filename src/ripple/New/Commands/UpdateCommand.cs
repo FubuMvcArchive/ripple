@@ -7,24 +7,21 @@ namespace ripple.New.Commands
 {
 	public class ReUpdateInput : SolutionInput
 	{
+		public override string DescribePlan(Solution solution)
+		{
+			return "Updating dependencies for solution {0}".ToFormat(solution.Name);
+		}
 	}
 
 	public class ReUpdateCommand : FubuCommand<ReUpdateInput>
 	{
 		public override bool Execute(ReUpdateInput input)
 		{
-			var repository = Solution.For(input);
-
-			RippleLog.Info("Updating dependencies for solution {0}".ToFormat(repository.Name));
-
-			var plan = RipplePlan
-				.For<ReUpdateInput>(input, repository)
+			return RipplePlan
+				.For<ReUpdateInput>(input)
 				.Step<UpdateDependencies>()
-				.Step<ExplodeDownloadedNugets>();
-
-			RippleLog.DebugMessage(plan);
-
-			return plan.Execute();
+				.Step<ExplodeDownloadedNugets>()
+				.Execute();
 		}
 	}
 }

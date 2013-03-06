@@ -11,8 +11,8 @@ namespace ripple.New.Commands
 	{
 		public override bool Execute(DescribeInput input)
 		{
-			var repository = Solution.For(input);
-			RippleLog.DebugMessage(repository);
+			var solution = Solution.For(input);
+			RippleLog.DebugMessage(solution);
 
 			return true;
 		}

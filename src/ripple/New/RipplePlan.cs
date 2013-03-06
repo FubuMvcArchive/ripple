@@ -26,7 +26,15 @@ namespace ripple.New
 		public RipplePlan Step<T>()
 			where T : IRippleStep, new()
 		{
-			_steps.Add(new T { Solution = _solution });
+			Step(new T());
+			return this;
+		}
+
+		public RipplePlan Step(IRippleStep step)
+		{
+			step.Solution = _solution;
+			_steps.Add(step);
+
 			return this;
 		}
 
@@ -41,6 +49,8 @@ namespace ripple.New
 
 		public bool Execute()
 		{
+			RippleLog.DebugMessage(this);
+
 			foreach (var step in _steps)
 			{
 				try
@@ -58,8 +68,19 @@ namespace ripple.New
 			return true;
 		}
 
+		public static RipplePlan For<T>(SolutionInput input)
+		{
+			return For<T>(input, Solution.For(input));
+		}
+
 		public static RipplePlan For<T>(SolutionInput input, Solution solution)
 		{
+			var description = input.DescribePlan(solution);
+			if (description.IsNotEmpty())
+			{
+				RippleLog.Info(description);
+			}
+
 			var runner = new RippleStepRunner(new FileSystem());
 			return new RipplePlan(solution, input, runner).Step<ValidateRepository>();
 		}

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FubuCore;
 using FubuCore.Descriptions;
 using ripple.New.Commands;
 using ripple.New.Model;
@@ -29,28 +27,11 @@ namespace ripple.New.Steps
 			runner.Set(new DownloadedNugets(nugets));
 		}
 
-		private static Task restore(NugetQuery query, Solution solution, List<INugetFile> nugets)
+		private static Task restore(Dependency query, Solution solution, List<INugetFile> nugets)
 		{
 			return Task.Factory.StartNew(() =>
 			{
-				IRemoteNuget nuget = null;
-				foreach (var feed in solution.Feeds)
-				{
-					try
-					{
-						nuget = feed.Find(query);
-						break;
-					}
-					catch (ArgumentOutOfRangeException)
-					{
-					}
-				}
-
-				if (nuget == null)
-				{
-					RippleLog.Error("Could not find {0}".ToFormat(query), new ArgumentOutOfRangeException());
-					return;
-				}
+				var nuget = solution.Restore(query);
 
 				RippleLog.Debug("Downloading " + nuget);
 				nugets.Add(nuget.DownloadTo(solution.PackagesDirectory()));

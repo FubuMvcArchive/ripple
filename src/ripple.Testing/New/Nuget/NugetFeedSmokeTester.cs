@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
+using ripple.New.Model;
 using ripple.New.Nuget;
 
 namespace ripple.Testing.New.Nuget
@@ -12,18 +13,14 @@ namespace ripple.Testing.New.Nuget
         public void find_nuget_by_name()
         {
             var feed = new NugetFeed(RippleConstants.NugetOrgFeed.First());
-            feed.Find(new NugetQuery
-            {
-                Name = "FubuMVC.Core",
-                Version = "1.0.0.1402"
-            }).ShouldNotBeNull();
+			feed.Find(new Dependency("FubuMVC.Core","1.0.0.1402")).ShouldNotBeNull();
         }
 
         [Test]
         public void find_latest_by_name()
         {
             var feed = new NugetFeed(RippleConstants.NugetOrgFeed.First());
-            feed.FindLatest(new NugetQuery { Name = "FubuMVC.Core" })
+			feed.FindLatest(new Dependency("FubuMVC.Core"))
                 .Version.Version.ToString().ShouldEqual("1.0.0.1402");
         }
 
@@ -31,7 +28,7 @@ namespace ripple.Testing.New.Nuget
         public void find_latest_by_name_then_download_it()
         {
             var feed = new NugetFeed(RippleConstants.NugetOrgFeed.First());
-            var nuget = feed.FindLatest(new NugetQuery { Name = "FubuMVC.Core" });
+			var nuget = feed.FindLatest(new Dependency("FubuMVC.Core"));
             nuget.DownloadTo("");
         }
     }

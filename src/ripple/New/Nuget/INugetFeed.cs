@@ -1,8 +1,10 @@
-﻿namespace ripple.New.Nuget
+﻿using ripple.New.Model;
+
+namespace ripple.New.Nuget
 {
     public interface INugetFeed
     {
-        IRemoteNuget Find(NugetQuery query);
-        IRemoteNuget FindLatest(NugetQuery query);
+        IRemoteNuget Find(Dependency query);
+		IRemoteNuget FindLatest(Dependency query);
     }
 }

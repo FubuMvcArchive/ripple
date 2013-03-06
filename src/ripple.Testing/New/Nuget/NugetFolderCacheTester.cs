@@ -5,6 +5,7 @@ using NuGet;
 using System.Linq;
 using FubuTestingSupport;
 using System.Collections.Generic;
+using ripple.New.Model;
 using ripple.New.Nuget;
 
 namespace ripple.Testing.New.Nuget
@@ -73,10 +74,10 @@ namespace ripple.Testing.New.Nuget
             fileSystem.WriteStringToFile(@"c:\nugets\lib2.1.0.0.0.nupkg", "foo");
             fileSystem.WriteStringToFile(@"c:\nugets\lib3.1.0.0.0.nupkg", "foo");
 
-            theCache.Latest(new NugetQuery {Name = "foo", Stability = NugetStability.Anything})
+            theCache.Latest(new Dependency("foo") { Stability = NugetStability.Anything})
                     .Version.ShouldEqual(SemanticVersion.Parse("1.3.0.0-alpha"));
 
-            theCache.Latest(new NugetQuery { Name = "foo", Stability = NugetStability.ReleasedOnly })
+            theCache.Latest(new Dependency("foo") { Stability = NugetStability.ReleasedOnly })
                     .Version.ShouldEqual(SemanticVersion.Parse("1.2.0.0"));
 
         }
@@ -98,13 +99,13 @@ namespace ripple.Testing.New.Nuget
             fileSystem.WriteStringToFile(@"c:\nugets\lib2.1.0.0.0.nupkg", "foo");
             fileSystem.WriteStringToFile(@"c:\nugets\lib3.1.0.0.0.nupkg", "foo");
 
-            theCache.Find(new NugetQuery {Name = "foo", Version = "1.0.0.0"}).ShouldNotBeNull();
-            theCache.Find(new NugetQuery {Name = "foo", Version = "1.0.0.0"}).Version.Version.ToString()
+            theCache.Find(new Dependency("foo", "1.0.0.0")).ShouldNotBeNull();
+			theCache.Find(new Dependency("foo", "1.0.0.0")).Version.Version.ToString()
                     .ShouldEqual("1.0.0.0");
-            theCache.Find(new NugetQuery {Name = "foo", Version = "1.1.0.0"}).ShouldNotBeNull();
-            theCache.Find(new NugetQuery {Name = "foo", Version = "1.2.0.0"}).ShouldNotBeNull();
-            theCache.Find(new NugetQuery {Name = "foo", Version = "1.3.0.0"}).ShouldNotBeNull();
-            theCache.Find(new NugetQuery {Name = "foo", Version = "1.4.0.0"}).ShouldBeNull();
+			theCache.Find(new Dependency("foo", "1.1.0.0")).ShouldNotBeNull();
+			theCache.Find(new Dependency("foo", "1.2.0.0")).ShouldNotBeNull();
+			theCache.Find(new Dependency("foo", "1.3.0.0")).ShouldNotBeNull();
+			theCache.Find(new Dependency("foo", "1.4.0.0")).ShouldBeNull();
         }
 
 

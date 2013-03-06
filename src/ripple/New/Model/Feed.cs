@@ -31,19 +31,13 @@ namespace ripple.New.Model
 		[XmlAttribute]
 		public UpdateMode Mode { get; set; }
 
-		// This is stupid
 		public INugetFeed GetNugetFeed()
 		{
-			if (Mode == UpdateMode.Fixed)
-			{
-				return new NugetFeed(Url);
-			}
-
-			return new FloatingFeed(Url);
+			return FeedRegistry.FeedFor(this);
 		}
 
 		// This is stupid
-		public IRemoteNuget Find(NugetQuery query)
+		public IRemoteNuget Find(Dependency query)
 		{
 			var feed = GetNugetFeed();
 			if (Mode == UpdateMode.Float || query.IsFloat())
@@ -52,13 +46,6 @@ namespace ripple.New.Model
 			}
 
 			return feed.Find(query);
-		}
-
-		// This is stupid
-		public IRemoteNuget FindLatest(NugetQuery query)
-		{
-			var feed = GetNugetFeed();
-			return feed.FindLatest(query);
 		}
 
 		protected bool Equals(Feed other)
