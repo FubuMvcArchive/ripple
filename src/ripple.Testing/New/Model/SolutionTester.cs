@@ -78,10 +78,10 @@ namespace ripple.Testing.New.Model
 			var solution = new Solution();
 			
 			var p1 = new Project("Project1.csproj");
-			p1.AddDependency(new Dependency("Bottles", "1.0.0.0"));
+			p1.Dependencies.Add(new Dependency("Bottles", "1.0.0.0"));
 
 			var p2 = new Project("Project2.csproj");
-			p2.AddDependency(new Dependency("Bottles", "1.0.0.0"));
+			p2.Dependencies.Add(new Dependency("Bottles", "1.0.0.0"));
 
 			solution.AddProject(p1);
 			solution.AddProject(p2);
@@ -95,10 +95,10 @@ namespace ripple.Testing.New.Model
 			var solution = new Solution();
 
 			var p1 = new Project("Project1.csproj");
-			p1.AddDependency(new Dependency("Bottles"));
+			p1.Dependencies.Add(new Dependency("Bottles"));
 
 			var p2 = new Project("Project2.csproj");
-			p2.AddDependency(new Dependency("Bottles"));
+			p2.Dependencies.Add(new Dependency("Bottles"));
 
 			solution.AddProject(p1);
 			solution.AddProject(p2);
@@ -112,10 +112,10 @@ namespace ripple.Testing.New.Model
 			var solution = new Solution();
 
 			var p1 = new Project("Project1.csproj");
-			p1.AddDependency(new Dependency("Bottles", "1.0.0.0"));
+			p1.Dependencies.Add(new Dependency("Bottles", "1.0.0.0"));
 
 			var p2 = new Project("Project2.csproj");
-			p2.AddDependency(new Dependency("Bottles", "0.9.0.0"));
+			p2.Dependencies.Add(new Dependency("Bottles", "0.9.0.0"));
 
 			solution.AddProject(p1);
 			solution.AddProject(p2);
@@ -130,9 +130,23 @@ namespace ripple.Testing.New.Model
 			var dependency = new Dependency("Bottles", "1.0.0.0");
 			
 			var solution = new Solution();
-			solution.AddDependency(dependency);
+			solution.Dependencies.Add(dependency);
 
 			solution.FindDependency("Bottles").ShouldEqual(dependency);
+		}
+
+		[Test]
+		public void combines_the_dependencies()
+		{
+			var solution = new Solution();
+			solution.AddDependency(new Dependency("Bottles", "1.0.1.1"));
+
+			var project = new Project("MyProject.csproj");
+			project.AddDependency(new Dependency("FubuCore", "1.2.3.4"));
+
+			solution.AddProject(project);
+
+			solution.Dependencies.ShouldHaveTheSameElementsAs(new Dependency("Bottles", "1.0.1.1"), new Dependency("FubuCore", "1.2.3.4"));
 		}
 	}
 }

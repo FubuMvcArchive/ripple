@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.Descriptions;
@@ -18,7 +17,8 @@ namespace ripple.New.Model
 		private readonly IList<Feed> _feeds = new List<Feed>();
 		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
 		private readonly Lazy<IEnumerable<Dependency>> _missing;
-		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates; 
+		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates;
+		private readonly Lazy<DependencyCollection> _dependencies; 
 
 		public Solution()
 		{
@@ -36,6 +36,7 @@ namespace ripple.New.Model
 
 			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
+			_dependencies = new Lazy<DependencyCollection>(combineDependencies);
 		}
 
 		public string Name { get; set; }
@@ -49,6 +50,13 @@ namespace ripple.New.Model
 		public INugetStorage Storage { get; private set; }
 		[XmlIgnore]
 		public IFeedService FeedService { get; private set; }
+
+		private DependencyCollection combineDependencies()
+		{
+			var dependencies = new DependencyCollection(_configuredDependencies);
+			Projects.Each(p => dependencies.AddChild(p.Dependencies));
+			return dependencies;
+		}
 
 		public string PackagesDirectory()
 		{
@@ -86,7 +94,7 @@ namespace ripple.New.Model
 			}
 		}
 
-		public Dependency[] Dependencies
+		public Dependency[] Nugets
 		{
 			get { return _configuredDependencies.ToArray(); }
 			set
@@ -94,6 +102,12 @@ namespace ripple.New.Model
 				_configuredDependencies.Clear();
 				_configuredDependencies.AddRange(value);
 			}
+		}
+
+		[XmlIgnore]
+		public DependencyCollection Dependencies
+		{
+			get { return _dependencies.Value; }
 		}
 
 		public void AddFeed(Feed feed)

@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using FubuCore.Descriptions;
 using NuGet;
 using ripple.New.Nuget;
@@ -81,6 +82,28 @@ namespace ripple.New.Model
 		{
 			description.Title = Name;
 			description.ShortDescription = IsFloat() ? UpdateMode.Float.ToString() : Version;
+		}
+
+		public static Dependency Parse(string input)
+		{
+			var parts = input.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+			if (parts.Length == 0)
+			{
+				throw new ArgumentOutOfRangeException("input", "Could not parse Dependency: " + input);
+			}
+
+			var dependency = new Dependency(parts[0]);
+			if (parts.Length > 1)
+			{
+				dependency.Version = parts[1];
+			}
+
+			if (parts.Length > 2)
+			{
+				dependency.Mode = (UpdateMode) Enum.Parse(typeof (UpdateMode), parts[2]);
+			}
+
+			return dependency;
 		}
 	}
 }

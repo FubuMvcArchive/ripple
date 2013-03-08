@@ -14,7 +14,8 @@ namespace ripple.Testing.New.Model
 					Name = "Test",
 					BuildCommand = "rake",
 					FastBuildCommand = "rake compile",
-					Feeds = new[] { Feed.NuGetV2, Feed.NuGetV1 }
+					Feeds = new[] { Feed.NuGetV2, Feed.NuGetV1 },
+					Nugets = new[] { new Dependency("FubuCore", "1.0.1.0") }
 				};
 
 			CheckXmlPersistence.For(solution);

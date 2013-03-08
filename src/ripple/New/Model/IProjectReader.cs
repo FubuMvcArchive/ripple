@@ -24,7 +24,7 @@ namespace ripple.New.Model
 			var reader = _dependencies.First(x => x.Matches(project));
 			var dependencies = reader.Read(project);
 
-			dependencies.Each(d => project.AddDependency(d));
+			dependencies.Each(d => project.Dependencies.Add(d));
 
 			return project;
 		}

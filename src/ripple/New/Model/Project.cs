@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using FubuCore;
 using FubuCore.Descriptions;
@@ -9,7 +8,7 @@ namespace ripple.New.Model
 {
 	public class Project : DescribesItself
 	{
-		private readonly IList<Dependency> _dependencies = new List<Dependency>();
+		private readonly DependencyCollection _dependencies = new DependencyCollection();
 		private readonly Lazy<CsProjFile> _csProj;
 
 		public Project(string filePath)
@@ -27,24 +26,14 @@ namespace ripple.New.Model
 		public CsProjFile CsProj { get { return _csProj.Value; } }
 		public Solution Solution { get; set; }
 
-		public IEnumerable<Dependency> Dependencies
+		public DependencyCollection Dependencies
 		{
 			get { return _dependencies; }
-			set
-			{
-				_dependencies.Clear();
-				_dependencies.AddRange(value);
-			}
 		}
 
 		public void AddDependency(Dependency dependency)
 		{
-			_dependencies.Fill(dependency);
-		}
-
-		public void RemoveDependency(Dependency dependency)
-		{
-			_dependencies.Remove(dependency);
+			_dependencies.Add(dependency);
 		}
 
 		protected bool Equals(Project other)

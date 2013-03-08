@@ -76,10 +76,12 @@
     <Compile Include="MakeTestData.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
+    <Compile Include="New\Model\DependencyCollectionTester.cs" />
+    <Compile Include="New\Model\DependencyParsing.cs" />
     <Compile Include="New\Model\DependencyTester.cs" />
     <Compile Include="New\Model\finding_the_latest_dependency.cs" />
     <Compile Include="New\Model\IntegratedSolutonUpdatesTester.cs" />
-    <Compile Include="New\Model\restoring_nugets.cs" />
+    <Compile Include="New\Model\finding_solution_nugets_to_restore.cs" />
     <Compile Include="New\Model\RippleDependencyReaderTester.cs" />
     <Compile Include="New\Model\SolutionBuilderTester.cs" />
     <Compile Include="New\Model\SolutionFilesTester.cs" />
