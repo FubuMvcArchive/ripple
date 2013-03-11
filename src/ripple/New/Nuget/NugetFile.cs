@@ -27,7 +27,8 @@ namespace ripple.New.Nuget
             IsPreRelease = Version.SpecialVersion.IsNotEmpty();
         }
 
-        public string Name { get; private set; }
+		public string FileName { get { return _path; } }
+	    public string Name { get; private set; }
         public SemanticVersion Version { get; private set; }
         public bool IsPreRelease { get; private set; }
 
@@ -62,6 +63,14 @@ namespace ripple.New.Nuget
             var repository = new LocalPackageRepository(directory);
             return repository.FindPackagesById(Name).Single();
         }
+
+	    public INugetFile CopyTo(string directory)
+	    {
+		    var target = Path.Combine(directory, Path.GetFileName(_path));
+			new FileSystem().Copy(_path, target);
+
+			return new NugetFile(target);
+	    }
 
 	    public void Describe(Description description)
 	    {

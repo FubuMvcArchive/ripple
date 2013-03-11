@@ -10,16 +10,50 @@ namespace ripple.New.Nuget
     public class NugetFolderCache : INugetCache
     {
         private readonly string _folder;
+	    private IFileSystem _fileSystem;
+
+	    private Lazy<IEnumerable<INugetFile>> _allFiles;
 
         public NugetFolderCache(string folder)
         {
             _folder = folder;
+			_fileSystem = new FileSystem();
+
+	        reset();
         }
 
-        public void UpdateAll(IEnumerable<IRemoteNuget> nugets)
+		private void reset()
+		{
+			_allFiles = new Lazy<IEnumerable<INugetFile>>(findNugetFiles);
+		}
+
+		private IEnumerable<INugetFile> findNugetFiles()
+		{
+			return _fileSystem
+				.FindFiles(_folder, new FileSet { Include = "*.nupkg" })
+				.Select(file => new NugetFile(file))
+				.ToList();
+		}
+
+	    private IEnumerable<INugetFile> Dependencies
+	    {
+			get { return _allFiles.Value; }
+	    }
+
+		public void UseFileSystem(IFileSystem fileSystem)
+		{
+			_fileSystem = fileSystem;
+		}
+
+	    public void Update(IRemoteNuget nuget)
+	    {
+		    UpdateAll(new[] { nuget });
+	    }
+
+	    public void UpdateAll(IEnumerable<IRemoteNuget> nugets)
         {
             var latest = new Cache<string, Version>(name => new Version("0.0.0.0"));
-            AllFiles().ToList().GroupBy(x => x.Name).Each(x => {
+            Dependencies.GroupBy(x => x.Name).Each(x => {
                 var version = x.OrderByDescending(file => file.Version).First().Version.Version;
                 latest[x.Key] = version;
             });
@@ -34,11 +68,13 @@ namespace ripple.New.Nuget
                     nuget.DownloadTo(_folder);
                 }
             });
+
+		    reset();
         }
 
 		public INugetFile Latest(Dependency query)
         {
-            IEnumerable<INugetFile> files = AllFiles().Where(x => x.Name == query.Name).ToList();
+            IEnumerable<INugetFile> files = Dependencies.Where(x => x.Name == query.Name).ToList();
             if (query.Stability == NugetStability.ReleasedOnly)
             {
                 files = files.Where(x => x.Version.SpecialVersion.IsEmpty());
@@ -49,21 +85,35 @@ namespace ripple.New.Nuget
 
         public void Flush()
         {
-            new FileSystem().CleanDirectory(_folder);
+            _fileSystem.CleanDirectory(_folder);
         }
 
         public IEnumerable<INugetFile> AllFiles()
         {
-            return
-                new FileSystem().FindFiles(_folder, new FileSet {Include = "*.nupkg"})
-                                .Select(file => new NugetFile(file));
+	        return Dependencies;
         }
 
-		public INugetFile Find(Dependency query)
+		public virtual INugetFile Find(Dependency query)
         {
-            return
-                AllFiles()
-                    .FirstOrDefault(x => x.Name == query.Name && x.Version.Version.ToString() == query.Version);
+            return Dependencies.FirstOrDefault(x => x.Name == query.Name && x.Version.Version.ToString() == query.Version);
         }
+
+	    public IRemoteNuget Retrieve(IRemoteNuget nuget)
+	    {
+		    if (nuget is CachedNuget)
+		    {
+			    return nuget;
+		    }
+
+		    var dependency = new Dependency(nuget.Name, nuget.Version.Version.ToString());
+		    var file = Find(dependency);
+
+			if (file == null)
+			{
+				return nuget;
+			}
+
+		    return new CachedNuget(file);
+	    }
     }
 }

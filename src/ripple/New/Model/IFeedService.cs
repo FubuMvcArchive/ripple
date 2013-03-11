@@ -39,7 +39,13 @@ namespace ripple.New.Model
 				throw new ArgumentOutOfRangeException("dependency", "Could not find " + dependency);
 			}
 
-			return nuget;
+			return remoteOrCached(solution, nuget);
+		}
+
+		private IRemoteNuget remoteOrCached(Solution solution, IRemoteNuget nuget)
+		{
+			if (nuget == null) return null;
+			return solution.Cache.Retrieve(nuget);
 		}
 
 		private IRemoteNuget getLatestFromFloatingFeed(INugetFeed feed, Dependency dependency)
@@ -104,7 +110,7 @@ namespace ripple.New.Model
 
 			if (latest != null && latest.IsUpdateFor(dependency))
 			{
-				return latest;
+				return remoteOrCached(solution, latest);
 			}
 
 			return null;

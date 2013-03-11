@@ -10,11 +10,11 @@ namespace ripple.Model
     public class SolutionGraph
     {
         private readonly Lazy<IEnumerable<NugetSpec>> _allNugets;
-        private readonly Cache<string, Solution> _solutions = new Cache<string, Solution>(key =>
+		private readonly Lazy<IList<Solution>> _orderedSolutions;
+		private readonly Cache<string, Solution> _solutions = new Cache<string, Solution>(key =>
         {
             throw new InvalidSolutionException(key);
         });
-        private readonly Lazy<IList<Solution>> _orderedSolutions;
 
         public SolutionGraph(IEnumerable<Solution> solutions)
         {
@@ -30,9 +30,6 @@ namespace ripple.Model
                 return graph.Ordered().ToList();
             });
         }
-
-
-        
 
         public Solution this[string name]
         {
@@ -60,8 +57,6 @@ namespace ripple.Model
             return AllNugets().FirstOrDefault(x => x.Name == nugetName);
         }
 
-
-
         public IEnumerable<NugetSpec> AllNugets()
         {
             return _allNugets.Value;
@@ -71,6 +66,5 @@ namespace ripple.Model
         {
             return AllNugets().Where(x => dependencies.Any(d => d.Name == x.Name));
         }
-
     }
 }

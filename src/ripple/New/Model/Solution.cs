@@ -33,6 +33,7 @@ namespace ripple.New.Model
 
 			UseStorage(new RippleStorage());
 			UseFeedService(new FeedService());
+			UseCache(new NulloNugetCache());
 
 			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
@@ -50,6 +51,8 @@ namespace ripple.New.Model
 		public INugetStorage Storage { get; private set; }
 		[XmlIgnore]
 		public IFeedService FeedService { get; private set; }
+		[XmlIgnore]
+		public INugetCache Cache { get; private set; }
 
 		private DependencyCollection combineDependencies()
 		{
@@ -71,6 +74,11 @@ namespace ripple.New.Model
 		public void UseFeedService(IFeedService service)
 		{
 			FeedService = service;
+		}
+
+		public void UseCache(INugetCache cache)
+		{
+			Cache = cache;
 		}
 
 		[XmlIgnore]

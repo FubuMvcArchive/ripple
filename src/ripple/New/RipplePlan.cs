@@ -81,6 +81,8 @@ namespace ripple.New
 				RippleLog.Info(description);
 			}
 
+			input.Apply(solution);
+
 			var runner = new RippleStepRunner(new FileSystem());
 			return new RipplePlan(solution, input, runner).Step<ValidateRepository>();
 		}

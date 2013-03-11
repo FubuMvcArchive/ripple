@@ -121,6 +121,7 @@
     <Compile Include="New\Commands\DescribeCommand.cs" />
     <Compile Include="New\Model\RippleException.cs" />
     <Compile Include="New\Model\UpdateMode.cs" />
+    <Compile Include="New\Nuget\CachedNuget.cs" />
     <Compile Include="New\Nuget\FloatingFeed.cs" />
     <Compile Include="New\Nuget\IFloatingFeed.cs" />
     <Compile Include="New\Nuget\INugetCache.cs" />
