@@ -10,13 +10,13 @@ namespace ripple.Testing.New.Model
 	[TestFixture]
 	public class RippleDependencyReaderTester
 	{
-		private RippleDependencyReader theDependencyReader;
+		private RippleDependencyStrategy theDependencyStrategy;
 		private Project theProject;
 
 		[SetUp]
 		public void SetUp()
 		{
-			theDependencyReader = new RippleDependencyReader();
+			theDependencyStrategy = new RippleDependencyStrategy();
 			theProject = new Project("TestProject.csproj");
 
 			var content = new StringBuilder()
@@ -25,7 +25,7 @@ namespace ripple.Testing.New.Model
 				.AppendLine("FubuMVC.Core,1.0.1.252")
 				.ToString();
 
-			new FileSystem().WriteStringToFile(RippleDependencyReader.RippleDependenciesConfig, content);
+			new FileSystem().WriteStringToFile(RippleDependencyStrategy.RippleDependenciesConfig, content);
 		}
 
 		[Test]
@@ -38,7 +38,7 @@ namespace ripple.Testing.New.Model
 				new Dependency("FubuMVC.Core","1.0.1.252")
 			};
 
-			theDependencyReader.Read(theProject).ShouldHaveTheSameElementsAs(dependencies);
+			theDependencyStrategy.Read(theProject).ShouldHaveTheSameElementsAs(dependencies);
 		}
 	}
 }

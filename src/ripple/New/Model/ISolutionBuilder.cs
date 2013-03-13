@@ -32,8 +32,8 @@ namespace ripple.New.Model
 				solution.AddProject(project);
 			});
 
-			// Maybe switch on the configured mode? Nuget vs. Ripple
-			solution.UseStorage(new RippleStorage());
+			// TODO -- Maybe switch on the configured mode? Nuget vs. Ripple
+			solution.UseStorage(RippleStorage.Basic());
 
 			_fileSystem.CreateDirectory(solution.PackagesDirectory());
 

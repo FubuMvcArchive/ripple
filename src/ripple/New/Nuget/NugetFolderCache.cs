@@ -110,7 +110,7 @@ namespace ripple.New.Nuget
 
 			if (file == null)
 			{
-				return nuget;
+				return new CacheableNuget(nuget, _folder);
 			}
 
 		    return new CachedNuget(file);

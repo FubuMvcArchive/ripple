@@ -1,8 +1,10 @@
-﻿using NuGet;
+﻿using FubuCore;
+using FubuCore.Descriptions;
+using NuGet;
 
 namespace ripple.New.Nuget
 {
-	public class CachedNuget : IRemoteNuget
+	public class CachedNuget : IRemoteNuget, DescribesItself
 	{
 		private readonly INugetFile _nuget;
 
@@ -25,7 +27,12 @@ namespace ripple.New.Nuget
 
 		public override string ToString()
 		{
-			return "Move from " + Filename;
+			return "From Cache: {0}".ToFormat(Filename);
+		}
+
+		public void Describe(Description description)
+		{
+			description.ShortDescription = ToString();
 		}
 	}
 }

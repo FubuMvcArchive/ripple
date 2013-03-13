@@ -86,7 +86,10 @@
     <Compile Include="New\Model\SolutionBuilderTester.cs" />
     <Compile Include="New\Model\SolutionFilesTester.cs" />
     <Compile Include="New\Model\StubFeed.cs" />
+    <Compile Include="New\Model\StubNugetFile.cs" />
     <Compile Include="New\Model\StubNugetStorage.cs" />
+    <Compile Include="New\Model\updating_solution_dependencies.cs" />
+    <Compile Include="New\Nuget\CacheableNugetTester.cs" />
     <Compile Include="New\Nuget\NugetFeedSmokeTester.cs" />
     <Compile Include="New\Nuget\NugetFileTester.cs" />
     <Compile Include="New\Nuget\NugetFolderCacheSmokeTester.cs" />

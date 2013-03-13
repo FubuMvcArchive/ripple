@@ -1,9 +1,10 @@
 ﻿using FubuCore.Util;
 using NuGet;
-using ripple.Local;
-using ripple.Model;
 using System.Collections.Generic;
+using ripple.New.Model;
 using Console = System.Console;
+using Project = ripple.Local.Project;
+using Solution = ripple.Model.Solution;
 
 namespace ripple.MSBuild
 {
@@ -45,7 +46,7 @@ namespace ripple.MSBuild
                 var assemblies = package.AssemblyReferences;
                 if (assemblies == null) return;
 
-                file.AddAssemblies(dep, assemblies);
+                file.AddAssemblies(new Dependency(dep.Name, dep.Version), assemblies);
 
 
             });

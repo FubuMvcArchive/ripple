@@ -1,31 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using FubuCore;
 
 namespace ripple.New.Model
 {
-	public interface IDependencyReader
+	public interface IDependencyStrategy
 	{
 		bool Matches(Project project);
 		IEnumerable<Dependency> Read(Project project);
+
+		void Write(Project project);
 	}
 
-	public class RippleDependencyReader : IDependencyReader
+	public class RippleDependencyStrategy : IDependencyStrategy
 	{
 		public const string RippleDependenciesConfig = "ripple.dependencies.config";
 
 		private readonly IFileSystem _fileSystem = new FileSystem();
 
+		public string FileFor(Project project)
+		{
+			return Path.Combine(project.Directory, RippleDependenciesConfig);
+		}
+
 		public bool Matches(Project project)
 		{
-			return _fileSystem.FileExists(project.Directory, RippleDependenciesConfig);
+			return _fileSystem.FileExists(FileFor(project));
 		}
 
 		public IEnumerable<Dependency> Read(Project project)
 		{
 			var dependencies = new List<Dependency>();
-			_fileSystem.ReadTextFile(Path.Combine(project.Directory, RippleDependenciesConfig), line =>
+			_fileSystem.ReadTextFile(FileFor(project), line =>
 			{
 				if (line.IsEmpty()) return;
 
@@ -41,6 +49,14 @@ namespace ripple.New.Model
 			});
 			
 			return dependencies;
+		}
+
+		public void Write(Project project)
+		{
+			var dependencies = new StringBuilder();
+			project.Dependencies.Each(dependency => dependencies.AppendLine(dependency.ToString()));
+
+			_fileSystem.WriteStringToFile(FileFor(project), dependencies.ToString());
 		}
 	}
 }

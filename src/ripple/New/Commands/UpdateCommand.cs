@@ -19,8 +19,9 @@ namespace ripple.New.Commands
 		{
 			return RipplePlan
 				.For<ReUpdateInput>(input)
-				.Step<UpdateDependencies>()
+				.Step<DownloadUpdatedDependencies>()
 				.Step<ExplodeDownloadedNugets>()
+				.Step<UpdateReferences>()
 				.Execute();
 		}
 	}

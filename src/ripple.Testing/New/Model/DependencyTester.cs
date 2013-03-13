@@ -18,5 +18,13 @@ namespace ripple.Testing.New.Model
 		{
 			new Dependency("Bottles", "1.0.0.0", UpdateMode.Fixed).IsFloat().ShouldBeFalse();
 		}
+
+		[Test]
+		public void to_string()
+		{
+			new Dependency("Bottles").ToString().ShouldEqual("Bottles");
+			new Dependency("Bottles", "1.0.0.0").ToString().ShouldEqual("Bottles,1.0.0.0");
+			new Dependency("Bottles", "1.0.0.1", UpdateMode.Fixed).ToString().ShouldEqual("Bottles,1.0.0.1,Fixed");
+		}
 	}
 }

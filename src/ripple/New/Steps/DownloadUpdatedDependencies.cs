@@ -8,7 +8,7 @@ using ripple.New.Nuget;
 
 namespace ripple.New.Steps
 {
-	public class UpdateDependencies : IRippleStep, DescribesItself
+	public class DownloadUpdatedDependencies : IRippleStep, DescribesItself
 	{
 		public Solution Solution { get; set; }
 

@@ -148,5 +148,22 @@ namespace ripple.Testing.New.Model
 
 			solution.Dependencies.ShouldHaveTheSameElementsAs(new Dependency("Bottles", "1.0.1.1"), new Dependency("FubuCore", "1.2.3.4"));
 		}
+
+		[Test]
+		public void saving_the_solution()
+		{
+			var storage = MockRepository.GenerateStub<INugetStorage>();
+
+			var solution = new Solution();
+			var project = new Project("Test.csproj");
+
+			solution.AddProject(project);
+			solution.UseStorage(storage);
+
+			solution.Save();
+
+			storage.AssertWasCalled(x => x.Write(solution));
+			storage.AssertWasCalled(x => x.Write(project));
+		}
 	}
 }

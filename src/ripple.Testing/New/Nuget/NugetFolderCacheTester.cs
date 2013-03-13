@@ -1,4 +1,5 @@
-﻿using FubuTestingSupport;
+﻿using FubuCore;
+using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
 using ripple.New.Model;
@@ -16,14 +17,15 @@ namespace ripple.Testing.New.Nuget
 		}
 
 		[Test]
-		public void no_local_file_just_returns_the_nuget()
+		public void no_local_file_returns_a_wrapped_nuget()
 		{
 			var theDependency = new Dependency("Bottles", "1.0.0.0");
 			var theNuget = new StubNuget(theDependency);
 
 			ClassUnderTest.Stub(x => x.Find(theDependency)).Return(null);
 
-			ClassUnderTest.Retrieve(theNuget).ShouldBeTheSameAs(theNuget);
+			var nuget = ClassUnderTest.Retrieve(theNuget).As<CacheableNuget>();
+			nuget.Inner.ShouldBeTheSameAs(theNuget);
 		}
 
 		[Test]

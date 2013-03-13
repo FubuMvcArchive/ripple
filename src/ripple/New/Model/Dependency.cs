@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
 using ripple.New.Nuget;
@@ -75,13 +76,29 @@ namespace ripple.New.Model
 
 		public override string ToString()
 		{
-			return string.Format("{0} -- {1}", Name, Version);
+			var value = Name;
+			if (Version.IsNotEmpty())
+			{
+				value += "," + Version;
+			}
+
+			if (!IsFloat())
+			{
+				value += "," + Mode.ToString();
+			}
+
+			return value;
 		}
 
 		public void Describe(Description description)
 		{
 			description.Title = Name;
 			description.ShortDescription = IsFloat() ? UpdateMode.Float.ToString() : Version;
+		}
+
+		public static Dependency For(INugetFile nuget)
+		{
+			return new Dependency(nuget.Name, nuget.Version.ToString());
 		}
 
 		public static Dependency Parse(string input)

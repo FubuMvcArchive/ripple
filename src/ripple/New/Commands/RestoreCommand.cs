@@ -21,9 +21,8 @@ namespace ripple.New.Commands
 				.For<ReReInput>(input)
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
+				.Step<UpdateReferences>()
 				.Execute();
-
-			// TODO -- Need to use the INugetCache <--- Maybe proxy it through a Feed by default?
 		}
 	}
 }

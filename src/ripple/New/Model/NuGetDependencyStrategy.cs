@@ -5,7 +5,7 @@ using FubuCore;
 
 namespace ripple.New.Model
 {
-	public class NuGetDependencyReader : IDependencyReader
+	public class NuGetDependencyStrategy : IDependencyStrategy
 	{
 		public const string PackagesConfig = "packages.config";
 
@@ -22,6 +22,12 @@ namespace ripple.New.Model
 			document.Load(Path.Combine(project.Directory, PackagesConfig));
 
 			return ReadFrom(document);
+		}
+
+		public void Write(Project project)
+		{
+			// TODO -- write out the packages.config
+			throw new System.NotImplementedException();
 		}
 
 		public static IEnumerable<Dependency> ReadFrom(XmlDocument document)

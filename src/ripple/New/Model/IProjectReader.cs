@@ -10,9 +10,9 @@ namespace ripple.New.Model
 
 	public class ProjectReader : IProjectReader
 	{
-		private readonly IEnumerable<IDependencyReader> _dependencies;
+		private readonly IEnumerable<IDependencyStrategy> _dependencies;
 
-		public ProjectReader(IEnumerable<IDependencyReader> dependencies)
+		public ProjectReader(IEnumerable<IDependencyStrategy> dependencies)
 		{
 			_dependencies = dependencies;
 		}
@@ -31,7 +31,7 @@ namespace ripple.New.Model
 
 		public static IProjectReader Basic()
 		{
-			return new ProjectReader(new IDependencyReader[] { new NuGetDependencyReader(), new RippleDependencyReader() });
+			return new ProjectReader(new IDependencyStrategy[] { new NuGetDependencyStrategy(), new RippleDependencyStrategy() });
 		}
 	}
 }

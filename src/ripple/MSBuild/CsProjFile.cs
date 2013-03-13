@@ -7,6 +7,7 @@ using System.Xml;
 using FubuCore;
 using NuGet;
 using ripple.Local;
+using ripple.New.Model;
 
 namespace ripple.MSBuild
 {
@@ -150,7 +151,7 @@ namespace ripple.MSBuild
             return string.Format("Filename: {0}", _filename);
         }
 
-        public void AddAssemblies(NugetDependency dep, IEnumerable<IPackageAssemblyReference> assemblies)
+		public void AddAssemblies(Dependency dep, IEnumerable<IPackageAssemblyReference> assemblies)
         {
             bool needsSaved = false;
 
@@ -162,7 +163,7 @@ namespace ripple.MSBuild
                 if (assemblyName.StartsWith("System.")) return;
                 if (assemblyName == "_._") return;
 
-                string hintPath = Path.Combine("..", "packages", dep.ToNugetFolderName(), assem.Path);
+                string hintPath = Path.Combine("..", "packages", dep.Name, assem.Path);
 
 
                 if (References.Any(x => x.Matches(assemblyName))) return;

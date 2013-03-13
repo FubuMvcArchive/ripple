@@ -8,8 +8,8 @@ namespace ripple.Testing.New.Model
 	[TestFixture]
 	public class ProjectReaderTester
 	{
-		private IDependencyReader r1;
-		private IDependencyReader r2;
+		private IDependencyStrategy r1;
+		private IDependencyStrategy r2;
 		private ProjectReader theReader;
 
 		private Dependency d1;
@@ -20,8 +20,8 @@ namespace ripple.Testing.New.Model
 		[SetUp]
 		public void SetUp()
 		{
-			r1 = MockRepository.GenerateStub<IDependencyReader>();
-			r2 = MockRepository.GenerateStub<IDependencyReader>();
+			r1 = MockRepository.GenerateStub<IDependencyStrategy>();
+			r2 = MockRepository.GenerateStub<IDependencyStrategy>();
 
 			d1 = new Dependency("FubuCore", "1.0.0.215");
 			d2 = new Dependency("Bottles", "1.0.0.212");

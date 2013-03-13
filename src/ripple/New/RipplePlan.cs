@@ -65,6 +65,8 @@ namespace ripple.New
 				}
 			}
 
+			_solution.Save();
+
 			return true;
 		}
 

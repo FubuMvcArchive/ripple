@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NuGet;
 using ripple.New.Model;
 using ripple.New.Nuget;
 
@@ -21,6 +20,16 @@ namespace ripple.Testing.New.Model
 		{
 		}
 
+		public void Write(Solution solution)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public void Write(Project project)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public LocalDependencies Dependencies(Solution solution)
 		{
 			return new LocalDependencies(_files);
@@ -29,29 +38,6 @@ namespace ripple.Testing.New.Model
 		public IEnumerable<Dependency> MissingFiles(Solution solution)
 		{
 			yield break;
-		}
-
-		public class StubNugetFile : INugetFile
-		{
-			public StubNugetFile(Dependency dependency)
-			{
-				Name = dependency.Name;
-				Version = SemanticVersion.Parse(dependency.Version);
-			}
-
-			public string FileName { get; private set; }
-			public string Name { get; private set; }
-			public SemanticVersion Version { get; private set; }
-
-			public IPackage ExplodeTo(string directory)
-			{
-				throw new System.NotImplementedException();
-			}
-
-			public INugetFile CopyTo(string directory)
-			{
-				throw new System.NotImplementedException();
-			}
 		}
 	}
 }

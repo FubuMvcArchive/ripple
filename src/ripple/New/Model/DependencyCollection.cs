@@ -59,6 +59,16 @@ namespace ripple.New.Model
 			_children.Add(collection);
 		}
 
+		public void Update(Dependency dependency)
+		{
+			var existing = Find(dependency.Name);
+			if (existing == null)
+			{
+				throw new ArgumentOutOfRangeException("dependency", "Could not find Dependency: " + dependency);
+			}
+
+			existing.Version = dependency.Version;
+		}
 
 		public Dependency Find(string name)
 		{

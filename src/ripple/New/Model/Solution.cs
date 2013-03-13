@@ -31,7 +31,7 @@ namespace ripple.New.Model
 			AddFeed(Feed.NuGetV2);
 			AddFeed(Feed.NuGetV1);
 
-			UseStorage(new RippleStorage());
+			UseStorage(RippleStorage.Basic());
 			UseFeedService(new FeedService());
 			UseCache(new NulloNugetCache());
 
@@ -217,9 +217,20 @@ namespace ripple.New.Model
 			return _updates.Value;
 		}
 
+		public void Update(INugetFile nuget)
+		{
+			Dependencies.Update(Dependency.For(nuget));
+		}
+
 		private IEnumerable<IRemoteNuget> findUpdates()
 		{
 			return FeedService.UpdatesFor(this);
+		}
+
+		public void Save()
+		{
+			Storage.Write(this);
+			Projects.Each(Storage.Write);
 		}
 
 		public static Solution For(SolutionInput input)

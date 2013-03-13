@@ -29,6 +29,7 @@ namespace ripple.New.Nuget
 
         public string Name { get; private set; }
         public SemanticVersion Version { get; private set; }
+
         public INugetFile DownloadTo(string directory)
         {
             var file = directory.AppendPath(Filename);
