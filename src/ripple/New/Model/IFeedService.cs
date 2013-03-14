@@ -108,12 +108,31 @@ namespace ripple.New.Model
 				}
 			}
 
-			if (latest != null && latest.IsUpdateFor(dependency))
+			if (isUpdate(latest, solution, dependency))
 			{
 				return remoteOrCached(solution, latest);
 			}
 
 			return null;
+		}
+
+		private bool isUpdate(IRemoteNuget latest, Solution solution, Dependency dependency)
+		{
+			if (latest == null) return false;
+
+			var localDependencies = solution.LocalDependencies();
+			if (localDependencies.Has(dependency))
+			{
+				var local = localDependencies.Get(dependency);
+				return latest.IsUpdateFor(local);
+			}
+
+			if (dependency.IsFloat())
+			{
+				return true;
+			}
+
+			return latest.IsUpdateFor(dependency);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using ripple.New.Nuget;
+﻿using FubuCore.Util;
+using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
@@ -9,7 +10,19 @@ namespace ripple.New.Model
 
 	public class FeedProvider : IFeedProvider
 	{
+		private readonly Cache<Feed, INugetFeed> _feeds;
+
+		public FeedProvider()
+		{
+			_feeds = new Cache<Feed, INugetFeed>(buildFeed);
+		}
+
 		public INugetFeed For(Feed feed)
+		{
+			return _feeds[feed];
+		}
+
+		private INugetFeed buildFeed(Feed feed)
 		{
 			if (feed.Mode == UpdateMode.Fixed)
 			{

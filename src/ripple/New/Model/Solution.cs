@@ -33,7 +33,7 @@ namespace ripple.New.Model
 
 			UseStorage(RippleStorage.Basic());
 			UseFeedService(new FeedService());
-			UseCache(new NulloNugetCache());
+			UseCache(NugetFolderCache.DefaultFor(this));
 
 			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);

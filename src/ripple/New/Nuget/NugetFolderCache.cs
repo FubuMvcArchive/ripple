@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FubuCore;
 using FubuCore.Util;
@@ -115,5 +116,16 @@ namespace ripple.New.Nuget
 
 		    return new CachedNuget(file);
 	    }
+
+		public static NugetFolderCache DefaultFor(Solution solution)
+		{
+			var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			var ripple = Path.Combine(appData, "ripple");
+
+			new FileSystem().CreateDirectory(ripple);
+
+			// TODO -- Be smart enough to switch off the Solution "mode"
+			return new NugetFolderCache(ripple);
+		}
     }
 }

@@ -10,6 +10,7 @@ namespace ripple.Testing.New.Model
 		private FeedService theFeedService;
 		private StubFeed theFeed;
 		private Solution theSolution;
+		private StubNugetStorage theStorage;
 
 		[SetUp]
 		public void SetUp()
@@ -19,17 +20,37 @@ namespace ripple.Testing.New.Model
 			theFeed = new StubFeed();
 			theFeed.Add(new Dependency("Bottles", "1.0.0.0"));
 			theFeed.Add(new Dependency("Bottles", "1.0.1.0"));
+			theFeed.Add(new Dependency("FubuCore", "1.2.0.0"));
 			theFeed.Add(new Dependency("StructureMap", "2.6.4.54"));
 			FeedRegistry.Stub(new StubFeedProvider(theFeed));
 
+			theStorage = new StubNugetStorage();
+
 			theSolution = new Solution();
+			theSolution.UseStorage(theStorage);
 			theSolution.AddFeed(new Feed("testing"));
 			theSolution.AddDependency(new Dependency("Bottles", "1.0.0.0"));
+			theSolution.AddDependency(new Dependency("FubuCore"));
 			theSolution.AddDependency(new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
 		}
 
 		[Test]
 		public void latest_for_floated_nuget()
+		{
+			var nuget = theFeedService.LatestFor(theSolution, theSolution.FindDependency("FubuCore"));
+			nuget.Name.ShouldEqual("FubuCore");
+			nuget.Version.ToString().ShouldEqual("1.2.0.0");
+		}
+
+		[Test]
+		public void latest_for_floated_nuget_with_local_dependency()
+		{
+			theStorage.Add("FubuCore", "1.2.0.0");
+			theFeedService.LatestFor(theSolution, theSolution.FindDependency("FubuCore")).ShouldBeNull();
+		}
+
+		[Test]
+		public void latest_for_nuget_from_floated_feed()
 		{
 			var nuget = theFeedService.LatestFor(theSolution, theSolution.FindDependency("Bottles"));
 			nuget.Name.ShouldEqual("Bottles");
@@ -46,7 +67,7 @@ namespace ripple.Testing.New.Model
 		public void null_if_id_is_not_found()
 		{
 			theFeedService
-				.LatestFor(theSolution, new Dependency("FubuCore"))
+				.LatestFor(theSolution, new Dependency("FubuLocalization"))
 				.ShouldBeNull();
 		}
 	}

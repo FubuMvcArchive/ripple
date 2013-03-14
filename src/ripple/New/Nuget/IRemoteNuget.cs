@@ -17,5 +17,10 @@ namespace ripple.New.Nuget
 		{
 			return nuget.Version > dependency.SemanticVersion();
 		}
+
+		public static bool IsUpdateFor(this IRemoteNuget nuget, INugetFile dependency)
+		{
+			return nuget.Version > dependency.Version;
+		}
 	}
 }
