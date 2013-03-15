@@ -47,5 +47,7 @@ namespace ripple.Testing.New.Model
 			              .OrderByDescending(x => x.Version)
 			              .FirstOrDefault();
 		}
+
+		public IPackageRepository Repository { get; private set; }
 	}
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using FubuCore;
+using NuGet;
 using ripple.New.Nuget;
 
 namespace ripple.New.Model
@@ -11,6 +13,8 @@ namespace ripple.New.Model
 	{
 		IRemoteNuget NugetFor(Solution solution, Dependency dependency);
 		IEnumerable<IRemoteNuget> UpdatesFor(Solution solution);
+
+		IEnumerable<IRemoteNuget> DependenciesFor(Solution solution, Dependency dependency);
 	}
 
 	public class FeedService : IFeedService
@@ -70,6 +74,32 @@ namespace ripple.New.Model
 			Task.WaitAll(tasks);
 
 			return nugets;
+		}
+
+		public IEnumerable<IRemoteNuget> DependenciesFor(Solution solution, Dependency dependency)
+		{
+			var nuget = NugetFor(solution, dependency);
+			var feeds = solution.Feeds.Select(x => x.GetNugetFeed()).ToList();
+			var dependencies = new List<IRemoteNuget>();
+
+			foreach (var feed in feeds)
+			{
+				var package = feed.Repository.FindPackage(nuget.Name, nuget.Version);
+				if (package == null) continue;
+
+				var dependents = package
+					.DependencySets
+					.SelectMany(x => x.Dependencies);
+
+				dependents.Each(x =>
+				{
+					var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
+					var dependentNuget = NugetFor(solution, new Dependency(x.Id, version.ToString()));
+					dependencies.Add(dependentNuget);
+				});
+			}
+			
+			return dependencies;
 		}
 
 		private Task updateNuget(List<IRemoteNuget> nugets, Solution solution, Dependency dependency)

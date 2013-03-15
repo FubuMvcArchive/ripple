@@ -47,7 +47,7 @@ namespace ripple.Testing.New.Model
 		[Test]
 		public void reads_the_dependencies()
 		{
-			theProject.Dependencies.ShouldHaveTheSameElementsAs(d1, d2);
+			theProject.Dependencies.ShouldHaveTheSameElementsAs(d2, d1);
 		}
 	}
 }

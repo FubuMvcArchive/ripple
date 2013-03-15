@@ -16,12 +16,18 @@ namespace ripple.New.Commands
 		[FlagAlias("cache", 'c')]
 		public string CacheFlag { get; set; }
 
-		public virtual void Apply(Solution solution)
+		public void Apply(Solution solution)
 		{
 			if (CacheFlag.IsNotEmpty())
 			{
 				solution.UseCache(new NugetFolderCache(CacheFlag.ToFullPath()));
 			}
+
+			ApplyTo(solution);
+		}
+
+		public virtual void ApplyTo(Solution solution)
+		{
 		}
 
 		public virtual string DescribePlan(Solution solution)

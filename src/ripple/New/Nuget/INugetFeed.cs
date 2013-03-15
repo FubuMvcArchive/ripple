@@ -1,4 +1,5 @@
-﻿using ripple.New.Model;
+﻿using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -6,5 +7,7 @@ namespace ripple.New.Nuget
     {
         IRemoteNuget Find(Dependency query);
 		IRemoteNuget FindLatest(Dependency query);
+
+		IPackageRepository Repository { get; }
     }
 }

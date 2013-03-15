@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FubuCore;
 using NuGet;
 using ripple.New.Model;
 
@@ -39,10 +40,9 @@ namespace ripple.New.Nuget
 
 		public IRemoteNuget FindLatest(Dependency query)
         {
-			RippleLog.Debug("Searching for " + query);
+			RippleLog.Debug("Searching for {0} from {1}".ToFormat(query, _url));
             var candidates = _repository.Search(query.Name, query.Stability == NugetStability.Anything)
                                         .Where(x => x.Id == query.Name).OrderBy(x => x.Id).ToList();
-
 
             var candidate = candidates.FirstOrDefault(x => x.IsAbsoluteLatestVersion)
                             ?? candidates.FirstOrDefault(x => x.IsLatestVersion);
@@ -54,5 +54,7 @@ namespace ripple.New.Nuget
 
             return new RemoteNuget(candidate);
         }
+
+		public IPackageRepository Repository { get { return _repository; } }
     }
 }

@@ -101,6 +101,7 @@
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
+    <Compile Include="New\Commands\InstallCommand.cs" />
     <Compile Include="New\Commands\RestoreCommand.cs" />
     <Compile Include="New\Commands\SolutionInput.cs" />
     <Compile Include="New\Commands\UpdateCommand.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="New\Model\ISolutionBuilder.cs" />
     <Compile Include="New\Model\ISolutionFiles.cs" />
     <Compile Include="New\Model\Dependency.cs" />
+    <Compile Include="New\Model\PackageInstallation.cs" />
     <Compile Include="New\Model\Project.cs" />
     <Compile Include="New\Model\ReferenceAttacher.cs" />
     <Compile Include="New\Model\Solution.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="New\Steps\ExplodeDownloadedNugets.cs" />
     <Compile Include="New\Steps\DownloadedNugets.cs" />
     <Compile Include="New\Steps\DownloadUpdatedDependencies.cs" />
+    <Compile Include="New\Steps\InstallNuget.cs" />
     <Compile Include="New\Steps\UpdateReferences.cs" />
     <Compile Include="New\Steps\ValidateRepository.cs" />
     <Compile Include="Nuget\INugetService.cs" />

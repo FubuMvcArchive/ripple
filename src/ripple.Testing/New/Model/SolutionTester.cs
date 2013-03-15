@@ -130,7 +130,7 @@ namespace ripple.Testing.New.Model
 			var dependency = new Dependency("Bottles", "1.0.0.0");
 			
 			var solution = new Solution();
-			solution.Dependencies.Add(dependency);
+			solution.AddDependency(dependency);
 
 			solution.FindDependency("Bottles").ShouldEqual(dependency);
 		}

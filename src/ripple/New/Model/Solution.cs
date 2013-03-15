@@ -18,7 +18,7 @@ namespace ripple.New.Model
 		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
 		private readonly Lazy<IEnumerable<Dependency>> _missing;
 		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates;
-		private readonly Lazy<DependencyCollection> _dependencies; 
+		private Lazy<DependencyCollection> _dependencies; 
 
 		public Solution()
 		{
@@ -37,7 +37,8 @@ namespace ripple.New.Model
 
 			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
-			_dependencies = new Lazy<DependencyCollection>(combineDependencies);
+			
+			resetDependencies();
 		}
 
 		public string Name { get; set; }
@@ -53,6 +54,11 @@ namespace ripple.New.Model
 		public IFeedService FeedService { get; private set; }
 		[XmlIgnore]
 		public INugetCache Cache { get; private set; }
+
+		private void resetDependencies()
+		{
+			_dependencies = new Lazy<DependencyCollection>(combineDependencies);
+		}
 
 		private DependencyCollection combineDependencies()
 		{
@@ -131,6 +137,7 @@ namespace ripple.New.Model
 
 		public void AddDependency(Dependency dependency)
 		{
+			resetDependencies();
 			_configuredDependencies.Fill(dependency);
 		}
 

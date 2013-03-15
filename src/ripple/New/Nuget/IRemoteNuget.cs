@@ -22,5 +22,10 @@ namespace ripple.New.Nuget
 		{
 			return nuget.Version > dependency.Version;
 		}
+
+		public static Dependency ToDependency(this IRemoteNuget nuget, UpdateMode mode = UpdateMode.Float)
+		{
+			return new Dependency(nuget.Name, nuget.Version.ToString(), mode);
+		}
 	}
 }
