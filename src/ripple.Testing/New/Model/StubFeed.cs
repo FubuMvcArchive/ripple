@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using FubuCore.Util;
 using NuGet;
 using ripple.New.Model;
 using ripple.New.Nuget;
@@ -8,16 +10,16 @@ namespace ripple.Testing.New.Model
 {
 	public class StubFeedProvider : IFeedProvider
 	{
-		private readonly StubFeed _feed;
+		private readonly Cache<Feed, StubFeed> _feeds;
 
-		public StubFeedProvider(StubFeed feed)
+		public StubFeedProvider()
 		{
-			_feed = feed;
+			_feeds = new Cache<Feed, StubFeed>(feed => new StubFeed());
 		}
 
 		public INugetFeed For(Feed feed)
 		{
-			return _feed;
+			return _feeds[feed];
 		}
 	}
 
@@ -25,14 +27,20 @@ namespace ripple.Testing.New.Model
 	{
 		private readonly IList<IRemoteNuget> _nugets = new List<IRemoteNuget>();
 
-		public void Add(string name, string version)
+		public StubFeed()
 		{
-			Add(new Dependency(name, version));
+			UseRepository(new StubPackageRepository());
 		}
 
-		public void Add(Dependency dependency)
+		public StubFeed Add(string name, string version)
+		{
+			return Add(new Dependency(name, version));
+		}
+
+		public StubFeed Add(Dependency dependency)
 		{
 			_nugets.Add(new StubNuget(dependency));
+			return this;
 		}
 
 		public IRemoteNuget Find(Dependency query)
@@ -48,6 +56,11 @@ namespace ripple.Testing.New.Model
 			              .FirstOrDefault();
 		}
 
-		public IPackageRepository Repository { get; private set; }
+		public void UseRepository(StubPackageRepository repository)
+		{
+			Repository = repository;
+		}
+
+		public IPackageRepository Repository { get; set; }
 	}
 }

@@ -1,29 +1,55 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FubuCore;
+using FubuCore.Descriptions;
 using ripple.New.Commands;
 using ripple.New.Model;
 using ripple.New.Nuget;
 
 namespace ripple.New.Steps
 {
-	public class InstallNuget : IRippleStep
+	public class InstallNuget : IRippleStep, DescribesItself
 	{
 		public Solution Solution { get; set; }
 
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
 			var configuration = input.As<InstallInput>();
-
-			var nugets = Solution.FeedService.DependenciesFor(Solution, configuration.Dependency);
-
-			// TODO -- Need serious test coverage over: a) What to install and b) What to update
-			nugets.Each(nuget =>
+			if (configuration.Target == InstallationTarget.Solution)
 			{
-				var dependency = nuget.ToDependency();
-				var installation = configuration.InstallationFor(dependency);
+				PackageInstallation.ForSolution(configuration.Dependency).InstallTo(Solution);
+				return;
+			}
 
-				installation.InstallTo(Solution);
+			var project = Solution.FindProject(configuration.ProjectFlag);
+			var plan = InstallationPlan.Create(Solution, project, configuration.Dependency);
+
+			RippleLog.DebugMessage(plan);
+
+			plan.Installations.Each(x => PackageInstallation.ForProject(configuration.ProjectFlag, x).InstallTo(Solution));
+
+			var updates = Solution.Updates().Where(x => plan.Updates.Any(y => y.Name == x.Name));
+			var nugets = new List<INugetFile>();
+
+			var tasks = updates.Select(x => download(x, Solution, nugets)).ToArray();
+			Task.WaitAll(tasks);
+
+			runner.Set(new DownloadedNugets(nugets));
+		}
+
+		private static Task download(IRemoteNuget nuget, Solution solution, List<INugetFile> nugets)
+		{
+			return Task.Factory.StartNew(() =>
+			{
+				RippleLog.Debug("Downloading " + nuget);
+				nugets.Add(nuget.DownloadTo(solution.PackagesDirectory()));
 			});
+		}
+
+		public void Describe(Description description)
+		{
+			description.ShortDescription = "Install nuget and dependencies";
 		}
 	}
 }

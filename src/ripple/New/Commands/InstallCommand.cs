@@ -29,32 +29,17 @@ namespace ripple.New.Commands
 		[FlagAlias("project", 'p')]
 		public string ProjectFlag { get; set; }
 
+		public InstallationTarget Target
+		{
+			get { return ProjectFlag.IsNotEmpty() ? InstallationTarget.Project : InstallationTarget.Solution; }
+		}
+
 		public Dependency Dependency
 		{
 			get
 			{
 				return new Dependency(Package, VersionFlag, ModeFlag);
 			}
-		}
-
-		public PackageInstallation Installation
-		{
-			get { return InstallationFor(Dependency); }
-		}
-
-		public PackageInstallation InstallationFor(Dependency dependency)
-		{
-			if (ProjectFlag.IsNotEmpty())
-			{
-				return PackageInstallation.ForProject(ProjectFlag, dependency);
-			}
-
-			return PackageInstallation.ForSolution(dependency);
-		}
-
-		public override void ApplyTo(Solution solution)
-		{
-			Installation.InstallTo(solution);
 		}
 
 		public override string DescribePlan(Solution solution)
@@ -70,6 +55,9 @@ namespace ripple.New.Commands
 			return RipplePlan
 				.For<InstallInput>(input)
 				.Step<InstallNuget>()
+				.Step<DownloadMissingNugets>()
+				.Step<ExplodeDownloadedNugets>()
+				.Step<UpdateReferences>()
 				.Execute();
 		}
 	}

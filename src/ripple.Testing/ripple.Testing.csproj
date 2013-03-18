@@ -77,11 +77,17 @@
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
     <Compile Include="New\DependencyCollectionExtensions.cs" />
+    <Compile Include="New\FeedScenario.cs" />
     <Compile Include="New\Model\DependencyCollectionTester.cs" />
     <Compile Include="New\Model\DependencyInstallationScenario.cs" />
     <Compile Include="New\Model\DependencyParsing.cs" />
     <Compile Include="New\Model\DependencyTester.cs" />
+    <Compile Include="New\Model\finding_dependencies_for_a_package.cs" />
     <Compile Include="New\Model\finding_the_latest_dependency.cs" />
+    <Compile Include="New\Model\InstallationScenario.cs" />
+    <Compile Include="New\Model\installation_plan_for_new_package.cs" />
+    <Compile Include="New\Model\installation_plan_for_package_with_existing_dependencies_with_floating_updates_same_version.cs" />
+    <Compile Include="New\Model\installation_plan_for_package_with_floating_updates.cs" />
     <Compile Include="New\Model\installing_dependencies.cs" />
     <Compile Include="New\Model\IntegratedSolutonUpdatesTester.cs" />
     <Compile Include="New\Model\finding_solution_nugets_to_restore.cs" />
@@ -90,7 +96,6 @@
     <Compile Include="New\Model\SolutionFilesTester.cs" />
     <Compile Include="New\Model\StubFeed.cs" />
     <Compile Include="New\Model\StubNugetFile.cs" />
-    <Compile Include="New\Model\StubNugetStorage.cs" />
     <Compile Include="New\Model\updating_solution_dependencies.cs" />
     <Compile Include="New\Nuget\CacheableNugetTester.cs" />
     <Compile Include="New\Nuget\NugetFeedSmokeTester.cs" />
@@ -103,7 +108,10 @@
     <Compile Include="New\Model\SolutionPersistence.cs" />
     <Compile Include="New\Model\SolutionTester.cs" />
     <Compile Include="New\RipplePlanTester.cs" />
+    <Compile Include="New\StubFeedService.cs" />
     <Compile Include="New\StubNuget.cs" />
+    <Compile Include="New\StubNugetStorage.cs" />
+    <Compile Include="New\StubPackage.cs" />
     <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\PackageRepositoryBuilderTester.cs" />
@@ -196,6 +204,7 @@
   <ItemGroup>
     <Folder Include="data\junk1\" />
     <Folder Include="data\junk2\" />
+    <Folder Include="New\Steps\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

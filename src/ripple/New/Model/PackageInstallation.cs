@@ -25,6 +25,8 @@
 
 		private void installToProject(Solution solution)
 		{
+			RippleLog.Debug("Installing " + Dependency);
+
 			var project = solution.FindProject(Project);
 			project.AddDependency(new Dependency(Dependency.Name));
 

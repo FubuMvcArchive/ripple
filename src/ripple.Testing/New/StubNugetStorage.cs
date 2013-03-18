@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ripple.New.Model;
 using ripple.New.Nuget;
+using ripple.Testing.New.Model;
 
-namespace ripple.Testing.New.Model
+namespace ripple.Testing.New
 {
 	public class StubNugetStorage : INugetStorage
 	{

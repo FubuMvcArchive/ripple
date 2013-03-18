@@ -70,6 +70,11 @@ namespace ripple.New.Model
 			existing.Version = dependency.Version;
 		}
 
+		public bool Has(string name)
+		{
+			return Find(name) != null;
+		}
+
 		public Dependency Find(string name)
 		{
 			var topLevel = _dependencies.SingleOrDefault(x => x.Name == name);

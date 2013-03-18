@@ -11,8 +11,6 @@ namespace ripple.Testing.New.Model
 		private Solution theSolution;
 		private StubNugetStorage theStorage;
 
-		private StubFeed theFeed;
-
 		[SetUp]
 		public void SetUp()
 		{
@@ -28,11 +26,12 @@ namespace ripple.Testing.New.Model
 			theSolution.AddFeed(new Feed("local"));
 			theSolution.UseStorage(theStorage);
 
-			theFeed = new StubFeed();
-			theFeed.Add("FubuCore", "1.0.0.1");
-			theFeed.Add("Bottles", "1.0.0.0");
-
-			FeedRegistry.Stub(new StubFeedProvider(theFeed));
+			FeedScenario.Create(scenario =>
+			{
+				scenario.For(new Feed("local"))
+					.Add("FubuCore", "1.0.0.1")
+					.Add("Bottles", "1.0.0.0");
+			});
 		}
 
 		[Test]

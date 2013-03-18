@@ -110,8 +110,10 @@
     <Compile Include="New\Model\DependencyCollection.cs" />
     <Compile Include="New\Model\Feed.cs" />
     <Compile Include="New\Model\FeedRegistry.cs" />
+    <Compile Include="New\Model\FeedService.cs" />
     <Compile Include="New\Model\IDependencyStrategy.cs" />
     <Compile Include="New\Model\IFeedService.cs" />
+    <Compile Include="New\Model\InstallationPlan.cs" />
     <Compile Include="New\Model\NuGetDependencyStrategy.cs" />
     <Compile Include="New\Model\IProjectReader.cs" />
     <Compile Include="New\Model\ISolutionBuilder.cs" />

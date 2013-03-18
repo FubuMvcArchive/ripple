@@ -23,8 +23,15 @@ namespace ripple.New.Nuget
         }
 
 		public IRemoteNuget Find(Dependency query)
-        {
-            var versionSpec = new VersionSpec(SemanticVersion.Parse(query.Version));
+		{
+			SemanticVersion version;
+			if (!SemanticVersion.TryParse(query.Version, out version))
+			{
+				RippleLog.Debug("Could not find exact for " + query);
+				return null;
+			}
+
+            var versionSpec = new VersionSpec(version);
             var package = _repository.FindPackages(query.Name, versionSpec, query.Stability == NugetStability.Anything, true).SingleOrDefault();
 
             if (package == null)

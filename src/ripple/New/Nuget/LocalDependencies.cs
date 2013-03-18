@@ -25,7 +25,12 @@ namespace ripple.New.Nuget
 
 		public bool Has(Dependency dependency)
 		{
-			return _dependencies.Any(x => x.Name == dependency.Name);
+			return Has(dependency.Name);
+		}
+
+		public bool Has(string name)
+		{
+			return _dependencies.Any(x => x.Name == name);
 		}
 
 		public IEnumerable<INugetFile> All()

@@ -240,6 +240,14 @@ namespace ripple.New.Model
 			Projects.Each(Storage.Write);
 		}
 
+		public static Solution Empty()
+		{
+			var solution = new Solution();
+			solution.ClearFeeds();
+
+			return solution;
+		}
+
 		public static Solution For(SolutionInput input)
 		{
 			var builder = SolutionBuilder.Basic();

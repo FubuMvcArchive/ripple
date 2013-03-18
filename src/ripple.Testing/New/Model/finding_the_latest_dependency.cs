@@ -8,7 +8,7 @@ namespace ripple.Testing.New.Model
 	public class finding_the_latest_dependency
 	{
 		private FeedService theFeedService;
-		private StubFeed theFeed;
+		private Feed theFeed;
 		private Solution theSolution;
 		private StubNugetStorage theStorage;
 
@@ -16,22 +16,27 @@ namespace ripple.Testing.New.Model
 		public void SetUp()
 		{
 			theFeedService = new FeedService();
-			
-			theFeed = new StubFeed();
-			theFeed.Add(new Dependency("Bottles", "1.0.0.0"));
-			theFeed.Add(new Dependency("Bottles", "1.0.1.0"));
-			theFeed.Add(new Dependency("FubuCore", "1.2.0.0"));
-			theFeed.Add(new Dependency("StructureMap", "2.6.4.54"));
-			FeedRegistry.Stub(new StubFeedProvider(theFeed));
 
+			theFeed = new Feed("testing");
 			theStorage = new StubNugetStorage();
 
 			theSolution = new Solution();
 			theSolution.UseStorage(theStorage);
-			theSolution.AddFeed(new Feed("testing"));
+			theSolution.AddFeed(theFeed);
 			theSolution.AddDependency(new Dependency("Bottles", "1.0.0.0"));
 			theSolution.AddDependency(new Dependency("FubuCore"));
 			theSolution.AddDependency(new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
+
+			FeedScenario.Create(scenario =>
+			{
+				scenario.For(theFeed)
+					    .Add(new Dependency("Bottles", "1.0.0.0"))
+					    .Add(new Dependency("Bottles", "1.0.1.0"))
+					    .Add(new Dependency("FubuCore", "1.2.0.0"))
+					    .Add(new Dependency("StructureMap", "2.6.4.54"));
+			});
+
+			
 		}
 
 		[Test]
