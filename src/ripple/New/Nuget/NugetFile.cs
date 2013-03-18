@@ -1,13 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
 
 namespace ripple.New.Nuget
 {
-	// TODO -- Maybe we have a separate implementation to do the NuGet style?
+	public class NugetName
+	{
+		public string Name { get; private set; }
+		public SemanticVersion Version { get; private set; }
+
+		public static NugetName Parse(string input)
+		{
+			var index = 0;
+			var periodFound = false;
+
+			for (var i = 0; i < input.Length; i++)
+			{
+				var character = input[i];
+				if (character == '.')
+				{
+					periodFound = true;
+					continue;
+				}
+
+				if (periodFound && char.IsNumber(character))
+				{
+					index = i;
+					break;
+				}
+			}
+
+			if (index == 0)
+			{
+				throw new InvalidOperationException("Invalid package name");
+			}
+
+			return new NugetName
+			{
+				Name = input.Substring(0, index - 1),
+				Version = SemanticVersion.Parse(input.Substring(index))
+			};
+		}
+	}
+
     public class NugetFile : INugetFile, DescribesItself
     {
         private readonly string _path;
@@ -17,14 +57,11 @@ namespace ripple.New.Nuget
             _path = path;
 
             var file = Path.GetFileNameWithoutExtension(path);
-            var parts = file.Split('.');
-            Name = parts.Reverse().Skip(4).Reverse().Join(".");
+	        var result = NugetName.Parse(file);
 
-            var versionParts = parts.Reverse().Take(4).Reverse().ToList();
-
-            Version = SemanticVersion.Parse(versionParts.Join("."));
-
-            IsPreRelease = Version.SpecialVersion.IsNotEmpty();
+	        Name = result.Name;
+	        Version = result.Version;
+	        IsPreRelease = Version.SpecialVersion.IsNotEmpty();
         }
 
 		public string FileName { get { return _path; } }
@@ -37,9 +74,14 @@ namespace ripple.New.Nuget
             return string.Format("Name: {0}, Version: {1}, IsPreRelease: {2}", Name, Version, IsPreRelease);
         }
 
+		public virtual string ExplodedDirectory(string directory)
+		{
+			return directory.AppendPath(Name, Version.ToString());
+		}
+
         public IPackage ExplodeTo(string directory)
         {
-            var explodedDirectory = directory.AppendPath(Name);
+	        var explodedDirectory = ExplodedDirectory(directory);
             var fileSystem = new FileSystem();
             fileSystem.CreateDirectory(explodedDirectory);
             fileSystem.CleanDirectory(explodedDirectory);
@@ -72,10 +114,32 @@ namespace ripple.New.Nuget
 			return new NugetFile(target);
 	    }
 
+		protected virtual INugetFile createCopy(string file)
+		{
+			return new NugetFile(file);
+		}
+
 	    public void Describe(Description description)
 	    {
 		    description.Title = Name;
 		    description.ShortDescription = "Version: {0}, IsPreRelease: {1}".ToFormat(Version, IsPreRelease);
 	    }
     }
+
+	public class RippleNugetFile : NugetFile
+	{
+		public RippleNugetFile(string path) : base(path)
+		{
+		}
+
+		public override string ExplodedDirectory(string directory)
+		{
+			return directory.AppendPath(Name);
+		}
+
+		protected override INugetFile createCopy(string file)
+		{
+			return new RippleNugetFile(file);
+		}
+	}
 }

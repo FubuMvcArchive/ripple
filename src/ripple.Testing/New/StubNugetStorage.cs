@@ -31,6 +31,10 @@ namespace ripple.Testing.New
 			throw new System.NotImplementedException();
 		}
 
+		public void Reset(Solution solution)
+		{
+		}
+
 		public LocalDependencies Dependencies(Solution solution)
 		{
 			return new LocalDependencies(_files);

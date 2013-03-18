@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FubuCore;
+using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
@@ -11,7 +12,11 @@ namespace ripple.New.Model
 		bool Matches(Project project);
 		IEnumerable<Dependency> Read(Project project);
 
+		INugetFile FileFor(string path);
+
 		void Write(Project project);
+
+		void RemoveDependencyConfigurations(Project project);
 	}
 
 	public class RippleDependencyStrategy : IDependencyStrategy
@@ -51,12 +56,22 @@ namespace ripple.New.Model
 			return dependencies;
 		}
 
+		public INugetFile FileFor(string path)
+		{
+			return new RippleNugetFile(path);
+		}
+
 		public void Write(Project project)
 		{
 			var dependencies = new StringBuilder();
 			project.Dependencies.Each(dependency => dependencies.AppendLine(dependency.ToString()));
 
 			_fileSystem.WriteStringToFile(FileFor(project), dependencies.ToString());
+		}
+
+		public void RemoveDependencyConfigurations(Project project)
+		{
+			_fileSystem.DeleteFile(FileFor(project));
 		}
 	}
 }

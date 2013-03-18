@@ -20,6 +20,15 @@ namespace ripple.Testing.New.Model
 		}
 
 		[Test]
+		public void make_float()
+		{
+			var dependency = new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed);
+			dependency.Float();
+
+			dependency.IsFloat().ShouldBeTrue();
+		}
+
+		[Test]
 		public void to_string()
 		{
 			new Dependency("Bottles").ToString().ShouldEqual("Bottles");

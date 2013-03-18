@@ -8,9 +8,18 @@ namespace ripple.New.Commands
 {
 	public class SolutionInput
 	{
+		public SolutionInput()
+		{
+			ModeFlag = SolutionMode.Ripple;
+		}
+
 		[Description("override the solution to be cleaned")]
 		[FlagAlias("solution", 'l')]
 		public string SolutionFlag { get; set; }
+
+		[Description("Override the Solution mode (Classic or Ripple)")]
+		[FlagAlias("mode", 'm')]
+		public SolutionMode ModeFlag { get; set; }
 
 		[Description("Override the NuGet cache")]
 		[FlagAlias("cache", 'c')]

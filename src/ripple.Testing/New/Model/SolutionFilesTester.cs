@@ -20,7 +20,7 @@ namespace ripple.Testing.New.Model
 			theFileSystem = new FileSystem();
 			theFileSystem.CreateDirectory("SolutionFiles");
 
-			theSolutionFiles = new SolutionFiles(theFileSystem);
+			theSolutionFiles = new SolutionFiles(theFileSystem, new SolutionLoader());
 			theSolutionFiles.RootDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SolutionFiles");
 			
 			theFileSystem.CreateDirectory("SolutionFiles", "src");

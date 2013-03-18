@@ -32,10 +32,12 @@ namespace ripple.New.Model
 				solution.AddProject(project);
 			});
 
-			// TODO -- Maybe switch on the configured mode? Nuget vs. Ripple
-			solution.UseStorage(RippleStorage.Basic());
+
+			solution.UseStorage(NugetStorage.For(solution.Mode));
 
 			_fileSystem.CreateDirectory(solution.PackagesDirectory());
+
+			_files.FinalizeSolution(solution);
 
 			return solution;
 		}
@@ -43,6 +45,16 @@ namespace ripple.New.Model
 		public static ISolutionBuilder Basic()
 		{
 			return new SolutionBuilder(SolutionFiles.Basic(), ProjectReader.Basic());
+		}
+
+		public static ISolutionBuilder Classic()
+		{
+			return new SolutionBuilder(SolutionFiles.Classic(), ProjectReader.Basic());
+		}
+
+		public static ISolutionBuilder For(SolutionMode mode)
+		{
+			return mode == SolutionMode.Ripple ? Basic() : Classic();
 		}
 	}
 }

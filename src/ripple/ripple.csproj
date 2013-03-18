@@ -101,6 +101,8 @@
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
+    <Compile Include="New\Classic\NuGetSolutionLoader.cs" />
+    <Compile Include="New\Commands\ConvertCommand.cs" />
     <Compile Include="New\Commands\InstallCommand.cs" />
     <Compile Include="New\Commands\RestoreCommand.cs" />
     <Compile Include="New\Commands\SolutionInput.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="New\Model\IDependencyStrategy.cs" />
     <Compile Include="New\Model\IFeedService.cs" />
     <Compile Include="New\Model\InstallationPlan.cs" />
+    <Compile Include="New\Model\ISolutionLoader.cs" />
     <Compile Include="New\Model\NuGetDependencyStrategy.cs" />
     <Compile Include="New\Model\IProjectReader.cs" />
     <Compile Include="New\Model\ISolutionBuilder.cs" />

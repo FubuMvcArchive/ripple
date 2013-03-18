@@ -10,6 +10,12 @@ using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
+	public enum SolutionMode
+	{
+		Ripple,
+		Classic
+	}
+
 	[XmlType("ripple")]
 	public class Solution : DescribesItself, LogTopic
 	{
@@ -26,12 +32,13 @@ namespace ripple.New.Model
 			SourceFolder = "src";
 			BuildCommand = "rake";
 			FastBuildCommand = "rake compile";
+			Mode = SolutionMode.Ripple;
 
 			AddFeed(Feed.Fubu);
 			AddFeed(Feed.NuGetV2);
 			AddFeed(Feed.NuGetV1);
 
-			UseStorage(RippleStorage.Basic());
+			UseStorage(NugetStorage.Basic());
 			UseFeedService(new FeedService());
 			UseCache(NugetFolderCache.DefaultFor(this));
 
@@ -47,6 +54,14 @@ namespace ripple.New.Model
 		public string SourceFolder { get; set; }
 		public string BuildCommand { get; set; }
 		public string FastBuildCommand { get; set; }
+		public SolutionMode Mode { get; set; }
+
+		public void ConvertTo(SolutionMode mode)
+		{
+			Mode = mode;
+			Storage.Reset(this);
+			UseStorage(NugetStorage.For(mode));
+		}
 
 		[XmlIgnore]
 		public INugetStorage Storage { get; private set; }
@@ -135,6 +150,14 @@ namespace ripple.New.Model
 			_projects.Fill(project);
 		}
 
+		public Project AddProject(string name)
+		{
+			var project = new Project(name);
+			AddProject(project);
+
+			return project;
+		}
+
 		public void AddDependency(Dependency dependency)
 		{
 			resetDependencies();
@@ -170,6 +193,9 @@ namespace ripple.New.Model
 		{
 			description.Title = "Solution \"{0}\"".ToFormat(Name);
 			description.ShortDescription = Path;
+
+			var configured = description.AddList("SolutionLevel", _configuredDependencies.OrderBy(x => x.Name));
+			configured.Label = "Solution-Level";
 
 			var feedsList = description.AddList("Feeds", Feeds);
 			feedsList.Label = "NuGet Feeds";
@@ -250,7 +276,7 @@ namespace ripple.New.Model
 
 		public static Solution For(SolutionInput input)
 		{
-			var builder = SolutionBuilder.Basic();
+			var builder = SolutionBuilder.For(input.ModeFlag);
 
 			// TODO -- Need to allow a specific solution
 			return builder.Build();

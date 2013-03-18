@@ -122,5 +122,11 @@ namespace ripple.New.Model
 
 			return dependency;
 		}
+
+		public void Float()
+		{
+			Version = string.Empty;
+			Mode = UpdateMode.Float;
+		}
 	}
 }

@@ -76,6 +76,7 @@
     <Compile Include="MakeTestData.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
+    <Compile Include="New\Classic\NuGetSolutionLoaderTester.cs" />
     <Compile Include="New\DependencyCollectionExtensions.cs" />
     <Compile Include="New\FeedScenario.cs" />
     <Compile Include="New\Model\DependencyCollectionTester.cs" />
@@ -128,6 +129,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Bottles.1.0.0.441.nupkg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="data\bottles\packaging\nuget\bottles.deployers.iis.nuspec" />
     <None Include="data\bottles\packaging\nuget\bottles.deployers.topshelf.nuspec" />
     <None Include="data\bottles\packaging\nuget\bottles.deployment.nuspec" />

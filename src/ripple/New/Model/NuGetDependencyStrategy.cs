@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using FubuCore;
+using ripple.New.Nuget;
 
 namespace ripple.New.Model
 {
@@ -24,10 +25,20 @@ namespace ripple.New.Model
 			return ReadFrom(document);
 		}
 
+		public INugetFile FileFor(string path)
+		{
+			return new NugetFile(path);
+		}
+
 		public void Write(Project project)
 		{
 			// TODO -- write out the packages.config
 			throw new System.NotImplementedException();
+		}
+
+		public void RemoveDependencyConfigurations(Project project)
+		{
+			_fileSystem.DeleteFile(Path.Combine(project.Directory, PackagesConfig));
 		}
 
 		public static IEnumerable<Dependency> ReadFrom(XmlDocument document)
@@ -40,7 +51,7 @@ namespace ripple.New.Model
 
 		public static Dependency ReadFrom(XmlElement element)
 		{
-			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"));
+			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"), UpdateMode.Fixed);
 		}
 	}
 }

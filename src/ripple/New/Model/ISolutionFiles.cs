@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using FubuCore;
+using ripple.New.Classic;
 
 namespace ripple.New.Model
 {
@@ -14,6 +15,8 @@ namespace ripple.New.Model
 		void ForProjects(Action<string> action);
 
 		Solution LoadSolution();
+
+		void FinalizeSolution(Solution solution);
 	}
 
 	public class SolutionFiles : ISolutionFiles
@@ -21,8 +24,9 @@ namespace ripple.New.Model
 		public const string ConfigFile = "ripple.config";
 
 		private readonly IFileSystem _fileSystem;
+		private readonly ISolutionLoader _loader;
 
-		public SolutionFiles(IFileSystem fileSystem)
+		public SolutionFiles(IFileSystem fileSystem, ISolutionLoader loader)
 		{
 			BuildSupportDir = Assembly.GetExecutingAssembly().Location.ToFullPath();
 			RootDir = BuildSupportDir.ParentDirectory().ParentDirectory();
@@ -30,6 +34,7 @@ namespace ripple.New.Model
 			SrcDir = Path.Combine(RootDir, "src");
 
 			_fileSystem = fileSystem;
+			_loader = loader;
 		}
 
 		public string RootDir { get; set; }
@@ -49,16 +54,26 @@ namespace ripple.New.Model
 		public Solution LoadSolution()
 		{
 			var file = Path.Combine(RootDir, ConfigFile);
-			
-			var solution = _fileSystem.LoadFromFile<Solution>(file);
+
+			var solution = _loader.LoadFrom(_fileSystem, file);
 			solution.Path = file;
 
 			return solution;
 		}
 
+		public void FinalizeSolution(Solution solution)
+		{
+			_loader.SolutionLoaded(solution);
+		}
+
 		public static SolutionFiles Basic()
 		{
-			return new SolutionFiles(new FileSystem());
+			return new SolutionFiles(new FileSystem(), new SolutionLoader());
+		}
+
+		public static SolutionFiles Classic()
+		{
+			return new SolutionFiles(new FileSystem(), new NuGetSolutionLoader());
 		}
 	}
 }

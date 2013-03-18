@@ -20,7 +20,7 @@ namespace ripple.Testing.New.Model
 		[Test]
 		public void default_storage()
 		{
-			new Solution().Storage.ShouldBeOfType<RippleStorage>();
+			new Solution().Storage.ShouldBeOfType<NugetStorage>();
 		}
 
 		[Test]
@@ -29,6 +29,11 @@ namespace ripple.Testing.New.Model
 			new Solution().FeedService.ShouldBeOfType<FeedService>();
 		}
 
+		[Test]
+		public void default_mode_is_ripple()
+		{
+			new Solution().Mode.ShouldEqual(SolutionMode.Ripple);
+		}
 
 		[Test]
 		public void adding_a_project_sets_the_solution()
@@ -164,6 +169,21 @@ namespace ripple.Testing.New.Model
 
 			storage.AssertWasCalled(x => x.Write(solution));
 			storage.AssertWasCalled(x => x.Write(project));
+		}
+
+		[Test]
+		public void convert_solution()
+		{
+			var storage = MockRepository.GenerateStub<INugetStorage>();
+
+			var solution = new Solution();
+			solution.UseStorage(storage);
+
+			solution.ConvertTo(SolutionMode.Ripple);
+
+			storage.AssertWasCalled(x => x.Reset(solution));
+
+			solution.Storage.ShouldBeOfType<NugetStorage>().Strategy.ShouldBeOfType<RippleDependencyStrategy>();
 		}
 	}
 }

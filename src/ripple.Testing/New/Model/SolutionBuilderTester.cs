@@ -48,7 +48,7 @@ namespace ripple.Testing.New.Model
 		[Test]
 		public void sets_the_storage()
 		{
-			theSolution.Storage.ShouldBeOfType<RippleStorage>();
+			theSolution.Storage.ShouldBeOfType<NugetStorage>();
 		}
 
 		[Test]
@@ -84,6 +84,10 @@ namespace ripple.Testing.New.Model
 		public Solution LoadSolution()
 		{
 			return _solution;
+		}
+
+		public void FinalizeSolution(Solution solution)
+		{
 		}
 	}
 }
