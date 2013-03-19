@@ -58,7 +58,7 @@ namespace ripple.New.Model
 
 		public INugetFile FileFor(string path)
 		{
-			return new RippleNugetFile(path);
+			return new NugetFile(path, SolutionMode.Ripple);
 		}
 
 		public void Write(Project project)

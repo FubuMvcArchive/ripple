@@ -28,7 +28,7 @@ namespace ripple.New.Steps
 			return Task.Factory.StartNew(() =>
 			{
 				RippleLog.Debug("Downloading " + nuget);
-				nugets.Add(nuget.DownloadTo(solution.PackagesDirectory()));
+				nugets.Add(nuget.DownloadTo(solution, solution.PackagesDirectory()));
 			});
 		}
 

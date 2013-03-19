@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -51,12 +52,14 @@ namespace ripple.New.Nuget
     public class NugetFile : INugetFile, DescribesItself
     {
         private readonly string _path;
+	    private readonly SolutionMode _mode;
 
-        public NugetFile(string path)
+	    public NugetFile(string path, SolutionMode mode)
         {
             _path = path;
+	        _mode = mode;
 
-            var file = Path.GetFileNameWithoutExtension(path);
+	        var file = Path.GetFileNameWithoutExtension(path);
 	        var result = NugetName.Parse(file);
 
 	        Name = result.Name;
@@ -76,12 +79,16 @@ namespace ripple.New.Nuget
 
 		public virtual string ExplodedDirectory(string directory)
 		{
-			return directory.AppendPath(Name, Version.ToString());
+			if(_mode == SolutionMode.Classic)
+				return directory.AppendPath(Name + "." + Version);
+
+			return directory.AppendPath(Name);
 		}
 
         public IPackage ExplodeTo(string directory)
         {
 	        var explodedDirectory = ExplodedDirectory(directory);
+
             var fileSystem = new FileSystem();
             fileSystem.CreateDirectory(explodedDirectory);
             fileSystem.CleanDirectory(explodedDirectory);
@@ -111,13 +118,9 @@ namespace ripple.New.Nuget
 		    var target = Path.Combine(directory, Path.GetFileName(_path));
 			new FileSystem().Copy(_path, target);
 
-			return new NugetFile(target);
+		    return new NugetFile(target, _mode);
 	    }
 
-		protected virtual INugetFile createCopy(string file)
-		{
-			return new NugetFile(file);
-		}
 
 	    public void Describe(Description description)
 	    {
@@ -125,21 +128,4 @@ namespace ripple.New.Nuget
 		    description.ShortDescription = "Version: {0}, IsPreRelease: {1}".ToFormat(Version, IsPreRelease);
 	    }
     }
-
-	public class RippleNugetFile : NugetFile
-	{
-		public RippleNugetFile(string path) : base(path)
-		{
-		}
-
-		public override string ExplodedDirectory(string directory)
-		{
-			return directory.AppendPath(Name);
-		}
-
-		protected override INugetFile createCopy(string file)
-		{
-			return new RippleNugetFile(file);
-		}
-	}
 }

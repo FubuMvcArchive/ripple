@@ -19,7 +19,7 @@ namespace ripple.Testing.New.Nuget
         [SetUp]
         public void SetUp()
         {
-            theCache = new NugetFolderCache(@"c:\nugets");
+            theCache = new NugetFolderCache(new Solution(), @"c:\nugets");
             fileSystem = new FileSystem();
         }
 

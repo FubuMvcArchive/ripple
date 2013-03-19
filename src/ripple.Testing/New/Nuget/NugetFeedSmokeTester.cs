@@ -29,7 +29,7 @@ namespace ripple.Testing.New.Nuget
         {
             var feed = new NugetFeed(RippleConstants.NugetOrgFeed.First());
 			var nuget = feed.FindLatest(new Dependency("FubuMVC.Core"));
-            nuget.DownloadTo("");
+            nuget.DownloadTo(null, "");
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ripple.New.Nuget
     {
         string Name { get; }
         SemanticVersion Version { get; }
-        INugetFile DownloadTo(string directory);
+        INugetFile DownloadTo(Solution solution, string directory);
         string Filename { get; }
 	}
 

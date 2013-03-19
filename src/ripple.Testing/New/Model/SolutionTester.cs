@@ -69,7 +69,7 @@ namespace ripple.Testing.New.Model
 			var solution = new Solution();
 			var storage = MockRepository.GenerateStub<INugetStorage>();
 
-			var dependencies = new LocalDependencies(new[] {new NugetFile("Bottles.1.0.1.252.nupkg")});
+			var dependencies = new LocalDependencies(new[] {new NugetFile("Bottles.1.0.1.252.nupkg", SolutionMode.Ripple)});
 			storage.Stub(x => x.Dependencies(solution)).Return(dependencies);
 
 			solution.UseStorage(storage);

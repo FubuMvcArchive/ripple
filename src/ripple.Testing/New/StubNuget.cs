@@ -20,7 +20,7 @@ namespace ripple.Testing.New
 		public string Name { get; private set; }
 		public SemanticVersion Version { get; private set; }
 
-		public INugetFile DownloadTo(string directory)
+		public INugetFile DownloadTo(Solution solution, string directory)
 		{
 			throw new System.NotImplementedException();
 		}

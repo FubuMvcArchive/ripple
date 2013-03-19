@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using FubuCore.Descriptions;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -19,14 +20,14 @@ namespace ripple.New.Nuget
             get { return _url; }
         }
 
-        public INugetFile DownloadTo(string filename)
+		public INugetFile DownloadTo(SolutionMode mode, string filename)
         {
             var client = new WebClient();
 
             Console.WriteLine("Downloading {0} to {1}", Url, filename);
             client.DownloadFile(Url, filename);
 
-            return new NugetFile(filename);
+            return new NugetFile(filename, mode);
         }
 
         private sealed class UrlEqualityComparer : IEqualityComparer<UrlNugetDownloader>

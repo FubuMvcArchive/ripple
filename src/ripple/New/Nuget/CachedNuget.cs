@@ -1,6 +1,7 @@
 ﻿using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -16,7 +17,7 @@ namespace ripple.New.Nuget
 		public string Name { get { return _nuget.Name; } }
 		public SemanticVersion Version { get { return _nuget.Version; } }
 
-		public INugetFile DownloadTo(string directory)
+		public INugetFile DownloadTo(Solution solution, string directory)
 		{
 			return _nuget.CopyTo(directory);
 		}

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -17,14 +18,14 @@ namespace ripple.New.Nuget
             get { return _package; }
         }
 
-        public INugetFile DownloadTo(string filename)
+        public INugetFile DownloadTo(SolutionMode mode, string filename)
         {
             using (var stream = new FileStream(filename, FileMode.Create, FileAccess.Write))
             {
                 _package.GetStream().CopyTo(stream);
             }
 
-            return new NugetFile(filename);
+            return new NugetFile(filename, mode);
         }
     }
 }

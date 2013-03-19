@@ -27,7 +27,7 @@ namespace ripple.New.Model
 
 		public INugetFile FileFor(string path)
 		{
-			return new NugetFile(path);
+			return new NugetFile(path, SolutionMode.Classic);
 		}
 
 		public void Write(Project project)

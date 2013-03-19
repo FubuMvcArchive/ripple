@@ -34,7 +34,7 @@ namespace ripple.New.Steps
 				var nuget = solution.Restore(query);
 
 				RippleLog.Debug("Downloading " + nuget);
-				nugets.Add(nuget.DownloadTo(solution.PackagesDirectory()));
+				nugets.Add(nuget.DownloadTo(solution, solution.PackagesDirectory()));
 			});
 		}
 

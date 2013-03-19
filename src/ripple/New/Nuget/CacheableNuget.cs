@@ -1,6 +1,7 @@
 ﻿using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -20,9 +21,9 @@ namespace ripple.New.Nuget
 		public string Filename { get { return _inner.Filename; } }
 		public IRemoteNuget Inner { get { return _inner; } }
 
-		public INugetFile DownloadTo(string directory)
+		public INugetFile DownloadTo(Solution solution, string directory)
 		{
-			var nuget = _inner.DownloadTo(_directory);
+			var nuget = _inner.DownloadTo(solution, _directory);
 			return nuget.CopyTo(directory);
 		}
 

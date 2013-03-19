@@ -29,7 +29,7 @@ namespace ripple.New.Commands
 		{
 			if (CacheFlag.IsNotEmpty())
 			{
-				solution.UseCache(new NugetFolderCache(CacheFlag.ToFullPath()));
+				solution.UseCache(new NugetFolderCache(solution, CacheFlag.ToFullPath()));
 			}
 
 			ApplyTo(solution);

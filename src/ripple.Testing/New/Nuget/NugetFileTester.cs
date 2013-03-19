@@ -3,6 +3,7 @@ using NUnit.Framework;
 using NuGet;
 using FubuTestingSupport;
 using System.Linq;
+using ripple.New.Model;
 using ripple.New.Nuget;
 
 namespace ripple.Testing.New.Nuget
@@ -13,7 +14,7 @@ namespace ripple.Testing.New.Nuget
 		private NugetFile fileFor(string path)
 		{
 			new FileSystem().WriteStringToFile(path, "test");
-			return new NugetFile(path);
+			return new NugetFile(path, SolutionMode.Ripple);
 		}
 
 		[Test]
@@ -73,7 +74,7 @@ namespace ripple.Testing.New.Nuget
         [Test, Explicit]
         public void explode_smoke_test()
         {
-            var file = new NugetFile("Bottles.1.0.0.441.nupkg");
+            var file = new NugetFile("Bottles.1.0.0.441.nupkg", SolutionMode.Ripple);
             var system = new FileSystem();
             system.CreateDirectory("bottles");
             system.CleanDirectory("bottles");

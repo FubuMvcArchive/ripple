@@ -10,14 +10,16 @@ namespace ripple.New.Nuget
 {
     public class NugetFolderCache : INugetCache
     {
-        private readonly string _folder;
+	    private readonly Solution _solution;
+	    private readonly string _folder;
 	    private IFileSystem _fileSystem;
 
 	    private Lazy<IEnumerable<INugetFile>> _allFiles;
 
-        public NugetFolderCache(string folder)
+        public NugetFolderCache(Solution solution, string folder)
         {
-            _folder = folder;
+	        _solution = solution;
+	        _folder = folder;
 			_fileSystem = new FileSystem();
 
 	        reset();
@@ -32,7 +34,7 @@ namespace ripple.New.Nuget
 		{
 			return _fileSystem
 				.FindFiles(_folder, new FileSet { Include = "*.nupkg" })
-				.Select(file => new NugetFile(file))
+				.Select(file => new NugetFile(file, _solution.Mode))
 				.ToList();
 		}
 
@@ -66,7 +68,7 @@ namespace ripple.New.Nuget
                 if (remoteVersion > localVersion)
                 {
                     Console.WriteLine("Downloading {0} to {1}", nuget.Filename, _folder);
-                    nuget.DownloadTo(_folder);
+                    nuget.DownloadTo(_solution, _folder);
                 }
             });
 
@@ -125,7 +127,7 @@ namespace ripple.New.Nuget
 			new FileSystem().CreateDirectory(ripple);
 
 			// TODO -- Be smart enough to switch off the Solution "mode"
-			return new NugetFolderCache(ripple);
+			return new NugetFolderCache(solution, ripple);
 		}
     }
 }
