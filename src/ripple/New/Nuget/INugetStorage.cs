@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using ripple.Model;
 using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
 	public interface INugetStorage
 	{
-		// Gonna use this for the ripple clean command
-		void Clean(Solution solution);
+		void Clean(Solution solution, CleanMode mode);
 
 		void Write(Solution solution);
 		void Write(Project project);
@@ -33,9 +33,20 @@ namespace ripple.New.Nuget
 
 		public IDependencyStrategy Strategy { get { return _strategy; } }
 
-		public void Clean(Solution solution)
+		public void Clean(Solution solution, CleanMode mode)
 		{
-			_fileSystem.CleanDirectory(solution.PackagesDirectory());
+			if (mode == CleanMode.all || mode == CleanMode.packages)
+			{
+				var packagesFolder = solution.PackagesDirectory();
+				RippleLog.Debug("Deleting " + packagesFolder);
+				_fileSystem.CleanDirectory(packagesFolder);
+			}
+
+			if (mode == CleanMode.all || mode == CleanMode.projects)
+			{
+				solution.Projects.Each(p => p.Clean(_fileSystem));
+			}
+			
 		}
 
 		public void Write(Solution solution)
@@ -52,7 +63,7 @@ namespace ripple.New.Nuget
 		public void Reset(Solution solution)
 		{
 			solution.Projects.Each(x => _strategy.RemoveDependencyConfigurations(x));
-			Clean(solution);
+			Clean(solution, CleanMode.packages);
 		}
 
 		public LocalDependencies Dependencies(Solution solution)

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -16,10 +17,11 @@ namespace ripple.Commands
     {
         public override bool Execute(NugetInput input)
         {
-            input.FindSolutions().Each(solution =>
-            {
-                solution.AlterConfig(config => config.FloatNuget(input.Name));
-            });
+			input.EachSolution(solution =>
+			{
+				solution.Dependencies.Find(input.Name).Float();
+				solution.Save();
+			});
 
             return true;
         }
@@ -30,12 +32,13 @@ namespace ripple.Commands
     {
         public override bool Execute(NugetInput input)
         {
-            input.FindSolutions().Each(solution =>
+			throw new NotImplementedException();
+            /*input.FindSolutions().Each(solution =>
             {
                 solution.AlterConfig(config => config.LockNuget(input.Name));
             });
 
-            return true;
+            return true;*/
         }
     }
 }

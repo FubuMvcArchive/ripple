@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using ripple.Local;
 using ripple.Model;
 using System.Linq;
+using ripple.New.Commands;
+using ripple.New.Model;
 
 namespace ripple.Commands
 {
@@ -43,7 +45,7 @@ namespace ripple.Commands
     [CommandDescription("lists information about the current ripple environment")]
     public class ListCommand : FubuCommand<ListInput>
     {
-        private Func<NugetDependency, bool> _nugetDependencyFilter = dep => true;
+        private Func<Dependency, bool> _nugetDependencyFilter = dep => true;
 
 	    public ListCommand()
 	    {
@@ -82,9 +84,9 @@ namespace ripple.Commands
 
             solution.Projects.Each(proj =>
             {
-                Console.WriteLine("    * " + proj.ProjectName + " depends on:");
+                Console.WriteLine("    * " + proj.Name + " depends on:");
 
-                proj.NugetDependencies.Where(_nugetDependencyFilter).Each(dep =>
+                proj.Dependencies.Where(_nugetDependencyFilter).Each(dep =>
                 {
                     Console.WriteLine("     - " + dep.Name + " " + dep.Version);
                 });
@@ -106,20 +108,20 @@ namespace ripple.Commands
 
             if (mode.Matches(ListMode.published))
             {
-                if (solution.PublishedNugets.Any())
+                if (solution.Specifications.Any())
                 {
                     Console.WriteLine("  Publishes");
-                    solution.PublishedNugets.Each(x => Console.WriteLine("    * " + x.Name));
+					solution.Specifications.Each(x => Console.WriteLine("    * " + x.Name));
                 }
             }
         }
 
         private void writeAssemblies(Solution solution)
         {
-            if (solution.NugetDependencies().Any())
+            if (solution.NugetDependencies.Any())
             {
                 Console.WriteLine("  Depends on assemblies");
-                solution.NugetDependencies().Each(x =>
+				solution.NugetDependencies.Each(x =>
                 {
                     x.PublishedAssemblies.Each(assem =>
                     {
@@ -128,10 +130,10 @@ namespace ripple.Commands
                 });
             }
 
-            if (solution.PublishedNugets.Any())
+            if (solution.Specifications.Any())
             {
                 Console.WriteLine("  Publishes assemblies");
-                solution.PublishedNugets.Each(x =>
+				solution.Specifications.Each(x =>
                 {
                     x.PublishedAssemblies.Each(assem =>
                     {
@@ -145,14 +147,13 @@ namespace ripple.Commands
         {
             if (mode.Matches(ListMode.dependencies))
             {
-                if (solution.GetAllNugetDependencies().Any())
+                if (solution.Dependencies.Any())
                 {
                     Console.WriteLine("  Dependencies");
 
 
-                    var nugets = solution.NugetDependencies();
-                    var all = solution.GetAllNugetDependencies().OrderBy(x => x.Name);
-                    all.Each(dep =>
+                    var nugets = solution.NugetDependencies;
+					solution.Dependencies.Each(dep =>
                     {
                         var nuget = nugets.FirstOrDefault(x => x.Name == dep.Name);
                         var name = dep.ToString();

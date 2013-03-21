@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using FubuCore;
 using System.Linq;
+using ripple.New.Model;
 
 namespace ripple.Model
 {
-    public enum UpdateMode
-    {
-        Locked,
-        Float
-    }
-
     [XmlType("ripple")]
     public class SolutionConfig
     {
@@ -60,7 +55,7 @@ namespace ripple.Model
 
         public UpdateMode ModeForNuget(string nugetName)
         {
-            return _floats.Contains(nugetName) ? UpdateMode.Float : UpdateMode.Locked;
+            return _floats.Contains(nugetName) ? UpdateMode.Float : UpdateMode.Fixed;
         }
 
         public static SolutionConfig LoadFrom(string directory)

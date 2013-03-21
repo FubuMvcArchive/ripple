@@ -66,7 +66,6 @@
     <Compile Include="CheckXmlPersistence.cs" />
     <Compile Include="Commands\ExtractSampleCommandTester.cs" />
     <Compile Include="Commands\PublishCommandTester.cs" />
-    <Compile Include="Commands\UpdateInputTester.cs" />
     <Compile Include="DataMother.cs" />
     <Compile Include="Directives\DirectiveParserTester.cs" />
     <Compile Include="Directives\DirectiveRunnerTester.cs" />
@@ -108,16 +107,12 @@
     <Compile Include="New\Model\ProjectReaderTester.cs" />
     <Compile Include="New\Model\SolutionPersistence.cs" />
     <Compile Include="New\Model\SolutionTester.cs" />
-    <Compile Include="New\RipplePlanTester.cs" />
+    <Compile Include="New\RippleOperationTester.cs" />
     <Compile Include="New\StubFeedService.cs" />
     <Compile Include="New\StubNuget.cs" />
     <Compile Include="New\StubNugetStorage.cs" />
     <Compile Include="New\StubPackage.cs" />
-    <Compile Include="NugetDependencyTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
-    <Compile Include="Nuget\PackageRepositoryBuilderTester.cs" />
-    <Compile Include="play.cs" />
-    <Compile Include="ProjectTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IntegratedSolutionGraphTester.cs" />
     <Compile Include="SolutionTester.cs" />
@@ -209,6 +204,11 @@
     <Folder Include="data\junk1\" />
     <Folder Include="data\junk2\" />
     <Folder Include="New\Steps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="feed.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

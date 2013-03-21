@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ripple.Model;
 using ripple.New.Model;
 using ripple.New.Nuget;
 using ripple.Testing.New.Model;
@@ -17,7 +18,7 @@ namespace ripple.Testing.New
 			return file;
 		}
 
-		public void Clean(Solution solution)
+		public void Clean(Solution solution, CleanMode mode)
 		{
 		}
 

@@ -1,8 +1,10 @@
 ﻿using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
+using ripple.Local;
 using ripple.New.Model;
 using ripple.New.Nuget;
+using Project = ripple.New.Model.Project;
 
 namespace ripple.Testing.New.Model
 {
@@ -184,6 +186,22 @@ namespace ripple.Testing.New.Model
 			storage.AssertWasCalled(x => x.Reset(solution));
 
 			solution.Storage.ShouldBeOfType<NugetStorage>().Strategy.ShouldBeOfType<RippleDependencyStrategy>();
+		}
+
+		[Test]
+		public void retrieve_the_nuget_specs()
+		{
+			var s1 = new NugetSpec("Test1", "Test1.nuspec");
+			var s2 = new NugetSpec("Test2", "Test2.nuspec");
+
+			var solution = new Solution();
+
+			var service = MockRepository.GenerateStub<IPublishingService>();
+			service.Stub(x => x.SpecificationsFor(solution)).Return(new[] {s1, s2});
+
+			solution.UsePublisher(service);
+
+			solution.Specifications.ShouldHaveTheSameElementsAs(s1, s2);
 		}
 	}
 }

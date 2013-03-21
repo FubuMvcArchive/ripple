@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ripple.Model;
+using ripple.New.Model;
 
 namespace ripple.Local
 {
@@ -24,7 +25,7 @@ namespace ripple.Local
                 var solution = queue.Dequeue();
 
                 var nugets = solution
-                    .NugetDependencies()
+                    .NugetDependencies
                     .Where(x => solutions.Contains(x.Publisher))
                     .OrderBy(x => x.Name)
                     .Select(x => new MoveNugetAssemblies(x, solution));

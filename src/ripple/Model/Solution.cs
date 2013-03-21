@@ -23,7 +23,7 @@ namespace ripple.Model
         IEnumerable<string> AllNugetDependencyNames();
     }
 
-    public class Solution : ISolution
+    /*public class Solution : ISolution
     {
         public static Solution ReadFrom(string directory)
         {
@@ -267,5 +267,5 @@ namespace ripple.Model
                 Arguments = commands.Skip(1).Join(" ")
             };
         }
-    }
+    }*/
 }

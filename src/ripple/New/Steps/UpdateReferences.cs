@@ -1,4 +1,6 @@
 ﻿using FubuCore.Descriptions;
+using ripple.MSBuild;
+using ripple.Model;
 using ripple.New.Commands;
 using ripple.New.Model;
 

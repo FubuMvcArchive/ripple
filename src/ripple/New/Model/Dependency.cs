@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.Descriptions;
@@ -96,6 +97,12 @@ namespace ripple.New.Model
 			description.ShortDescription = IsFloat() ? UpdateMode.Float.ToString() : Version;
 		}
 
+		public void Float()
+		{
+			Version = string.Empty;
+			Mode = UpdateMode.Float;
+		}
+
 		public static Dependency For(INugetFile nuget)
 		{
 			return new Dependency(nuget.Name, nuget.Version.ToString());
@@ -123,10 +130,9 @@ namespace ripple.New.Model
 			return dependency;
 		}
 
-		public void Float()
+		public static Dependency ReadFrom(XmlElement element)
 		{
-			Version = string.Empty;
-			Mode = UpdateMode.Float;
+			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"), UpdateMode.Fixed);
 		}
 	}
 }

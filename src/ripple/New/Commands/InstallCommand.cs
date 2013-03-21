@@ -52,7 +52,7 @@ namespace ripple.New.Commands
 	{
 		public override bool Execute(InstallInput input)
 		{
-			return RipplePlan
+			return RippleOperation
 				.For<InstallInput>(input)
 				.Step<InstallNuget>()
 				.Step<DownloadMissingNugets>()

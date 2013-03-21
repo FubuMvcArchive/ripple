@@ -13,6 +13,7 @@ namespace ripple.New.Model
 		string BuildSupportDir { get; }
 
 		void ForProjects(Action<string> action);
+		void ForNuspecs(Action<string> action);
 
 		Solution LoadSolution();
 
@@ -32,13 +33,24 @@ namespace ripple.New.Model
 			RootDir = BuildSupportDir.ParentDirectory().ParentDirectory();
 
 			SrcDir = Path.Combine(RootDir, "src");
+			PackagingDir = Path.Combine(RootDir, "packaging");
 
 			_fileSystem = fileSystem;
 			_loader = loader;
 		}
 
+		private void resetDirectories(string root)
+		{
+			RootDir = root;
+			BuildSupportDir = Path.Combine(RootDir, "buildsupport");
+
+			SrcDir = Path.Combine(RootDir, "src");
+			PackagingDir = Path.Combine(RootDir, "packaging");
+		}
+
 		public string RootDir { get; set; }
 		public string BuildSupportDir { get; set; }
+		public string PackagingDir { get; set; }
 		public string SrcDir { get; set; }
 
 		public void ForProjects(Action<string> action)
@@ -49,6 +61,16 @@ namespace ripple.New.Model
 			};
 
 			_fileSystem.FindFiles(SrcDir, csProjSet).Each(action);
+		}
+
+		public void ForNuspecs(Action<string> action)
+		{
+			var nuspecSet = new FileSet()
+			{
+				Include = "*.nuspec"
+			};
+
+			_fileSystem.FindFiles(PackagingDir, nuspecSet).Each(action);
 		}
 
 		public Solution LoadSolution()
@@ -71,9 +93,22 @@ namespace ripple.New.Model
 			return new SolutionFiles(new FileSystem(), new SolutionLoader());
 		}
 
+		public static SolutionFiles BasicFromDirectory(string directory)
+		{
+			var files = Basic();
+			files.resetDirectories(directory);
+
+			return files;
+		}
+
 		public static SolutionFiles Classic()
 		{
 			return new SolutionFiles(new FileSystem(), new NuGetSolutionLoader());
+		}
+
+		public static SolutionFiles For(SolutionMode mode)
+		{
+			return mode == SolutionMode.Classic ? Classic() : Basic();
 		}
 	}
 }

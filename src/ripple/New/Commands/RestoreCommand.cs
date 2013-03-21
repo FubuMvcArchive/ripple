@@ -5,7 +5,7 @@ using ripple.New.Steps;
 
 namespace ripple.New.Commands
 {
-	public class ReReInput : SolutionInput
+	public class RestoreInput : SolutionInput
 	{
 		public override string DescribePlan(Solution solution)
 		{
@@ -13,12 +13,12 @@ namespace ripple.New.Commands
 		}
 	}
 
-	public class ReRestoreCommand : FubuCommand<ReReInput>
+	public class RestoreCommand : FubuCommand<RestoreInput>
 	{
-		public override bool Execute(ReReInput input)
+		public override bool Execute(RestoreInput input)
 		{
-			return RipplePlan
-				.For<ReReInput>(input)
+			return RippleOperation
+				.For<RestoreInput>(input)
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
 				.Step<UpdateReferences>()

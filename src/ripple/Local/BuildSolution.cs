@@ -1,4 +1,4 @@
-using ripple.Model;
+using ripple.New.Model;
 
 namespace ripple.Local
 {

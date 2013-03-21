@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using FubuCore;
+using FubuCore.CommandLine;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
+using ripple.Local;
+using ripple.Model;
 using ripple.New.Commands;
 using ripple.New.Nuget;
 
@@ -24,7 +29,10 @@ namespace ripple.New.Model
 		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
 		private readonly Lazy<IEnumerable<Dependency>> _missing;
 		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates;
-		private Lazy<DependencyCollection> _dependencies; 
+		private readonly Lazy<IEnumerable<NugetSpec>> _specifications;
+		private Lazy<DependencyCollection> _dependencies;
+		private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
+		private string _path;
 
 		public Solution()
 		{
@@ -41,20 +49,35 @@ namespace ripple.New.Model
 			UseStorage(NugetStorage.Basic());
 			UseFeedService(new FeedService());
 			UseCache(NugetFolderCache.DefaultFor(this));
+			UsePublisher(PublishingService.For(Mode));
 
 			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
+			_specifications = new Lazy<IEnumerable<NugetSpec>>(() => Publisher.SpecificationsFor(this));
 			
 			resetDependencies();
 		}
 
 		public string Name { get; set; }
-		public string Path { get; set; }
+		public string Directory { get; set; }
 		public string NugetSpecFolder { get; set; }
 		public string SourceFolder { get; set; }
 		public string BuildCommand { get; set; }
 		public string FastBuildCommand { get; set; }
 		public SolutionMode Mode { get; set; }
+
+		public string Path
+		{
+			get { return _path; }
+			set
+			{
+				_path = value;
+				if (value.IsNotEmpty() && File.Exists(value))
+				{
+					Directory = System.IO.Path.GetDirectoryName(value);
+				}
+			}
+		}
 
 		public void ConvertTo(SolutionMode mode)
 		{
@@ -69,6 +92,8 @@ namespace ripple.New.Model
 		public IFeedService FeedService { get; private set; }
 		[XmlIgnore]
 		public INugetCache Cache { get; private set; }
+		[XmlIgnore]
+		public IPublishingService Publisher { get; private set; }
 
 		private void resetDependencies()
 		{
@@ -85,6 +110,11 @@ namespace ripple.New.Model
 		public string PackagesDirectory()
 		{
 			return System.IO.Path.Combine(SourceFolder, "packages").ToFullPath();
+		}
+
+		public void UsePublisher(IPublishingService service)
+		{
+			Publisher = service;
 		}
 
 		public void UseStorage(INugetStorage storage)
@@ -137,6 +167,12 @@ namespace ripple.New.Model
 		public DependencyCollection Dependencies
 		{
 			get { return _dependencies.Value; }
+		}
+
+		[XmlIgnore]
+		public IEnumerable<NugetSpec> Specifications
+		{
+			get { return _specifications.Value; }
 		}
 
 		public void AddFeed(Feed feed)
@@ -240,6 +276,11 @@ namespace ripple.New.Model
 			}
 		}
 
+		public void Clean(CleanMode mode)
+		{
+			Storage.Clean(this, mode);
+		}
+
 		public LocalDependencies LocalDependencies()
 		{
 			return Storage.Dependencies(this);
@@ -260,10 +301,68 @@ namespace ripple.New.Model
 			return FeedService.UpdatesFor(this);
 		}
 
+		public void DetermineNugetDependencies(Func<string, NugetSpec> finder)
+		{
+			Dependencies.Each(x =>
+			{
+				var spec = finder(x.Name);
+				if (spec != null)
+				{
+					_nugetDependencies.Add(spec);
+				}
+			});
+		}
+
+		public bool DependsOn(Solution peer)
+		{
+			return _nugetDependencies.Any(x => x.Publisher == peer);
+		}
+
+		public string NugetFolderFor(NugetSpec spec)
+		{
+			return NugetFolderFor(spec.Name);
+		}
+
+		public string NugetFolderFor(string nugetName)
+		{
+			var nuget = LocalDependencies().Get(nugetName);
+			return nuget.NugetFolder(this);
+		}
+
+		public IEnumerable<NugetSpec> NugetDependencies
+		{
+			get { return _nugetDependencies; }
+		}
+
+		public IEnumerable<Solution> SolutionDependencies()
+		{
+			return _nugetDependencies.Select(x => x.Publisher)
+				.Distinct()
+				.OrderBy(x => x.Name);
+		}
+
 		public void Save()
 		{
 			Storage.Write(this);
 			Projects.Each(Storage.Write);
+		}
+
+		public ProcessStartInfo CreateBuildProcess(bool fast)
+		{
+			var cmdLine = fast ? FastBuildCommand : BuildCommand;
+			var commands = StringTokenizer.Tokenize(cmdLine);
+
+			var fileName = commands.First();
+			if (fileName == "rake")
+			{
+				fileName = RippleFileSystem.RakeRunnerFile();
+			}
+
+			return new ProcessStartInfo(fileName)
+			{
+				WorkingDirectory = Directory,
+				Arguments = commands.Skip(1).Join(" ")
+			};
 		}
 
 		public static Solution Empty()

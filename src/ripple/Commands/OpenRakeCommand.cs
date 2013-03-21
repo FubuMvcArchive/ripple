@@ -1,7 +1,7 @@
 using System;
 using FubuCore;
 using FubuCore.CommandLine;
-using System.Collections.Generic;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -16,7 +16,7 @@ namespace ripple.Commands
         public override bool Execute(OpenRakeInput input)
         {
             var system = new FileSystem();
-            input.FindSolutions().Each(x =>
+            input.EachSolution(x =>
             {
                 var rakeFile = x.Directory.AppendPath("rakefile.rb");
                 if (system.FileExists(rakeFile))

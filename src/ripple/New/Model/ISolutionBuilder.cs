@@ -52,6 +52,13 @@ namespace ripple.New.Model
 			return new SolutionBuilder(SolutionFiles.Classic(), ProjectReader.Basic());
 		}
 
+		public static Solution ReadFrom(string directory)
+		{
+			// TODO -- Be smart enough to recognize the Mode based on the directory structure?
+			var builder = new SolutionBuilder(SolutionFiles.BasicFromDirectory(directory), ProjectReader.Basic());
+			return builder.Build();
+		}
+
 		public static ISolutionBuilder For(SolutionMode mode)
 		{
 			return mode == SolutionMode.Ripple ? Basic() : Classic();

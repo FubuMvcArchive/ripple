@@ -25,5 +25,10 @@ namespace ripple.Testing.New.Model
 		{
 			throw new System.NotImplementedException();
 		}
+
+		public string NugetFolder(Solution solution)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

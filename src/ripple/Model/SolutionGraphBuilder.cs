@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FubuCore;
+using ripple.New.Model;
 
 namespace ripple.Model
 {
@@ -48,8 +48,8 @@ namespace ripple.Model
         private IEnumerable<Solution> readSolutions(string folder)
         {
             return _fileSystem.ChildDirectoriesFor(folder)
-                .Where(x => _fileSystem.FileExists(x.AppendPath(SolutionConfig.FileName)))
-                .Select(Solution.ReadFrom)
+				.Where(x => _fileSystem.FileExists(x.AppendPath(SolutionFiles.ConfigFile)))
+                .Select(SolutionBuilder.ReadFrom)
                 .ToList();
         }
 

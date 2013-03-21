@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using FubuCore;
+using ripple.New.Model;
 
 namespace ripple.Local
 {
@@ -50,9 +51,9 @@ namespace ripple.Local
             }
         }
 
-        public IEnumerable<NugetDependency> FindDependencies()
+		public IEnumerable<Dependency> FindDependencies()
         {
-            return findNugetElements("dependency").Select(NugetDependency.ReadFrom);
+            return findNugetElements("dependency").Select(Dependency.ReadFrom);
         }
 
         public IEnumerable<PublishedAssembly> FindPublishedAssemblies()
@@ -130,7 +131,7 @@ namespace ripple.Local
             var element = findNugetElement("dependency[@id='" + dependency + "']");
             if (element == null)
             {
-                throw new NotImplementedException("Unable to find dependency " + dependency);
+                throw new InvalidOperationException("Unable to find dependency " + dependency);
             }
 
             element.SetAttribute("version", version);

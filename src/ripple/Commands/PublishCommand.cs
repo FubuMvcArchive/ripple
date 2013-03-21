@@ -4,6 +4,7 @@ using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using ripple.Local;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -34,7 +35,7 @@ namespace ripple.Commands
     {
         public override bool Execute(PublishInput input)
         {
-            input.FindSolutions().Each(solution =>
+            input.EachSolution(solution =>
             {
                 Console.WriteLine("Building nuget files for " + solution.Name);
                 var artifactDirectory = solution.Directory.AppendPath(input.ArtifactsFlag);
@@ -42,7 +43,7 @@ namespace ripple.Commands
                 Console.WriteLine("Cleaning out any existing nuget files before continuing");
                 new FileSystem().CleanDirectory(artifactDirectory);
 
-                solution.PublishedNugets.Each(nuget =>
+                solution.Specifications.Each(nuget =>
                 {
                     Console.WriteLine("Creating and publishing Nuget for " + nuget.Name);
 

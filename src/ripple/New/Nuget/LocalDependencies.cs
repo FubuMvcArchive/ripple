@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using ripple.New.Model;
 
 namespace ripple.New.Nuget
@@ -20,7 +21,12 @@ namespace ripple.New.Nuget
 
 		public INugetFile Get(Dependency dependency)
 		{
-			return _dependencies.Single(x => x.Name == dependency.Name);
+			return Get(dependency.Name);
+		}
+
+		public INugetFile Get(string name)
+		{
+			return _dependencies.Single(x => x.Name.EqualsIgnoreCase(name));
 		}
 
 		public bool Has(Dependency dependency)

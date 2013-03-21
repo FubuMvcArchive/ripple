@@ -1,4 +1,5 @@
 ﻿using NuGet;
+using ripple.New.Model;
 
 namespace ripple.New.Nuget
 {
@@ -10,5 +11,7 @@ namespace ripple.New.Nuget
         IPackage ExplodeTo(string directory);
 
 	    INugetFile CopyTo(string directory);
+
+	    string NugetFolder(Solution solution);
     }
 }

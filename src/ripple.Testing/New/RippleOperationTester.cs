@@ -7,7 +7,7 @@ using ripple.New.Model;
 namespace ripple.Testing.New
 {
 	[TestFixture]
-	public class RipplePlanTester
+	public class RippleOperationTester
 	{
 		[Test]
 		public void executes_the_steps()
@@ -15,8 +15,8 @@ namespace ripple.Testing.New
 			var s1 = new RecordingStep();
 			var s2 = new RecordingStep();
 
-			RipplePlan
-				.For<TestInput>(new TestInput(), new Solution())
+			RippleOperation
+				.For<TestInput>(new TestInput(), new Solution { Path = "test.config"})
 				.Step(s1)
 				.Step(s2)
 				.Execute();

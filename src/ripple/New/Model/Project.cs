@@ -54,6 +54,12 @@ namespace ripple.New.Model
 			return FilePath.GetHashCode();
 		}
 
+		public void Clean(IFileSystem system)
+		{
+			system.CleanWithTracing(Directory.AppendPath("bin"));
+			system.CleanWithTracing(Directory.AppendPath("obj"));
+		}
+
 		public void Describe(Description description)
 		{
 			description.Title = "Project \"{0}\"".ToFormat(Name);

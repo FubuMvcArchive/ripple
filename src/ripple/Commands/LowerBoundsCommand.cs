@@ -2,7 +2,7 @@ using System;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using System.Linq;
-using ripple.Local;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -18,17 +18,14 @@ namespace ripple.Commands
         {
             input.FindSolutions().Each(solution =>
             {
-                NugetDependency nuget = solution.GetLatestNugetOf(input.Nuget);
-
-
-
+                var nuget = solution.LocalDependencies().Get(input.Nuget);
                 var version = nuget.Version;
 
-                solution.PublishedNugets.Where(x => x.DependsOn(input.Nuget)).Each(nuspec =>
+                solution.Specifications.Where(x => x.DependsOn(input.Nuget)).Each(nuspec =>
                 {
                     Console.WriteLine("Setting the dependent version of {0} in {1} to '{2}'", input.Nuget, nuspec.Name, version);
                     var nuspecDocument = nuspec.ToDocument();
-                    nuspecDocument.SetVersion(input.Nuget, version);
+                    nuspecDocument.SetVersion(input.Nuget, version.ToString());
                     nuspecDocument.SaveChanges();
                 });
             });

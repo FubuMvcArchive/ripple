@@ -4,6 +4,7 @@ using Rhino.Mocks;
 using FubuTestingSupport;
 using ripple.Local;
 using ripple.Model;
+using ripple.New.Model;
 
 namespace ripple.Testing
 {
@@ -17,7 +18,7 @@ namespace ripple.Testing
         [SetUp]
         public void SetUp()
         {
-            theSolution = new Solution(new SolutionConfig(), "some directory");
+            theSolution = new Solution();
             theBuild = new BuildSolution(theSolution);
 
             theRunner = MockRepository.GenerateMock<IRippleStepRunner>();
@@ -49,7 +50,7 @@ namespace ripple.Testing
         [SetUp]
         public void SetUp()
         {
-            theSolution = new Solution(new SolutionConfig(), "some directory");
+            theSolution = new Solution();
             theBuild = new BuildSolution(theSolution);
 
             theRunner = MockRepository.GenerateMock<IRippleStepRunner>();

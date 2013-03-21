@@ -3,6 +3,7 @@ using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -28,7 +29,7 @@ namespace ripple.Commands
             {
                 var list = new List<string>();
 
-                solution.GetAllNugetDependencies().Each(x =>
+                solution.Dependencies.Each(x =>
                 {
                     list.Add("{0}/{1}".ToFormat(x.Name, x.Version));
                 });

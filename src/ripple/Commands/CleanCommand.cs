@@ -1,9 +1,9 @@
-using System;
 using System.ComponentModel;
 using FubuCore.CommandLine;
 using FubuCore;
 using ripple.Model;
-using System.Collections.Generic;
+using ripple.New;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -23,13 +23,10 @@ namespace ripple.Commands
     {
         public override bool Execute(CleanInput input)
         {
-            var system = new FileSystem();
-
-            input.FindSolutions().Each(solution =>
+            input.EachSolution(solution =>
             {
-                Console.WriteLine("Cleaning Solution {0} at {1}", solution.Name, solution.Directory);
-
-                solution.Clean(system, input.ModeFlag);
+                RippleLog.Info("Cleaning Solution {0} at {1}".ToFormat(solution.Name, solution.Directory));
+                solution.Clean(input.ModeFlag);
             });
 
 

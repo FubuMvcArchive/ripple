@@ -72,7 +72,7 @@ namespace ripple.Testing.New.Model
 		[Test]
 		public void restores_the_fixed_version()
 		{
-			theVersionIs(rhinomocks, "3.6.1");
+			theVersionIs(rhinomocks, "3.6.1.0");
 			theVersionIs(structuremap, "2.6.3");
 		}
 	}
@@ -147,7 +147,7 @@ namespace ripple.Testing.New.Model
 		[Test]
 		public void restores_the_fixed_version()
 		{
-			theVersionIs(rhinomocks, "3.6.1");
+			theVersionIs(rhinomocks, "3.6.1.0");
 			theVersionIs(structuremap, "2.6.3");
 		}
 	}

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Linq;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -32,9 +33,9 @@ namespace ripple.Commands
 
             new FileSystem().CreateDirectory(input.DestinationFlag);
 
-            input.FindSolutions().Each(solution =>
+            input.EachSolution(solution =>
             {
-                solution.PublishedNugets.Each(spec => {
+                solution.Specifications.Each(spec => {
                     var version = spec.Dependencies.Any(x => x.Version.Contains("-"))
                                       ? input.VersionFlag + "-alpha"
                                       : input.VersionFlag;

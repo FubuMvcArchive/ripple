@@ -4,6 +4,7 @@ using FubuCore.DependencyAnalysis;
 using FubuCore.Util;
 using System.Linq;
 using ripple.Local;
+using ripple.New.Model;
 
 namespace ripple.Model
 {
@@ -18,10 +19,10 @@ namespace ripple.Model
 
         public SolutionGraph(IEnumerable<Solution> solutions)
         {
-            _allNugets = new Lazy<IEnumerable<NugetSpec>>(() => _solutions.SelectMany(x => x.PublishedNugets).ToList());
+            _allNugets = new Lazy<IEnumerable<NugetSpec>>(() => _solutions.SelectMany(x => x.Specifications).ToList());
 
             solutions.Each(s => _solutions[s.Name] = s);
-            solutions.Each(s => s.DetermineDependencies(FindNugetSpec));
+			solutions.Each(s => s.DetermineNugetDependencies(FindNugetSpec));
         
             _orderedSolutions = new Lazy<IList<Solution>>(() =>
             {
@@ -62,7 +63,7 @@ namespace ripple.Model
             return _allNugets.Value;
         }
 
-        public IEnumerable<NugetSpec> FindFromDependencies(IEnumerable<NugetDependency> dependencies)
+        public IEnumerable<NugetSpec> FindFromDependencies(IEnumerable<Dependency> dependencies)
         {
             return AllNugets().Where(x => dependencies.Any(d => d.Name == x.Name));
         }

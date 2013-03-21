@@ -85,6 +85,11 @@ namespace ripple.New.Nuget
 			return directory.AppendPath(Name);
 		}
 
+		public string NugetFolder(Solution solution)
+		{
+			return ExplodedDirectory(solution.PackagesDirectory());
+		}
+
         public IPackage ExplodeTo(string directory)
         {
 	        var explodedDirectory = ExplodedDirectory(directory);

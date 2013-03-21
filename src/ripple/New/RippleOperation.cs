@@ -9,28 +9,28 @@ using ripple.New.Steps;
 
 namespace ripple.New
 {
-	public class RipplePlan : DescribesItself, LogTopic
+	public class RippleOperation : DescribesItself, LogTopic
 	{
 		private readonly Solution _solution;
 		private readonly SolutionInput _input;
 		private readonly IRippleStepRunner _runner;
 		private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
 
-		public RipplePlan(Solution solution, SolutionInput input, IRippleStepRunner runner)
+		public RippleOperation(Solution solution, SolutionInput input, IRippleStepRunner runner)
 		{
 			_solution = solution;
 			_input = input;
 			_runner = runner;
 		}
 
-		public RipplePlan Step<T>()
+		public RippleOperation Step<T>()
 			where T : IRippleStep, new()
 		{
 			Step(new T());
 			return this;
 		}
 
-		public RipplePlan Step(IRippleStep step)
+		public RippleOperation Step(IRippleStep step)
 		{
 			step.Solution = _solution;
 			_steps.Add(step);
@@ -70,12 +70,12 @@ namespace ripple.New
 			return true;
 		}
 
-		public static RipplePlan For<T>(SolutionInput input)
+		public static RippleOperation For<T>(SolutionInput input)
 		{
 			return For<T>(input, Solution.For(input));
 		}
 
-		public static RipplePlan For<T>(SolutionInput input, Solution solution)
+		public static RippleOperation For<T>(SolutionInput input, Solution solution)
 		{
 			var description = input.DescribePlan(solution);
 			if (description.IsNotEmpty())
@@ -86,7 +86,7 @@ namespace ripple.New
 			input.Apply(solution);
 
 			var runner = new RippleStepRunner(new FileSystem());
-			return new RipplePlan(solution, input, runner).Step<ValidateRepository>();
+			return new RippleOperation(solution, input, runner).Step<ValidateRepository>();
 		}
 	}
 }

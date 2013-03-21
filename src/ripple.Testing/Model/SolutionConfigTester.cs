@@ -2,6 +2,7 @@ using NUnit.Framework;
 using ripple.Model;
 using FubuTestingSupport;
 using System.Linq;
+using ripple.New.Model;
 
 namespace ripple.Testing.Model
 {
@@ -12,7 +13,7 @@ namespace ripple.Testing.Model
         public void mode_for_nuget_that_does_not_match_floats()
         {
             var config = new SolutionConfig();
-            config.ModeForNuget("anything").ShouldEqual(UpdateMode.Locked);
+            config.ModeForNuget("anything").ShouldEqual(UpdateMode.Fixed);
         }
 
         [Test]
@@ -41,7 +42,7 @@ namespace ripple.Testing.Model
             config.FloatNuget("Nug1");
             config.LockNuget("Nug1");
 
-            config.ModeForNuget("Nug1").ShouldEqual(UpdateMode.Locked);
+            config.ModeForNuget("Nug1").ShouldEqual(UpdateMode.Fixed);
             config.Floats.Any().ShouldBeFalse();
         }
     }

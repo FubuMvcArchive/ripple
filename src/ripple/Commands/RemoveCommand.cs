@@ -6,6 +6,8 @@ using System.Linq;
 using System.Xml;
 using FubuCore;
 using FubuCore.CommandLine;
+using ripple.MSBuild;
+using ripple.New.Commands;
 
 namespace ripple.Commands
 {
@@ -21,12 +23,12 @@ namespace ripple.Commands
 
         public override bool Execute(RemoveInput input)
         {
-            input.FindSolutions().Each(solution =>
+            input.EachSolution(solution =>
             {
                 Console.WriteLine("Trying to remove {0} from solution {1}", input.Nuget, solution.Name);
 
 
-                var assemblies = Directory.GetDirectories(solution.PackagesFolder())
+                var assemblies = Directory.GetDirectories(solution.PackagesDirectory())
                     .Where(dir =>
                     {
                         var name = Path.GetFileName(dir).Split('.').First();
@@ -80,7 +82,7 @@ namespace ripple.Commands
                 DeepSearch = true
             }).Each(csProjFile => {
                 var project = new CsProjFile(csProjFile);
-                project.RemoveAssemblies(assemblies);
+                project.RemoveReferences(assemblies);
             });
         }
 

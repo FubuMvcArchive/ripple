@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using ripple.Model;
 using System.Linq;
+using ripple.New.Model;
 
 namespace ripple.Local
 {
@@ -10,7 +8,7 @@ namespace ripple.Local
     {
         // Recursive -- thanks Josh
 
-        private readonly IList<NugetDependency> _dependencies = new List<NugetDependency>();
+		private readonly IList<Dependency> _dependencies = new List<Dependency>();
         private readonly string _filename;
         private readonly string _name;
         private readonly IList<PublishedAssembly> _publishedAssemblies = new List<PublishedAssembly>();
@@ -31,7 +29,7 @@ namespace ripple.Local
             get { return _filename; }
         }
 
-        public IList<NugetDependency> Dependencies
+		public IList<Dependency> Dependencies
         {
             get { return _dependencies; }
         }

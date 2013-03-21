@@ -81,6 +81,10 @@ namespace ripple.Testing.New.Model
 			_projects.Each(action);
 		}
 
+		public void ForNuspecs(Action<string> action)
+		{
+		}
+
 		public Solution LoadSolution()
 		{
 			return _solution;

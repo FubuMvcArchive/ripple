@@ -1,43 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
-using ripple.Nuget;
 
 namespace ripple.Testing
 {
-    [TestFixture]
-    public class integrated_nuget_service_tester
-    {
-        private NugetService theNugetService;
-
-        [SetUp]
-        public void SetUp()
-        {
-            DataMother.CreateDataFolder();
-            var builder = new SolutionGraphBuilder(new FileSystem());
-            var solution = builder.ReadFrom("data")["fubumvc"];
-
-            theNugetService = new NugetService(solution, Enumerable.Empty<string>());
-        }
-
-
-        [Test]
-        public void try_to_read_latest_fubucore()
-        {
-            var dep = theNugetService.GetLatest("FubuCore");
-            dep.ShouldNotBeNull();
-            dep.Name.ShouldEqual("FubuCore");
-
-            Debug.WriteLine(dep.Version);
-        }
-    }
-
-
     [TestFixture]
     public class IntegratedSolutionGraphTester
     {

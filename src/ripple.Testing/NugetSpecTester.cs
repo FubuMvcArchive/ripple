@@ -4,6 +4,7 @@ using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
 using ripple.Local;
+using ripple.New.Model;
 
 namespace ripple.Testing
 {
@@ -29,13 +30,13 @@ namespace ripple.Testing
         public void should_read_all_the_dependencies()
         {
             theSpec.Dependencies.ShouldHaveTheSameElementsAs(
-                new NugetDependency("Bottles"),
-                new NugetDependency("CommonServiceLocator"),
-                new NugetDependency("FubuCore"),
-                new NugetDependency("FubuLocalization"),
-                new NugetDependency("HtmlTags", "1.0.0"),
-                new NugetDependency("StructureMap")
-                );
+                new Dependency("Bottles"),
+				new Dependency("CommonServiceLocator"),
+				new Dependency("FubuCore"),
+				new Dependency("FubuLocalization"),
+				new Dependency("HtmlTags", "1.0.0"),
+				new Dependency("StructureMap")
+            );
         }
 
 

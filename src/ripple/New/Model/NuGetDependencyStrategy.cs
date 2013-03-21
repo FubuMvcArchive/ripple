@@ -45,13 +45,8 @@ namespace ripple.New.Model
 		{
 			foreach (XmlElement element in document.SelectNodes("//package"))
 			{
-				yield return ReadFrom(element);
+				yield return Dependency.ReadFrom(element);
 			}
-		}
-
-		public static Dependency ReadFrom(XmlElement element)
-		{
-			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"), UpdateMode.Fixed);
 		}
 	}
 }

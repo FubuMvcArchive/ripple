@@ -7,6 +7,7 @@ using FubuCore;
 using ripple.Commands;
 using ripple.Model;
 using System.Linq;
+using ripple.New.Model;
 
 namespace ripple.Local
 {
@@ -33,7 +34,7 @@ namespace ripple.Local
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            if (solution.GetAllNugetDependencies().Any())
+            if (solution.Dependencies.Any())
             {
                 _logger.Trace("Pausing to try to let the file system quiet down...");
                 Thread.Sleep(1000);
