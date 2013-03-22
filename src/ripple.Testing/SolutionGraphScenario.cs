@@ -143,7 +143,7 @@ namespace ripple.Testing
 
 			public void Publishes(string name)
 			{
-				Publishes(name, x => { });
+				Publishes(name, null);
 			}
 
 			public void Publishes(string name, Action<PublishesExpression> configure)
@@ -162,8 +162,14 @@ namespace ripple.Testing
 
 				var expression = new PublishesExpression(document);
 
-				expression.Assembly("{0}.dll".ToFormat(name));
-				configure(expression);
+				if (configure == null)
+				{
+					expression.Assembly("{0}.dll".ToFormat(name), "lib");
+				}
+				else
+				{
+					configure(expression);
+				}
 
 				document.SaveChanges();
 			}
@@ -183,41 +189,21 @@ namespace ripple.Testing
 				_spec = spec;
 			}
 
-			public void DependsOn(string name)
+			public PublishesExpression DependsOn(string name)
 			{
 				_spec.AddDependency(new Dependency(name));
+				return this;
 			}
 
-			public void Assembly(string assembly)
+			public PublishesExpression Assembly(string assembly, string target)
 			{
 				var name = assembly.Replace(".dll", "");
 				// ..\..\src\Bottles\bin\Debug\Bottles.dll
 				var relativePath = "..{0}..{0}src{0}{1}{0}bin{0}Debug{0}{2}".ToFormat(Path.DirectorySeparatorChar, name, assembly); 
 
 				_spec.AddPublishedAssembly(relativePath);
+				return this;
 			}
-		}
-	}
-
-	[TestFixture]
-	public class Testing
-	{
-		[Test]
-		public void blah()
-		{
-			SolutionGraphScenario.Create(scenario =>
-			{
-				scenario.Solution("FubuCore", fubucore =>
-				{
-					fubucore.Publishes("FubuCore");
-				});
-
-				scenario.Solution("Bottles", bottles =>
-				{
-					bottles.Publishes("Bottles", nuspec => nuspec.DependsOn("FubuCore"));
-					bottles.ProjectDependency("Bottles", "FubuCore");
-				});
-			});
 		}
 	}
 }

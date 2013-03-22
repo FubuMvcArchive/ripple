@@ -20,7 +20,7 @@ namespace ripple.New.Model
 		public IEnumerable<NugetSpec> SpecificationsFor(Solution solution)
 		{
 			var specs = new List<NugetSpec>();
-			_files.ForNuspecs(file =>
+			_files.ForNuspecs(solution, file =>
 			{
 				var spec = NugetSpec.ReadFrom(file);
 				spec.Publisher = solution;

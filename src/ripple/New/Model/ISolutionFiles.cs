@@ -12,8 +12,8 @@ namespace ripple.New.Model
 		string RootDir { get; }
 		string BuildSupportDir { get; }
 
-		void ForProjects(Action<string> action);
-		void ForNuspecs(Action<string> action);
+		void ForProjects(Solution solution, Action<string> action);
+		void ForNuspecs(Solution solution, Action<string> action);
 
 		Solution LoadSolution();
 
@@ -32,9 +32,6 @@ namespace ripple.New.Model
 			BuildSupportDir = Assembly.GetExecutingAssembly().Location.ToFullPath();
 			RootDir = BuildSupportDir.ParentDirectory().ParentDirectory();
 
-			SrcDir = Path.Combine(RootDir, "src");
-			PackagingDir = Path.Combine(RootDir, "packaging");
-
 			_fileSystem = fileSystem;
 			_loader = loader;
 		}
@@ -43,34 +40,31 @@ namespace ripple.New.Model
 		{
 			RootDir = root;
 			BuildSupportDir = Path.Combine(RootDir, "buildsupport");
-
-			SrcDir = Path.Combine(RootDir, "src");
-			PackagingDir = Path.Combine(RootDir, "packaging");
 		}
 
 		public string RootDir { get; set; }
 		public string BuildSupportDir { get; set; }
-		public string PackagingDir { get; set; }
-		public string SrcDir { get; set; }
 
-		public void ForProjects(Action<string> action)
+		public void ForProjects(Solution solution, Action<string> action)
 		{
 			var csProjSet = new FileSet()
 			{
 				Include = "*.csproj"
 			};
 
-			_fileSystem.FindFiles(SrcDir, csProjSet).Each(action);
+			var targetDir = Path.Combine(solution.Directory, solution.SourceFolder);
+			_fileSystem.FindFiles(targetDir, csProjSet).Each(action);
 		}
 
-		public void ForNuspecs(Action<string> action)
+		public void ForNuspecs(Solution solution, Action<string> action)
 		{
 			var nuspecSet = new FileSet()
 			{
 				Include = "*.nuspec"
 			};
 
-			_fileSystem.FindFiles(PackagingDir, nuspecSet).Each(action);
+			var targetDir = Path.Combine(solution.Directory, solution.NugetSpecFolder);
+			_fileSystem.FindFiles(targetDir, nuspecSet).Each(action);
 		}
 
 		public Solution LoadSolution()

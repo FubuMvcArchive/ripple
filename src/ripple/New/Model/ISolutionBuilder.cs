@@ -26,7 +26,7 @@ namespace ripple.New.Model
 		{
 			var solution = _files.LoadSolution();
 			
-			_files.ForProjects(x =>
+			_files.ForProjects(solution, x =>
 			{
 				var project = _project.Read(x);
 				solution.AddProject(project);

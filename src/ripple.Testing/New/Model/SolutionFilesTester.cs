@@ -11,12 +11,19 @@ namespace ripple.Testing.New.Model
 	[TestFixture]
 	public class SolutionFilesTester
 	{
+		private Solution theSolution;
 		private SolutionFiles theSolutionFiles;
 		private IFileSystem theFileSystem;
 
 		[SetUp]
 		public void SetUp()
 		{
+			theSolution = new Solution
+			{
+				Directory = "SolutionFiles"
+			};
+
+
 			theFileSystem = new FileSystem();
 			theFileSystem.CreateDirectory("SolutionFiles");
 
@@ -24,7 +31,6 @@ namespace ripple.Testing.New.Model
 			theSolutionFiles.RootDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SolutionFiles");
 			
 			theFileSystem.CreateDirectory("SolutionFiles", "src");
-			theSolutionFiles.SrcDir = Path.Combine(theSolutionFiles.RootDir, "src");
 
 			theFileSystem.CreateDirectory("SolutionFiles", "src", "Project1");
 			theFileSystem.CreateDirectory("SolutionFiles", "src", "Project2");
@@ -43,10 +49,10 @@ namespace ripple.Testing.New.Model
 		public void reads_the_projects()
 		{
 			var projects = new List<string>();
-			theSolutionFiles.ForProjects(projects.Add);
+			theSolutionFiles.ForProjects(theSolution, projects.Add);
 
-			var project1 = Path.Combine(theSolutionFiles.SrcDir, "Project1", "Project1.csproj");
-			var project2 = Path.Combine(theSolutionFiles.SrcDir, "Project2", "Project2.csproj");
+			var project1 = Path.Combine("SolutionFiles", "src", "Project1", "Project1.csproj");
+			var project2 = Path.Combine("SolutionFiles", "src", "Project2", "Project2.csproj");
 
 			projects.ShouldHaveTheSameElementsAs(project1, project2);
 		}

@@ -76,12 +76,12 @@ namespace ripple.Testing.New.Model
 			_solution = solution;
 		}
 
-		public void ForProjects(Action<string> action)
+		public void ForProjects(Solution solution, Action<string> action)
 		{
 			_projects.Each(action);
 		}
 
-		public void ForNuspecs(Action<string> action)
+		public void ForNuspecs(Solution solution, Action<string> action)
 		{
 		}
 

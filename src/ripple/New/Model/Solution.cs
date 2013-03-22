@@ -378,6 +378,11 @@ namespace ripple.New.Model
 			};
 		}
 
+		public override string ToString()
+		{
+			return "{0} ({1})".ToFormat(Name, Path);
+		}
+
 		public static Solution Empty()
 		{
 			var solution = new Solution();
