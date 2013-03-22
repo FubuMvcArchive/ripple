@@ -15,15 +15,5 @@ namespace ripple.Testing
         {
             return MockRepository.GenerateMock<IFileSystem>();
         }
-
-
-        public static void CreateDataFolder()
-        {
-            var fileSystem = new FileSystem();
-            fileSystem.CleanDirectory("data");
-            fileSystem.DeleteDirectory("data");
-            fileSystem.Copy(FileSystem.Combine("..", "..", "data"), "data");
-
-        }
     }
 }

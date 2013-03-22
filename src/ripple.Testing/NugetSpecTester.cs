@@ -16,26 +16,29 @@ namespace ripple.Testing
         [SetUp]
         public void SetUp()
         {
-            var file = FileSystem.Combine("..", "..", "data", "fubumvc","packaging", "nuget", "fubumvc.references.nuspec");
-            theSpec = NugetSpec.ReadFrom(file.ToFullPath());
+			var theFilename = "fubumvc.core.nuspec";
+			var stream = GetType()
+					.Assembly
+					.GetManifestResourceStream(typeof(DataMother), "FubuMVCNuspecTemplate.txt");
+
+			new FileSystem().WriteStreamToFile(theFilename, stream);
+            theSpec = NugetSpec.ReadFrom(theFilename.ToFullPath());
         }
 
         [Test]
         public void should_read_the_name()
         {
-            theSpec.Name.ShouldEqual("FubuMVC.References");
+            theSpec.Name.ShouldEqual("FubuMVC.Core");
         }
 
         [Test]
         public void should_read_all_the_dependencies()
         {
             theSpec.Dependencies.ShouldHaveTheSameElementsAs(
-                new Dependency("Bottles"),
-				new Dependency("CommonServiceLocator"),
-				new Dependency("FubuCore"),
-				new Dependency("FubuLocalization"),
-				new Dependency("HtmlTags", "1.0.0"),
-				new Dependency("StructureMap")
+				new Dependency("Bottles", "1.0.0.412"),
+				new Dependency("FubuCore", "0.9.9.172"),
+				new Dependency("FubuLocalization", "0.9.5.48"),
+				new Dependency("HtmlTags", "1.1.0.114")
             );
         }
 
@@ -45,7 +48,6 @@ namespace ripple.Testing
         {
             var names = theSpec.PublishedAssemblies.Select(x => x.Name);
             names.ShouldContain("FubuMVC.Core");
-            names.ShouldContain("FubuMVC.StructureMap");
 
         }
 
@@ -55,7 +57,7 @@ namespace ripple.Testing
             var assembly = theSpec.PublishedAssemblies.First(x => x.Name == "FubuMVC.Core");
 
             var expectedPath = Path.GetDirectoryName(theSpec.Filename)
-                .AppendPath("..", "..", "build")
+                .AppendPath("..", "..", "src", "FubuMVC.Core", "bin", "release")
                 .ToFullPath();
 
             assembly.Directory.ShouldEqual(expectedPath);

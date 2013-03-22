@@ -1,3 +1,4 @@
+using System;
 using FubuCore;
 using NUnit.Framework;
 using ripple.Local;
@@ -14,10 +15,14 @@ namespace ripple.Testing.Model
         [SetUp]
         public void SetUp()
         {
-            DataMother.CreateDataFolder();
-            theFilename = FileSystem.Combine("data", "fubucore", "packaging", "nuget", "fubucore.nuspec");
-            theDocument = new NuspecDocument(theFilename);
+	        theFilename = "fubucore.nuspec";
+			var stream = GetType()
+					.Assembly
+					.GetManifestResourceStream(typeof(DataMother), "FubuCoreNuspecTemplate.txt");
 
+			new FileSystem().WriteStreamToFile(theFilename, stream);
+
+			theDocument = new NuspecDocument(theFilename);
         }
 
         [Test]

@@ -3,6 +3,7 @@ using FubuCore;
 using FubuTestingSupport;
 using ripple.Local;
 using ripple.New.Model;
+using ripple.Testing.New;
 
 namespace ripple.Testing
 {
@@ -54,6 +55,10 @@ namespace ripple.Testing
 				Directory = ".".ToFullPath()
             };
 
+	        var storage = new StubNugetStorage();
+	        storage.Add("FubuCore", "0.9.1.37");
+			solution.UseStorage(storage);
+
             var project = new Project("something.csproj");
             var dependency = new Dependency("FubuCore", "0.9.1.37");
             project.AddDependency(dependency);
@@ -62,7 +67,7 @@ namespace ripple.Testing
             var spec = new NugetSpec("FubuCore", "somefile.nuspec");
 
             solution.NugetFolderFor(spec)
-                .ShouldEqual(".".ToFullPath().AppendPath(solution.PackagesDirectory(), "FubuCore.0.9.1.37"));
+                .ShouldEqual(".".ToFullPath().AppendPath(solution.PackagesDirectory(), "FubuCore"));
         
         }
     }

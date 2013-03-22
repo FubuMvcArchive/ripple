@@ -13,18 +13,91 @@ namespace ripple.Testing
     [TestFixture]
     public class IntegratedChoosingOfRequiredSolutionsTester
     {
-        private SolutionGraphBuilder theBuilder;
-        private SolutionGraph theGraph;
         private RipplePlanRequirements theRequirements;
+		private SolutionGraphScenario theScenario;
+		private SolutionGraphBuilder theBuilder;
+		private SolutionGraph theGraph;
 
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
-        {
-            DataMother.CreateDataFolder();
-            theBuilder = new SolutionGraphBuilder(new FileSystem());
 
-            theGraph = theBuilder.ReadFrom("data");
-        }
+		[TestFixtureSetUp]
+		public void FixtureSetUp()
+		{
+			theScenario = SolutionGraphScenario.Create(scenario =>
+			{
+				scenario.Solution("Bottles", bottles =>
+				{
+					bottles.Publishes("Bottles", x => x.Assembly("Bottles.dll", "lib").DependsOn("FubuCore"));
+					bottles.ProjectDependency("Bottles", "FubuCore");
+				});
+
+				// Defaults to "FubuCore.dll" targeting "lib"
+				scenario.Solution("FubuCore", fubucore => fubucore.Publishes("FubuCore"));
+
+				scenario.Solution("FubuLocalization", localization =>
+				{
+					localization.Publishes("FubuLocalization", x => x.Assembly("FubuLocalization.dll", "lib").DependsOn("FubuCore"));
+					localization.ProjectDependency("FubuLocalization", "FubuCore");
+				});
+
+				scenario.Solution("FubuMVC", fubumvc =>
+				{
+					fubumvc.Publishes("FubuMVC.Core", x =>
+					{
+						x.Assembly("FubuMVC.Core.dll", "lib\\net40");
+						x.DependsOn("Bottles");
+						x.DependsOn("FubuCore");
+						x.DependsOn("FubuLocalization");
+						x.DependsOn("HtmlTags");
+					});
+
+					fubumvc.ProjectDependency("FubuMVC.Core", "Bottles");
+					fubumvc.ProjectDependency("FubuMVC.Core", "FubuCore");
+					fubumvc.ProjectDependency("FubuMVC.Core", "FubuLocalization");
+					fubumvc.ProjectDependency("FubuMVC.Core", "HtmlTags");
+				});
+
+				scenario.Solution("FubuMVC.Core.View", views =>
+				{
+					views.Publishes("FubuMVC.Core.View", x => x.Assembly("FubuMVC.Core.View.dll", "lib\\net40").DependsOn("FubuMVC.Core"));
+
+					views.ProjectDependency("FubuMVC.Core.View", "Bottles");
+					views.ProjectDependency("FubuMVC.Core.View", "FubuCore");
+					views.ProjectDependency("FubuMVC.Core.View", "FubuLocalization");
+					views.ProjectDependency("FubuMVC.Core.View", "FubuMVC.Core");
+					views.ProjectDependency("FubuMVC.Core.View", "HtmlTags");
+				});
+
+				scenario.Solution("FubuMVC.Core.UI", ui =>
+				{
+					ui.Publishes("FubuMVC.Core.UI", x => x.Assembly("FubuMVC.Core.UI.dll", "lib\\net40").DependsOn("FubuMVC.Core.View"));
+
+					ui.ProjectDependency("FubuMVC.Core.UI", "Bottles");
+					ui.ProjectDependency("FubuMVC.Core.UI", "FubuCore");
+					ui.ProjectDependency("FubuMVC.Core.UI", "FubuLocalization");
+					ui.ProjectDependency("FubuMVC.Core.UI", "FubuMVC.Core");
+					ui.ProjectDependency("FubuMVC.Core.UI", "FubuMVC.Core.View");
+					ui.ProjectDependency("FubuMVC.Core.UI", "HtmlTags");
+				});
+
+				scenario.Solution("HtmlTags", htmlTags => htmlTags.Publishes("HtmlTags", x => x.Assembly("HtmlTags.dll", "lib\\4.0")));
+
+				scenario.Solution("Validation", validation =>
+				{
+					validation.Publishes("FubuValidation", x => x.Assembly("FubuValidation.dll", "lib\\net40").DependsOn("FubuCore"));
+					validation.ProjectDependency("FubuValidation", "FubuCore");
+				});
+			});
+
+			theBuilder = new SolutionGraphBuilder(new FileSystem());
+
+			theGraph = theBuilder.ReadFrom(theScenario.Directory);
+		}
+
+		[TestFixtureTearDown]
+		public void TearDown()
+		{
+			theScenario.Cleanup();
+		}
 
         [SetUp]
         public void SetUp()
@@ -52,12 +125,14 @@ namespace ripple.Testing
         public void get_them_all()
         {
             theRequirements = new RipplePlanRequirements();
-            theSolutionsShouldBe("fubucore",
-                                 "htmltags",
-                                 "validation",
-                                 "bottles",
-                                 "fubumvc",
-                                 "fastpack");
+            theSolutionsShouldBe("FubuCore",
+                                 "HtmlTags",
+								 "Bottles",
+								 "FubuLocalization",
+								 "Validation",
+                                 "FubuMVC",
+                                 "FubuMVC.Core.View",
+								 "FubuMVC.Core.UI");
         }
 
         [Test]
@@ -65,21 +140,21 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "bottles"
+                                  From = "Bottles"
                               };
 
-            theSolutionsShouldBe("bottles", "fubumvc", "fastpack");
+            theSolutionsShouldBe("Bottles", "FubuMVC", "FubuMVC.Core.View", "FubuMVC.Core.UI");
         }
 
         [Test]
         public void set_from_and_to()
         {
             theRequirements = new RipplePlanRequirements{
-                From = "htmltags",
-                To = "fastpack"
+                From = "HtmlTags",
+                To = "FubuMVC"
             };
 
-            theSolutionsShouldBe("htmltags", "bottles", "fubumvc", "fastpack");
+            theSolutionsShouldBe("HtmlTags", "FubuMVC");
         }
 
         [Test]
@@ -87,11 +162,11 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "bottles",
-                                  To = "fastpack"
+                                  From = "FubuCore",
+                                  To = "FubuMVC"
                               };
 
-            theSolutionsShouldBe("bottles", "fubumvc", "fastpack");
+            theSolutionsShouldBe("FubuCore", "Bottles", "FubuLocalization", "FubuMVC");
         }
 
         [Test]
@@ -99,11 +174,11 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "fubucore",
-                                  To = "fastpack"
+                                  From = "FubuCore",
+                                  To = "FubuMVC.Core.View"
                               };
 
-            theSolutionsShouldBe("fubucore", "bottles", "fubumvc", "fastpack");
+            theSolutionsShouldBe("FubuCore", "Bottles", "FubuLocalization", "FubuMVC", "FubuMVC.Core.View");
         }
 
         [Test]
@@ -111,11 +186,11 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "fubucore",
-                                  To = "fubumvc"
+                                  From = "FubuCore",
+                                  To = "FubuMVC.Core.UI"
                               };
 
-            theSolutionsShouldBe("fubucore", "bottles", "fubumvc");
+			theSolutionsShouldBe("FubuCore", "Bottles", "FubuLocalization", "FubuMVC", "FubuMVC.Core.View", "FubuMVC.Core.UI");
         }
 
         [Test]
@@ -124,7 +199,7 @@ namespace ripple.Testing
             Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
             {
                 theRequirements = new RipplePlanRequirements(){
-                    From = "fubucore",
+                    From = "FubuCore",
                     To = null,
                     Direct = true
                 };
@@ -141,7 +216,7 @@ namespace ripple.Testing
                 theRequirements = new RipplePlanRequirements()
                                   {
                                       From = null,
-                                      To = "fubumvc",
+                                      To = "FubuMVC",
                                       Direct = true
                                   };
 
@@ -183,12 +258,12 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "fubucore",
-                                  To = "fubumvc",
+                                  From = "FubuCore",
+                                  To = "FubuMVC",
                                   Direct = true
                               };
 
-            theSolutionsShouldBe("fubucore", "fubumvc");
+            theSolutionsShouldBe("FubuCore", "FubuMVC");
         }
 
 
@@ -197,10 +272,10 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "htmltags"
+                                  From = "HtmlTags"
                               };
 
-            theSolutionsShouldBe("htmltags", "bottles", "fubumvc", "fastpack");
+            theSolutionsShouldBe("HtmlTags", "FubuMVC", "FubuMVC.Core.View", "FubuMVC.Core.UI");
         }
 
         [Test]
@@ -208,43 +283,30 @@ namespace ripple.Testing
         {
             theRequirements = new RipplePlanRequirements
                               {
-                                  From = "validation"
+                                  From = "Validation"
                               };
 
-            theSolutionsShouldBe("validation", "fastpack");
+            theSolutionsShouldBe("Validation");
         }
 
         [Test]
         public void stop_at_a_to_project()
         {
             theRequirements = new RipplePlanRequirements{
-                To = "bottles"
+                To = "Bottles"
             };
 
-            theSolutionsShouldBe("fubucore", "htmltags", "bottles");
+            theSolutionsShouldBe("FubuCore", "Bottles");
         }
 
         [Test]
         public void stop_at_a_project_2()
         {
             theRequirements = new RipplePlanRequirements{
-                To = "fubumvc"
+                To = "FubuMVC"
             };
 
-            theGraph["fubumvc"].DependsOn(theGraph["bottles"]).ShouldBeTrue();
-
-            theSolutionsShouldBe("fubucore", "htmltags", "bottles", "fubumvc");
-        }
-
-        [Test]
-        public void stop_at_a_project_3()
-        {
-            theRequirements = new RipplePlanRequirements
-                              {
-                                  To = "fastpack"
-                              };
-
-            theSolutionsShouldBe("fubucore", "htmltags", "validation", "bottles", "fubumvc", "fastpack");
+            theSolutionsShouldBe("FubuCore", "HtmlTags", "Bottles", "FubuLocalization", "FubuMVC");
         }
     }
 }

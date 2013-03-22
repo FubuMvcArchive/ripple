@@ -72,7 +72,6 @@
     <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
-    <Compile Include="MakeTestData.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
     <Compile Include="New\Classic\NuGetSolutionLoaderTester.cs" />
@@ -137,6 +136,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NuspecTemplate.txt" />
+    <EmbeddedResource Include="FubuCoreNuspecTemplate.txt" />
+    <EmbeddedResource Include="FubuMVCNuspecTemplate.txt" />
     <Content Include="feed.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,4 +1,5 @@
-﻿using NuGet;
+﻿using FubuCore;
+using NuGet;
 using ripple.New.Model;
 using ripple.New.Nuget;
 
@@ -28,7 +29,7 @@ namespace ripple.Testing.New.Model
 
 		public string NugetFolder(Solution solution)
 		{
-			throw new System.NotImplementedException();
+			return solution.PackagesDirectory().AppendPath(Name);
 		}
 	}
 }
