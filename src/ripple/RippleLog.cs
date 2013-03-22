@@ -19,6 +19,11 @@ namespace ripple
 			// TODO -- Add the file writing logger
 		}
 
+		public static void Verbose(bool verbose)
+		{
+			RippleLogger.PrintDebug = verbose;
+		}
+
 		private static ILogger Logger { get { return _logger.Value; } }
 
 		public static void RegisterListener(ILogListener listener)
@@ -53,6 +58,9 @@ namespace ripple
 
 		public class RippleLogger : ILogListener
 		{
+			public static bool PrintDebug = false;
+			public static bool PrintInfo = true;
+
 			public bool ListensFor(Type type)
 			{
 				return true;
@@ -99,8 +107,8 @@ namespace ripple
 				Console.ResetColor();
 			}
 
-			public bool IsDebugEnabled { get { return true; } }
-			public bool IsInfoEnabled { get { return true; } }
+			public bool IsDebugEnabled { get { return PrintDebug; } }
+			public bool IsInfoEnabled { get { return PrintInfo; } }
 		}
 	}
 }

@@ -30,9 +30,9 @@ namespace ripple.Commands
 		{
 			return RippleOperation
 				.For<UpdateInput>(input)
-				.Step<DownloadUpdatedDependencies>()
+				.Step<UpdateAndDownloadDependencies>()
 				.Step<ExplodeDownloadedNugets>()
-				.Step<UpdateReferences>()
+				.Step<FixReferences>()
 				.Execute();
 		}
 	}

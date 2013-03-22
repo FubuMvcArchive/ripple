@@ -69,6 +69,14 @@ namespace ripple.Testing.Model
 		}
 
 		[Test]
+		public void latest_for_fixed_with_forced_update()
+		{
+			var nuget = theFeedService.LatestFor(theSolution, theSolution.FindDependency("StructureMap"), forced: true);
+			nuget.Name.ShouldEqual("StructureMap");
+			nuget.Version.ToString().ShouldEqual("2.6.4.54");
+		}
+
+		[Test]
 		public void null_if_id_is_not_found()
 		{
 			theFeedService

@@ -67,6 +67,11 @@ namespace ripple.Model
 			return nugets;
 		}
 
+		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency)
+		{
+			return LatestFor(solution, dependency, forced: true);
+		}
+
 		public IEnumerable<PackageDependency> DependenciesFor(Solution solution, Dependency dependency)
 		{
 			var nuget = NugetFor(solution, dependency);
@@ -103,9 +108,9 @@ namespace ripple.Model
 			return Task.Factory.StartNew(() => LatestFor(solution, dependency).CallIfNotNull(nugets.Add));
 		}
 
-		public IRemoteNuget LatestFor(Solution solution, Dependency dependency)
+		public IRemoteNuget LatestFor(Solution solution, Dependency dependency, bool forced = false)
 		{
-			if (dependency.Mode == UpdateMode.Fixed)
+			if (dependency.Mode == UpdateMode.Fixed && !forced)
 			{
 				return null;
 			}

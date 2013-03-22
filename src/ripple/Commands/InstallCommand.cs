@@ -57,7 +57,7 @@ namespace ripple.Commands
 				.Step<InstallNuget>()
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
-				.Step<UpdateReferences>()
+				.Step<FixReferences>()
 				.Execute();
 		}
 	}

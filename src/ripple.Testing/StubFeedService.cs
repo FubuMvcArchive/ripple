@@ -25,6 +25,11 @@ namespace ripple.Testing
 			throw new System.NotImplementedException();
 		}
 
+		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public IEnumerable<PackageDependency> DependenciesFor(Solution solution, Dependency dependency)
 		{
 			return _packageDependencies[dependency];

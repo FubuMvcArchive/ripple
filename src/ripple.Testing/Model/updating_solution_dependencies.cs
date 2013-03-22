@@ -13,8 +13,8 @@ namespace ripple.Testing.Model
 		public void SetUp()
 		{
 			theSolution = new Solution();
-			theSolution.AddDependency(new Dependency("Bottles", "1.0.0.0"));
-			theSolution.AddDependency(new Dependency("FubuCore", "1.0.0.0"));
+			theSolution.AddDependency(new Dependency("Bottles", "1.0.0.0", UpdateMode.Fixed));
+			theSolution.AddDependency(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Fixed));
 
 			theSolution.Update("Bottles", "1.1.0.0");
 			theSolution.Update("FubuCore", "1.2.0.1");
@@ -40,8 +40,8 @@ namespace ripple.Testing.Model
 			theSolution = new Solution();
 
 			theProject = new Project("TestProject.csproj");
-			theProject.AddDependency(new Dependency("Bottles", "1.0.0.0"));
-			theProject.AddDependency(new Dependency("FubuCore", "1.0.0.0"));
+			theProject.AddDependency(new Dependency("Bottles", "1.0.0.0", UpdateMode.Fixed));
+			theProject.AddDependency(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Fixed));
 
 			theSolution.AddProject(theProject);
 

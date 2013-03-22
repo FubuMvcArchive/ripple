@@ -93,6 +93,8 @@ namespace ripple.Nuget
         {
 	        var explodedDirectory = ExplodedDirectory(directory);
 
+			RippleLog.Info("Exploding to " + explodedDirectory);
+
             var fileSystem = new FileSystem();
             fileSystem.CreateDirectory(explodedDirectory);
             fileSystem.CleanDirectory(explodedDirectory);

@@ -93,7 +93,7 @@ namespace ripple.Commands
 
         private static void writeSolution(Solution solution)
         {
-            Console.WriteLine("{0} ({1})", solution.Name, solution.Directory);
+            Console.WriteLine("{0} ({1})", solution.Name, solution.Directory.ToFullPath());
         }
 
         private void writePublishedNugets(Solution solution, ListMode mode)

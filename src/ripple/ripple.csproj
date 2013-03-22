@@ -167,10 +167,11 @@
     <Compile Include="RippleOperation.cs" />
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
-    <Compile Include="Steps\DownloadUpdatedDependencies.cs" />
+    <Compile Include="Steps\UpdateAndDownloadDependencies.cs" />
     <Compile Include="Steps\ExplodeDownloadedNugets.cs" />
     <Compile Include="Steps\InstallNuget.cs" />
-    <Compile Include="Steps\UpdateReferences.cs" />
+    <Compile Include="Steps\FixReferences.cs" />
+    <Compile Include="Steps\RippleStep.cs" />
     <Compile Include="Steps\ValidateRepository.cs" />
   </ItemGroup>
   <ItemGroup>

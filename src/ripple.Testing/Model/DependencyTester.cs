@@ -20,6 +20,18 @@ namespace ripple.Testing.Model
 		}
 
 		[Test]
+		public void not_fixed()
+		{
+			new Dependency("Bottles", "1.0.0.0").IsFixed().ShouldBeFalse();
+		}
+
+		[Test]
+		public void is_fixed()
+		{
+			new Dependency("Bottles", "1.0.0.0", UpdateMode.Fixed).IsFixed().ShouldBeTrue();
+		}
+
+		[Test]
 		public void make_float()
 		{
 			var dependency = new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed);

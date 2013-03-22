@@ -5,7 +5,7 @@ using ripple.Model;
 
 namespace ripple.Steps
 {
-	public class UpdateReferences : IRippleStep, DescribesItself
+	public class FixReferences : IRippleStep, DescribesItself
 	{
 		public Solution Solution { get; set; }
 

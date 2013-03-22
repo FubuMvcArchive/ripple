@@ -32,6 +32,9 @@ namespace ripple.Commands
 		[Description("Apply restore to all solutions")]
 		public bool AllFlag { get; set; }
 
+		[Description("Writes all output to the screen")]
+		public bool VerboseFlag { get; set; }
+
 		public void EachSolution(Action<Solution> configure)
 		{
 			FindSolutions().Each(configure);
@@ -61,6 +64,8 @@ namespace ripple.Commands
 
 		public void Apply(Solution solution)
 		{
+			RippleLog.Verbose(VerboseFlag);
+
 			if (CacheFlag.IsNotEmpty())
 			{
 				solution.UseCache(new NugetFolderCache(solution, CacheFlag.ToFullPath()));

@@ -87,7 +87,7 @@
     <Compile Include="Model\installation_plan_for_package_with_existing_dependencies_with_floating_updates_same_version.cs" />
     <Compile Include="Model\installation_plan_for_package_with_floating_updates.cs" />
     <Compile Include="Model\installing_dependencies.cs" />
-    <Compile Include="Model\IntegratedSolutonUpdatesTester.cs" />
+    <Compile Include="Model\IntegratedSolutionUpdatesTester.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\ProjectReaderTester.cs" />
     <Compile Include="Model\RippleDependencyReaderTester.cs" />

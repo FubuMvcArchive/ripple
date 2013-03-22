@@ -52,6 +52,11 @@ namespace ripple.Model
 			return Mode == UpdateMode.Float;
 		}
 
+		public bool IsFixed()
+		{
+			return Mode == UpdateMode.Fixed;
+		}
+
 		public bool Equals(Dependency other)
 		{
 			if (ReferenceEquals(null, other)) return false;

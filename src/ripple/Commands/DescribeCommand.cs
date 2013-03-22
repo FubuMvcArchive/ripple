@@ -11,6 +11,8 @@ namespace ripple.Commands
 	{
 		public override bool Execute(DescribeInput input)
 		{
+			RippleLog.Verbose(true);
+
 			var solution = Solution.For(input);
 			RippleLog.DebugMessage(solution);
 

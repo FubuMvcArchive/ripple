@@ -315,6 +315,11 @@ namespace ripple.Model
 			return _updates.Value;
 		}
 
+		public IRemoteNuget UpdateFor(string name)
+		{
+			return FeedService.UpdateFor(this, Dependencies.Find(name));
+		}
+
 		public void Update(INugetFile nuget)
 		{
 			Dependencies.Update(Dependency.For(nuget));

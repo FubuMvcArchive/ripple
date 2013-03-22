@@ -67,7 +67,10 @@ namespace ripple.Model
 				throw new ArgumentOutOfRangeException("dependency", "Could not find Dependency: " + dependency);
 			}
 
-			existing.Version = dependency.Version;
+			if (existing.IsFixed())
+			{
+				existing.Version = dependency.Version;
+			}
 		}
 
 		public bool Has(string name)

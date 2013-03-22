@@ -21,7 +21,7 @@ namespace ripple.Commands
 				.For<RestoreInput>(input)
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
-				.Step<UpdateReferences>()
+				.Step<FixReferences>()
 				.Execute();
 		}
 	}
