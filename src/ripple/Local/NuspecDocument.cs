@@ -51,6 +51,32 @@ namespace ripple.Local
             }
         }
 
+		public void AddDependency(Dependency dependency)
+		{
+			var dependencies = _document.DocumentElement.SelectSingleNode("//nuspec:dependencies", _xmlNamespaceManager);
+
+			var element = _document.CreateElement("dependency");
+			element.SetAttribute("id", dependency.Name);
+
+			if (!dependency.IsFloat())
+			{
+				element.SetAttribute("version", dependency.Version);
+			}
+
+			dependencies.AppendChild(element);
+		}
+
+		public void AddPublishedAssembly(string src, string target = "lib")
+		{
+			var files = _document.DocumentElement.SelectSingleNode("//files", _xmlNamespaceManager);
+
+			var element = _document.CreateElement("file");
+			element.SetAttribute("src", src);
+			element.SetAttribute("target", target);
+
+			files.AppendChild(element);
+		}
+
 		public IEnumerable<Dependency> FindDependencies()
         {
             return findNugetElements("dependency").Select(Dependency.ReadFrom);

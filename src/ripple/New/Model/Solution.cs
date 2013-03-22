@@ -29,7 +29,7 @@ namespace ripple.New.Model
 		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
 		private readonly Lazy<IEnumerable<Dependency>> _missing;
 		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates;
-		private readonly Lazy<IEnumerable<NugetSpec>> _specifications;
+		private readonly Lazy<IList<NugetSpec>> _specifications;
 		private Lazy<DependencyCollection> _dependencies;
 		private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
 		private string _path;
@@ -53,7 +53,7 @@ namespace ripple.New.Model
 
 			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
-			_specifications = new Lazy<IEnumerable<NugetSpec>>(() => Publisher.SpecificationsFor(this));
+			_specifications = new Lazy<IList<NugetSpec>>(findSpecifications);
 			
 			resetDependencies();
 		}
@@ -105,6 +105,14 @@ namespace ripple.New.Model
 			var dependencies = new DependencyCollection(_configuredDependencies);
 			Projects.Each(p => dependencies.AddChild(p.Dependencies));
 			return dependencies;
+		}
+
+		private IList<NugetSpec> findSpecifications()
+		{
+			var specs = new List<NugetSpec>();
+			specs.AddRange(Publisher.SpecificationsFor(this));
+
+			return specs;
 		}
 
 		public string PackagesDirectory()
@@ -327,6 +335,11 @@ namespace ripple.New.Model
 		{
 			var nuget = LocalDependencies().Get(nugetName);
 			return nuget.NugetFolder(this);
+		}
+
+		public void AddNugetSpec(NugetSpec spec)
+		{
+			_specifications.Value.Add(spec);
 		}
 
 		public IEnumerable<NugetSpec> NugetDependencies

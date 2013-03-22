@@ -115,6 +115,7 @@
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IntegratedSolutionGraphTester.cs" />
+    <Compile Include="SolutionGraphScenario.cs" />
     <Compile Include="SolutionTester.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,88 +128,19 @@
     <None Include="Bottles.1.0.0.441.nupkg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="data\bottles\packaging\nuget\bottles.deployers.iis.nuspec" />
-    <None Include="data\bottles\packaging\nuget\bottles.deployers.topshelf.nuspec" />
-    <None Include="data\bottles\packaging\nuget\bottles.deployment.nuspec" />
-    <None Include="data\bottles\packaging\nuget\bottles.host.packaging.nuspec" />
-    <None Include="data\bottles\packaging\nuget\bottles.nuspec" />
-    <None Include="data\bottles\packaging\nuget\bottles.tools.nuspec" />
-    <None Include="data\bottles\ripple.config" />
-    <None Include="data\bottles\src\Bottles.Console\packages.config" />
-    <None Include="data\bottles\src\Bottles.Deployers.Iis\packages.config" />
-    <None Include="data\bottles\src\Bottles.Deployers.Topshelf\packages.config" />
-    <None Include="data\bottles\src\Bottles.Deployment\packages.config" />
-    <None Include="data\bottles\src\Bottles.Host.Packaging\packages.config" />
-    <None Include="data\bottles\src\Bottles.Host\packages.config" />
-    <None Include="data\bottles\src\Bottles.Storyteller\packages.config" />
-    <None Include="data\bottles\src\Bottles.Tests\packages.config" />
-    <None Include="data\bottles\src\Bottles\packages.config" />
-    <None Include="data\bottles\src\SampleBottleService\packages.config" />
-    <None Include="data\fastpack\packaging\nuget\fubumvc.fastpack.nuspec" />
-    <None Include="data\fastpack\ripple.config" />
-    <None Include="data\fastpack\src\FubuFastPack.Testing\packages.config" />
-    <None Include="data\fastpack\src\FubuFastPack\packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="data\fastpack\src\FubuTestApplication\packages.config" />
-    <None Include="data\fastpack\src\StoryTellerTesting\packages.config" />
-    <None Include="data\fubucore\packaging\nuget\fubucore.nuspec" />
-    <None Include="data\fubucore\packaging\nuget\fubulocalization.nuspec" />
-    <None Include="data\fubucore\packaging\nuget\fubutestingsupport.nuspec" />
-    <None Include="data\fubucore\ripple.config" />
-    <None Include="data\fubucore\src\FubuCore.Testing\packages.config" />
-    <None Include="data\fubucore\src\FubuCore\packages.config" />
-    <None Include="data\fubucore\src\FubuLocalization.Tests\packages.config" />
-    <None Include="data\fubucore\src\FubuTestingSupport\packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="data\fubumvc\packaging\nuget\ConfigureFubuMVC.cs.pp" />
-    <None Include="data\fubumvc\packaging\nuget\FubuMVC.cs.pp" />
-    <None Include="data\fubumvc\packaging\nuget\fubumvc.diagnostics.nuspec" />
-    <None Include="data\fubumvc\packaging\nuget\fubumvc.nuspec" />
-    <None Include="data\fubumvc\packaging\nuget\fubumvc.references.nuspec" />
-    <None Include="data\fubumvc\packaging\nuget\fubumvc.spark.nuspec" />
-    <None Include="data\fubumvc\packaging\nuget\fubumvc.webforms.nuspec" />
-    <None Include="data\fubumvc\packaging\nuget\web.config.transform" />
-    <None Include="data\fubumvc\ripple.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Core\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Deployers\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Diagnostics.Tests\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Diagnostics\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.GettingStarted\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.HelloSpark\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.HelloWorld\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Spark.Tests\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Spark\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.StructureMap\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.Tests\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.WebForms.Testing\packages.config" />
-    <None Include="data\fubumvc\src\FubuMVC.WebForms\packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="data\fubumvc\src\FubuTestApplication\packages.config" />
-    <None Include="data\fubumvc\src\Fubu\packages.config" />
-    <None Include="data\fubumvc\src\StoryTellerTesting\packages.config" />
-    <None Include="data\fubumvc\src\TestPackage1\packages.config" />
-    <None Include="data\fubumvc\src\TestPackage2\packages.config" />
-    <None Include="data\fubumvc\src\TestPackage4\packages.config" />
-    <None Include="data\htmltags\packaging\nuget\htmltags.nuspec" />
-    <None Include="data\htmltags\ripple.config" />
-    <None Include="data\validation\packaging\nuget\fubumvc.validation.nuspec" />
-    <None Include="data\validation\ripple.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="data\junk1\" />
-    <Folder Include="data\junk2\" />
     <Folder Include="New\Steps\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="NuspecTemplate.txt" />
     <Content Include="feed.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="ProjectTemplate.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
