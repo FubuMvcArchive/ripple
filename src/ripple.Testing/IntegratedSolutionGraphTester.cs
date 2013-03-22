@@ -10,16 +10,39 @@ namespace ripple.Testing
     [TestFixture]
     public class IntegratedSolutionGraphTester
     {
+	    private SolutionGraphScenario theScenario;
         private SolutionGraphBuilder theBuilder;
         private Lazy<SolutionGraph> theGraph;
 
         [TestFixtureSetUp]
         public void FixtureSetUp()
         {
-            DataMother.CreateDataFolder();
+	        theScenario = SolutionGraphScenario.Create(scenario =>
+		    {
+				scenario.Solution("Bottles", bottles =>
+				{
+					bottles.Publishes("Bottles", x => x.DependsOn("FubuCore"));
+					bottles.ProjectDependency("Bottles", "FubuCore");
+				});
+
+				scenario.Solution("FubuCore", fubucore => fubucore.Publishes("FubuCore"));
+
+				scenario.Solution("FubuMVC", fubumvc =>
+				{
+					fubumvc.Publishes("FubuMVC.Core", x =>
+					{
+						x.DependsOn("Bottles");
+						x.DependsOn("FubuCore");
+					});
+
+					fubumvc.ProjectDependency("FubuMVC.Core", "Bottles");
+					fubumvc.ProjectDependency("FubuMVC.Core", "FubuCore");
+				});
+		    });
+
             theBuilder = new SolutionGraphBuilder(new FileSystem());
 
-            theGraph = new Lazy<SolutionGraph>(() => theBuilder.ReadFrom("data"));
+            theGraph = new Lazy<SolutionGraph>(() => theBuilder.ReadFrom(theScenario.Directory));
         }
 
         [Test]

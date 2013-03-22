@@ -11,6 +11,21 @@ namespace ripple.Testing
 {
 	public class SolutionGraphScenario
 	{
+		private readonly string _directory;
+		private readonly IFileSystem _fileSystem;
+
+		public SolutionGraphScenario(string directory)
+		{
+			_directory = directory;
+			_fileSystem = new FileSystem();
+		}
+
+		public string Directory { get { return _directory; } }
+
+		public void Cleanup()
+		{
+			_fileSystem.DeleteDirectory(_directory);
+		}
 
 		public static SolutionGraphScenario Create(Action<SolutionGraphScenarioDefinition> configure)
 		{
@@ -57,7 +72,7 @@ namespace ripple.Testing
 	 		SolutionGraphScenario ISolutionGraphScenarioBuilder.Build()
 	 		{
 	 			_solutions.Each(solution => solution.Save());
-	 			return new SolutionGraphScenario();
+	 			return new SolutionGraphScenario(this.As<ISolutionGraphScenarioBuilder>().Directory);
 	 		}
 	 	}
 
@@ -98,7 +113,7 @@ namespace ripple.Testing
 
 			private void addDefaultProject()
 			{
-				createAndAddProject(_solution.Name);
+				_projects.FillDefault(_solution.Name);
 			}
 
 			private Project createAndAddProject(string name)
