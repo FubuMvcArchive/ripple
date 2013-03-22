@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using FubuCore;
-using ripple.New.Model;
+using ripple.Model;
 
 namespace ripple.Local
 {

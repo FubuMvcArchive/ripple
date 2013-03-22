@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using ripple.New.Model;
+using ripple.Model;
 
 namespace ripple.Local
 {

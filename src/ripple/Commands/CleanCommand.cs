@@ -2,8 +2,6 @@ using System.ComponentModel;
 using FubuCore.CommandLine;
 using FubuCore;
 using ripple.Model;
-using ripple.New;
-using ripple.New.Commands;
 
 namespace ripple.Commands
 {

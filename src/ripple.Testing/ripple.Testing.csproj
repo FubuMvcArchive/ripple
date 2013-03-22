@@ -64,58 +64,58 @@
   <ItemGroup>
     <Compile Include="BuildSolutionTester.cs" />
     <Compile Include="CheckXmlPersistence.cs" />
+    <Compile Include="Classic\NuGetSolutionLoaderTester.cs" />
     <Compile Include="Commands\ExtractSampleCommandTester.cs" />
     <Compile Include="Commands\PublishCommandTester.cs" />
     <Compile Include="DataMother.cs" />
+    <Compile Include="DependencyCollectionExtensions.cs" />
     <Compile Include="Directives\DirectiveParserTester.cs" />
     <Compile Include="Directives\DirectiveRunnerTester.cs" />
+    <Compile Include="FeedScenario.cs" />
     <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
+    <Compile Include="Model\DependencyCollectionTester.cs" />
+    <Compile Include="Model\DependencyInstallationScenario.cs" />
+    <Compile Include="Model\DependencyParsing.cs" />
+    <Compile Include="Model\DependencyTester.cs" />
+    <Compile Include="Model\finding_dependencies_for_a_package.cs" />
+    <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
+    <Compile Include="Model\finding_the_latest_dependency.cs" />
+    <Compile Include="Model\InstallationScenario.cs" />
+    <Compile Include="Model\installation_plan_for_new_package.cs" />
+    <Compile Include="Model\installation_plan_for_package_with_existing_dependencies_with_floating_updates_same_version.cs" />
+    <Compile Include="Model\installation_plan_for_package_with_floating_updates.cs" />
+    <Compile Include="Model\installing_dependencies.cs" />
+    <Compile Include="Model\IntegratedSolutonUpdatesTester.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
+    <Compile Include="Model\ProjectReaderTester.cs" />
+    <Compile Include="Model\RippleDependencyReaderTester.cs" />
+    <Compile Include="Model\SolutionBuilderTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
-    <Compile Include="New\Classic\NuGetSolutionLoaderTester.cs" />
-    <Compile Include="New\DependencyCollectionExtensions.cs" />
-    <Compile Include="New\FeedScenario.cs" />
-    <Compile Include="New\Model\DependencyCollectionTester.cs" />
-    <Compile Include="New\Model\DependencyInstallationScenario.cs" />
-    <Compile Include="New\Model\DependencyParsing.cs" />
-    <Compile Include="New\Model\DependencyTester.cs" />
-    <Compile Include="New\Model\finding_dependencies_for_a_package.cs" />
-    <Compile Include="New\Model\finding_the_latest_dependency.cs" />
-    <Compile Include="New\Model\InstallationScenario.cs" />
-    <Compile Include="New\Model\installation_plan_for_new_package.cs" />
-    <Compile Include="New\Model\installation_plan_for_package_with_existing_dependencies_with_floating_updates_same_version.cs" />
-    <Compile Include="New\Model\installation_plan_for_package_with_floating_updates.cs" />
-    <Compile Include="New\Model\installing_dependencies.cs" />
-    <Compile Include="New\Model\IntegratedSolutonUpdatesTester.cs" />
-    <Compile Include="New\Model\finding_solution_nugets_to_restore.cs" />
-    <Compile Include="New\Model\RippleDependencyReaderTester.cs" />
-    <Compile Include="New\Model\SolutionBuilderTester.cs" />
-    <Compile Include="New\Model\SolutionFilesTester.cs" />
-    <Compile Include="New\Model\StubFeed.cs" />
-    <Compile Include="New\Model\StubNugetFile.cs" />
-    <Compile Include="New\Model\updating_solution_dependencies.cs" />
-    <Compile Include="New\Nuget\CacheableNugetTester.cs" />
-    <Compile Include="New\Nuget\NugetFeedSmokeTester.cs" />
-    <Compile Include="New\Nuget\NugetFileTester.cs" />
-    <Compile Include="New\Nuget\NugetFolderCacheSmokeTester.cs" />
-    <Compile Include="New\Nuget\NugetFolderCacheTester.cs" />
-    <Compile Include="New\Nuget\NugetXmlFeedTester.cs" />
-    <Compile Include="New\Nuget\RemoteNugetTester.cs" />
-    <Compile Include="New\Model\ProjectReaderTester.cs" />
-    <Compile Include="New\Model\SolutionPersistence.cs" />
-    <Compile Include="New\Model\SolutionTester.cs" />
-    <Compile Include="New\RippleOperationTester.cs" />
-    <Compile Include="New\StubFeedService.cs" />
-    <Compile Include="New\StubNuget.cs" />
-    <Compile Include="New\StubNugetStorage.cs" />
-    <Compile Include="New\StubPackage.cs" />
+    <Compile Include="Model\SolutionFilesTester.cs" />
+    <Compile Include="Model\SolutionPersistence.cs" />
+    <Compile Include="Model\SolutionTester.cs" />
+    <Compile Include="Model\StubFeed.cs" />
+    <Compile Include="Model\StubNugetFile.cs" />
+    <Compile Include="Model\updating_solution_dependencies.cs" />
     <Compile Include="NugetSpecTester.cs" />
+    <Compile Include="Nuget\CacheableNugetTester.cs" />
+    <Compile Include="Nuget\NugetFeedSmokeTester.cs" />
+    <Compile Include="Nuget\NugetFileTester.cs" />
+    <Compile Include="Nuget\NugetFolderCacheSmokeTester.cs" />
+    <Compile Include="Nuget\NugetFolderCacheTester.cs" />
+    <Compile Include="Nuget\NugetXmlFeedTester.cs" />
+    <Compile Include="Nuget\RemoteNugetTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IntegratedSolutionGraphTester.cs" />
+    <Compile Include="RippleOperationTester.cs" />
     <Compile Include="SolutionGraphScenario.cs" />
     <Compile Include="SolutionTester.cs" />
+    <Compile Include="StubFeedService.cs" />
+    <Compile Include="StubNuget.cs" />
+    <Compile Include="StubNugetStorage.cs" />
+    <Compile Include="StubPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ripple\ripple.csproj">
@@ -131,9 +131,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="New\Steps\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="NuspecTemplate.txt" />
     <EmbeddedResource Include="FubuCoreNuspecTemplate.txt" />

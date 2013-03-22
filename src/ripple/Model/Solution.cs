@@ -1,271 +1,429 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FubuCore;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
+using FubuCore;
 using FubuCore.CommandLine;
+using FubuCore.Descriptions;
+using FubuCore.Logging;
+using ripple.Commands;
 using ripple.Local;
+using ripple.Nuget;
 
 namespace ripple.Model
 {
-    public enum CleanMode
-    {
-        all,
-        packages,
-        projects
-    }
+	public enum SolutionMode
+	{
+		Ripple,
+		Classic
+	}
 
-    public interface ISolution
-    {
-        string NugetFolderFor(string nugetName);
-        string Directory { get; }
-        void IgnoreFile(string file);
-        IEnumerable<string> AllNugetDependencyNames();
-    }
+	public enum CleanMode
+	{
+		all,
+		packages,
+		projects
+	}
 
-    /*public class Solution : ISolution
-    {
-        public static Solution ReadFrom(string directory)
-        {
-            try
-            {
-                var config = SolutionConfig.LoadFrom(directory);
+	public interface ISolution
+	{
+		string NugetFolderFor(string nugetName);
+		string Directory { get; }
+		void IgnoreFile(string file);
+		IEnumerable<string> AllNugetDependencyNames();
+	}
 
-                var solution = new Solution(config, directory);
+	[XmlType("ripple")]
+	public class Solution : DescribesItself, LogTopic, ISolution
+	{
+		private readonly IList<Project> _projects = new List<Project>();
+		private readonly IList<Feed> _feeds = new List<Feed>();
+		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
+		private readonly Lazy<IEnumerable<Dependency>> _missing;
+		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates;
+		private readonly Lazy<IList<NugetSpec>> _specifications;
+		private Lazy<DependencyCollection> _dependencies;
+		private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
+		private string _path;
 
-                var system = new FileSystem();
-                readProjects(config.GetSolutionFolder(directory), system, solution);
-                readNugetSpecs(directory, config, system, solution);
+		public Solution()
+		{
+			NugetSpecFolder = "packaging/nuget";
+			SourceFolder = "src";
+			BuildCommand = "rake";
+			FastBuildCommand = "rake compile";
+			Mode = SolutionMode.Ripple;
 
+			AddFeed(Feed.Fubu);
+			AddFeed(Feed.NuGetV2);
+			AddFeed(Feed.NuGetV1);
 
+			UseStorage(NugetStorage.Basic());
+			UseFeedService(new FeedService());
+			UseCache(NugetFolderCache.DefaultFor(this));
+			UsePublisher(PublishingService.For(Mode));
 
-                return solution;
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Error reading Solution from " + directory);
-                throw;
-            }
-        }
+			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
+			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
+			_specifications = new Lazy<IList<NugetSpec>>(findSpecifications);
+			
+			resetDependencies();
+		}
 
-        private static void readNugetSpecs(string directory, SolutionConfig config, FileSystem system, Solution solution)
-        {
-            system.FindFiles(directory.AppendPath(config.NugetSpecFolder), new FileSet(){
-                Include = "*.nuspec"
-            })
-                .Each(file =>
-                {
-                    var spec = NugetSpec.ReadFrom(file);
-                    solution.AddNugetSpec(spec);
-                });
-        }
+		public string Name { get; set; }
+		[XmlIgnore]
+		public string Directory { get; set; }
+		public string NugetSpecFolder { get; set; }
+		public string SourceFolder { get; set; }
+		public string BuildCommand { get; set; }
+		public string FastBuildCommand { get; set; }
+		public SolutionMode Mode { get; set; }
 
-        private static void readProjects(string directory, FileSystem system, Solution solution)
-        {
-            var csProjSet = new FileSet(){
-                Include = "*.csproj"
-            };
+		[XmlIgnore]
+		public string Path
+		{
+			get { return _path; }
+			set
+			{
+				_path = value;
+				if (value.IsNotEmpty() && File.Exists(value))
+				{
+					Directory = System.IO.Path.GetDirectoryName(value);
+				}
+			}
+		}
 
-            system.FindFiles(directory, csProjSet).Each(file =>
-            {
-                var project = Project.ReadFrom(file);
+		public void ConvertTo(SolutionMode mode)
+		{
+			Mode = mode;
+			Storage.Reset(this);
+			UseStorage(NugetStorage.For(mode));
+		}
 
-                solution.AddProject(project);
-            });
-        }
+		[XmlIgnore]
+		public INugetStorage Storage { get; private set; }
+		[XmlIgnore]
+		public IFeedService FeedService { get; private set; }
+		[XmlIgnore]
+		public INugetCache Cache { get; private set; }
+		[XmlIgnore]
+		public IPublishingService Publisher { get; private set; }
 
-        private readonly SolutionConfig _config;
-        private readonly string _directory;
-        private readonly IList<Project> _projects = new List<Project>();
-        private readonly IList<NugetSpec> _published = new List<NugetSpec>();
-        private readonly IList<NugetSpec> _dependencies = new List<NugetSpec>();
+		private void resetDependencies()
+		{
+			_dependencies = new Lazy<DependencyCollection>(combineDependencies);
+		}
 
-        public Solution(SolutionConfig config, string directory)
-        {
-            _config = config;
-            _directory = directory.ToFullPath();
-        }
+		private DependencyCollection combineDependencies()
+		{
+			var dependencies = new DependencyCollection(_configuredDependencies);
+			Projects.Each(p => dependencies.AddChild(p.Dependencies));
+			return dependencies;
+		}
 
-        public void AlterConfig(Action<SolutionConfig> alteration)
-        {
-            alteration(_config);
+		private IList<NugetSpec> findSpecifications()
+		{
+			var specs = new List<NugetSpec>();
+			specs.AddRange(Publisher.SpecificationsFor(this));
 
-            var file = _directory.AppendPath(SolutionConfig.FileName);
-            Console.WriteLine("Writing changes to " + file);
-            new FileSystem().PersistToFile(_config, file);
-        }
+			return specs;
+		}
 
-        public string Directory
-        {
-            get { return _directory; }
-        }
+		public string PackagesDirectory()
+		{
+			return Directory.AppendPath(SourceFolder, "packages").ToFullPath();
+		}
 
-        public void IgnoreFile(string file)
-        {
-            var gitIgnoreFile = _directory.AppendPath(".gitignore");
-            new FileSystem().AlterFlatFile(gitIgnoreFile, list => list.Fill(file));
-        }
+		public void UsePublisher(IPublishingService service)
+		{
+			Publisher = service;
+		}
 
-        public string Name
-        {
-            get
-            {
-                return _config.Name;
-            }
-        }
+		public void UseStorage(INugetStorage storage)
+		{
+			Storage = storage;
+		}
 
-        public SolutionConfig Config
-        {
-            get { return _config; }
-        }
+		public void UseFeedService(IFeedService service)
+		{
+			FeedService = service;
+		}
 
-        public void Clean(IFileSystem fileSystem, CleanMode mode)
-        {
-            if (mode == CleanMode.all || mode == CleanMode.packages)
-            {
-                var packagesFolder = PackagesFolder();
-                Console.WriteLine("Deleting " + packagesFolder);
-                fileSystem.DeleteDirectory(packagesFolder);
-            }
+		public void UseCache(INugetCache cache)
+		{
+			Cache = cache;
+		}
 
-            if (mode == CleanMode.all || mode == CleanMode.projects)
-            {
-                _projects.Each(p => p.Clean(fileSystem));    
-            }
+		[XmlIgnore]
+		public Project[] Projects
+		{
+			get { return _projects.ToArray(); }
+			set
+			{
+				_projects.Clear();
+				_projects.AddRange(value);
+			}
+		}
 
-            
-        }
+		public Feed[] Feeds
+		{
+			get { return _feeds.ToArray(); }
+			set
+			{
+				_feeds.Clear();
+				_feeds.AddRange(value);
+			}
+		}
 
-        public NugetDependency GetLatestNugetOf(string nugetName)
-        {
-            return GetAllNugetDependencies().OrderByDescending(x => x.Version).FirstOrDefault(x => x.Name == nugetName);
-        }
+		public Dependency[] Nugets
+		{
+			get { return _configuredDependencies.ToArray(); }
+			set
+			{
+				_configuredDependencies.Clear();
+				_configuredDependencies.AddRange(value);
+			}
+		}
 
-        public string PackagesFolder()
-        {
-            return _directory.AppendPath(_config.SourceFolder, "packages");
-        }
+		[XmlIgnore]
+		public DependencyCollection Dependencies
+		{
+			get { return _dependencies.Value; }
+		}
 
-        public void AddNugetSpec(NugetSpec spec)
-        {
-            _published.Add(spec);
-            spec.Publisher = this;
-        }
+		[XmlIgnore]
+		public IEnumerable<NugetSpec> Specifications
+		{
+			get { return _specifications.Value; }
+		}
 
-        public IEnumerable<Project> Projects
-        {
-            get { return _projects; }
-        }
+		public void AddFeed(Feed feed)
+		{
+			_feeds.Fill(feed);
+		}
 
-        public Project FindProject(string name)
-        {
-            return _projects.FirstOrDefault(x => x.ProjectName == name);
-        }
+		public void AddProject(Project project)
+		{
+			project.Solution = this;
+			_projects.Fill(project);
+		}
 
-        public IEnumerable<NugetSpec> PublishedNugets
-        {
-            get
-            {
-                return _published;
-            }
-        }
+		public Project AddProject(string name)
+		{
+			var project = new Project(name);
+			AddProject(project);
 
-        public void DetermineDependencies(Func<string, NugetSpec> finder)
-        {
-            IEnumerable<NugetDependency> nugetDependencies = GetAllNugetDependencies();
+			return project;
+		}
 
-            nugetDependencies.Each(x =>
-            {
-                var spec = finder(x.Name);
-                if (spec != null)
-                {
-                    _dependencies.Add(spec);
-                }
-            });
-        }
+		public void AddDependency(Dependency dependency)
+		{
+			resetDependencies();
+			_configuredDependencies.Fill(dependency);
+		}
 
-        public IEnumerable<string> AllNugetDependencyNames()
-        {
-            return GetAllNugetDependencies().Select(x => x.Name).Distinct().ToList();
-        }
+		public Dependency FindDependency(string name)
+		{
+			return _configuredDependencies.SingleOrDefault(x => x.Name == name);
+		}
 
-        public IEnumerable<NugetDependency> GetAllNugetDependencies()
-        {
-            return Projects.SelectMany(x => x.NugetDependencies).Distinct();
-        }
+		public void ClearFeeds()
+		{
+			_feeds.Clear();
+		}
 
-        public IEnumerable<NugetSpec> NugetDependencies()
-        {
-            return _dependencies;
-        }
+		public IEnumerable<Dependency> MissingNugets()
+		{
+			return _missing.Value;
+		}
 
-        public IEnumerable<Solution> SolutionDependencies()
-        {
-            return _dependencies.Select(x => x.Publisher)
-                .Distinct()
-                .OrderBy(x => x.Name);
-        }
+		public IRemoteNuget Restore(Dependency dependency)
+		{
+			return FeedService.NugetFor(this, dependency);
+		}
 
-        public bool DependsOn(Solution peer)
-        {
-            return _dependencies.Any(x => x.Publisher == peer);
-        }
+		public Project FindProject(string name)
+		{
+			return _projects.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
+		}
 
-        public override string ToString()
-        {
-            return string.Format("Solution {0}", Name);
-        }
+		public void Describe(Description description)
+		{
+			description.Title = "Solution \"{0}\"".ToFormat(Name);
+			description.ShortDescription = Path;
 
-        public void AddProject(Project project)
-        {
-            _projects.Add(project);
-            project.NugetDependencies.Each(dep =>
-            {
-                dep.UpdateMode = _config.ModeForNuget(dep.Name);
-            });
-        }
+			var configured = description.AddList("SolutionLevel", _configuredDependencies.OrderBy(x => x.Name));
+			configured.Label = "Solution-Level";
 
-        public string NugetFolderFor(NugetSpec spec)
-        {
-            var nugetName = spec.Name;
+			var feedsList = description.AddList("Feeds", Feeds);
+			feedsList.Label = "NuGet Feeds";
 
-            return NugetFolderFor(nugetName);
-        }
+			var projectsList = description.AddList("Projects", Projects);
+			projectsList.Label = "Projects";
 
-        public string NugetFolderFor(string nugetName)
-        {
-            var nugetDependencies = Projects.SelectMany(x => x.NugetDependencies).Distinct();
-            NugetDependency dependency = null;
-            
-            try
-            {
-                dependency = nugetDependencies
-                    .Single(x => x.Name.EqualsIgnoreCase(nugetName));
-            }
-            catch (InvalidOperationException ex)
-            {
-                var options = nugetDependencies.Select(d=>d.Name).Aggregate((l,r)=> l+", "+r);
-                throw new InvalidOperationException(string.Format("Couldn't select a single dependency for '{0}'. Couldn't decide between {1}./nTry running 'ripple update'.", nugetName, options));
-            }
+			var local = LocalDependencies();
+			if (local.Any())
+			{
+				var localList = description.AddList("Local", local.All());
+				localList.Label = "Local";
+			}
 
-            return _directory.AppendPath(_config.SourceFolder, "packages", nugetName + "." + dependency.Version);
-        }
+			var missing = MissingNugets();
+			if (missing.Any())
+			{
+				var missingList = description.AddList("Missing", missing);
+				missingList.Label = "Missing";
+			}
+		}
 
-        public ProcessStartInfo CreateBuildProcess(bool fast)
-        {
-            var cmdLine = fast ? _config.FastBuildCommand : _config.BuildCommand;
-            var commands = StringTokenizer.Tokenize(cmdLine);
+		public void AssertIsValid()
+		{
+			var exception = new RippleException(this);
 
-            var fileName = commands.First();
-            if (fileName == "rake")
-            {
-                fileName = RippleFileSystem.RakeRunnerFile();
-            }
+			_projects
+				.SelectMany(x => x.Dependencies)
+				.GroupBy(x => x.Name)
+				.Each(group =>
+				{
+					var version = group.First().Version;
+					if (group.Any(d => d.Version != version))
+					{
+						exception.AddProblem("Validation", "Multiple dependencies found for " + group.Key);
+					}
+				});
 
-            return new ProcessStartInfo(fileName){
-                WorkingDirectory = _directory,
-                Arguments = commands.Skip(1).Join(" ")
-            };
-        }
-    }*/
+			if (exception.HasProblems())
+			{
+				throw exception;
+			}
+		}
+
+		public void Clean(CleanMode mode)
+		{
+			Storage.Clean(this, mode);
+		}
+
+		public LocalDependencies LocalDependencies()
+		{
+			return Storage.Dependencies(this);
+		}
+
+		public IEnumerable<IRemoteNuget> Updates()
+		{
+			return _updates.Value;
+		}
+
+		public void Update(INugetFile nuget)
+		{
+			Dependencies.Update(Dependency.For(nuget));
+		}
+
+		private IEnumerable<IRemoteNuget> findUpdates()
+		{
+			return FeedService.UpdatesFor(this);
+		}
+
+		public void DetermineNugetDependencies(Func<string, NugetSpec> finder)
+		{
+			Dependencies.Each(x =>
+			{
+				var spec = finder(x.Name);
+				if (spec != null)
+				{
+					_nugetDependencies.Add(spec);
+				}
+			});
+		}
+
+		public bool DependsOn(Solution peer)
+		{
+			return _nugetDependencies.Any(x => x.Publisher == peer);
+		}
+
+		public string NugetFolderFor(NugetSpec spec)
+		{
+			return NugetFolderFor(spec.Name);
+		}
+
+		public string NugetFolderFor(string nugetName)
+		{
+			var nuget = LocalDependencies().Get(nugetName);
+			return nuget.NugetFolder(this);
+		}
+
+		public void AddNugetSpec(NugetSpec spec)
+		{
+			_specifications.Value.Add(spec);
+		}
+
+		public IEnumerable<NugetSpec> NugetDependencies
+		{
+			get { return _nugetDependencies; }
+		}
+
+		public IEnumerable<Solution> SolutionDependencies()
+		{
+			return _nugetDependencies.Select(x => x.Publisher)
+				.Distinct()
+				.OrderBy(x => x.Name);
+		}
+
+		public void Save()
+		{
+			Storage.Write(this);
+			Projects.Each(Storage.Write);
+		}
+
+		public ProcessStartInfo CreateBuildProcess(bool fast)
+		{
+			var cmdLine = fast ? FastBuildCommand : BuildCommand;
+			var commands = StringTokenizer.Tokenize(cmdLine);
+
+			var fileName = commands.First();
+			if (fileName == "rake")
+			{
+				fileName = RippleFileSystem.RakeRunnerFile();
+			}
+
+			return new ProcessStartInfo(fileName)
+			{
+				WorkingDirectory = Directory,
+				Arguments = commands.Skip(1).Join(" ")
+			};
+		}
+
+		public override string ToString()
+		{
+			return "{0} ({1})".ToFormat(Name, Directory);
+		}
+
+		public static Solution Empty()
+		{
+			var solution = new Solution();
+			solution.ClearFeeds();
+
+			return solution;
+		}
+
+		public static Solution For(SolutionInput input)
+		{
+			var builder = SolutionBuilder.For(input.ModeFlag);
+
+			// TODO -- Need to allow a specific solution
+			return builder.Build();
+		}
+
+		public void IgnoreFile(string file)
+		{
+			var gitIgnoreFile = Directory.AppendPath(".gitignore");
+			new FileSystem().AlterFlatFile(gitIgnoreFile, list => list.Fill(file));
+		}
+
+		public IEnumerable<string> AllNugetDependencyNames()
+		{
+			return Dependencies.Select(x => x.Name);
+		}
+	}
 }

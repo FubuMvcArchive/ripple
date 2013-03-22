@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
-using ripple.New.Model;
 
 namespace ripple.Model
 {

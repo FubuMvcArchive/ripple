@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using ripple.Local;
 using ripple.Model;
 using System.Linq;
-using ripple.New.Commands;
-using ripple.New.Model;
 
 namespace ripple.Commands
 {

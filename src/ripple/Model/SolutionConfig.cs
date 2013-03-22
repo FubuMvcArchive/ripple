@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using FubuCore;
 using System.Linq;
-using ripple.New.Model;
 
 namespace ripple.Model
 {

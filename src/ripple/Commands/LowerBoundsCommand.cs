@@ -2,7 +2,6 @@ using System;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using System.Linq;
-using ripple.New.Commands;
 
 namespace ripple.Commands
 {

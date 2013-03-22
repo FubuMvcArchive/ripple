@@ -50,7 +50,7 @@ namespace ripple.Commands
             var solutionGraph = SolutionGraphBuilder.BuildForRippleDirectory();
 
             var logger = new RippleLogger();
-            var stepRunner = new RippleStepRunner(new ProcessRunner(), new FileSystem(), logger, requirements);
+            var stepRunner = new Local.RippleStepRunner(new ProcessRunner(), new FileSystem(), logger, requirements);
             var runner = new RippleRunner(logger, stepRunner);
 
             runner.RunPlan(solutionGraph, requirements);

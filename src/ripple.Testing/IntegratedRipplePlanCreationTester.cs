@@ -95,7 +95,7 @@ namespace ripple.Testing
 			theScenario.Cleanup();
 		}
 
-        private void theRippleStepsShouldBe(params IRippleStep[] steps)
+        private void theRippleStepsShouldBe(params Local.IRippleStep[] steps)
         {
             var plan = theRequirements.BuildPlan(theGraph);
             try

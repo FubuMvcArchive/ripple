@@ -4,7 +4,6 @@ using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using ripple.Local;
-using ripple.New.Commands;
 
 namespace ripple.Commands
 {

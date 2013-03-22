@@ -7,7 +7,6 @@ using FubuCore;
 using ripple.Commands;
 using ripple.Model;
 using System.Linq;
-using ripple.New.Model;
 
 namespace ripple.Local
 {

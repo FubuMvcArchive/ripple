@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using FubuCore;
 using ripple.Model;
-using ripple.New.Model;
 
 namespace ripple.Local
 {
@@ -44,7 +44,16 @@ namespace ripple.Local
         // Tested manually.
         public void Execute(IRippleStepRunner runner)
         {
-            var packageFolder = _destination.NugetFolderFor(_nuget);
+	        string packageFolder;
+	        try
+	        {
+				 packageFolder = _destination.NugetFolderFor(_nuget);
+	        }
+	        catch (ArgumentOutOfRangeException exc)
+	        {
+				RippleLog.Error(ToString(), exc);
+		        throw;
+	        }
 
             runner.CleanDirectory(packageFolder);
             _nuget.PublishedAssemblies.Each(x =>

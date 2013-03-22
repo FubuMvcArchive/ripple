@@ -7,7 +7,7 @@ using System.Xml;
 using FubuCore;
 using NuGet;
 using ripple.Local;
-using ripple.New.Model;
+using ripple.Model;
 
 namespace ripple.MSBuild
 {
@@ -171,7 +171,7 @@ namespace ripple.MSBuild
                 string hintPath = Path.Combine("..", "packages", dep.Name, assem.Path);
 
 
-                if (References.Any(x => x.Matches(assemblyName))) return;
+                //if (References.Any(x => x.Matches(assemblyName))) return;
 
                 if (AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
                 {

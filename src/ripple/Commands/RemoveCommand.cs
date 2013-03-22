@@ -7,7 +7,6 @@ using System.Xml;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.MSBuild;
-using ripple.New.Commands;
 
 namespace ripple.Commands
 {

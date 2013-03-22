@@ -2,8 +2,7 @@ using NUnit.Framework;
 using FubuCore;
 using FubuTestingSupport;
 using ripple.Local;
-using ripple.New.Model;
-using ripple.Testing.New;
+using ripple.Model;
 
 namespace ripple.Testing
 {

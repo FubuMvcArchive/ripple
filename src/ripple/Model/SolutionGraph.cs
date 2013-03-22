@@ -4,7 +4,6 @@ using FubuCore.DependencyAnalysis;
 using FubuCore.Util;
 using System.Linq;
 using ripple.Local;
-using ripple.New.Model;
 
 namespace ripple.Model
 {

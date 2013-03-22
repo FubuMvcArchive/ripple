@@ -4,7 +4,6 @@ using Rhino.Mocks;
 using FubuTestingSupport;
 using ripple.Local;
 using ripple.Model;
-using ripple.New.Model;
 
 namespace ripple.Testing
 {
@@ -13,7 +12,7 @@ namespace ripple.Testing
     {
         private Solution theSolution;
         private BuildSolution theBuild;
-        private IRippleStepRunner theRunner;
+        private Local.IRippleStepRunner theRunner;
 
         [SetUp]
         public void SetUp()
@@ -21,7 +20,7 @@ namespace ripple.Testing
             theSolution = new Solution();
             theBuild = new BuildSolution(theSolution);
 
-            theRunner = MockRepository.GenerateMock<IRippleStepRunner>();
+            theRunner = MockRepository.GenerateMock<Local.IRippleStepRunner>();
 
             theBuild.Execute(theRunner);
         }
@@ -44,7 +43,7 @@ namespace ripple.Testing
     {
         private Solution theSolution;
         private BuildSolution theBuild;
-        private IRippleStepRunner theRunner;
+        private Local.IRippleStepRunner theRunner;
         private NotImplementedException theException;
 
         [SetUp]
@@ -53,7 +52,7 @@ namespace ripple.Testing
             theSolution = new Solution();
             theBuild = new BuildSolution(theSolution);
 
-            theRunner = MockRepository.GenerateMock<IRippleStepRunner>();
+            theRunner = MockRepository.GenerateMock<Local.IRippleStepRunner>();
             theException = new NotImplementedException();
 
             theRunner.Expect(x => x.BuildSolution(theSolution)).Throw(theException);

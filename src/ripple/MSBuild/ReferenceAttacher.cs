@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using FubuCore.Util;
 using NuGet;
-using ripple.New;
-using ripple.New.Model;
+using ripple.Model;
 
 namespace ripple.MSBuild
 {

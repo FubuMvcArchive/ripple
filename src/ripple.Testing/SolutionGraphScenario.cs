@@ -5,7 +5,7 @@ using FubuCore;
 using FubuCore.Util;
 using NUnit.Framework;
 using ripple.Local;
-using ripple.New.Model;
+using ripple.Model;
 
 namespace ripple.Testing
 {

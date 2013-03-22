@@ -1,7 +1,6 @@
 using System;
 using FubuCore;
 using FubuCore.CommandLine;
-using ripple.New.Commands;
 
 namespace ripple.Commands
 {
