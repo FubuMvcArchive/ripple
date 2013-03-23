@@ -1,5 +1,6 @@
 using FubuTestingSupport;
 using NUnit.Framework;
+using NuGet;
 using Rhino.Mocks;
 using ripple.Model;
 using ripple.Nuget;
@@ -54,7 +55,7 @@ namespace ripple.Testing.Model
 
 		private void theVersionIs(Dependency dependency, string version)
 		{
-			theSolution.Restore(dependency).Version.ToString().ShouldEqual(version);
+			theSolution.Restore(dependency).Version.ShouldEqual(new SemanticVersion(version));
 		}
 
 		[Test]
@@ -129,7 +130,7 @@ namespace ripple.Testing.Model
 
 		private void theVersionIs(Dependency dependency, string version)
 		{
-			theSolution.Restore(dependency).Version.ToString().ShouldEqual(version);
+			theSolution.Restore(dependency).Version.ShouldEqual(new SemanticVersion(version));
 		}
 
 		[Test]
