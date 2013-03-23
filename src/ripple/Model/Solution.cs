@@ -420,7 +420,7 @@ namespace ripple.Model
 
 		public static Solution For(SolutionInput input)
 		{
-			var builder = SolutionBuilder.For(input.RippleMode);
+			var builder = SolutionBuilder.For(input.RippleModeFlag);
 
 			// TODO -- Need to allow a specific solution
 			return builder.Build();

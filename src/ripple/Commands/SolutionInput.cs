@@ -14,7 +14,7 @@ namespace ripple.Commands
 
 		public SolutionInput()
 		{
-			RippleMode = SolutionMode.Ripple;
+			RippleModeFlag = SolutionMode.Ripple;
 		}
 
 		[Description("override the solution to be cleaned")]
@@ -23,7 +23,7 @@ namespace ripple.Commands
 
 		[Description("Override the Solution mode (Classic or Ripple)")]
 		[FlagAlias("ripplemode", 'r')]
-		public SolutionMode RippleMode { get; set; }
+		public SolutionMode RippleModeFlag { get; set; }
 
 		[Description("Override the NuGet cache")]
 		[FlagAlias("cache", 'c')]
