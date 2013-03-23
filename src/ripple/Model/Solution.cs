@@ -8,6 +8,7 @@ using FubuCore;
 using FubuCore.CommandLine;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
+using NuGet;
 using ripple.Commands;
 using ripple.Local;
 using ripple.Nuget;
@@ -323,6 +324,11 @@ namespace ripple.Model
 		public void Update(INugetFile nuget)
 		{
 			Dependencies.Update(Dependency.For(nuget));
+		}
+
+		public string Package(NugetSpec spec, SemanticVersion version, string outputPath)
+		{
+			return Publisher.CreatePackage(spec, version, outputPath);
 		}
 
 		private IEnumerable<IRemoteNuget> findUpdates()

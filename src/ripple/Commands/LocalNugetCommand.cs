@@ -1,9 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Linq;
+using NuGet;
+using ripple.Local;
 
 namespace ripple.Commands
 {
@@ -27,9 +29,6 @@ namespace ripple.Commands
     {
         public override bool Execute(LocalNugetInput input)
         {
-            var commandLine = "pack {0} -Version {1}";
-            commandLine += " -o " + input.DestinationFlag.FileEscape();
-
             new FileSystem().CreateDirectory(input.DestinationFlag);
 
             input.EachSolution(solution =>
@@ -40,9 +39,9 @@ namespace ripple.Commands
                                       : input.VersionFlag;
 
 
-                    Console.WriteLine("Building the nuget spec file at " + spec.Filename + " as version " + version);
+                    RippleLog.Info("Building the nuget spec file at " + spec.Filename + " as version " + version);
 
-                    CLIRunner.RunNuget(commandLine, spec.Filename.FileEscape(), version);
+					solution.Package(spec, SemanticVersion.Parse(version), input.DestinationFlag);
                     ConsoleWriter.PrintHorizontalLine();
                 });
             });

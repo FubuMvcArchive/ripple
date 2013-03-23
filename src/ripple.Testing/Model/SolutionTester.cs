@@ -1,5 +1,6 @@
 using FubuTestingSupport;
 using NUnit.Framework;
+using NuGet;
 using Rhino.Mocks;
 using ripple.Local;
 using ripple.Model;
@@ -201,6 +202,24 @@ namespace ripple.Testing.Model
 			solution.UsePublisher(service);
 
 			solution.Specifications.ShouldHaveTheSameElementsAs(s1, s2);
+		}
+
+		[Test]
+		public void publishes_the_specification()
+		{
+			var s1 = new NugetSpec("Test1", "Test1.nuspec");
+
+			var solution = new Solution();
+
+			var service = MockRepository.GenerateStub<IPublishingService>();
+			service.Stub(x => x.SpecificationsFor(solution)).Return(new[] { s1 });
+
+			solution.UsePublisher(service);
+
+			var version = SemanticVersion.Parse("1.1.2.3");
+			solution.Package(s1, version, "artifacts");
+
+			service.AssertWasCalled(x => x.CreatePackage(s1, version, "artifacts"));
 		}
 	}
 }

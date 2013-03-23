@@ -73,6 +73,7 @@
     <Compile Include="Directives\DirectiveRunnerTester.cs" />
     <Compile Include="FeedScenario.cs" />
     <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
+    <Compile Include="IntegratedPackagingTester.cs" />
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />

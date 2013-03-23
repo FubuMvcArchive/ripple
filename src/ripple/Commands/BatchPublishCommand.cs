@@ -5,6 +5,7 @@ using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using System.Linq;
+using ripple.Model;
 
 namespace ripple.Commands
 {
@@ -30,22 +31,15 @@ namespace ripple.Commands
             _count = files.Count();
             _index = 0;
 
+	        var publisher = PublishingService.For(SolutionMode.Ripple);
             files.Each(file => {
                 _index++;
 
-                publishFile(file, input);
+				RippleLog.Info("Trying to publish {0}, {1} or {2}".ToFormat(file, _index, _count));
+				publisher.PublishPackage(file, input.ApiKey);
             });
 
             return true;
-        }
-
-        private void publishFile(string file, BatchPublishInput input)
-        {
-            var filename = Path.GetFileName(file);
-            Console.WriteLine("Trying to publish {0}, {1} or {2}", filename, _index, _count);
-
-            var cmd = "push {0} {1}".ToFormat(file, input.ApiKey);
-            CLIRunner.RunNuget(cmd);
         }
     }
 }
