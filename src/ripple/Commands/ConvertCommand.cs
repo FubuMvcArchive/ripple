@@ -7,7 +7,7 @@ namespace ripple.Commands
 	{
 		public ConvertInput()
 		{
-			ModeFlag = SolutionMode.Classic;
+			RippleMode = SolutionMode.Classic;
 		}
 	}
 
@@ -23,7 +23,7 @@ namespace ripple.Commands
 			{
 				AllFlag = input.AllFlag,
 				CacheFlag = input.CacheFlag,
-				ModeFlag = SolutionMode.Ripple,
+				RippleMode = SolutionMode.Ripple,
 				SolutionFlag = input.SolutionFlag
 			});
 

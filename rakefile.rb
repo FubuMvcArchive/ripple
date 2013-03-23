@@ -85,10 +85,11 @@ desc "Compiles the app"
 task :compile => [:clean, :restore_if_missing, :version] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/ripple.sln', :clrversion => CLR_TOOLS_VERSION
   
-  copyOutputFiles 'src/ripple/bin/Debug', 'FubuCore.dll', props[:stage]
-  copyOutputFiles 'src/ripple/bin/Debug', 'NuGet.Core.dll', props[:stage]
-  copyOutputFiles 'src/ripple/bin/Debug', 'ripple.exe*', props[:stage]
-  copyOutputFiles 'src/ripple/bin/Debug', 'ripple.pdb', props[:stage]
+  targetDir = Dir.glob("src/ripple/bin/#{COMPILE_TARGET}")
+  copyOutputFiles targetDir, 'FubuCore.dll', props[:artifacts]
+  copyOutputFiles targetDir, 'NuGet.Core.dll', ARTIFACTS
+  copyOutputFiles targetDir, 'ripple.exe*', ARTIFACTS
+  copyOutputFiles targetDir, 'ripple.pdb', ARTIFACTS
 end
 
 def copyOutputFiles(fromDir, filePattern, outDir)
