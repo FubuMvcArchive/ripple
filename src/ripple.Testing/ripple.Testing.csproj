@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FubuCore">
-      <HintPath>..\packages\FubuCore.1.0.1.228\lib\FubuCore.dll</HintPath>
+      <HintPath>..\packages\FubuCore.1.0.2.232\lib\FubuCore.dll</HintPath>
     </Reference>
     <Reference Include="FubuTestingSupport">
       <HintPath>..\packages\FubuTestingSupport.1.0.1.228\lib\FubuTestingSupport.dll</HintPath>
