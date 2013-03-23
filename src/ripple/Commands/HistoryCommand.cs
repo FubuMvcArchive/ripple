@@ -3,6 +3,7 @@ using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
+using FubuCore.Descriptions;
 
 namespace ripple.Commands
 {
@@ -42,6 +43,11 @@ namespace ripple.Commands
                 {
                     record.Clear();
                     record.AddRange(list);
+
+					record.Add("");
+					record.Add("");
+
+					record.Add(solution.ToDescriptionText());
                 });
 
 

@@ -23,7 +23,7 @@ namespace ripple.Commands
 			{
 				AllFlag = input.AllFlag,
 				CacheFlag = input.CacheFlag,
-				ModeFlag = input.ModeFlag,
+				ModeFlag = SolutionMode.Ripple,
 				SolutionFlag = input.SolutionFlag
 			});
 
