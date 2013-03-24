@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using FubuCore;
 using FubuCore.Util;
 using NuGet;
@@ -25,31 +27,35 @@ namespace ripple.MSBuild
     {
         public const string Schema = "http://schemas.microsoft.com/developer/msbuild/2003";
         private static readonly XmlNamespaceManager _manager;
-        private readonly XmlDocument _document;
+	    private static readonly XNamespace _namespace;
+		private static readonly XNamespace _xmlns;
+        private readonly XElement _document;
         private readonly string _filename;
 
         private readonly Lazy<IList<Reference>> _references;
 
         static CsProjFile()
         {
+	        _namespace = "tns";
             _manager = new XmlNamespaceManager(new NameTable());
             _manager.AddNamespace("tns", Schema);
+
+	        _xmlns = Schema;
         }
 
         public CsProjFile(string filename)
         {
             _filename = filename;
 
-            _document = new XmlDocument();
-            _document.PreserveWhitespace = false;
-            _document.Load(filename);
+			_document = XElement.Load(filename);
+	        _document.Name = _xmlns + _document.Name.LocalName;
 
             _references = new Lazy<IList<Reference>>(() => { return new List<Reference>(readReferences()); });
         }
 
         public string ToolsVersion
         {
-            get { return _document.DocumentElement.GetAttribute("ToolsVersion"); }
+            get { return _document.Attribute(XName.Get("ToolsVersion")).Value; }
         }
 
         public IEnumerable<Reference> References
@@ -96,25 +102,28 @@ namespace ripple.MSBuild
         {
             if (_references.IsValueCreated)
             {
-                XmlNodeList nodes = FindReferenceNodes();
-                foreach (XmlNode node in nodes)
+                var nodes = FindReferenceNodes().ToList();
+                foreach (var node in nodes)
                 {
-                    node.ParentNode.RemoveChild(node);
+					node.Remove();
                 }
 
-                XmlNode itemGroup = _document.DocumentElement.SelectSingleNode("tns:ItemGroup", _manager);
+                var itemGroup = _document.XPathSelectElement("tns:ItemGroup", _manager);
+				itemGroup.Name = _xmlns + itemGroup.Name.LocalName;
+
                 _references.Value.OrderBy(x => x.Name).Each(reference => {
-                    XmlElement node = _document.CreateElement(null, "Reference", Schema);
-                    node.SetAttribute("Include", reference.Name);
+
+					var node = new XElement(_xmlns + "Reference");
+					node.SetAttributeValue("Include", reference.Name);
 
                     if (reference.HintPath.IsNotEmpty())
                     {
-                        XmlElement hintPath = _document.CreateElement(null, "HintPath", Schema);
-                        hintPath.InnerText = reference.HintPath;
-                        node.AppendChild(hintPath);
+						var hintPath = new XElement(_xmlns + "HintPath");
+                        hintPath.Value = reference.HintPath;
+                        node.Add(hintPath);
                     }
 
-                    itemGroup.AppendChild(node);
+                    itemGroup.Add(node);
                 });
             }
 
@@ -123,20 +132,20 @@ namespace ripple.MSBuild
 
         private IEnumerable<Reference> readReferences()
         {
-            XmlNodeList nodes = FindReferenceNodes();
-            foreach (XmlElement node in nodes)
+            var nodes = FindReferenceNodes();
+            foreach (var node in nodes)
             {
                 var reference = new Reference
                 {
-                    Name = node.GetAttribute("Include")
+					Name = node.Attribute("Include").Value
                 };
 
-                foreach (XmlNode child in node.ChildNodes)
+                foreach (var child in node.Elements())
                 {
-                    switch (child.Name)
+					switch (child.Name.LocalName)
                     {
                         case "HintPath":
-                            reference.HintPath = child.InnerText;
+                            reference.HintPath = child.Value;
                             break;
                     }
                 }
@@ -145,10 +154,9 @@ namespace ripple.MSBuild
             }
         }
 
-        public XmlNodeList FindReferenceNodes()
+        public IEnumerable<XElement> FindReferenceNodes()
         {
-            XmlNodeList nodes = _document.DocumentElement.SelectNodes("tns:ItemGroup/tns:Reference", _manager);
-            return nodes;
+	        return _document.XPathSelectElements("tns:ItemGroup/tns:Reference", _manager);
         }
 
         public override string ToString()
@@ -201,7 +209,7 @@ namespace ripple.MSBuild
 			references.Each(dependency =>
 			{
 				var duplicates = References.Where(x => x.Matches(dependency));
-				counts[dependency].AddRange(duplicates);
+				counts[dependency].Fill(duplicates);
 			});
 
 			var removals = new List<string>();

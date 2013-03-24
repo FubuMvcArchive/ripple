@@ -51,11 +51,7 @@ namespace ripple.Testing.MSBuild
 		[Test]
 		public void removes_by_matching_on_just_the_assembly_name()
 		{
-			theCsProj.FindReferenceNodes().Count.ShouldNotEqual(0);
-
-			// Opting of Mono for now. Sigh.
-			if (DirectiveRunner.IsUnix())
-				return;			
+			theCsProj.FindReferenceNodes().Count().ShouldNotEqual(0);
 
 			theCsProj
 				.References
