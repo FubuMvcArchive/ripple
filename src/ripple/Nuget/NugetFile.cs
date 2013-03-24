@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
@@ -115,8 +117,8 @@ namespace ripple.Nuget
 
 			fileSystem.DeleteFile(_path);
 
-            var repository = new LocalPackageRepository(directory);
-            return repository.FindPackagesById(Name).Single();
+	        var newFile = Path.Combine(explodedDirectory, Path.GetFileName(_path));
+			return new ZipPackage(newFile);
         }
 
 	    public INugetFile CopyTo(string directory)
