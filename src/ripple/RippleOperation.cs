@@ -65,6 +65,7 @@ namespace ripple
 				}
 			}
 
+			_solution.EachProject(project => project.RemoveDuplicateReferences());
 			_solution.Save();
 
 			return true;

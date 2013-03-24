@@ -67,7 +67,7 @@ namespace ripple.Model
 
 		public void RemoveDuplicateReferences()
 		{
-			CsProj.RemoveDuplicateReferences(this);
+			CsProj.RemoveDuplicateReferences();
 		}
 
 		public void Describe(Description description)

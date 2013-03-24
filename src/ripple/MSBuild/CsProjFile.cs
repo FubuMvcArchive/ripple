@@ -185,13 +185,24 @@ namespace ripple.MSBuild
             }
         }
 
-		public void RemoveDuplicateReferences(Project project)
+		public void RemoveDuplicateReferences()
 		{
-			var counts = new Cache<string, List<Reference>>(x => new List<Reference>());
-			project.Dependencies.Each(dependency =>
+			var references = References.Select(x =>
 			{
-				var references = References.Where(x => x.Matches(dependency.Name));
-				counts[dependency.Name].AddRange(references);
+				var name = x.Name;
+				if (name.Contains(","))
+				{
+					name = name.Split(',').First();
+				}
+
+				return name;
+			});
+
+			var counts = new Cache<string, List<Reference>>(x => new List<Reference>());
+			references.Each(dependency =>
+			{
+				var duplicates = References.Where(x => x.Matches(dependency));
+				counts[dependency].AddRange(duplicates);
 			});
 
 			var removals = new List<string>();

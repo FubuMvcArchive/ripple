@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using FubuCore;
+﻿using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.MSBuild;
-using ripple.Model;
 
 namespace ripple.Testing.MSBuild
 {
@@ -11,7 +9,6 @@ namespace ripple.Testing.MSBuild
 	public class removing_duplicate_assembly_references
 	{
 		private CsProjFile theCsProj;
-		private Project theProject;
 		private string theFilename;
 
 		[SetUp]
@@ -39,11 +36,10 @@ namespace ripple.Testing.MSBuild
 					"System.Xml"
 				}, x => x.Name);
 
-			theProject = new Project("Test");
-			theProject.AddDependency("FubuCore");
-			theProject.AddDependency("Ionic.Zip");
+			theCsProj.RemoveDuplicateReferences();
+			theCsProj.Write();
 
-			theCsProj.RemoveDuplicateReferences(theProject);
+			theCsProj = new CsProjFile(theFilename);
 		}
 
 		[Test]
