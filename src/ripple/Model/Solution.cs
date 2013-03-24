@@ -157,6 +157,11 @@ namespace ripple.Model
 			Cache = cache;
 		}
 
+		public void EachProject(Action<Project> action)
+		{
+			Projects.Each(action);
+		}
+
 		[XmlIgnore]
 		public Project[] Projects
 		{

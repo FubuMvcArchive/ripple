@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E208A2B1-31B0-4455-BA16-3D79F5887ECE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bottles</RootNamespace>
+    <AssemblyName>Bottles</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FubuCore">
+      <HintPath>..\packages\FubuCore\lib\FubuCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AliasRegistry.cs" />
+    <Compile Include="AssemblyTarget.cs" />
+    <Compile Include="Commands\AliasCommand.cs" />
+    <Compile Include="Commands\AssemblyPackageCommand.cs" />
+    <Compile Include="Commands\CreateBottleCommand.cs" />
+    <Compile Include="Commands\InitCommand.cs" />
+    <Compile Include="Commands\LinkCommand.cs" />
+    <Compile Include="Commands\OpenManifestCommand.cs" />
+    <Compile Include="CompileTarget.cs" />
+    <Compile Include="Configuration\AssertBottleConfiguration.cs" />
+    <Compile Include="Configuration\BottleConfiguration.cs" />
+    <Compile Include="Configuration\BottleConfigurationError.cs" />
+    <Compile Include="Configuration\BottleConfigurationException.cs" />
+    <Compile Include="Configuration\IBottleConfigurationRule.cs" />
+    <Compile Include="Configuration\MissingService.cs" />
+    <Compile Include="Exceptions\BottleException.cs" />
+    <Compile Include="Exploding\ExplodeDirectory.cs" />
+    <Compile Include="Exploding\ExplodeOptions.cs" />
+    <Compile Include="IDeactivator.cs" />
+    <Compile Include="Manifest\Dependency.cs" />
+    <Compile Include="PackageInfo.cs" />
+    <Compile Include="PackageLoaders\Assemblies\AssemblyFileFinder.cs" />
+    <Compile Include="PackageLoaders\Assemblies\AssemblyFiles.cs" />
+    <Compile Include="PackageLoaders\Assemblies\AssemblyLoader.cs" />
+    <Compile Include="PackageLoaders\Assemblies\AssemblyPackageInfo.cs" />
+    <Compile Include="PackageLoaders\Assemblies\AssemblyPackageLoader.cs" />
+    <Compile Include="Diagnostics\IBottleLogger.cs" />
+    <Compile Include="Environment\EnvironmentLogEntry.cs" />
+    <Compile Include="Diagnostics\LoggingSession.cs" />
+    <Compile Include="Diagnostics\LogWriter.cs" />
+    <Compile Include="Diagnostics\LogWriterStatus.cs" />
+    <Compile Include="Diagnostics\BottleLogExtensions.cs" />
+    <Compile Include="Diagnostics\BottleLogger.cs" />
+    <Compile Include="Environment\EnvironmentGateway.cs" />
+    <Compile Include="Environment\EnvironmentListExtensions.cs" />
+    <Compile Include="Environment\EnvironmentProxy.cs" />
+    <Compile Include="Environment\EnvironmentRun.cs" />
+    <Compile Include="Environment\EnvironmentRunner.cs" />
+    <Compile Include="Environment\EnvironmentRunnerException.cs" />
+    <Compile Include="Environment\IEnvironment.cs" />
+    <Compile Include="Environment\IEnvironmentGateway.cs" />
+    <Compile Include="Environment\IInstaller.cs" />
+    <Compile Include="BottleFiles.cs" />
+    <Compile Include="FileSystemExtensions.cs" />
+    <Compile Include="IActivator.cs" />
+    <Compile Include="PackageLoaders\Assemblies\IAssemblyFileFinder.cs" />
+    <Compile Include="PackageLoaders\Assemblies\IAssemblyLoader.cs" />
+    <Compile Include="PackageLoaders\Assemblies\IAssemblyRegistration.cs" />
+    <Compile Include="IBootstrapper.cs" />
+    <Compile Include="Exploding\IBottleExploder.cs" />
+    <Compile Include="Exploding\IBottleExploderLogger.cs" />
+    <Compile Include="IPackageFacility.cs" />
+    <Compile Include="IPackageInfo.cs" />
+    <Compile Include="IPackageLoader.cs" />
+    <Compile Include="Diagnostics\IPackageLog.cs" />
+    <Compile Include="Diagnostics\IBottlingDiagnostics.cs" />
+    <Compile Include="Manifest\IPackageManifestReader.cs" />
+    <Compile Include="IPackagingRuntimeGraphConfigurer.cs" />
+    <Compile Include="LambdaActivator.cs" />
+    <Compile Include="LambdaBootstrapper.cs" />
+    <Compile Include="Exploding\BottleExploder.cs" />
+    <Compile Include="Exploding\BottleExploderLogger.cs" />
+    <Compile Include="Creation\ZipPackageCreator.cs" />
+    <Compile Include="PackageLoaders\LinkedFolders\LinkedFolderPackageLoader.cs" />
+    <Compile Include="PackageLoaders\LinkedFolders\LinkManifest.cs" />
+    <Compile Include="BottleDependencyProcessor.cs" />
+    <Compile Include="PackageFacility.cs" />
+    <Compile Include="PackageFiles.cs" />
+    <Compile Include="PackageLoaders\LinkedFolders\LinksService.cs" />
+    <Compile Include="BottleLoadingRecord.cs" />
+    <Compile Include="PackageManifest.cs" />
+    <Compile Include="Manifest\PackageManifestReader.cs" />
+    <Compile Include="PackageRegistry.cs" />
+    <Compile Include="Diagnostics\PackageLog.cs" />
+    <Compile Include="Diagnostics\BottlingDiagnostics.cs" />
+    <Compile Include="Diagnostics\PackagingDiagnosticsExtensions.cs" />
+    <Compile Include="BottleRoles.cs" />
+    <Compile Include="PackagingRuntimeGraph.cs" />
+    <Compile Include="ProvenanceHelper.cs" />
+    <Compile Include="PackageLoaders\Directory\DirectoryPackageLoader.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="ZipFilePackageLoader.cs" />
+    <Compile Include="Zipping\IZipFile.cs" />
+    <Compile Include="Zipping\IZipFileService.cs" />
+    <Compile Include="Zipping\ZipFileService.cs" />
+    <Compile Include="Zipping\ZipFileWrapper.cs" />
+    <Compile Include="Zipping\ZipFolderRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Xml;
 using FubuCore;
+using FubuCore.Util;
 using NuGet;
 using ripple.Local;
 using ripple.Model;
@@ -170,9 +171,6 @@ namespace ripple.MSBuild
 
                 string hintPath = Path.Combine("..", "packages", dep.Name, assem.Path);
 
-
-                //if (References.Any(x => x.Matches(assemblyName))) return;
-
                 if (AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
                 {
                     Console.WriteLine("Updated reference for {0} to {1}", _filename, hintPath);
@@ -186,6 +184,27 @@ namespace ripple.MSBuild
                 Write();
             }
         }
+
+		public void RemoveDuplicateReferences(Project project)
+		{
+			var counts = new Cache<string, List<Reference>>(x => new List<Reference>());
+			project.Dependencies.Each(dependency =>
+			{
+				var references = References.Where(x => x.Matches(dependency.Name));
+				counts[dependency.Name].AddRange(references);
+			});
+
+			var removals = new List<string>();
+			counts
+				.Where(x => x.Count > 1)
+				.Each(duplicates =>
+				{
+					// Naive but it works for now
+					duplicates.Where(x => x.Name.Contains(",")).Each(x => removals.Add(x.Name));
+				});
+
+			RemoveReferences(removals);
+		}
 
         internal static IEnumerable<T> GetCompatibleItemsCore<T>(IEnumerable<T> items) where T : IFrameworkTargetable
         {

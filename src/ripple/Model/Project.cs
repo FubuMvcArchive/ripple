@@ -36,6 +36,11 @@ namespace ripple.Model
 			_dependencies.Add(dependency);
 		}
 
+		public void AddDependency(string name)
+		{
+			AddDependency(new Dependency(name));
+		}
+
 		protected bool Equals(Project other)
 		{
 			return string.Equals(FilePath, other.FilePath);
@@ -58,6 +63,11 @@ namespace ripple.Model
 		{
 			system.CleanWithTracing(Directory.AppendPath("bin"));
 			system.CleanWithTracing(Directory.AppendPath("obj"));
+		}
+
+		public void RemoveDuplicateReferences()
+		{
+			CsProj.RemoveDuplicateReferences(this);
 		}
 
 		public void Describe(Description description)

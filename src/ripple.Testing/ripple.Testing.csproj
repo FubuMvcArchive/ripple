@@ -105,6 +105,7 @@
     <Compile Include="Model\StubFeed.cs" />
     <Compile Include="Model\StubNugetFile.cs" />
     <Compile Include="Model\updating_solution_dependencies.cs" />
+    <Compile Include="MSBuild\removing_duplicate_assembly_references.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
     <Compile Include="Nuget\NugetFeedSmokeTester.cs" />
@@ -139,6 +140,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="MSBuild\ProjectTemplate.txt" />
     <EmbeddedResource Include="NuspecTemplate.txt" />
     <EmbeddedResource Include="FubuCoreNuspecTemplate.txt" />
     <EmbeddedResource Include="FubuMVCNuspecTemplate.txt" />

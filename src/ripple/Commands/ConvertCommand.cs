@@ -17,6 +17,7 @@ namespace ripple.Commands
 		{
 			var solution = Solution.For(input);
 			solution.ConvertTo(SolutionMode.Ripple);
+			solution.EachProject(project => project.RemoveDuplicateReferences());
 			solution.Save();
 
 			new RestoreCommand().Execute(new RestoreInput
