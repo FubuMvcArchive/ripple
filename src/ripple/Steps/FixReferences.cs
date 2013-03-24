@@ -1,5 +1,6 @@
 using FubuCore.Descriptions;
 using ripple.Commands;
+using ripple.Directives;
 using ripple.MSBuild;
 using ripple.Model;
 
@@ -11,6 +12,10 @@ namespace ripple.Steps
 
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
+			// Opting of Mono for now. Sigh.
+			if (DirectiveRunner.IsUnix())
+				return;
+
 			var attacher = new ReferenceAttacher(Solution);
 			attacher.Attach();
 		}

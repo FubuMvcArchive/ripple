@@ -96,7 +96,7 @@ namespace ripple.MSBuild
         {
             if (_references.IsValueCreated)
             {
-                XmlNodeList nodes = findReferenceNodes();
+                XmlNodeList nodes = FindReferenceNodes();
                 foreach (XmlNode node in nodes)
                 {
                     node.ParentNode.RemoveChild(node);
@@ -118,13 +118,12 @@ namespace ripple.MSBuild
                 });
             }
 
-
             _document.Save(_filename);
         }
 
         private IEnumerable<Reference> readReferences()
         {
-            XmlNodeList nodes = findReferenceNodes();
+            XmlNodeList nodes = FindReferenceNodes();
             foreach (XmlElement node in nodes)
             {
                 var reference = new Reference
@@ -146,7 +145,7 @@ namespace ripple.MSBuild
             }
         }
 
-        private XmlNodeList findReferenceNodes()
+        public XmlNodeList FindReferenceNodes()
         {
             XmlNodeList nodes = _document.DocumentElement.SelectNodes("tns:ItemGroup/tns:Reference", _manager);
             return nodes;
