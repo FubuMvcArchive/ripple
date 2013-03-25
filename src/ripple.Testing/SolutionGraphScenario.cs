@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using FubuCore;
 using FubuCore.Util;
-using NUnit.Framework;
 using ripple.Local;
 using ripple.Model;
 
@@ -27,6 +26,11 @@ namespace ripple.Testing
 			_fileSystem.DeleteDirectory(_directory);
 		}
 
+		public string DirectoryForSolution(string solutionName)
+		{
+			return _directory.AppendPath(solutionName);
+		}
+
 		public static SolutionGraphScenario Create(Action<SolutionGraphScenarioDefinition> configure)
 		{
 			var definition = new SolutionGraphScenarioDefinition();
@@ -39,13 +43,16 @@ namespace ripple.Testing
 		{
 			string Directory { get; }
 			void AddSolution(Solution solution);
+			void AddModification(SolutionModification modification);
 			SolutionGraphScenario Build();
 		}
 
 		public class SolutionGraphScenarioDefinition : ISolutionGraphScenarioBuilder
 	 	{
 			private readonly IList<Solution> _solutions = new List<Solution>();
+			private readonly IList<SolutionModification> _modifications = new List<SolutionModification>();
 			private readonly string _directory;
+
 
 			public SolutionGraphScenarioDefinition()
 			{
@@ -69,18 +76,42 @@ namespace ripple.Testing
 				_solutions.Add(solution);
 			}
 
-	 		SolutionGraphScenario ISolutionGraphScenarioBuilder.Build()
+			void ISolutionGraphScenarioBuilder.AddModification(SolutionModification modification)
+			{
+				_modifications.Add(modification);
+			}
+
+			SolutionGraphScenario ISolutionGraphScenarioBuilder.Build()
 	 		{
-	 			_solutions.Each(solution => solution.Save());
+	 			_modifications.Each(x => x.Execute());
+	 			_solutions.Each(solution => solution.Save(true));
 	 			return new SolutionGraphScenario(this.As<ISolutionGraphScenarioBuilder>().Directory);
 	 		}
 	 	}
+
+		public class SolutionModification
+		{
+			private readonly Solution _solution;
+			private readonly Action<Solution> _modify;
+
+			public SolutionModification(Solution solution, Action<Solution> modify)
+			{
+				_solution = solution;
+				_modify = modify;
+			}
+
+			public void Execute()
+			{
+				_modify(_solution);
+			}
+		}
 
 		public class SolutionExpression
 		{
 			private readonly Solution _solution;
 			private readonly IFileSystem _fileSystem;
 			private readonly Cache<string, Project> _projects;
+			private readonly ISolutionGraphScenarioBuilder _builder;
 
 			public SolutionExpression(ISolutionGraphScenarioBuilder builder, string name)
 			{
@@ -105,6 +136,8 @@ namespace ripple.Testing
 				_fileSystem.CreateDirectory(_solution.SourceFolder);
 
 				builder.AddSolution(_solution);
+
+				_builder = builder;
 
 				_projects = new Cache<string, Project>(createAndAddProject);
 
@@ -139,6 +172,16 @@ namespace ripple.Testing
 				_solution.AddProject(project);
 
 				return project;
+			}
+
+			public void Modify(Action<Solution> modify)
+			{
+				_builder.AddModification(new SolutionModification(_solution, modify));
+			}
+
+			public void Mode(SolutionMode mode)
+			{
+				Modify(x => x.ConvertTo(mode));
 			}
 
 			public void Publishes(string name)

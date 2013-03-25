@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.Descriptions;
@@ -69,6 +71,24 @@ namespace ripple.Model
 		public void Describe(Description description)
 		{
 			description.ShortDescription = "{0} ({1})".ToFormat(Url, Mode);
+		}
+
+		public static IEnumerable<Feed> Defaults()
+		{
+			yield return Fubu;
+			yield return NuGetV2;
+			yield return NuGetV1;
+		}
+
+		public static Feed FindOrCreate(string url)
+		{
+			var existing = Defaults().SingleOrDefault(x => x.Url.EqualsIgnoreCase(url));
+			if (existing != null)
+			{
+				return existing;
+			}
+
+			return new Feed(url);
 		}
 	}
 }

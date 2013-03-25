@@ -31,6 +31,11 @@ namespace ripple.Model
 			get { return _dependencies; }
 		}
 
+		public bool HasChanges()
+		{
+			return _dependencies.HasChanges();
+		}
+
 		public void AddDependency(Dependency dependency)
 		{
 			_dependencies.Add(dependency);

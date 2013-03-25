@@ -157,7 +157,7 @@ namespace ripple.Testing.Model
 		}
 
 		[Test]
-		public void saving_the_solution()
+		public void saving_the_solution_with_no_changes_in_projects()
 		{
 			var storage = MockRepository.GenerateStub<INugetStorage>();
 
@@ -168,6 +168,42 @@ namespace ripple.Testing.Model
 			solution.UseStorage(storage);
 
 			solution.Save();
+
+			storage.AssertWasCalled(x => x.Write(solution));
+			storage.AssertWasNotCalled(x => x.Write(project));
+		}
+
+		[Test]
+		public void force_saving_the_solution_with_no_changes_in_projects()
+		{
+			var storage = MockRepository.GenerateStub<INugetStorage>();
+
+			var solution = new Solution();
+			var project = new Project("Test.csproj");
+
+			solution.AddProject(project);
+			solution.UseStorage(storage);
+
+			solution.Save(true);
+
+			storage.AssertWasCalled(x => x.Write(solution));
+			storage.AssertWasCalled(x => x.Write(project));
+		}
+
+		[Test]
+		public void saving_the_solution_with_changed_projects()
+		{
+			var storage = MockRepository.GenerateStub<INugetStorage>();
+
+			var solution = new Solution();
+			var project = new Project("Test.csproj");
+
+			solution.AddProject(project);
+			solution.UseStorage(storage);
+
+			project.AddDependency("FubuCore");
+
+			solution.Save(true);
 
 			storage.AssertWasCalled(x => x.Write(solution));
 			storage.AssertWasCalled(x => x.Write(project));

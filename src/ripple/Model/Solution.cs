@@ -59,6 +59,8 @@ namespace ripple.Model
 
 			AddFeed(Feed.Fubu);
 			AddFeed(Feed.NuGetV2);
+
+			// TODO -- Do we even need v1?
 			AddFeed(Feed.NuGetV1);
 
 			UseStorage(NugetStorage.Basic());
@@ -208,6 +210,11 @@ namespace ripple.Model
 		public void AddFeed(Feed feed)
 		{
 			_feeds.Fill(feed);
+		}
+
+		public void AddFeeds(IEnumerable<Feed> feeds)
+		{
+			_feeds.Fill(feeds);
 		}
 
 		public void AddProject(Project project)
@@ -386,10 +393,10 @@ namespace ripple.Model
 				.OrderBy(x => x.Name);
 		}
 
-		public void Save()
+		public void Save(bool force = false)
 		{
 			Storage.Write(this);
-			Projects.Each(Storage.Write);
+			Projects.Where(x => force || x.HasChanges()).Each(Storage.Write);
 		}
 
 		public ProcessStartInfo CreateBuildProcess(bool fast)
@@ -425,10 +432,9 @@ namespace ripple.Model
 
 		public static Solution For(SolutionInput input)
 		{
-			var builder = SolutionBuilder.For(input.RippleModeFlag);
-
 			// TODO -- Need to allow a specific solution
-			return builder.Build();
+			// TODO -- Need to be smarter about the current directory maybe
+			return SolutionBuilder.ReadFromBuildSupport();
 		}
 
 		public void IgnoreFile(string file)

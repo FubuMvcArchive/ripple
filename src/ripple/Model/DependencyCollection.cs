@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuCore.Util;
 
 namespace ripple.Model
@@ -10,7 +11,8 @@ namespace ripple.Model
 	{
 		private readonly IList<Dependency> _dependencies = new List<Dependency>();
 		private readonly IList<DependencyCollection> _children = new List<DependencyCollection>();
-		private Lazy<Cache<string, Dependency>> _allDependencies; 
+		private Lazy<Cache<string, Dependency>> _allDependencies;
+		private string _hash;
 
 		public DependencyCollection()
 		{
@@ -99,6 +101,22 @@ namespace ripple.Model
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		public bool HasChanges()
+		{
+			return _hash != null && _hash != getHash();
+		}
+
+		public void MarkRead()
+		{
+			_children.Each(x => x.MarkRead());
+			_hash = getHash();
+		}
+
+		private string getHash()
+		{
+			return this.Select(x => x.ToString()).Join(",").ToHash();
 		}
 	}
 }

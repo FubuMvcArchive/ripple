@@ -85,6 +85,7 @@
     <Compile Include="Model\DependencyInstallationScenario.cs" />
     <Compile Include="Model\DependencyParsing.cs" />
     <Compile Include="Model\DependencyTester.cs" />
+    <Compile Include="Model\FeedTester.cs" />
     <Compile Include="Model\finding_dependencies_for_a_package.cs" />
     <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
     <Compile Include="Model\finding_the_latest_dependency.cs" />
@@ -94,11 +95,13 @@
     <Compile Include="Model\installation_plan_for_package_with_floating_updates.cs" />
     <Compile Include="Model\installing_dependencies.cs" />
     <Compile Include="Model\IntegratedSolutionUpdatesTester.cs" />
+    <Compile Include="Model\NugetDependencyStrategyTester.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\ProjectReaderTester.cs" />
     <Compile Include="Model\RippleDependencyReaderTester.cs" />
     <Compile Include="Model\SolutionBuilderTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />
+    <Compile Include="Model\SolutionFilesIntegratedTester.cs" />
     <Compile Include="Model\SolutionFilesTester.cs" />
     <Compile Include="Model\SolutionPersistence.cs" />
     <Compile Include="Model\SolutionTester.cs" />

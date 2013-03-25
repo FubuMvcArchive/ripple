@@ -71,4 +71,48 @@ namespace ripple.Testing.Model
 			theSolutionDependencies.ShouldHaveTheSameElementsAs(expected);
 		}
 	}
+
+	[TestFixture]
+	public class tracking_DependencyCollection_changes
+	{
+		private DependencyCollection theCollection;
+
+		[SetUp]
+		public void SetUp()
+		{
+			theCollection = new DependencyCollection();
+
+			theCollection.Add(new Dependency("Bottles", "1.0.0.1"));
+			theCollection.Add(new Dependency("structuremap", "2.6.3", UpdateMode.Fixed));
+
+			theCollection.MarkRead();
+		}
+
+		[Test]
+		public void no_changes()
+		{
+			theCollection.HasChanges().ShouldBeFalse();
+		}
+
+		[Test]
+		public void changes_when_version_changes()
+		{
+			theCollection.Find("Bottles").Version = "1.1.0.1";
+			theCollection.HasChanges().ShouldBeTrue();
+		}
+
+		[Test]
+		public void changes_when_update_mode_changes()
+		{
+			theCollection.Find("structuremap").Float();
+			theCollection.HasChanges().ShouldBeTrue();
+		}
+
+		[Test]
+		public void changes_for_addition()
+		{
+			theCollection.Add(new Dependency("FubuCore"));
+			theCollection.HasChanges().ShouldBeTrue();
+		}
+	}
 }

@@ -8,22 +8,18 @@ using ripple.Nuget;
 
 namespace ripple.Commands
 {
+	public interface IOverrideFeeds
+	{
+		IEnumerable<Feed> Feeds();
+	}
+
 	public class SolutionInput
 	{
 		private readonly Lazy<SolutionGraph> _graph = new Lazy<SolutionGraph>(SolutionGraphBuilder.BuildForRippleDirectory);
 
-		public SolutionInput()
-		{
-			RippleModeFlag = SolutionMode.Ripple;
-		}
-
 		[Description("override the solution to be cleaned")]
 		[FlagAlias("solution", 'l')]
 		public string SolutionFlag { get; set; }
-
-		[Description("Override the Solution mode (Classic or Ripple)")]
-		[FlagAlias("ripplemode", 'r')]
-		public SolutionMode RippleModeFlag { get; set; }
 
 		[Description("Override the NuGet cache")]
 		[FlagAlias("cache", 'c')]

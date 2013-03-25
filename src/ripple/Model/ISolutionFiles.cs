@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using FubuCore;
 using ripple.Classic;
@@ -45,6 +46,17 @@ namespace ripple.Model
 		public string RootDir { get; set; }
 		public string BuildSupportDir { get; set; }
 
+		public ISolutionLoader Loader { get { return _loader; } }
+
+		public SolutionMode Mode
+		{
+			get
+			{
+				if(_loader is SolutionLoader) return SolutionMode.Ripple;
+				return SolutionMode.Classic;
+			}
+		}
+
 		public void ForProjects(Solution solution, Action<string> action)
 		{
 			var csProjSet = new FileSet()
@@ -87,11 +99,18 @@ namespace ripple.Model
 			return new SolutionFiles(new FileSystem(), new SolutionLoader());
 		}
 
-		public static SolutionFiles BasicFromDirectory(string directory)
+		public static SolutionFiles FromDirectory(string directory)
 		{
-			var files = Basic();
-			files.resetDirectories(directory);
+			var nugetConfigs = new FileSet
+			{
+				Include = NuGetDependencyStrategy.PackagesConfig,
+				DeepSearch = true
+			};
 
+			var isClassicMode = new FileSystem().FindFiles(directory, nugetConfigs).Any();
+			var files =  isClassicMode ? Classic() : Basic();
+
+			files.resetDirectories(directory);
 			return files;
 		}
 

@@ -1,3 +1,4 @@
+using System.Reflection;
 using FubuCore;
 using ripple.Nuget;
 
@@ -43,6 +44,8 @@ namespace ripple.Model
 
 			_files.FinalizeSolution(solution);
 
+			solution.Dependencies.MarkRead();
+
 			return solution;
 		}
 
@@ -56,10 +59,14 @@ namespace ripple.Model
 			return new SolutionBuilder(SolutionFiles.Classic(), ProjectReader.Basic());
 		}
 
+		public static Solution ReadFromBuildSupport()
+		{
+			return ReadFrom(Assembly.GetExecutingAssembly().Location.ToFullPath().ParentDirectory().ParentDirectory());
+		}
+
 		public static Solution ReadFrom(string directory)
 		{
-			// TODO -- Be smart enough to recognize the Mode based on the directory structure?
-			var builder = new SolutionBuilder(SolutionFiles.BasicFromDirectory(directory), ProjectReader.Basic());
+			var builder = new SolutionBuilder(SolutionFiles.FromDirectory(directory), ProjectReader.Basic());
 			return builder.Build();
 		}
 

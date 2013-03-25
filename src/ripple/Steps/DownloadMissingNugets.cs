@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuCore.Descriptions;
 using ripple.Commands;
 using ripple.Model;
@@ -14,6 +15,18 @@ namespace ripple.Steps
 
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
+			var feeds = Solution.Feeds.ToArray();
+
+			if (input is IOverrideFeeds)
+			{
+				var overrides = input.As<IOverrideFeeds>().Feeds();
+				if (overrides.Any())
+				{
+					Solution.ClearFeeds();
+					Solution.AddFeeds(overrides);
+				}
+			}
+
 			var missing = Solution.MissingNugets().ToList();
 			var nugets = new List<INugetFile>();
 
@@ -23,6 +36,9 @@ namespace ripple.Steps
 
 				Task.WaitAll(tasks);
 			}
+
+			Solution.ClearFeeds();
+			Solution.AddFeeds(feeds);
 
 			runner.Set(new DownloadedNugets(nugets));
 		}
