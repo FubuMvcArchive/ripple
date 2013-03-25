@@ -108,7 +108,16 @@ namespace ripple.Model
 				DeepSearch = true
 			};
 
-			var isClassicMode = new FileSystem().FindFiles(directory, nugetConfigs).Any();
+			var isClassicMode = false;
+			var configFiles = new FileSystem().FindFiles(directory, nugetConfigs);
+			foreach (var file in configFiles)
+			{
+				if (!file.Contains("fubu-content"))
+				{
+					isClassicMode = true;
+					break;
+				}
+			}
 
 			var files =  isClassicMode ? Classic() : Basic();
 			files.resetDirectories(directory);

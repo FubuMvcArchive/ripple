@@ -188,11 +188,12 @@ namespace ripple.Model
 
 		public Dependency[] Nugets
 		{
-			get { return _configuredDependencies.ToArray(); }
+			get { return _configuredDependencies.OrderBy(x => x.Name).ToArray(); }
 			set
 			{
 				_configuredDependencies.Clear();
 				_configuredDependencies.AddRange(value);
+				resetDependencies();
 			}
 		}
 
