@@ -112,7 +112,9 @@ namespace ripple.Model
 			var configFiles = new FileSystem().FindFiles(directory, nugetConfigs);
 			foreach (var file in configFiles)
 			{
-				if (!file.Contains("fubu-content"))
+				var configFile = file.ToFullPath();
+				// TODO -- Maybe configure this somehow
+				if (!configFile.Contains("fubu-content") && !configFile.Contains("gems"))
 				{
 					isClassicMode = true;
 					RippleLog.Info("Classic Mode Detected: ({0})".ToFormat(configFiles.Select(x => x.ToFullPath()).Join(";")));
