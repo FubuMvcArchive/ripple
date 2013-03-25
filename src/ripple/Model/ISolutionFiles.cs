@@ -104,12 +104,13 @@ namespace ripple.Model
 			var nugetConfigs = new FileSet
 			{
 				Include = NuGetDependencyStrategy.PackagesConfig,
+				Exclude = "fubu-content/*.*",
 				DeepSearch = true
 			};
 
 			var isClassicMode = new FileSystem().FindFiles(directory, nugetConfigs).Any();
-			var files =  isClassicMode ? Classic() : Basic();
 
+			var files =  isClassicMode ? Classic() : Basic();
 			files.resetDirectories(directory);
 			return files;
 		}

@@ -82,6 +82,7 @@ namespace ripple.Model
 		public string SourceFolder { get; set; }
 		public string BuildCommand { get; set; }
 		public string FastBuildCommand { get; set; }
+		[XmlIgnore]
 		public SolutionMode Mode { get; set; }
 
 		[XmlIgnore]

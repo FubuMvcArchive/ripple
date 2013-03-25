@@ -65,6 +65,11 @@ namespace ripple.MSBuild
 
         public ReferenceStatus AddReference(string name, string hintPath)
         {
+			if (hintPath.IsNotEmpty())
+			{
+				hintPath = hintPath.Trim();
+			}
+
             Reference reference = FindReference(name);
             if (reference == null)
             {
@@ -75,7 +80,18 @@ namespace ripple.MSBuild
             string original = reference.HintPath;
             reference.HintPath = hintPath;
 
-            return original == hintPath ? ReferenceStatus.Unchanged : ReferenceStatus.Changed;
+			if (original.IsNotEmpty())
+			{
+				original = original.Trim();
+			}
+
+			var status = string.Equals(original, hintPath, StringComparison.OrdinalIgnoreCase) ? ReferenceStatus.Unchanged : ReferenceStatus.Changed;
+			if (status == ReferenceStatus.Changed)
+			{
+				RippleLog.Info("HintPath changed: " + original + " to " + hintPath);
+			}
+
+	        return status;
         }
 
         public Reference FindReference(string name)
