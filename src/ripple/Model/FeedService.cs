@@ -128,14 +128,14 @@ namespace ripple.Model
 						latest = nuget;
 					}
 
-					if (latest != null && latest.Version < nuget.Version)
+					if (latest != null && nuget != null && latest.Version < nuget.Version)
 					{
 						latest = nuget;
 					}
 				}
-				catch (Exception exc)
+				catch (Exception)
 				{
-					RippleLog.Error("Error while finding latest " + dependency, exc);
+					RippleLog.Debug("Error while finding latest " + dependency);
 				}
 			}
 
