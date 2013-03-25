@@ -115,6 +115,7 @@ namespace ripple.Model
 				if (!file.Contains("fubu-content"))
 				{
 					isClassicMode = true;
+					RippleLog.Info("Classic Mode Detected: ({0})".ToFormat(configFiles.Select(x => x.ToFullPath()).Join(";")));
 					break;
 				}
 			}
