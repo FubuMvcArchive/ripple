@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using FubuCore;
 using FubuCore.Util;
+using NuGet;
 using ripple.Model;
+using IFileSystem = FubuCore.IFileSystem;
 
 namespace ripple.Nuget
 {
@@ -32,8 +34,32 @@ namespace ripple.Nuget
 
 		private IEnumerable<INugetFile> findNugetFiles()
 		{
+			var nugetSpec = new FileSet {Include = "*.nupkg"};
+			_fileSystem
+				.FindFiles(_folder, nugetSpec)
+				.Each(file =>
+				{
+					try
+					{
+						if (new FileInfo(file).Length == 0)
+						{
+							_fileSystem.DeleteFile(file);
+						}
+
+						// Validate the package file
+						using (new ZipPackage(file).GetStream())
+						{	
+						}
+					}
+					catch
+					{
+						_fileSystem.DeleteFile(file);
+					}
+				});
+
+
 			return _fileSystem
-				.FindFiles(_folder, new FileSet { Include = "*.nupkg" })
+				.FindFiles(_folder, nugetSpec)
 				.Select(file => new NugetFile(file, _solution.Mode))
 				.ToList();
 		}
