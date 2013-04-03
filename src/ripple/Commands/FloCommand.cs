@@ -12,15 +12,22 @@ namespace ripple.Commands
         [Description("The destination")]
         public string To { get; set; }
 
-        public bool VerboseFlag { get; set; }
+		[Description("Use the 'no build' option to just shuffle binaries around (i.e., don't compile after moving)")]
+		[FlagAlias("no-build", 'n')]
+		public bool NoBuildFlag { get; set; }
+
+		[Description("Writes out all the build output to the screen")]
+		public bool VerboseFlag { get; set; }
     
         public LocalInput ToLocalInput()
         {
-            return new LocalInput(){
+            return new LocalInput
+	        {
                 DirectFlag = true,
                 FastFlag = true,
                 FromFlag = From,
                 ToFlag = To,
+				NoBuildFlag = NoBuildFlag,
                 VerboseFlag = VerboseFlag
             };
         }

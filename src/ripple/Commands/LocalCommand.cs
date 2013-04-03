@@ -23,6 +23,10 @@ namespace ripple.Commands
         [FlagAlias("fast", 'x')]
         public bool FastFlag { get; set; }
 
+		[Description("Use the 'no build' option to just shuffle binaries around (i.e., don't compile after moving)")]
+		[FlagAlias("nobuild", 'n')]
+		public bool NoBuildFlag { get; set; }
+
         [Description("Writes out all the build output to the screen")]
         public bool VerboseFlag { get; set; }
 
@@ -33,7 +37,8 @@ namespace ripple.Commands
                 Fast = FastFlag,
                 From = FromFlag,
                 To = ToFlag,
-                Verbose = VerboseFlag
+                Verbose = VerboseFlag,
+				SkipBuild = NoBuildFlag
             };
         }
     }

@@ -14,6 +14,7 @@ namespace ripple.Local
         public bool Fast { get; set; }
         public bool Direct { get; set; }
         public bool Verbose { get; set; }
+		public bool SkipBuild { get; set; }
 
         public IEnumerable<Solution> SelectSolutions(SolutionGraph theGraph)
         {
@@ -62,7 +63,7 @@ namespace ripple.Local
         public RipplePlan BuildPlan(SolutionGraph theGraph)
         {
             var allSolutions = SelectSolutions(theGraph);
-            return new RipplePlan(allSolutions);
+            return new RipplePlan(allSolutions, SkipBuild);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ripple.Local
         public void RunPlan(SolutionGraph graph, RipplePlanRequirements requirements)
         {
             var solutions = requirements.SelectSolutions(graph);
-            var plan = new RipplePlan(solutions);
+            var plan = new RipplePlan(solutions, requirements.SkipBuild);
 
             var number = 0;
             try

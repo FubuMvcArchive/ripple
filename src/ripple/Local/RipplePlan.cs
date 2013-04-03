@@ -10,7 +10,7 @@ namespace ripple.Local
     {
         private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
 
-        public RipplePlan(IEnumerable<Solution> solutions)
+        public RipplePlan(IEnumerable<Solution> solutions, bool skipBuild)
         {
             guardCondition(solutions);
 
@@ -31,7 +31,10 @@ namespace ripple.Local
 
                 _steps.AddRange(nugets);
 
-                _steps.Add(new BuildSolution(solution));
+				if (!skipBuild)
+				{
+					_steps.Add(new BuildSolution(solution));
+				}
             }
 
         }
@@ -48,7 +51,7 @@ namespace ripple.Local
         {
             if (solutions.Count() < 2)
             {
-                throw new InvalidOperationException("Cannot execxute a ripple with less than 2 solutions.  It's just plain silly");
+                throw new InvalidOperationException("Cannot execute a ripple with less than 2 solutions.  It's just plain silly");
             }
         }
 

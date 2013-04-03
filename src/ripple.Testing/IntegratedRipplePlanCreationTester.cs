@@ -171,6 +171,22 @@ namespace ripple.Testing
             );
         }
 
+		[Test]
+		public void create_a_plan_for_setting_from_and_to_with_no_build()
+		{
+			theRequirements = new RipplePlanRequirements
+			{
+				From = "FubuCore",
+				To = "Bottles",
+				SkipBuild = true
+			};
+
+			theRippleStepsShouldBe(
+				build("FubuCore"),
+				move("FubuCore").To("Bottles")
+			);
+		}
+
         [Test]
         public void create_a_direct_plan()
         {
