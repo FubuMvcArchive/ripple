@@ -22,7 +22,7 @@ namespace ripple.Commands
 		public string VersionFlag { get; set; }
 
 		[Description("The update mode of the package")]
-		[FlagAlias("Mode", 'm')]
+		[FlagAlias("ModeFlag", 'm')]
 		public UpdateMode ModeFlag { get; set; }
 
 		[Description("Project to install to")]

@@ -31,10 +31,11 @@ namespace ripple.Commands
     {
         public ListInput()
         {
-            Mode = ListMode.all;
+            ModeFlag = ListMode.all;
         }
 
-        public ListMode Mode { get; set; }
+		
+        public ListMode ModeFlag { get; set; }
 
         [Description("If set, only shows information for a named nuget")]
         public string NugetFlag { get; set; }
@@ -48,14 +49,14 @@ namespace ripple.Commands
 	    public ListCommand()
 	    {
 		    Usage("lists all projects");
-		    Usage("filters the information shown").Arguments(x => x.Mode, x => x.NugetFlag);
+		    Usage("filters the information shown").Arguments(x => x.ModeFlag, x => x.NugetFlag);
 	    }
 
         public override bool Execute(ListInput input)
         {
             input.NugetFlag.IfNotNull(x => _nugetDependencyFilter = dep => dep.Name == x);
 
-            input.FindSolutions().Each(x => listSolution(x, input.Mode));
+            input.FindSolutions().Each(x => listSolution(x, input.ModeFlag));
 
             return true;
         }
