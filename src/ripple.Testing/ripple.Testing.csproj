@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="MSBuild\ProjectWithDuplicateRefs.txt" />
     <EmbeddedResource Include="MSBuild\ProjectTemplate.txt" />
     <EmbeddedResource Include="NuspecTemplate.txt" />
     <EmbeddedResource Include="FubuCoreNuspecTemplate.txt" />

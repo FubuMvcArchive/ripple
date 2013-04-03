@@ -9,20 +9,10 @@ using System.Xml.XPath;
 using FubuCore;
 using FubuCore.Util;
 using NuGet;
-using ripple.Local;
 using ripple.Model;
 
 namespace ripple.MSBuild
 {
-    public class TryIt
-    {
-        public void DoIt()
-        {
-            var file = new CsProjFile(@"C:\code\fubumvc\src\FubuMVC.Core\FubuMVC.Core.csproj");
-            Console.WriteLine(file.ToolsVersion);
-        }
-    }
-
     public class CsProjFile
     {
         public const string Schema = "http://schemas.microsoft.com/developer/msbuild/2003";

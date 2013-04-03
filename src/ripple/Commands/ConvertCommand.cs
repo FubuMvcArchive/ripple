@@ -22,7 +22,17 @@ namespace ripple.Commands
 				SolutionFlag = input.SolutionFlag
 			});
 
+			// Third time's a charm, apparently
+			forceFixReferences(input);
+
 			return true;
+		}
+
+		private void forceFixReferences(ConvertInput input)
+		{
+			var solution = Solution.For(input);
+			solution.EachProject(x => x.RemoveDuplicateReferences());
+			solution.Save(true);
 		}
 	}
 }
