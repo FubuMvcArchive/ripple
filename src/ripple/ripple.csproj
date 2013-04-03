@@ -11,7 +11,8 @@
     <RootNamespace>ripple</RootNamespace>
     <AssemblyName>ripple</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -164,6 +165,7 @@
     <Compile Include="RippleOperation.cs" />
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
+    <Compile Include="Steps\ProcessDirectives.cs" />
     <Compile Include="Steps\UpdateAndDownloadDependencies.cs" />
     <Compile Include="Steps\ExplodeDownloadedNugets.cs" />
     <Compile Include="Steps\InstallNuget.cs" />

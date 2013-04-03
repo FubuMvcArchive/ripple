@@ -16,6 +16,7 @@ namespace ripple.Commands
         public string Nuget { get; set; }
     }
 
+	[CommandDescription("Removes a nuget from the solution")]
     public class RemoveCommand : FubuCommand<RemoveInput>
     {
         private readonly FileSystem files = new FileSystem();
@@ -24,27 +25,30 @@ namespace ripple.Commands
         {
             input.EachSolution(solution =>
             {
-                Console.WriteLine("Trying to remove {0} from solution {1}", input.Nuget, solution.Name);
+				// TODO -- Bring this back
+				throw new NotImplementedException();
+
+				//Console.WriteLine("Trying to remove {0} from solution {1}", input.Nuget, solution.Name);
 
 
-                var assemblies = Directory.GetDirectories(solution.PackagesDirectory())
-                    .Where(dir =>
-                    {
-                        var name = Path.GetFileName(dir).Split('.').First();
-                        return name == input.Nuget;
-                    })
-                    .SelectMany(removePackageFolder).Distinct().ToList();
+				//var assemblies = Directory.GetDirectories(solution.PackagesDirectory())
+				//	.Where(dir =>
+				//	{
+				//		var name = Path.GetFileName(dir).Split('.').First();
+				//		return name == input.Nuget;
+				//	})
+				//	.SelectMany(removePackageFolder).Distinct().ToList();
 
 
-                if (assemblies.Any())
-                {
-                    Console.WriteLine("  - Will try to remove references to these assemblies");
-                    assemblies.Each(a => Console.WriteLine("     * " + a));
-                }
+				//if (assemblies.Any())
+				//{
+				//	Console.WriteLine("  - Will try to remove references to these assemblies");
+				//	assemblies.Each(a => Console.WriteLine("     * " + a));
+				//}
 
-                removeAssemblies(assemblies, solution.Directory);
+				//removeAssemblies(assemblies, solution.Directory);
 
-                RemoveFromPackageConfigFiles(input.Nuget, solution.Directory);
+				//RemoveFromPackageConfigFiles(input.Nuget, solution.Directory);
             });
 
 

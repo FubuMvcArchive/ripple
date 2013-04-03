@@ -34,7 +34,7 @@ namespace ripple.Commands
             ModeFlag = ListMode.all;
         }
 
-		
+		[Description("Filters the information shown")]
         public ListMode ModeFlag { get; set; }
 
         [Description("If set, only shows information for a named nuget")]

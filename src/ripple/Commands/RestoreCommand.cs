@@ -42,6 +42,7 @@ namespace ripple.Commands
 		}
 	}
 
+	[CommandDescription("Restores nugets for the solution")]
 	public class RestoreCommand : FubuCommand<RestoreInput>
 	{
 		public override bool Execute(RestoreInput input)
@@ -50,6 +51,7 @@ namespace ripple.Commands
 				.For<RestoreInput>(input)
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
+				.Step<ProcessDirectives>()
 				.Step<FixReferences>()
 				.Execute();
 		}

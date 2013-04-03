@@ -24,6 +24,7 @@ namespace ripple.Commands
 		}
 	}
 
+	[CommandDescription("Updates the nugets for the solution")]
 	public class UpdateCommand : FubuCommand<UpdateInput>
 	{
 		public override bool Execute(UpdateInput input)
