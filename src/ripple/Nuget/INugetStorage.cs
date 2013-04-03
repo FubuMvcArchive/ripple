@@ -16,7 +16,7 @@ namespace ripple.Nuget
 
 		LocalDependencies Dependencies(Solution solution);
 
-		IEnumerable<Dependency> MissingFiles(Solution solution);
+		IEnumerable<Dependency> MissingFiles(Solution solution, bool force);
 	}
 
 	public class NugetStorage : INugetStorage
@@ -80,13 +80,13 @@ namespace ripple.Nuget
 			return new LocalDependencies(files);
 		}
 
-		public IEnumerable<Dependency> MissingFiles(Solution solution)
+		public IEnumerable<Dependency> MissingFiles(Solution solution, bool force)
 		{
 			var dependencies = Dependencies(solution);
 
 			return solution
 				.Dependencies
-				.Where(dependency => !dependencies.Has(dependency));
+				.Where(dependency => dependencies.ShouldRestore(dependency, force));
 		}
 
 		public static NugetStorage Basic()

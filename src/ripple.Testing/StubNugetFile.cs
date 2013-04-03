@@ -3,7 +3,7 @@ using NuGet;
 using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Model
+namespace ripple.Testing
 {
 	public class StubNugetFile : INugetFile
 	{

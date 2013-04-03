@@ -13,9 +13,21 @@ namespace ripple.Commands
 		[Description("Additional NuGet feed urls separated by '#'")]
 		public string FeedsFlag { get; set; }
 
+		[Description("Forces the restoration to correct any version mismatches")]
+		[FlagAlias("force", 'f')]
+		public bool ForceFlag { get; set; }
+
 		public override string DescribePlan(Solution solution)
 		{
 			return "Restoring dependencies for solution {0} to {1}".ToFormat(solution.Name, solution.PackagesDirectory());
+		}
+
+		public override void ApplyTo(Solution solution)
+		{
+			if (ForceFlag)
+			{
+				solution.ForceRestore();
+			}
 		}
 
 		public IEnumerable<Feed> Feeds()

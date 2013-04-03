@@ -47,6 +47,7 @@ namespace ripple.Model
 		private Lazy<IList<NugetSpec>> _specifications;
 		private Lazy<DependencyCollection> _dependencies;
 		private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
+		private bool _forceRestore;
 		private string _path;
 
 		public Solution()
@@ -68,109 +69,16 @@ namespace ripple.Model
 			UseCache(NugetFolderCache.DefaultFor(this));
 			UsePublisher(PublishingService.For(Mode));
 
+			_forceRestore = false;
+
 			Reset();
 		}
 
 		public string Name { get; set; }
-		[XmlIgnore]
-		public string Directory { get; set; }
 		public string NugetSpecFolder { get; set; }
 		public string SourceFolder { get; set; }
 		public string BuildCommand { get; set; }
 		public string FastBuildCommand { get; set; }
-		[XmlIgnore]
-		public SolutionMode Mode { get; set; }
-
-		[XmlIgnore]
-		public string Path
-		{
-			get { return _path; }
-			set
-			{
-				_path = value;
-				if (value.IsNotEmpty() && File.Exists(value))
-				{
-					Directory = System.IO.Path.GetDirectoryName(value);
-				}
-			}
-		}
-
-		public void ConvertTo(SolutionMode mode)
-		{
-			Mode = mode;
-			Storage.Reset(this);
-			UseStorage(NugetStorage.For(mode));
-		}
-
-		[XmlIgnore]
-		public INugetStorage Storage { get; private set; }
-		[XmlIgnore]
-		public IFeedService FeedService { get; private set; }
-		[XmlIgnore]
-		public INugetCache Cache { get; private set; }
-		[XmlIgnore]
-		public IPublishingService Publisher { get; private set; }
-
-		private void resetDependencies()
-		{
-			_dependencies = new Lazy<DependencyCollection>(combineDependencies);
-		}
-
-		private DependencyCollection combineDependencies()
-		{
-			var dependencies = new DependencyCollection(_configuredDependencies);
-			Projects.Each(p => dependencies.AddChild(p.Dependencies));
-			return dependencies;
-		}
-
-		private IList<NugetSpec> findSpecifications()
-		{
-			var specs = new List<NugetSpec>();
-			specs.AddRange(Publisher.SpecificationsFor(this));
-
-			return specs;
-		}
-
-		public string PackagesDirectory()
-		{
-			return Directory.AppendPath(SourceFolder, "packages").ToFullPath();
-		}
-
-		public void UsePublisher(IPublishingService service)
-		{
-			Publisher = service;
-		}
-
-		public void UseStorage(INugetStorage storage)
-		{
-			Storage = storage;
-		}
-
-		public void UseFeedService(IFeedService service)
-		{
-			FeedService = service;
-		}
-
-		public void UseCache(INugetCache cache)
-		{
-			Cache = cache;
-		}
-
-		public void EachProject(Action<Project> action)
-		{
-			Projects.Each(action);
-		}
-
-		[XmlIgnore]
-		public Project[] Projects
-		{
-			get { return _projects.ToArray(); }
-			set
-			{
-				_projects.Clear();
-				_projects.AddRange(value);
-			}
-		}
 
 		public Feed[] Feeds
 		{
@@ -205,6 +113,68 @@ namespace ripple.Model
 			get { return _specifications.Value; }
 		}
 
+		[XmlIgnore]
+		public Project[] Projects
+		{
+			get { return _projects.ToArray(); }
+			set
+			{
+				_projects.Clear();
+				_projects.AddRange(value);
+			}
+		}
+
+		[XmlIgnore]
+		public string Directory { get; set; }
+		[XmlIgnore]
+		public SolutionMode Mode { get; set; }
+		[XmlIgnore]
+		public INugetStorage Storage { get; private set; }
+		[XmlIgnore]
+		public IFeedService FeedService { get; private set; }
+		[XmlIgnore]
+		public INugetCache Cache { get; private set; }
+		[XmlIgnore]
+		public IPublishingService Publisher { get; private set; }
+		[XmlIgnore]
+		public string Path
+		{
+			get { return _path; }
+			set
+			{
+				_path = value;
+				if (value.IsNotEmpty() && File.Exists(value))
+				{
+					Directory = System.IO.Path.GetDirectoryName(value);
+				}
+			}
+		}
+
+		private void resetDependencies()
+		{
+			_dependencies = new Lazy<DependencyCollection>(combineDependencies);
+		}
+
+		private DependencyCollection combineDependencies()
+		{
+			var dependencies = new DependencyCollection(_configuredDependencies);
+			Projects.Each(p => dependencies.AddChild(p.Dependencies));
+			return dependencies;
+		}
+
+		private IList<NugetSpec> findSpecifications()
+		{
+			var specs = new List<NugetSpec>();
+			specs.AddRange(Publisher.SpecificationsFor(this));
+
+			return specs;
+		}
+
+		private IEnumerable<IRemoteNuget> findUpdates()
+		{
+			return FeedService.UpdatesFor(this);
+		}
+
 		public void AddFeed(Feed feed)
 		{
 			_feeds.Fill(feed);
@@ -235,6 +205,40 @@ namespace ripple.Model
 			_configuredDependencies.Fill(dependency);
 		}
 
+		public IEnumerable<string> AllNugetDependencyNames()
+		{
+			return Dependencies.Select(x => x.Name);
+		}
+
+		public void AssertIsValid()
+		{
+			var exception = new RippleException(this);
+
+			_projects
+				.SelectMany(x => x.Dependencies)
+				.GroupBy(x => x.Name)
+				.Each(group =>
+				{
+					var version = group.First().Version;
+					if (group.Any(d => d.Version != version))
+					{
+						exception.AddProblem("Validation", "Multiple dependencies found for " + group.Key);
+					}
+				});
+
+			if (exception.HasProblems())
+			{
+				throw exception;
+			}
+		}
+
+		public void ConvertTo(SolutionMode mode)
+		{
+			Mode = mode;
+			Storage.Reset(this);
+			UseStorage(NugetStorage.For(mode));
+		}
+
 		public Dependency FindDependency(string name)
 		{
 			return _configuredDependencies.SingleOrDefault(x => x.Name == name);
@@ -245,9 +249,41 @@ namespace ripple.Model
 			_feeds.Clear();
 		}
 
+		public void Clean(CleanMode mode)
+		{
+			Storage.Clean(this, mode);
+		}
+
+		public void DetermineNugetDependencies(Func<string, NugetSpec> finder)
+		{
+			Dependencies.Each(x =>
+			{
+				var spec = finder(x.Name);
+				if (spec != null)
+				{
+					_nugetDependencies.Add(spec);
+				}
+			});
+		}
+
+		public bool DependsOn(Solution peer)
+		{
+			return _nugetDependencies.Any(x => x.Publisher == peer);
+		}
+
+		public void EachProject(Action<Project> action)
+		{
+			Projects.Each(action);
+		}
+
 		public IEnumerable<Dependency> MissingNugets()
 		{
 			return _missing.Value;
+		}
+
+		public string PackagesDirectory()
+		{
+			return Directory.AppendPath(SourceFolder, "packages").ToFullPath();
 		}
 
 		public IRemoteNuget Restore(Dependency dependency)
@@ -258,6 +294,32 @@ namespace ripple.Model
 		public Project FindProject(string name)
 		{
 			return _projects.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
+		}
+
+		public void IgnoreFile(string file)
+		{
+			var gitIgnoreFile = Directory.AppendPath(".gitignore");
+			new FileSystem().AlterFlatFile(gitIgnoreFile, list => list.Fill(file));
+		}
+
+		public void UsePublisher(IPublishingService service)
+		{
+			Publisher = service;
+		}
+
+		public void UseStorage(INugetStorage storage)
+		{
+			Storage = storage;
+		}
+
+		public void UseFeedService(IFeedService service)
+		{
+			FeedService = service;
+		}
+
+		public void UseCache(INugetCache cache)
+		{
+			Cache = cache;
 		}
 
 		public void Describe(Description description)
@@ -289,41 +351,20 @@ namespace ripple.Model
 			}
 		}
 
-		public void AssertIsValid()
+		public void ForceRestore()
 		{
-			var exception = new RippleException(this);
-
-			_projects
-				.SelectMany(x => x.Dependencies)
-				.GroupBy(x => x.Name)
-				.Each(group =>
-				{
-					var version = group.First().Version;
-					if (group.Any(d => d.Version != version))
-					{
-						exception.AddProblem("Validation", "Multiple dependencies found for " + group.Key);
-					}
-				});
-
-			if (exception.HasProblems())
-			{
-				throw exception;
-			}
+			_forceRestore = true;
+			Reset();
 		}
 
 		// Mostly for testing
 		public void Reset()
 		{
-			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
+			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this, _forceRestore));
 			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
 			_specifications = new Lazy<IList<NugetSpec>>(findSpecifications);
 
 			resetDependencies();
-		}
-
-		public void Clean(CleanMode mode)
-		{
-			Storage.Clean(this, mode);
 		}
 
 		public LocalDependencies LocalDependencies()
@@ -349,28 +390,6 @@ namespace ripple.Model
 		public string Package(NugetSpec spec, SemanticVersion version, string outputPath)
 		{
 			return Publisher.CreatePackage(spec, version, outputPath);
-		}
-
-		private IEnumerable<IRemoteNuget> findUpdates()
-		{
-			return FeedService.UpdatesFor(this);
-		}
-
-		public void DetermineNugetDependencies(Func<string, NugetSpec> finder)
-		{
-			Dependencies.Each(x =>
-			{
-				var spec = finder(x.Name);
-				if (spec != null)
-				{
-					_nugetDependencies.Add(spec);
-				}
-			});
-		}
-
-		public bool DependsOn(Solution peer)
-		{
-			return _nugetDependencies.Any(x => x.Publisher == peer);
 		}
 
 		public string NugetFolderFor(NugetSpec spec)
@@ -443,17 +462,6 @@ namespace ripple.Model
 			// TODO -- Need to allow a specific solution
 			// TODO -- Need to be smarter about the current directory maybe
 			return SolutionBuilder.ReadFromBuildSupport();
-		}
-
-		public void IgnoreFile(string file)
-		{
-			var gitIgnoreFile = Directory.AppendPath(".gitignore");
-			new FileSystem().AlterFlatFile(gitIgnoreFile, list => list.Fill(file));
-		}
-
-		public IEnumerable<string> AllNugetDependencyNames()
-		{
-			return Dependencies.Select(x => x.Name);
-		}
+		}	
 	}
 }

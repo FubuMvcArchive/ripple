@@ -109,11 +109,11 @@
     <Compile Include="Model\SolutionPersistence.cs" />
     <Compile Include="Model\SolutionTester.cs" />
     <Compile Include="Model\StubFeed.cs" />
-    <Compile Include="Model\StubNugetFile.cs" />
     <Compile Include="Model\updating_solution_dependencies.cs" />
     <Compile Include="MSBuild\removing_duplicate_assembly_references.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
+    <Compile Include="Nuget\LocalDependenciesTester.cs" />
     <Compile Include="Nuget\NugetFeedSmokeTester.cs" />
     <Compile Include="Nuget\NugetFileTester.cs" />
     <Compile Include="Nuget\NugetFolderCacheSmokeTester.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="SolutionTester.cs" />
     <Compile Include="StubFeedService.cs" />
     <Compile Include="StubNuget.cs" />
+    <Compile Include="StubNugetFile.cs" />
     <Compile Include="StubNugetStorage.cs" />
     <Compile Include="StubPackage.cs" />
   </ItemGroup>

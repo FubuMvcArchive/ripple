@@ -49,6 +49,21 @@ namespace ripple.Nuget
 			}
 		}
 
+		public bool ShouldRestore(Dependency dependency, bool force = false)
+		{
+			if (!Has(dependency))
+			{
+				return true;
+			}
+
+			if (!force) return false;
+
+			if (dependency.IsFloat()) return true;
+
+			var local = Get(dependency);
+			return local.Version != dependency.SemanticVersion();
+		}
+
 		public bool Has(Dependency dependency)
 		{
 			return Has(dependency.Name);
@@ -56,7 +71,7 @@ namespace ripple.Nuget
 
 		public bool Has(string name)
 		{
-			return _dependencies.Any(x => x.Name == name);
+			return _dependencies.Any(x => x.Name.EqualsIgnoreCase(name));
 		}
 
 		public IEnumerable<INugetFile> All()

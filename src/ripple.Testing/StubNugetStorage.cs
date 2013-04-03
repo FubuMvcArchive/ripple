@@ -38,7 +38,7 @@ namespace ripple.Testing
 			return new LocalDependencies(_files);
 		}
 
-		public IEnumerable<Dependency> MissingFiles(Solution solution)
+		public IEnumerable<Dependency> MissingFiles(Solution solution, bool force)
 		{
 			yield break;
 		}

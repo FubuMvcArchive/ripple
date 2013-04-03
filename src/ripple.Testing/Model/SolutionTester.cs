@@ -58,7 +58,7 @@ namespace ripple.Testing.Model
 			var q1 = new Dependency("Bottles", "1.0.1.1");
 			var q2 = new Dependency("FubuCore", "1.0.1.252");
 
-			storage.Stub(x => x.MissingFiles(solution)).Return(new[] {q1, q2});
+			storage.Stub(x => x.MissingFiles(solution, false)).Return(new[] {q1, q2});
 
 			solution.UseStorage(storage);
 

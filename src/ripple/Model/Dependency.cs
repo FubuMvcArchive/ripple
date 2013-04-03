@@ -113,6 +113,11 @@ namespace ripple.Model
 			return new Dependency(nuget.Name, nuget.Version.ToString());
 		}
 
+		public static Dependency FloatFor(string name)
+		{
+			return new Dependency(name, null, UpdateMode.Float);
+		}
+
 		public static Dependency Parse(string input)
 		{
 			var parts = input.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
