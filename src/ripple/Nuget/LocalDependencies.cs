@@ -29,14 +29,24 @@ namespace ripple.Nuget
 
 		public INugetFile Get(string name)
 		{
-			var nuget = _dependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
-			if (nuget == null)
+			try
 			{
-				RippleLog.DebugMessage(this);
-				throw new ArgumentOutOfRangeException("name", "Could not find " + name);
-			}
+				var nuget = _dependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
+				if (nuget == null)
+				{
+					RippleLog.DebugMessage(this);
+					throw new ArgumentOutOfRangeException("name", "Could not find " + name);
+				}
 
-			return nuget;
+				return nuget;
+			}
+			catch (InvalidOperationException)
+			{
+				var dependencies = _dependencies.Where(x => x.Name.EqualsIgnoreCase(name)).Select(x => x.FileName).Join(",");
+				RippleLog.Info("Found multiple copies of {0}: {1}".ToFormat(name, dependencies));
+
+				throw;
+			}
 		}
 
 		public bool Has(Dependency dependency)
