@@ -79,6 +79,7 @@
     <Compile Include="FeedScenario.cs" />
     <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="IntegratedPackagingTester.cs" />
+    <Compile Include="IntegratedRestoreWithError.cs" />
     <Compile Include="IntegratedRipplePlanCreationTester.cs" />
     <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />

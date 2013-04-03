@@ -15,8 +15,6 @@ namespace ripple.Testing
     {
         private RipplePlanRequirements theRequirements;
 		private SolutionGraphScenario theScenario;
-		private SolutionGraphBuilder theBuilder;
-		private SolutionGraph theGraph;
 
 
 		[SetUp]
@@ -82,10 +80,6 @@ namespace ripple.Testing
 				scenario.Solution("HtmlTags", htmlTags => htmlTags.Publishes("HtmlTags", x => x.Assembly("HtmlTags.dll", "lib\\4.0")));
 			});
 
-			theBuilder = new SolutionGraphBuilder(new FileSystem());
-
-			theGraph = theBuilder.ReadFrom(theScenario.Directory);
-
 			theRequirements = null;
 		}
 
@@ -97,7 +91,7 @@ namespace ripple.Testing
 
         private void theRippleStepsShouldBe(params Local.IRippleStep[] steps)
         {
-            var plan = theRequirements.BuildPlan(theGraph);
+            var plan = theRequirements.BuildPlan(theScenario.Graph);
             try
             {
                 plan.ShouldHaveTheSameElementsAs(steps);
@@ -112,7 +106,7 @@ namespace ripple.Testing
 
         private MoveExpression move(string nugetName)
         {
-            return new MoveExpression(theGraph, nugetName);
+			return new MoveExpression(theScenario.Graph, nugetName);
         }
 
         private class MoveExpression
@@ -134,7 +128,7 @@ namespace ripple.Testing
 
         private BuildSolution build(string solutionName)
         {
-            return new BuildSolution(theGraph[solutionName]);
+			return new BuildSolution(theScenario.Find(solutionName));
         }
 
         [Test]

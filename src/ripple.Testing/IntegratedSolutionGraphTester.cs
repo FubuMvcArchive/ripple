@@ -12,7 +12,6 @@ namespace ripple.Testing
     {
 	    private SolutionGraphScenario theScenario;
         private SolutionGraphBuilder theBuilder;
-        private Lazy<SolutionGraph> theGraph;
 
         [TestFixtureSetUp]
         public void FixtureSetUp()
@@ -78,8 +77,6 @@ namespace ripple.Testing
 		    });
 
             theBuilder = new SolutionGraphBuilder(new FileSystem());
-
-            theGraph = new Lazy<SolutionGraph>(() => theBuilder.ReadFrom(theScenario.Directory));
         }
 
 		[TestFixtureTearDown]
@@ -91,7 +88,7 @@ namespace ripple.Testing
         [Test]
         public void was_able_to_find_published_assemblies_not_directly_in_lib()
         {
-            var nuspec = theGraph.Value.FindNugetSpec("HtmlTags");
+			var nuspec = theScenario.Graph.FindNugetSpec("HtmlTags");
         
             nuspec.PublishedAssemblies.Any().ShouldBeTrue();
 
@@ -109,7 +106,7 @@ namespace ripple.Testing
         [Test]
         public void can_read_from_a_root_get_folder()
         {
-            theGraph.Value
+			theScenario.Graph
                 .AllSolutions.Select(x => x.Name).OrderBy(x => x)
 				.ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "FubuMVC", "FubuMVC.Core.UI", "FubuMVC.Core.View", "HtmlTags");
         }
@@ -117,26 +114,26 @@ namespace ripple.Testing
         [Test]
         public void solution_graph_can_find_nuget_specs()
         {
-            theGraph.Value.FindNugetSpec("FubuCore").ShouldNotBeNull();
-			theGraph.Value.FindNugetSpec("FubuLocalization").ShouldNotBeNull();
-            theGraph.Value.FindNugetSpec("Bottles").ShouldNotBeNull();
-            theGraph.Value.FindNugetSpec("FubuMVC.Core.View").ShouldNotBeNull();
-			theGraph.Value.FindNugetSpec("FubuMVC.Core.UI").ShouldNotBeNull();
-            theGraph.Value.FindNugetSpec("FubuMVC.Core").ShouldNotBeNull();
-			theGraph.Value.FindNugetSpec("HtmlTags").ShouldNotBeNull();
+            theScenario.Graph.FindNugetSpec("FubuCore").ShouldNotBeNull();
+			theScenario.Graph.FindNugetSpec("FubuLocalization").ShouldNotBeNull();
+            theScenario.Graph.FindNugetSpec("Bottles").ShouldNotBeNull();
+            theScenario.Graph.FindNugetSpec("FubuMVC.Core.View").ShouldNotBeNull();
+			theScenario.Graph.FindNugetSpec("FubuMVC.Core.UI").ShouldNotBeNull();
+            theScenario.Graph.FindNugetSpec("FubuMVC.Core").ShouldNotBeNull();
+			theScenario.Graph.FindNugetSpec("HtmlTags").ShouldNotBeNull();
         }
 
         [Test]
         public void solution_graph_happily_returns_null_for_nugets_that_are_not_published_from_any_of_the_contained_projects()
         {
-            theGraph.Value.FindNugetSpec("CommonServiceLocator").ShouldBeNull();
-            theGraph.Value.FindNugetSpec("structuremap").ShouldBeNull();
+            theScenario.Graph.FindNugetSpec("CommonServiceLocator").ShouldBeNull();
+            theScenario.Graph.FindNugetSpec("structuremap").ShouldBeNull();
         }
 
         [Test]
         public void can_return_the_solutions_in_dependency_order()
         {
-            var names = theGraph.Value.AllSolutions.Select(x => x.Name);
+            var names = theScenario.Graph.AllSolutions.Select(x => x.Name);
             names.ShouldHaveTheSameElementsAs(
 				"FubuCore",
 				"HtmlTags",
@@ -151,7 +148,7 @@ namespace ripple.Testing
         [Test]
         public void has_read_all_the_published_nuget_specs()
         {
-            theGraph.Value.AllNugets().Select(x => x.Name).ShouldHaveTheSameElementsAs(
+            theScenario.Graph.AllNugets().Select(x => x.Name).ShouldHaveTheSameElementsAs(
 				"Bottles",
 				"FubuCore",
 				"FubuLocalization",
@@ -167,19 +164,19 @@ namespace ripple.Testing
         [Test]
         public void find_nuget_spec_works()
         {
-            theGraph.Value.FindNugetSpec("HtmlTags").ShouldNotBeNull();
+            theScenario.Graph.FindNugetSpec("HtmlTags").ShouldNotBeNull();
         }
 
 
         [Test]
         public void solutions_list_their_dependencies()
         {
-            theGraph.Value["FubuCore"].SolutionDependencies().Any().ShouldBeFalse();
-            theGraph.Value["Bottles"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("FubuCore");
-			theGraph.Value["FubuLocalization"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("FubuCore");
-            theGraph.Value["FubuMVC"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "HtmlTags");
-			theGraph.Value["FubuMVC.Core.UI"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "FubuMVC", "FubuMVC.Core.View", "HtmlTags");
-			theGraph.Value["FubuMVC.Core.View"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "FubuMVC", "HtmlTags");
+            theScenario.Graph["FubuCore"].SolutionDependencies().Any().ShouldBeFalse();
+            theScenario.Graph["Bottles"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("FubuCore");
+			theScenario.Graph["FubuLocalization"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("FubuCore");
+            theScenario.Graph["FubuMVC"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "HtmlTags");
+			theScenario.Graph["FubuMVC.Core.UI"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "FubuMVC", "FubuMVC.Core.View", "HtmlTags");
+			theScenario.Graph["FubuMVC.Core.View"].SolutionDependencies().Select(x => x.Name).ShouldHaveTheSameElementsAs("Bottles", "FubuCore", "FubuLocalization", "FubuMVC", "HtmlTags");
 
         }
     }

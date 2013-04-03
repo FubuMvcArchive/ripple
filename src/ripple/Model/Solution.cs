@@ -42,9 +42,9 @@ namespace ripple.Model
 		private readonly IList<Project> _projects = new List<Project>();
 		private readonly IList<Feed> _feeds = new List<Feed>();
 		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
-		private readonly Lazy<IEnumerable<Dependency>> _missing;
-		private readonly Lazy<IEnumerable<IRemoteNuget>> _updates;
-		private readonly Lazy<IList<NugetSpec>> _specifications;
+		private Lazy<IEnumerable<Dependency>> _missing;
+		private Lazy<IEnumerable<IRemoteNuget>> _updates;
+		private Lazy<IList<NugetSpec>> _specifications;
 		private Lazy<DependencyCollection> _dependencies;
 		private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
 		private string _path;
@@ -68,11 +68,7 @@ namespace ripple.Model
 			UseCache(NugetFolderCache.DefaultFor(this));
 			UsePublisher(PublishingService.For(Mode));
 
-			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
-			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
-			_specifications = new Lazy<IList<NugetSpec>>(findSpecifications);
-			
-			resetDependencies();
+			Reset();
 		}
 
 		public string Name { get; set; }
@@ -313,6 +309,16 @@ namespace ripple.Model
 			{
 				throw exception;
 			}
+		}
+
+		// Mostly for testing
+		public void Reset()
+		{
+			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
+			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
+			_specifications = new Lazy<IList<NugetSpec>>(findSpecifications);
+
+			resetDependencies();
 		}
 
 		public void Clean(CleanMode mode)

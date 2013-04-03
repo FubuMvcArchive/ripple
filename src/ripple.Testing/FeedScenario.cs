@@ -9,6 +9,11 @@ namespace ripple.Testing
 	{
 		private readonly StubFeedProvider theProvider = new StubFeedProvider();
 
+		public StubFeed For(string name)
+		{
+			return For(new Feed(name));
+		}
+
 		public StubFeed For(Feed feed)
 		{
 			return theProvider.For(feed).As<StubFeed>();

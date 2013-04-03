@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
@@ -59,8 +60,12 @@ namespace ripple
 				}
 				catch (Exception ex)
 				{
+					cleanupPackages();
+					_solution.Reset();
+
 					RippleLog.Error("Error executing {0}".ToFormat(step.GetType().Name), ex);
 					RippleLog.InfoMessage(_solution);
+					
 					return false;
 				}
 			}
@@ -69,6 +74,15 @@ namespace ripple
 			_solution.Save();
 
 			return true;
+		}
+
+		private void cleanupPackages()
+		{
+			var files = new FileSystem();
+			var packages = new FileSet {Include = "*.nupkg", DeepSearch = false};
+
+			var packageFiles = files.FindFiles(_solution.PackagesDirectory(), packages).ToArray();
+			packageFiles.Each(file => files.DeleteFile(file));
 		}
 
 		public static RippleOperation For<T>(SolutionInput input)

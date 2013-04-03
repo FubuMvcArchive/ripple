@@ -12,12 +12,23 @@ namespace ripple.Testing
 	{
 		private readonly string _directory;
 		private readonly IFileSystem _fileSystem;
+		private readonly Lazy<SolutionGraph> _graph;
 
 		public SolutionGraphScenario(string directory)
 		{
 			_directory = directory;
 			_fileSystem = new FileSystem();
+
+			var builder = new SolutionGraphBuilder(_fileSystem);
+			_graph = new Lazy<SolutionGraph>(() => builder.ReadFrom(_directory));
 		}
+
+		public Solution Find(string name)
+		{
+			return Graph[name];
+		}
+
+		public SolutionGraph Graph { get { return _graph.Value; } }
 
 		public string Directory { get { return _directory; } }
 

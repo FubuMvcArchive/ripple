@@ -11,8 +11,6 @@ namespace ripple.Testing
 	public class IntegratedPackagingTester
 	{
 		private SolutionGraphScenario theScenario;
-		private SolutionGraphBuilder theBuilder;
-		private SolutionGraph theGraph;
 
 		private FileSystem theFileSystem;
 		private string theNugetDirectory;
@@ -27,16 +25,12 @@ namespace ripple.Testing
 				scenario.Solution("FubuCore", fubucore => fubucore.Publishes("FubuCore"));
 			});
 
-			theBuilder = new SolutionGraphBuilder(new FileSystem());
-
-			theGraph = theBuilder.ReadFrom(theScenario.Directory);
-
 			theNugetDirectory = theScenario.Directory.AppendPath("nugets");
 
 			theFileSystem = new FileSystem();
 			theFileSystem.CreateDirectory(theNugetDirectory);
 
-			theSolution = theGraph["FubuCore"];
+			theSolution = theScenario.Find("FubuCore");
 
 			theSolution.Package(theSolution.Specifications.Single(), new SemanticVersion("1.1.1.1"), theNugetDirectory);
 		}

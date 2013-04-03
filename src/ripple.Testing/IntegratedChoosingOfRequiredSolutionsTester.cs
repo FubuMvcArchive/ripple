@@ -15,8 +15,6 @@ namespace ripple.Testing
     {
         private RipplePlanRequirements theRequirements;
 		private SolutionGraphScenario theScenario;
-		private SolutionGraphBuilder theBuilder;
-		private SolutionGraph theGraph;
 
 
 		[TestFixtureSetUp]
@@ -87,10 +85,6 @@ namespace ripple.Testing
 					validation.ProjectDependency("FubuValidation", "FubuCore");
 				});
 			});
-
-			theBuilder = new SolutionGraphBuilder(new FileSystem());
-
-			theGraph = theBuilder.ReadFrom(theScenario.Directory);
 		}
 
 		[TestFixtureTearDown]
@@ -107,7 +101,7 @@ namespace ripple.Testing
 
         private void theSolutionsShouldBe(params string[] names)
         {
-            var theNames = theRequirements.SelectSolutions(theGraph).Select(x => x.Name);
+            var theNames = theRequirements.SelectSolutions(theScenario.Graph).Select(x => x.Name);
             try
             {
                 theNames
@@ -204,7 +198,7 @@ namespace ripple.Testing
                     Direct = true
                 };
 
-                theRequirements.SelectSolutions(theGraph);
+                theRequirements.SelectSolutions(theScenario.Graph);
             });
         }
 
@@ -220,7 +214,7 @@ namespace ripple.Testing
                                       Direct = true
                                   };
 
-                theRequirements.SelectSolutions(theGraph);
+                theRequirements.SelectSolutions(theScenario.Graph);
             });
         }
 
@@ -235,7 +229,7 @@ namespace ripple.Testing
                                       To = "junk",
                                   };
 
-                theRequirements.SelectSolutions(theGraph);
+                theRequirements.SelectSolutions(theScenario.Graph);
             });
         }
 
@@ -249,7 +243,7 @@ namespace ripple.Testing
                                       From = "junk",
                                   };
 
-                theRequirements.SelectSolutions(theGraph);
+                theRequirements.SelectSolutions(theScenario.Graph);
             });
         }
 

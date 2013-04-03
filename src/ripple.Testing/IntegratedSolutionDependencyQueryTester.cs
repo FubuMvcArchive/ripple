@@ -9,9 +9,6 @@ namespace ripple.Testing
     public class IntegratedSolutionDependencyQueryTester
     {
 		private SolutionGraphScenario theScenario;
-        private SolutionGraphBuilder theBuilder;
-        private SolutionGraph theGraph;
-		
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
@@ -75,10 +72,6 @@ namespace ripple.Testing
 
 				scenario.Solution("HtmlTags", htmlTags => htmlTags.Publishes("HtmlTags", x => x.Assembly("HtmlTags.dll", "lib\\4.0")));
 			});
-
-			theBuilder = new SolutionGraphBuilder(new FileSystem());
-
-			theGraph = theBuilder.ReadFrom(theScenario.Directory);
 		}
 
 		[TestFixtureTearDown]
@@ -90,23 +83,23 @@ namespace ripple.Testing
         [Test]
         public void depends_on_positive()
         {
-            theGraph["Bottles"].DependsOn(theGraph["FubuCore"]).ShouldBeTrue();
+            theScenario.Find("Bottles").DependsOn(theScenario.Find("FubuCore")).ShouldBeTrue();
 
-			theGraph["FubuLocalization"].DependsOn(theGraph["FubuCore"]).ShouldBeTrue();
+			theScenario.Find("FubuLocalization").DependsOn(theScenario.Find("FubuCore")).ShouldBeTrue();
 
-			theGraph["FubuMVC"].DependsOn(theGraph["Bottles"]).ShouldBeTrue();
-			theGraph["FubuMVC"].DependsOn(theGraph["FubuCore"]).ShouldBeTrue();
-			theGraph["FubuMVC"].DependsOn(theGraph["FubuLocalization"]).ShouldBeTrue();
-			theGraph["FubuMVC"].DependsOn(theGraph["HtmlTags"]).ShouldBeTrue();
+			theScenario.Find("FubuMVC").DependsOn(theScenario.Find("Bottles")).ShouldBeTrue();
+			theScenario.Find("FubuMVC").DependsOn(theScenario.Find("FubuCore")).ShouldBeTrue();
+			theScenario.Find("FubuMVC").DependsOn(theScenario.Find("FubuLocalization")).ShouldBeTrue();
+			theScenario.Find("FubuMVC").DependsOn(theScenario.Find("HtmlTags")).ShouldBeTrue();
         }
 
         [Test]
         public void depends_on_negative()
         {
-			theGraph["FubuCore"].DependsOn(theGraph["FubuMVC"]).ShouldBeFalse();
-			theGraph["FubuCore"].DependsOn(theGraph["HtmlTags"]).ShouldBeFalse();
-			theGraph["FubuCore"].DependsOn(theGraph["Bottles"]).ShouldBeFalse();
-			theGraph["FubuMVC"].DependsOn(theGraph["FubuMVC.Core.UI"]).ShouldBeFalse();
+			theScenario.Find("FubuCore").DependsOn(theScenario.Find("FubuMVC")).ShouldBeFalse();
+			theScenario.Find("FubuCore").DependsOn(theScenario.Find("HtmlTags")).ShouldBeFalse();
+			theScenario.Find("FubuCore").DependsOn(theScenario.Find("Bottles")).ShouldBeFalse();
+			theScenario.Find("FubuMVC").DependsOn(theScenario.Find("FubuMVC.Core.UI")).ShouldBeFalse();
         }
     }
 }

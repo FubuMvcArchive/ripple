@@ -23,12 +23,10 @@ namespace ripple.Testing
 
 		public void Write(Solution solution)
 		{
-			throw new System.NotImplementedException();
 		}
 
 		public void Write(Project project)
 		{
-			throw new System.NotImplementedException();
 		}
 
 		public void Reset(Solution solution)

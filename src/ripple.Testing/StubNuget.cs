@@ -1,3 +1,4 @@
+using FubuCore;
 using NuGet;
 using ripple.Model;
 using ripple.Nuget;
@@ -22,7 +23,13 @@ namespace ripple.Testing
 
 		public INugetFile DownloadTo(Solution solution, string directory)
 		{
-			throw new System.NotImplementedException();
+			var files = new FileSystem();
+			files.CreateDirectory(directory);
+
+			var fileName = "{0}.{1}.nupkg".ToFormat(Name, Version);
+			files.WriteStringToFile(fileName, "");
+
+			return new NugetFile(fileName, SolutionMode.Ripple);
 		}
 
 		public string Filename { get; private set; }
