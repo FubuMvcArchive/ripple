@@ -48,7 +48,7 @@ namespace ripple
 			list.IsOrderDependent = true;
 		}
 
-		public bool Execute()
+		public bool Execute(bool throwOnFailure = false)
 		{
 			RippleLog.DebugMessage(this);
 
@@ -66,6 +66,12 @@ namespace ripple
 					RippleLog.Error("Error executing {0}".ToFormat(step.GetType().Name), ex);
 					RippleLog.InfoMessage(_solution);
 					
+					// Mostly for testing
+					if (throwOnFailure)
+					{
+						throw;
+					}
+
 					return false;
 				}
 			}

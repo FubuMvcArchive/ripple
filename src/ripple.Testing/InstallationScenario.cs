@@ -3,7 +3,7 @@ using FubuCore;
 using NuGet;
 using ripple.Model;
 
-namespace ripple.Testing.Model
+namespace ripple.Testing
 {
 	public interface IInstallationScenario
 	{
@@ -25,6 +25,17 @@ namespace ripple.Testing.Model
 			_solution.AddProject(_project);
 			_solution.UseFeedService(_service);
 			_solution.UseStorage(_storage);
+		}
+
+		public void AddRemoteDependency(string id)
+		{
+			AddRemoteDependency(id, x => { });
+		}
+
+		public void AddRemoteDependency(string id, Action<PackageDependency> configure)
+		{
+			var dependency = new PackageDependency(id);
+			_service.AddPackageDependency(_dependency, dependency);
 		}
 
 		public void AddRemoteDependency(string id, string version)

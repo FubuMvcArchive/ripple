@@ -74,6 +74,11 @@ namespace ripple.Testing
 				system.CreateDirectory(_directory);
 			}
 
+			public void Solution(string name)
+			{
+				Solution(name, x => { });
+			}
+
 			public void Solution(string name, Action<SolutionExpression> configure)
 			{
 				var expression = new SolutionExpression(this, name);

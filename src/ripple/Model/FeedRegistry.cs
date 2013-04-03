@@ -39,12 +39,17 @@ namespace ripple.Model
 
 		static FeedRegistry()
 		{
-			Stub(new FeedProvider());
+			Reset();
 		}
 
 		public static void Stub(IFeedProvider provider)
 		{
 			_provider = provider;
+		}
+
+		public static void Reset()
+		{
+			Stub(new FeedProvider());
 		}
 
 	 	public static INugetFeed FeedFor(Feed feed)

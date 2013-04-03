@@ -77,6 +77,11 @@ namespace ripple.Testing
 		{
 			AddDependency(new PackageDependency(id, new VersionSpec(SemanticVersion.Parse(version))));
 		}
+
+		public void AddDependency(string id)
+		{
+			AddDependency(new PackageDependency(id));
+		}
 	}
 
 	public class StubPackageRepository : IPackageRepository

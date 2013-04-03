@@ -1,11 +1,11 @@
-﻿using FubuCore;
+using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Commands;
 using ripple.Model;
 using ripple.Steps;
 
-namespace ripple.Testing
+namespace ripple.Testing.Integration
 {
 	[TestFixture]
 	public class IntegratedRestoreWithError
@@ -36,6 +36,12 @@ namespace ripple.Testing
 					.Add("FubuCore", "1.0.0.1")
 					.Add("Bottles", "1.0.0.0");
 			});
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			theScenario.Cleanup();
 		}
 
 		[Test]

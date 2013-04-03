@@ -29,6 +29,9 @@ namespace ripple.Steps
 
 			plan.Installations.Each(x => PackageInstallation.ForProject(configuration.ProjectFlag, x).InstallTo(Solution));
 
+			// TODO -- hate this
+			Solution.Reset();
+
 			var updates = Solution.Updates().Where(x => plan.Updates.Any(y => y.Name == x.Name));
 			var nugets = new List<INugetFile>();
 

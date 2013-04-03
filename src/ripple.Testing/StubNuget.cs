@@ -2,6 +2,7 @@ using FubuCore;
 using NuGet;
 using ripple.Model;
 using ripple.Nuget;
+using ripple.Testing.Model;
 
 namespace ripple.Testing
 {
@@ -29,7 +30,7 @@ namespace ripple.Testing
 			var fileName = "{0}.{1}.nupkg".ToFormat(Name, Version);
 			files.WriteStringToFile(fileName, "");
 
-			return new NugetFile(fileName, SolutionMode.Ripple);
+			return new StubNugetFile(new Dependency(Name, Version.ToString())) { FileName = fileName};
 		}
 
 		public string Filename { get; private set; }

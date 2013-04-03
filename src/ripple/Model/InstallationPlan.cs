@@ -59,8 +59,18 @@ namespace ripple.Model
 				.Where(x => !_project.Dependencies.Has(x.Id))
 				.Each(x =>
 				{
-					var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
-					allDependencies.Add(new Dependency(x.Id, version.ToString(), _dependency.Mode));
+					Dependency dependency;
+					if (x.VersionSpec != null)
+					{
+						var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
+						dependency = new Dependency(x.Id, version.ToString(), _dependency.Mode);
+					}
+					else
+					{
+						dependency = new Dependency(x.Id);
+					}
+					
+					allDependencies.Add(dependency);
 				});
 
 			return allDependencies;

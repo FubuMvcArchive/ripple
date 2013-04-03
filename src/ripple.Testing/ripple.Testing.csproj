@@ -77,11 +77,14 @@
     <Compile Include="Directives\DirectiveParserTester.cs" />
     <Compile Include="Directives\DirectiveRunnerTester.cs" />
     <Compile Include="FeedScenario.cs" />
-    <Compile Include="IntegratedChoosingOfRequiredSolutionsTester.cs" />
-    <Compile Include="IntegratedPackagingTester.cs" />
-    <Compile Include="IntegratedRestoreWithError.cs" />
-    <Compile Include="IntegratedRipplePlanCreationTester.cs" />
-    <Compile Include="IntegratedSolutionDependencyQueryTester.cs" />
+    <Compile Include="InstallationScenario.cs" />
+    <Compile Include="Integration\installing_a_new_package_with_no_versions_on_dependencies.cs" />
+    <Compile Include="Integration\IntegratedChoosingOfRequiredSolutionsTester.cs" />
+    <Compile Include="Integration\IntegratedPackagingTester.cs" />
+    <Compile Include="Integration\IntegratedRestoreWithError.cs" />
+    <Compile Include="Integration\IntegratedRipplePlanCreationTester.cs" />
+    <Compile Include="Integration\IntegratedSolutionDependencyQueryTester.cs" />
+    <Compile Include="Integration\IntegratedSolutionGraphTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />
     <Compile Include="Model\DependencyInstallationScenario.cs" />
     <Compile Include="Model\DependencyParsing.cs" />
@@ -90,7 +93,6 @@
     <Compile Include="Model\finding_dependencies_for_a_package.cs" />
     <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
     <Compile Include="Model\finding_the_latest_dependency.cs" />
-    <Compile Include="Model\InstallationScenario.cs" />
     <Compile Include="Model\installation_plan_for_new_package.cs" />
     <Compile Include="Model\installation_plan_for_package_with_existing_dependencies_with_floating_updates_same_version.cs" />
     <Compile Include="Model\installation_plan_for_package_with_floating_updates.cs" />
@@ -119,7 +121,6 @@
     <Compile Include="Nuget\NugetXmlFeedTester.cs" />
     <Compile Include="Nuget\RemoteNugetTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IntegratedSolutionGraphTester.cs" />
     <Compile Include="RippleOperationTester.cs" />
     <Compile Include="SolutionGraphScenario.cs" />
     <Compile Include="SolutionTester.cs" />

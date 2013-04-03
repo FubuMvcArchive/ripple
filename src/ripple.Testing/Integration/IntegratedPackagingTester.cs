@@ -1,11 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using NuGet;
 using ripple.Model;
 
-namespace ripple.Testing
+namespace ripple.Testing.Integration
 {
 	[TestFixture]
 	public class IntegratedPackagingTester

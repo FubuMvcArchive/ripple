@@ -91,8 +91,16 @@ namespace ripple.Model
 
 				dependents.Each(x =>
 				{
-					var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
-					var ancestors = DependenciesFor(solution, new Dependency(x.Id, version.ToString(), dependency.Mode));
+					IEnumerable<PackageDependency> ancestors;
+					if (x.VersionSpec != null)
+					{
+						var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
+						ancestors = DependenciesFor(solution, new Dependency(x.Id, version.ToString(), dependency.Mode));
+					}
+					else
+					{
+						ancestors = DependenciesFor(solution, new Dependency(x.Id));
+					}
 					
 					dependencies.AddRange(ancestors);
 				});

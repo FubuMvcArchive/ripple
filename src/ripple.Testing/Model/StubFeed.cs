@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Util;
@@ -55,11 +56,16 @@ namespace ripple.Testing.Model
 			              .FirstOrDefault();
 		}
 
+		public void ConfigureRepository(Action<StubPackageRepository> configure)
+		{
+			configure((StubPackageRepository)Repository);
+		}
+
 		public void UseRepository(StubPackageRepository repository)
 		{
 			Repository = repository;
 		}
 
-		public IPackageRepository Repository { get; set; }
+		public IPackageRepository Repository { get; private set; }
 	}
 }
