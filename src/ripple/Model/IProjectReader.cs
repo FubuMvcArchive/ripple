@@ -33,7 +33,7 @@ namespace ripple.Model
 
 		public static IProjectReader Basic()
 		{
-			return new ProjectReader(new IDependencyStrategy[] { new NuGetDependencyStrategy(), new RippleDependencyStrategy() });
+			return new ProjectReader(new IDependencyStrategy[] { new NuGetDependencyStrategy(), new RippleDependencyStrategy(), new NulloDependencyStrategy() });
 		}
 	}
 }

@@ -114,6 +114,7 @@
     <Compile Include="Model\ISolutionFiles.cs" />
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
+    <Compile Include="Model\NulloDependencyStrategy.cs" />
     <Compile Include="Model\PackageInstallation.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\RippleException.cs" />
