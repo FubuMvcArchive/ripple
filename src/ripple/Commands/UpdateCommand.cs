@@ -18,6 +18,11 @@ namespace ripple.Commands
 		[FlagAlias("force", 'f')]
 		public bool ForceFlag { get; set; }
 
+		public override void ApplyTo(Solution solution)
+		{
+			solution.ForceRestore();
+		}
+
 		public override string DescribePlan(Solution solution)
 		{
 			return "Updating dependencies for solution {0}".ToFormat(solution.Name);
@@ -32,7 +37,9 @@ namespace ripple.Commands
 			return RippleOperation
 				.For<UpdateInput>(input)
 				.Step<UpdateAndDownloadDependencies>()
+				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
+				.Step<ProcessDirectives>()
 				.Step<FixReferences>()
 				.Execute();
 		}
