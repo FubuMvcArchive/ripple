@@ -16,8 +16,9 @@ namespace ripple.Testing
 		public string FileName { get; set; }
 		public string Name { get; private set; }
 		public SemanticVersion Version { get; private set; }
+	    public bool IsPreRelease { get; private set; }
 
-		public IPackage ExplodeTo(string directory)
+	    public IPackage ExplodeTo(string directory)
 		{
 			var explodedDirectory = directory.AppendPath(Name).ToFullPath();
 			RippleLog.Info("Exploding to " + explodedDirectory);

@@ -5,11 +5,11 @@ using ripple.Model;
 
 namespace ripple.Nuget
 {
-	public class CachedNuget : IRemoteNuget, DescribesItself
+	public class FileSystemNuget : IRemoteNuget, DescribesItself
 	{
 		private readonly INugetFile _nuget;
 
-		public CachedNuget(INugetFile nuget)
+		public FileSystemNuget(INugetFile nuget)
 		{
 			_nuget = nuget;
 		}

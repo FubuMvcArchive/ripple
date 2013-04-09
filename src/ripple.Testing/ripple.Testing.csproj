@@ -90,6 +90,7 @@
     <Compile Include="Model\DependencyInstallationScenario.cs" />
     <Compile Include="Model\DependencyParsing.cs" />
     <Compile Include="Model\DependencyTester.cs" />
+    <Compile Include="Model\FeedProviderTester.cs" />
     <Compile Include="Model\FeedTester.cs" />
     <Compile Include="Model\finding_dependencies_for_a_package.cs" />
     <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="MSBuild\removing_duplicate_assembly_references.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
+    <Compile Include="Nuget\FileSystemFeedTester.cs" />
     <Compile Include="Nuget\LocalDependenciesTester.cs" />
     <Compile Include="Nuget\NugetFeedSmokeTester.cs" />
     <Compile Include="Nuget\NugetFileTester.cs" />

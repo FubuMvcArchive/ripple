@@ -129,7 +129,7 @@ namespace ripple.Nuget
 
 	    public IRemoteNuget Retrieve(IRemoteNuget nuget)
 	    {
-		    if (nuget is CachedNuget)
+		    if (nuget is FileSystemNuget)
 		    {
 			    return nuget;
 		    }
@@ -142,7 +142,7 @@ namespace ripple.Nuget
 				return new CacheableNuget(nuget, _folder);
 			}
 
-		    return new CachedNuget(file);
+		    return new FileSystemNuget(file);
 	    }
 
 		public static NugetFolderCache DefaultFor(Solution solution)

@@ -126,7 +126,8 @@
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
     <Compile Include="MSBuild\ReferenceStatus.cs" />
     <Compile Include="Nuget\CacheableNuget.cs" />
-    <Compile Include="Nuget\CachedNuget.cs" />
+    <Compile Include="Nuget\FileSystemNuget.cs" />
+    <Compile Include="Nuget\FileSystemNugetFeed.cs" />
     <Compile Include="Nuget\FloatingFeed.cs" />
     <Compile Include="Nuget\IFloatingFeed.cs" />
     <Compile Include="Nuget\InstallationService.cs" />

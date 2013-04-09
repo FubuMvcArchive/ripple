@@ -24,6 +24,11 @@ namespace ripple.Model
 
 		private INugetFeed buildFeed(Feed feed)
 		{
+            if(feed.Url.StartsWith("file://"))
+            {
+                return buildFileSystemFeed(feed);
+            }
+
 			if (feed.Mode == UpdateMode.Fixed)
 			{
 				return new NugetFeed(feed.Url);
@@ -31,6 +36,18 @@ namespace ripple.Model
 
 			return new FloatingFeed(feed.Url);
 		}
+
+        private INugetFeed buildFileSystemFeed(Feed feed)
+        {
+            var directory = feed.Url.Replace("file://", "");
+
+            if (feed.Mode == UpdateMode.Fixed)
+            {
+                return new FileSystemNugetFeed(directory);
+            }
+
+            return new FloatingFileSystemNugetFeed(directory);
+        }
 	}
 
 	public class FeedRegistry

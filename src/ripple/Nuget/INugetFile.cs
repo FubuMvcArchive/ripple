@@ -8,6 +8,7 @@ namespace ripple.Nuget
 		string FileName { get; }
         string Name { get; }
         SemanticVersion Version { get; }
+        bool IsPreRelease { get; }
         IPackage ExplodeTo(string directory);
 
 	    INugetFile CopyTo(string directory);

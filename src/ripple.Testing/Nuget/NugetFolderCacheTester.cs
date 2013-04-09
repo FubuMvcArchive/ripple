@@ -37,14 +37,14 @@ namespace ripple.Testing.Nuget
 
 			ClassUnderTest.Stub(x => x.Find(theDependency)).Return(theLocalFile);
 
-			var cached = ClassUnderTest.Retrieve(theNuget) as CachedNuget;
+			var cached = ClassUnderTest.Retrieve(theNuget) as FileSystemNuget;
 			cached.File.ShouldBeTheSameAs(theLocalFile);
 		}
 
 		[Test]
 		public void cached_file_is_returned()
 		{
-			var cached = new CachedNuget(MockFor<INugetFile>());
+			var cached = new FileSystemNuget(MockFor<INugetFile>());
 			ClassUnderTest.Retrieve(cached).ShouldBeTheSameAs(cached);
 		}
 	}
