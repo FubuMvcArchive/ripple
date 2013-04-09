@@ -45,6 +45,11 @@ namespace ripple.Testing.Model
 
 		public IRemoteNuget Find(Dependency query)
 		{
+            if (query.IsFloat())
+            {
+                return _nugets.FirstOrDefault(x => x.Name == query.Name);
+            }
+
 			var version = SemanticVersion.Parse(query.Version);
 			return _nugets.FirstOrDefault(x => x.Name == query.Name && x.Version.Equals(version));
 		}

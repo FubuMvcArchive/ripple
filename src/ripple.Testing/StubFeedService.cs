@@ -25,7 +25,7 @@ namespace ripple.Testing
 			throw new System.NotImplementedException();
 		}
 
-		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency)
+		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency, bool force = true)
 		{
 			throw new System.NotImplementedException();
 		}

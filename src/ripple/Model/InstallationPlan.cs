@@ -13,18 +13,20 @@ namespace ripple.Model
 		private readonly Solution _solution;
 		private readonly Project _project;
 		private readonly Dependency _dependency;
+	    private readonly bool _force;
 
 		private readonly Lazy<IEnumerable<PackageDependency>> _dependencies;
 		private readonly Lazy<IEnumerable<Dependency>> _installs;
 		private readonly Lazy<IEnumerable<Dependency>> _updates;
 
-		private InstallationPlan(Solution solution, Project project, Dependency dependency)
+		private InstallationPlan(Solution solution, Project project, Dependency dependency, bool force)
 		{
 			_solution = solution;
 			_project = project;
 			_dependency = dependency;
+		    _force = force;
 
-			_dependencies = new Lazy<IEnumerable<PackageDependency>>(findPackageDependencies);
+		    _dependencies = new Lazy<IEnumerable<PackageDependency>>(findPackageDependencies);
 			_installs = new Lazy<IEnumerable<Dependency>>(findDependenciesToInstall);
 			_updates = new Lazy<IEnumerable<Dependency>>(findDependenciesToUpdate);
 		}
@@ -86,7 +88,7 @@ namespace ripple.Model
 				.Each(x =>
 				{
 					var configured = _solution.Dependencies.Find(x.Id);
-					if (!configured.IsFloat())
+					if (!configured.IsFloat() && !_force)
 					{
 						// TODO -- warning?
 						return;
@@ -116,9 +118,9 @@ namespace ripple.Model
 			return !dependency.VersionSpec.Satisfies(version);
 		}
 
-		public static InstallationPlan Create(Solution solution, Project project, Dependency dependency)
+		public static InstallationPlan Create(Solution solution, Project project, Dependency dependency, bool force)
 		{
-			var plan = new InstallationPlan(solution, project, dependency);
+			var plan = new InstallationPlan(solution, project, dependency, force);
 			return plan;
 		}
 

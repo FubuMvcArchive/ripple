@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FubuCore.Util;
 using NuGet;
@@ -17,7 +18,18 @@ namespace ripple.MSBuild
 			_solution = solution;
 			_repository = new LocalPackageRepository(_solution.PackagesDirectory());
 
-			_packages = new Cache<string, IPackage>(name => _repository.FindPackage(name));
+			_packages = new Cache<string, IPackage>(name =>
+			{
+			    try
+			    {
+			        return _repository.FindPackage(name);
+			    }
+			    catch (Exception)
+			    {
+			        return null;
+			    }
+			});
+
 			_toolsVersionMatch["4.0"] = "net40";
 		}
 

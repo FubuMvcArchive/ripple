@@ -27,6 +27,15 @@ namespace ripple.Steps
 
 			nugets.Each(x => Solution.Update(x));
 
+		    var checkForUpdates = nugets.ToArray();
+		    checkForUpdates.Each(nuget =>
+		    {
+		        var dependency = Solution.Dependencies.Find(nuget.Name);
+		        var projects = Solution.Projects.Where(project => project.Dependencies.Has(nuget.Name));
+
+		        projects.Each(project => nugets.AddRange(InstallationService.Install(Solution, dependency, project, input.ForceFlag)));
+		    });
+
 			runner.Set(new DownloadedNugets(nugets));
 		}
 

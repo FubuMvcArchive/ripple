@@ -177,7 +177,7 @@ namespace ripple.Testing
 				var projectFile = Path.Combine(projectDir, RippleDependencyStrategy.RippleDependenciesConfig);
 				_fileSystem.WriteStringToFile(projectFile, "");
 
-				var csProjectFile = Path.Combine(projectDir, "{0}.csproj".ToFormat(_solution.Name));
+				var csProjectFile = Path.Combine(projectDir, "{0}.csproj".ToFormat(name));
 				_fileSystem.WriteStreamToFile(csProjectFile, stream);
 
 				var debugDir = Path.Combine(projectDir, "bin", "Debug");
@@ -232,6 +232,13 @@ namespace ripple.Testing
 
 				document.SaveChanges();
 			}
+
+            public void LocalDependency(string id, string version)
+            {
+                var fileName = "{0}.{1}.nupkg".ToFormat(id, version);
+                _fileSystem.CreateDirectory(_solution.PackagesDirectory(), id);
+                _fileSystem.WriteStringToFile(Path.Combine(_solution.PackagesDirectory(), id, fileName), "");
+            }
 
 			public void ProjectDependency(string project, string id)
 			{

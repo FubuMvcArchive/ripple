@@ -129,6 +129,7 @@
     <Compile Include="Nuget\CachedNuget.cs" />
     <Compile Include="Nuget\FloatingFeed.cs" />
     <Compile Include="Nuget\IFloatingFeed.cs" />
+    <Compile Include="Nuget\InstallationService.cs" />
     <Compile Include="Nuget\INugetCache.cs" />
     <Compile Include="Nuget\INugetDownloader.cs" />
     <Compile Include="Nuget\INugetFeed.cs" />

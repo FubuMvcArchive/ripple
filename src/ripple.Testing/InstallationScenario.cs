@@ -67,7 +67,7 @@ namespace ripple.Testing
 
 		InstallationPlan IInstallationScenario.Build()
 		{
-			return InstallationPlan.Create(_solution, _project, _dependency);
+			return InstallationPlan.Create(_solution, _project, _dependency, false);
 		}
 
 		public static InstallationPlan For(string name, Action<InstallationScenario> define)

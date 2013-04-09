@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuCore.CommandLine;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 using ripple.Commands;
@@ -67,7 +68,7 @@ namespace ripple
 					RippleLog.InfoMessage(_solution);
 					
 					// Mostly for testing
-					if (throwOnFailure)
+					if (_forceThrow || throwOnFailure)
 					{
 						throw;
 					}
@@ -93,21 +94,68 @@ namespace ripple
 
 		public static RippleOperation For<T>(SolutionInput input)
 		{
-			return For<T>(input, Solution.For(input));
+            return For<T>(input, _target ?? Solution.For(input));
 		}
 
 		public static RippleOperation For<T>(SolutionInput input, Solution solution)
 		{
+			var target = _target ?? solution;
+
 			var description = input.DescribePlan(solution);
 			if (description.IsNotEmpty())
 			{
 				RippleLog.Info(description);
 			}
 
-			input.Apply(solution);
+			input.Apply(target);
 
 			var runner = new RippleStepRunner(new FileSystem());
-			return new RippleOperation(solution, input, runner).Step<ValidateRepository>();
+			return new RippleOperation(target, input, runner).Step<ValidateRepository>();
+		}
+
+		private static Solution _target;
+		private static bool _forceThrow;
+
+		public static CommandExecutionExpression With(Solution solution)
+		{
+			_target = solution;
+			_forceThrow = true;
+
+			return new CommandExecutionExpression(() =>
+			{
+				_target = null;
+				_forceThrow = false;
+			});
+		}
+
+		public class CommandExecutionExpression
+		{
+			private readonly Action _done;
+
+			public CommandExecutionExpression(Action done)
+			{
+				_done = done;
+			}
+
+			public void Execute<TInput, TCommand>()
+				where TCommand : FubuCommand<TInput>, new()
+				where TInput : new()
+			{
+				Execute<TInput, TCommand>(input => { });
+			}
+
+			public void Execute<TInput, TCommand>(Action<TInput> configure)
+				where TCommand : FubuCommand<TInput>, new()
+				where TInput : new()
+			{
+				var input = new TInput();
+				configure(input);
+				
+				new TCommand().Execute(input);
+
+                _target.Reset();
+				_done();
+			}
 		}
 	}
 }

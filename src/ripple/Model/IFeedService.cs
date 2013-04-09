@@ -8,7 +8,7 @@ namespace ripple.Model
 	{
 		IRemoteNuget NugetFor(Solution solution, Dependency dependency);
 		IEnumerable<IRemoteNuget> UpdatesFor(Solution solution);
-		IRemoteNuget UpdateFor(Solution solution, Dependency dependency);
+		IRemoteNuget UpdateFor(Solution solution, Dependency dependency, bool force = true);
 
 		IEnumerable<PackageDependency> DependenciesFor(Solution solution, Dependency dependency);
 	}

@@ -50,5 +50,10 @@ namespace ripple.Model
 				Target = InstallationTarget.Project
 			};
 		}
+
+        public static PackageInstallation ForProject(Project project, Dependency dependency)
+        {
+            return ForProject(project.Name, dependency);
+        }
 	}
 }

@@ -67,9 +67,9 @@ namespace ripple.Model
 			return nugets;
 		}
 
-		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency)
+		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency, bool force = true)
 		{
-			return LatestFor(solution, dependency, forced: true);
+			return LatestFor(solution, dependency, force);
 		}
 
 		public IEnumerable<PackageDependency> DependenciesFor(Solution solution, Dependency dependency)
