@@ -1,13 +1,13 @@
-using System;
 using System.ComponentModel;
+using FubuCore;
 using FubuCore.CommandLine;
-using System.Collections.Generic;
+using ripple.Model;
 
 namespace ripple.Commands
 {
     public class NugetInput : SolutionInput
     {
-        [Description("The name of the nuget to allow to float")]
+        [Description("The name of the nuget")]
         public string Name { get; set; }
     }
 
@@ -26,18 +26,35 @@ namespace ripple.Commands
         }
     }
 
-    [CommandDescription("Locks a nuget to prevent it from being automatically updated from the Update command")]
-    public class LockCommand : FubuCommand<NugetInput>
+    public class LockInput : NugetInput
     {
-        public override bool Execute(NugetInput input)
+        [Description("The version to lock to")]
+        public string Version { get; set; }
+    }
+
+    [CommandDescription("Locks a nuget to prevent it from being automatically updated from the Update command")]
+    public class LockCommand : FubuCommand<LockInput>
+    {
+        public override bool Execute(LockInput input)
         {
-			throw new NotImplementedException();
-            /*input.FindSolutions().Each(solution =>
+            RippleLog.Info("Locking {0} at {1}".ToFormat(input.Name, input.Version));
+
+            input.EachSolution(solution =>
             {
-                solution.AlterConfig(config => config.LockNuget(input.Name));
+                var dependency = solution.FindDependency(input.Name);
+                if (dependency == null)
+                {
+                    solution.AddDependency(new Dependency(input.Name, input.Version, UpdateMode.Fixed));
+                }
+                else
+                {
+                    dependency.FixAt(input.Version);
+                }
+
+                solution.Save();
             });
 
-            return true;*/
+            return true;
         }
     }
 }

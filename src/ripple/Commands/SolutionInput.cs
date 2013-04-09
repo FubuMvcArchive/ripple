@@ -33,7 +33,12 @@ namespace ripple.Commands
 
 		public void EachSolution(Action<Solution> configure)
 		{
-			FindSolutions().Each(configure);
+		    var solutions = FindSolutions();
+		    solutions.Each(solution =>
+		    {
+                RippleLog.Debug("Solution " + solution.Name);
+		        configure(solution);
+		    });
 		}
 
 		public IEnumerable<Solution> FindSolutions()

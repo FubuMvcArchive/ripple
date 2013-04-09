@@ -47,6 +47,12 @@ namespace ripple.Model
 			return NuGet.SemanticVersion.Parse(Version);
 		}
 
+        public void FixAt(string version)
+        {
+            Version = version;
+            Mode = UpdateMode.Fixed;
+        }
+
 		public bool IsFloat()
 		{
 			return Mode == UpdateMode.Float;
