@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using FubuCore;
+using ripple.Model;
 
 namespace ripple
 {
@@ -85,7 +86,6 @@ namespace ripple
             fileSystem.WriteStringToFile(logsDirectory.AppendPath(filename), contents);
         }
 
-
         public static string RippleExeLocation()
         {
             return Assembly.GetExecutingAssembly().Location;
@@ -112,6 +112,58 @@ namespace ripple
             }
 
             return CodeDirectory().AppendPath("ripple", file);
+        }
+
+        private static Func<string> _currentDir;
+
+        static RippleFileSystem()
+        {
+            Live();
+        }
+
+        // Mostly for testing
+        public static void Live()
+        {
+            _currentDir = () => Environment.CurrentDirectory;
+        }
+
+        public static void StubCurrentDirectory(string directory)
+        {
+            _currentDir = () => directory;
+        }
+
+        public static string FindSolutionDirectory()
+        {
+            return findSolutionDir(_currentDir());
+        }
+
+        private static string findSolutionDir(string path)
+        {
+            var files = new FileSystem();
+            if (files.FileExists(path, SolutionFiles.ConfigFile))
+            {
+                return path;
+            }
+
+            var parent = new DirectoryInfo(path).Parent;
+            if (parent == null)
+            {
+                RippleAssert.Fail("Not a ripple repository (or any of the parent directories)");
+                return null;
+            }
+
+            return findSolutionDir(parent.FullName);
+        }
+
+        public static string FindCodeDirectory()
+        {
+            var slnDir = FindSolutionDirectory();
+            if (slnDir == null) return null;
+
+            var parent = new DirectoryInfo(slnDir).Parent;
+            if (parent == null) return null;
+
+            return parent.FullName;
         }
     }
 }

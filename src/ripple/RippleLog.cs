@@ -1,10 +1,34 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 
 namespace ripple
 {
+    public class RippleFatalError : Exception
+    {
+        public RippleFatalError(string message)
+            : base(message)
+        {
+        }
+
+        public void Describe(Description description)
+        {
+            description.ShortDescription = Message;
+        }
+    }
+
+    public class RippleAssert
+    {
+        public static void Fail(string message)
+        {
+            RippleLog.Error(message);
+            throw new RippleFatalError(message);
+        }
+    }
+
 	public class RippleLog
 	{
 		private static readonly Lazy<ILogger> _logger;
@@ -16,7 +40,7 @@ namespace ripple
 			_logger = new Lazy<ILogger>(() => new Logger(Listeners, new ILogModifier[0]));
 
 			RegisterListener(new RippleLogger());
-			// TODO -- Add the file writing logger
+			RegisterListener(new FileListener());
 		}
 
 		public static void Verbose(bool verbose)
@@ -51,10 +75,23 @@ namespace ripple
 			Logger.Info(message);
 		}
 
+        public static void Error(string message)
+        {
+            Error(message, new RippleFatalError(message));
+        }
+
 		public static void Error(string message, Exception ex)
 		{
+            withConsoleColor(ConsoleColor.Red, () => Console.WriteLine("ripple: " + message));
 			Logger.Error(message, ex);
 		}
+
+        private static void withConsoleColor(ConsoleColor color, Action action)
+        {
+            Console.ForegroundColor = color;
+            action();
+            Console.ResetColor();
+        }
 
 		public class RippleLogger : ILogListener
 		{
@@ -88,16 +125,10 @@ namespace ripple
 
 			public void Error(string message, Exception ex)
 			{
-				writeWithColor(ConsoleColor.Red, () =>
-				{
-					Console.WriteLine(message);
-					Console.WriteLine(ex.ToDescriptionText());
-				});
 			}
 
 			public void Error(object correlationId, string message, Exception ex)
 			{
-				Error(message, ex);
 			}
 
 			private void writeWithColor(ConsoleColor color, Action action)
@@ -110,5 +141,57 @@ namespace ripple
 			public bool IsDebugEnabled { get { return PrintDebug; } }
 			public bool IsInfoEnabled { get { return PrintInfo; } }
 		}
+
+        public class FileListener : ILogListener
+        {
+            public const string File = "ripple.log";
+
+            private readonly IFileSystem _fileSystem = new FileSystem();
+
+            public bool ListensFor(Type type)
+            {
+                return true;
+            }
+
+            public void DebugMessage(object message)
+            {
+                Debug(message.ToDescriptionText());
+            }
+
+            public void InfoMessage(object message)
+            {
+                Info(message.ToDescriptionText());
+            }
+
+            public void Debug(string message)
+            {
+                write("Debug", message);
+            }
+
+            public void Info(string message)
+            {
+                write("Info", message);
+            }
+
+            public void Error(string message, Exception ex)
+            {
+                write("Error", message);
+                write("Error", ex.ToString());
+            }
+
+            public void Error(object correlationId, string message, Exception ex)
+            {
+                Error(message, ex);
+            }
+
+            private void write(string level, string message)
+            {
+                var log = "{0}: [{1}] {2}{3}".ToFormat(DateTime.Now.ToString(), level, message, Environment.NewLine);
+                _fileSystem.AppendStringToFile(Path.Combine(RippleFileSystem.FindSolutionDirectory(), File), log);
+            }
+
+            public bool IsDebugEnabled { get { return true; } }
+            public bool IsInfoEnabled { get { return true; } }
+        }
 	}
 }

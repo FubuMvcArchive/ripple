@@ -124,6 +124,7 @@
     <Compile Include="Nuget\NugetXmlFeedTester.cs" />
     <Compile Include="Nuget\RemoteNugetTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RippleFileSystemTester.cs" />
     <Compile Include="RippleOperationTester.cs" />
     <Compile Include="SolutionGraphScenario.cs" />
     <Compile Include="SolutionTester.cs" />
@@ -143,9 +144,7 @@
     <None Include="Bottles.1.0.0.441.nupkg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="ripple.dependencies.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

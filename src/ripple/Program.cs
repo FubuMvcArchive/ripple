@@ -24,6 +24,10 @@ namespace ripple
                 Console.ResetColor();
                 return 1;
             }
+            catch (RippleFatalError)
+            {
+                return 1;
+            }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -31,6 +35,7 @@ namespace ripple
                 Console.ResetColor();
                 return 1;
             }
+            
             return success ? 0 : 1;
         }
     }

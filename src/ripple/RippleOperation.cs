@@ -65,7 +65,7 @@ namespace ripple
 					_solution.Reset();
 
 					RippleLog.Error("Error executing {0}".ToFormat(step.GetType().Name), ex);
-					RippleLog.InfoMessage(_solution);
+					RippleLog.DebugMessage(_solution);
 					
 					// Mostly for testing
 					if (_forceThrow || throwOnFailure)

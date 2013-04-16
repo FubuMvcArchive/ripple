@@ -31,7 +31,7 @@ namespace ripple.Model
 
 			if (nuget == null)
 			{
-				throw new ArgumentOutOfRangeException("dependency", "Could not find " + dependency);
+                RippleLog.Error("Could not find " + dependency, new ArgumentOutOfRangeException("dependency", "Could not find " + dependency));
 			}
 
 			return remoteOrCached(solution, nuget);

@@ -1,4 +1,3 @@
-using System.Reflection;
 using FubuCore;
 using ripple.Nuget;
 
@@ -59,9 +58,9 @@ namespace ripple.Model
 			return new SolutionBuilder(SolutionFiles.Classic(), ProjectReader.Basic());
 		}
 
-		public static Solution ReadFromBuildSupport()
+		public static Solution ReadFromCurrentDirectory()
 		{
-			return ReadFrom(Assembly.GetExecutingAssembly().Location.ToFullPath().ParentDirectory().ParentDirectory());
+			return ReadFrom(RippleFileSystem.FindSolutionDirectory());
 		}
 
 		public static Solution ReadFrom(string directory)

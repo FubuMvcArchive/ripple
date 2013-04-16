@@ -30,8 +30,7 @@ namespace ripple.Model
 
 		public SolutionFiles(IFileSystem fileSystem, ISolutionLoader loader)
 		{
-			BuildSupportDir = Assembly.GetExecutingAssembly().Location.ToFullPath();
-			RootDir = BuildSupportDir.ParentDirectory().ParentDirectory();
+			resetDirectories(RippleFileSystem.FindSolutionDirectory());
 
 			_fileSystem = fileSystem;
 			_loader = loader;
@@ -101,29 +100,24 @@ namespace ripple.Model
 
 		public static SolutionFiles FromDirectory(string directory)
 		{
-			var nugetConfigs = new FileSet
+			var rippleConfigs = new FileSet
 			{
-				Include = NuGetDependencyStrategy.PackagesConfig,
-				Exclude = "fubu-content/*.*",
+				Include = RippleDependencyStrategy.RippleDependenciesConfig,
 				DeepSearch = true
 			};
 
 			var isClassicMode = false;
-			var configFiles = new FileSystem().FindFiles(directory, nugetConfigs);
-			foreach (var file in configFiles)
-			{
-				var configFile = file.ToFullPath();
-				// TODO -- Maybe configure this somehow
-				if (!configFile.Contains("fubu-content") && !configFile.Contains("gems"))
-				{
-					isClassicMode = true;
-					RippleLog.Info("Classic Mode Detected: ({0})".ToFormat(configFiles.Select(x => x.ToFullPath()).Join(";")));
-					break;
-				}
-			}
+			var configFiles = new FileSystem().FindFiles(directory, rippleConfigs);
+
+            if (!configFiles.Any())
+            {
+                isClassicMode = true;
+                RippleLog.Info("Classic Mode Detected");
+            }
 
 			var files =  isClassicMode ? Classic() : Basic();
 			files.resetDirectories(directory);
+
 			return files;
 		}
 

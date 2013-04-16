@@ -461,7 +461,7 @@ namespace ripple.Model
 		{
 			// TODO -- Need to allow a specific solution
 			// TODO -- Need to be smarter about the current directory maybe
-			return SolutionBuilder.ReadFromBuildSupport();
+			return SolutionBuilder.ReadFromCurrentDirectory();
 		}	
 	}
 }
