@@ -18,7 +18,7 @@ namespace ripple.Commands
     {
         public override bool Execute(OpenNugetInput input)
         {
-            var nuspec = SolutionGraphBuilder.BuildForRippleDirectory()
+            var nuspec = SolutionGraphBuilder.BuildForCurrentDirectory()
                 .FindNugetSpec(input.Name);
 
             new FileSystem().LaunchEditor(nuspec.Filename);

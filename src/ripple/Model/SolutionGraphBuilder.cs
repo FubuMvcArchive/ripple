@@ -7,10 +7,10 @@ namespace ripple.Model
 {
     public class SolutionGraphBuilder
     {
-        public static SolutionGraph BuildForRippleDirectory()
+        public static SolutionGraph BuildForCurrentDirectory()
         {
             var builder = new SolutionGraphBuilder(new FileSystem());
-            var codeDirectory = RippleFileSystem.CodeDirectory();
+            var codeDirectory = RippleFileSystem.FindCodeDirectory();
 
             return builder.ReadFrom(codeDirectory);
         }
@@ -26,7 +26,7 @@ namespace ripple.Model
         {
             folder = findCorrectFolder(folder);
 
-            Console.WriteLine("Trying to read a Ripple SolutionGraph from " + folder);
+            RippleLog.Info("Trying to read a Ripple SolutionGraph from " + folder);
 
             var solutions = readSolutions(folder);
 

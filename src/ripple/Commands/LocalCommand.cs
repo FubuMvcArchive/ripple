@@ -52,7 +52,7 @@ namespace ripple.Commands
             Console.WriteLine();
 
             var requirements = input.ToRequirements();
-            var solutionGraph = SolutionGraphBuilder.BuildForRippleDirectory();
+            var solutionGraph = SolutionGraphBuilder.BuildForCurrentDirectory();
 
             var logger = new RippleLogger();
             var stepRunner = new Local.RippleStepRunner(new ProcessRunner(), new FileSystem(), logger, requirements);

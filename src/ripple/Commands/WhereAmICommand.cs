@@ -14,7 +14,7 @@ namespace ripple.Commands
     {
         public override bool Execute(WhereAmIInput input)
         {
-            Console.WriteLine("The root code directory for ripple is " + RippleFileSystem.CodeDirectory());
+            Console.WriteLine("The root code directory for ripple is " + RippleFileSystem.FindCodeDirectory());
             Console.WriteLine("ripple.exe is at " + RippleFileSystem.RippleExeLocation());
 
             return true;

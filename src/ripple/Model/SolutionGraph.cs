@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using FubuCore;
 using FubuCore.DependencyAnalysis;
+using FubuCore.Descriptions;
 using FubuCore.Util;
 using System.Linq;
 using ripple.Local;
 
 namespace ripple.Model
 {
-    public class SolutionGraph
+    public class SolutionGraph : DescribesItself
     {
         private readonly Lazy<IEnumerable<NugetSpec>> _allNugets;
 		private readonly Lazy<IList<Solution>> _orderedSolutions;
@@ -65,6 +67,30 @@ namespace ripple.Model
         public IEnumerable<NugetSpec> FindFromDependencies(IEnumerable<Dependency> dependencies)
         {
             return AllNugets().Where(x => dependencies.Any(d => d.Name == x.Name));
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = "Solution Graph at {0}".ToFormat(RippleFileSystem.FindCodeDirectory());
+
+            var solutions = description.AddList("Solutions", _orderedSolutions.Value.Select(x => new SolutionListItem(x)));
+            solutions.Label = "Solutions";
+        }
+
+        public class SolutionListItem : DescribesItself
+        {
+            private readonly Solution _solution;
+
+            public SolutionListItem(Solution solution)
+            {
+                _solution = solution;
+            }
+
+            public void Describe(Description description)
+            {
+                description.Title = _solution.Name;
+                description.ShortDescription = _solution.Path;
+            }
         }
     }
 }

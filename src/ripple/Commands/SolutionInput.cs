@@ -15,7 +15,7 @@ namespace ripple.Commands
 
 	public class SolutionInput
 	{
-		private readonly Lazy<SolutionGraph> _graph = new Lazy<SolutionGraph>(SolutionGraphBuilder.BuildForRippleDirectory);
+		private readonly Lazy<SolutionGraph> _graph = new Lazy<SolutionGraph>(SolutionGraphBuilder.BuildForCurrentDirectory);
 
 		[Description("override the solution to be cleaned")]
 		[FlagAlias("solution", 'l')]
@@ -47,7 +47,7 @@ namespace ripple.Commands
 			{
 				yield return _graph.Value[SolutionFlag];
 			}
-			else if (AllFlag || ".".ToFullPath() == RippleFileSystem.CodeDirectory())
+			else if (AllFlag || RippleFileSystem.IsCodeDirectory())
 			{
 				foreach (var solution in _graph.Value.AllSolutions)
 				{
@@ -56,9 +56,9 @@ namespace ripple.Commands
 			}
 			else
 			{
-				if (new FileSystem().FileExists(".".ToFullPath(), SolutionFiles.ConfigFile))
+				if (RippleFileSystem.IsSolutionDirectory())
 				{
-					yield return SolutionBuilder.ReadFrom(".");
+				    yield return SolutionBuilder.ReadFromCurrentDirectory();
 				}
 			}
 		}
