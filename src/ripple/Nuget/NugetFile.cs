@@ -30,6 +30,12 @@ namespace ripple.Nuget
 					continue;
 				}
 
+                if (char.IsLetter(character))
+                {
+                    periodFound = false;
+                    continue;
+                }
+
 				if (periodFound && char.IsNumber(character))
 				{
 					index = i;
