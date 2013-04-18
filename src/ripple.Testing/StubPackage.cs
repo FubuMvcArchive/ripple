@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
+using FubuCore;
+using FubuCore.Util;
 using NuGet;
+using ripple.Model;
 
 namespace ripple.Testing
 {
@@ -86,7 +89,7 @@ namespace ripple.Testing
 
 	public class StubPackageRepository : IPackageRepository
 	{
-		private readonly IList<IPackage> _packages = new List<IPackage>(); 
+        private readonly Cache<Dependency, IPackage> _packages = new Cache<Dependency, IPackage>(x => new StubPackage(x.Name, x.Version));
 
 		public IQueryable<IPackage> GetPackages()
 		{
@@ -95,20 +98,18 @@ namespace ripple.Testing
 
 		public void AddPackage(IPackage package)
 		{
-			_packages.Add(package);
+            _packages.Fill(new Dependency(package.Id, package.Version.ToString()), package);
 		}
 
 		public void RemovePackage(IPackage package)
 		{
-			_packages.Remove(package);
+			_packages.Remove(new Dependency(package.Id, package.Version.ToString()));
 		}
 
 		public void ConfigurePackage(string id, string version, Action<StubPackage> configure)
 		{
-			var package = new StubPackage(id, version);
+		    var package = _packages[new Dependency(id, version)].As<StubPackage>();
 			configure(package);
-
-			AddPackage(package);
 		}
 
 		public string Source { get; private set; }

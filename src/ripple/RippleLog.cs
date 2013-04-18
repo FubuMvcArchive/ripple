@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
@@ -12,11 +11,6 @@ namespace ripple
         public RippleFatalError(string message)
             : base(message)
         {
-        }
-
-        public void Describe(Description description)
-        {
-            description.ShortDescription = Message;
         }
     }
 
