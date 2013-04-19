@@ -24,6 +24,26 @@ namespace ripple.Nuget
             return Project.IsNotEmpty();
         }
 
+        public bool UpdatesCurrentDependency()
+        {
+            // Going to have to compare against the latest from the feed here
+            if (Dependency.IsFloat()) return true;
+
+            if (!Solution.Dependencies.Has(Dependency.Name)) return false;
+
+            var configured = Solution.Dependencies.Find(Dependency.Name);
+            var local = Solution.LocalDependencies().Get(Dependency);
+
+            if (local == null)
+            {
+                if (configured.IsFloat()) return true;
+
+                return configured.SemanticVersion() < Dependency.SemanticVersion();
+            }
+
+            return local.Version < Dependency.SemanticVersion();
+        }
+
         /// <summary>
         /// Fixed versions are 'fixed'. Use this option to force updates of existing dependencies.
         /// </summary>

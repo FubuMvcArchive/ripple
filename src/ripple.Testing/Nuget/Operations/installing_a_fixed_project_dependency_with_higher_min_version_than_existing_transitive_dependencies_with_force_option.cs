@@ -32,6 +32,7 @@ namespace ripple.Testing.Nuget.Operations
             {
                 scenario.Solution("Test", test =>
                 {
+                    test.ProjectDependency("Test", "FubuCore");
                     test.LocalDependency("FubuCore", "1.2.0.0");
                 });
             });
@@ -63,9 +64,9 @@ namespace ripple.Testing.Nuget.Operations
         public void installs_the_new_package_and_updates_the_existing()
         {
             thePlan.ShouldHaveTheSameElementsAs(
-                updateSolutionDependency("FubuCore", "1.3.0.0", UpdateMode.Fixed),
                 solutionInstallation("Bottles", "1.1.0.0", UpdateMode.Fixed),
-                projectInstallation("Test", "Bottles")
+                projectInstallation("Test", "Bottles"),
+                updateSolutionDependency("FubuCore", "1.3.0.0", UpdateMode.Fixed)
             );
         }
     }

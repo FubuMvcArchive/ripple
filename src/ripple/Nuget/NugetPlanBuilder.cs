@@ -26,7 +26,7 @@ namespace ripple.Nuget
             return new NugetPlan();
         }
 
-        public NugetPlan InstallFor(NugetPlanRequest request)
+        public NugetPlan InstallFor(NugetPlanRequest request, int depth = 0)
         {
             var plan = new NugetPlan();
             var target = request.Dependency;
@@ -38,22 +38,30 @@ namespace ripple.Nuget
                 target.Version = remote.Version.ToString();
             }
 
-            if (solution.Dependencies.Has(target.Name) || solution.LocalDependencies().Has(target))
+            
+            if (request.UpdatesCurrentDependency())
             {
-                return plan;
+                var shouldUpdate = (depth != 0) && request.ForceUpdates;
+                if(shouldUpdate) plan.AddStep(new UpdateDependency(target));
             }
-
-            plan.AddStep(new InstallSolutionDependency(target));
+            else
+            {
+                plan.AddStep(new InstallSolutionDependency(target));
+            }
             
             if (request.InstallToProject())
             {
-                plan.AddStep(new InstallProjectDependency(request.Project, Dependency.FloatFor(target.Name)));
+                var project = solution.FindProject(request.Project);
+                if (!project.Dependencies.Has(target.Name))
+                {
+                    plan.AddStep(new InstallProjectDependency(request.Project, Dependency.FloatFor(target.Name)));
+                }
             }
 
             var nugetDependencies = solution.FeedService.DependenciesFor(solution, target, target.Mode);
             nugetDependencies.Each(x =>
             {
-                var childPlan = InstallFor(request.CopyFor(x));
+                var childPlan = InstallFor(request.CopyFor(x), depth + 1);
                 plan.Import(childPlan);
             });
 

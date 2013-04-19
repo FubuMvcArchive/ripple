@@ -6,17 +6,17 @@ using ripple.Nuget;
 namespace ripple.Testing.Nuget
 {
     [TestFixture]
-    public class InstallSolutionDependencyTester
+    public class UpdateDependencyTester
     {
         private Dependency theDependency;
-        private InstallSolutionDependency theStep;
+        private UpdateDependency theStep;
         private INugetStepRunner theRunner;
 
         [SetUp]
         public void SetUp()
         {
             theDependency = new Dependency("Test");
-            theStep = new InstallSolutionDependency(theDependency);
+            theStep = new UpdateDependency(theDependency);
 
             theRunner = MockRepository.GenerateStub<INugetStepRunner>();
 
@@ -24,9 +24,9 @@ namespace ripple.Testing.Nuget
         }
 
         [Test]
-        public void installs_the_solution_dependency()
+        public void updates_the_dependency()
         {
-            theRunner.AssertWasCalled(x => x.AddSolutionDependency(theDependency));
+            theRunner.AssertWasCalled(x => x.UpdateDependency(theDependency));
         }
     }
 }

@@ -33,5 +33,10 @@ namespace ripple.Nuget
         {
             return (_dependency != null ? _dependency.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            return "Update " + _dependency;
+        }
     }
 }

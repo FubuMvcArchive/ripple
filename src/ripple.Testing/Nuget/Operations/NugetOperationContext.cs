@@ -17,7 +17,7 @@ namespace ripple.Testing.Nuget.Operations
 
         public INugetStep updateSolutionDependency(string name, string version, UpdateMode mode)
         {
-            return null;
+            return new UpdateDependency(new Dependency(name, version, mode));
         }
     }
 }
