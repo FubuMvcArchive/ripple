@@ -11,6 +11,7 @@ namespace ripple.Testing.Nuget.Operations
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
+        private SolutionGraphScenario theScenario;
 
         [SetUp]
         public void SetUp()
@@ -36,8 +37,8 @@ namespace ripple.Testing.Nuget.Operations
                         });
             });
 
-            theSolution = new Solution();
-            theSolution.AddProject("Test");
+            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theSolution = theScenario.Find("Test");
 
             theBuilder = new NugetPlanBuilder();
 
@@ -55,6 +56,7 @@ namespace ripple.Testing.Nuget.Operations
         [TearDown]
         public void TearDown()
         {
+            theScenario.Cleanup();
             FeedRegistry.Reset();
         }
 
@@ -64,11 +66,12 @@ namespace ripple.Testing.Nuget.Operations
             thePlan.ShouldHaveTheSameElementsAs(
 
                 solutionInstallation("FubuMVC.Katana", "1.0.0.1", UpdateMode.Float),
-                solutionInstallation("FubuMVC.Core", "1.1.0.2", UpdateMode.Float),
-                solutionInstallation("FubuMVC.OwinHost", "1.3.0.0", UpdateMode.Float),
-
                 projectInstallation("Test", "FubuMVC.Katana"),
+
+                solutionInstallation("FubuMVC.Core", "1.1.0.2", UpdateMode.Float),
                 projectInstallation("Test", "FubuMVC.Core"),
+
+                solutionInstallation("FubuMVC.OwinHost", "1.3.0.0", UpdateMode.Float),
                 projectInstallation("Test", "FubuMVC.OwinHost")
             );
         }

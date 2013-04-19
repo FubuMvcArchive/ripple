@@ -32,6 +32,12 @@ namespace ripple.Nuget
             var target = request.Dependency;
             var solution = request.Solution;
 
+            if (target.IsFloat())
+            {
+                var remote = solution.FeedService.NugetFor(solution, target);
+                target.Version = remote.Version.ToString();
+            }
+
             if (solution.Dependencies.Has(target.Name) || solution.LocalDependencies().Has(target))
             {
                 return plan;

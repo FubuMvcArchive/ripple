@@ -45,7 +45,8 @@ namespace ripple.Testing.Nuget.Operations
                     Solution = theSolution,
                     Dependency = new Dependency("Bottles", "1.1.0.0", UpdateMode.Fixed),
                     Operation = OperationType.Install,
-                    ForceUpdates = false
+                    ForceUpdates = false,
+                    Project = "Test"
                 };
 
             thePlan = theBuilder.PlanFor(request);
@@ -63,8 +64,8 @@ namespace ripple.Testing.Nuget.Operations
         {
             thePlan.ShouldHaveTheSameElementsAs(
                 solutionInstallation("Bottles", "1.1.0.0", UpdateMode.Fixed),
-                projectInstallation("Test", "1.1.0.0")
-                );
+                projectInstallation("Test", "Bottles")
+            );
         }
     }
 }

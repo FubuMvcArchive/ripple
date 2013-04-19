@@ -45,7 +45,8 @@ namespace ripple.Testing.Nuget.Operations
                 Solution = theSolution,
                 Dependency = new Dependency("Bottles", "1.1.0.0", UpdateMode.Fixed),
                 Operation = OperationType.Install,
-                ForceUpdates = true
+                ForceUpdates = true,
+                Project = "Test"
             };
 
             thePlan = theBuilder.PlanFor(request);
@@ -64,7 +65,7 @@ namespace ripple.Testing.Nuget.Operations
             thePlan.ShouldHaveTheSameElementsAs(
                 updateSolutionDependency("FubuCore", "1.3.0.0", UpdateMode.Fixed),
                 solutionInstallation("Bottles", "1.1.0.0", UpdateMode.Fixed),
-                projectInstallation("Test", "1.1.0.0")
+                projectInstallation("Test", "Bottles")
             );
         }
     }

@@ -45,7 +45,7 @@ namespace ripple.Testing.Nuget.Operations
         public void installs_to_the_solution()
         {
             thePlan.ShouldHaveTheSameElementsAs(
-                solutionInstallation("fubu", "1.0.01", UpdateMode.Float)
+                solutionInstallation("fubu", "1.0.0.1", UpdateMode.Float)
             );
         }
     }
