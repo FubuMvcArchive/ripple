@@ -11,7 +11,7 @@ namespace ripple.Testing.Nuget
         [Test]
         public void get_file_name_with_special_version()
         {
-            var nuget = new RemoteNuget("FubuMVC.Core", "1.0.0.1442-alpha", "http://something");
+            var nuget = new RemoteNuget("FubuMVC.Core", "1.0.0.1442-alpha", "http://something", null);
 
             nuget.Filename.ShouldEqual("FubuMVC.Core.1.0.0.1442-alpha.nupkg");
         }
@@ -19,14 +19,14 @@ namespace ripple.Testing.Nuget
 		[Test]
 		public void is_update_for_dependency()
 		{
-			var nuget = new RemoteNuget("Bottles", "1.0.0.1", "test");
+			var nuget = new RemoteNuget("Bottles", "1.0.0.1", "test", null);
 			nuget.IsUpdateFor(new Dependency("Bottles", "1.0.0.0")).ShouldBeTrue();
 		}
 
 		[Test]
 		public void is_update_for_dependency_negative()
 		{
-			var nuget = new RemoteNuget("Bottles", "1.0.0.0", "test");
+			var nuget = new RemoteNuget("Bottles", "1.0.0.0", "test", null);
 			nuget.IsUpdateFor(new Dependency("Bottles", "1.0.0.1")).ShouldBeFalse();
 		}
     }

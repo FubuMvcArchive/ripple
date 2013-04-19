@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
@@ -19,7 +20,13 @@ namespace ripple.Nuget
 		public string Name { get { return _inner.Name; } }
 		public SemanticVersion Version { get { return _inner.Version; } }
 		public string Filename { get { return _inner.Filename; } }
-		public IRemoteNuget Inner { get { return _inner; } }
+
+	    public IEnumerable<Dependency> Dependencies()
+	    {
+	        return _inner.Dependencies();
+	    }
+
+	    public IRemoteNuget Inner { get { return _inner; } }
 
 		public INugetFile DownloadTo(Solution solution, string directory)
 		{

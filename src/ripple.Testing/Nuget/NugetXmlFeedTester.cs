@@ -19,13 +19,13 @@ namespace ripple.Testing.Nuget
         [Test]
         public void does_not_blow_up()
         {
-            theFeed.ReadAll().Any().ShouldBeTrue();
+            theFeed.ReadAll(null).Any().ShouldBeTrue();
         }
 
         [Test]
         public void spot_check_a_nuget()
         {
-            var nuget = theFeed.ReadAll().Single(x => x.Name == "FubuMVC.Core").ShouldBeOfType<RemoteNuget>();
+            var nuget = theFeed.ReadAll(null).Single(x => x.Name == "FubuMVC.Core").ShouldBeOfType<RemoteNuget>();
 
             nuget.Name.ShouldEqual("FubuMVC.Core");
             nuget.Version.Version.ToString().ShouldEqual("1.0.0.1402");

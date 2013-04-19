@@ -1,4 +1,5 @@
-﻿using ripple.Model;
+﻿using FubuCore;
+using ripple.Model;
 
 namespace ripple.Nuget
 {
@@ -37,6 +38,11 @@ namespace ripple.Nuget
             {
                 return (_project.GetHashCode() * 397) ^ _dependency.GetHashCode();
             }
+        }
+
+        public override string ToString()
+        {
+            return "Install {0} to {1}".ToFormat(_dependency.Name, _project);
         }
     }
 }

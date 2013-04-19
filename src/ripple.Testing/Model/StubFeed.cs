@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuCore.Util;
 using NuGet;
 using ripple.Model;
@@ -39,7 +40,7 @@ namespace ripple.Testing.Model
 
 		public StubFeed Add(Dependency dependency)
 		{
-			_nugets.Add(new StubNuget(dependency));
+            _nugets.Add(new StubNuget(dependency, () => Repository.As<StubPackageRepository>().GetPackageByDependency(dependency)));
 			return this;
 		}
 

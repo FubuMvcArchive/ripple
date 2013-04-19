@@ -37,7 +37,7 @@ namespace ripple.Nuget
             _document = document;
         }
 
-        public IEnumerable<IRemoteNuget> ReadAll()
+        public IEnumerable<IRemoteNuget> ReadAll(INugetFeed feed)
         {
             var nodes = _document.DocumentElement.SelectNodes("atom:entry", _manager);
             foreach (XmlElement element in nodes)
@@ -50,7 +50,7 @@ namespace ripple.Nuget
                 var version = properties.SelectSingleNode("d:Version", _manager).InnerText;
 
 
-                yield return new RemoteNuget(name, version, url);
+                yield return new RemoteNuget(name, version, url, feed);
             }
         }
     }

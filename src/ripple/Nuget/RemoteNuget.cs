@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
@@ -8,12 +11,15 @@ namespace ripple.Nuget
     public class RemoteNuget : IRemoteNuget, DescribesItself
     {
         private readonly INugetDownloader _downloader;
+        private readonly Lazy<IEnumerable<Dependency>> _dependencies;
 
-        public RemoteNuget(string name, string version, string url)
+        public RemoteNuget(string name, string version, string url, INugetFeed feed)
         {
             Name = name;
             Version = SemanticVersion.Parse(version);
             _downloader = new UrlNugetDownloader(url);
+
+            _dependencies = new Lazy<IEnumerable<Dependency>>(() => feed.Repository.FindPackage(Name, Version).ImmediateDependencies());
         }
 
         public RemoteNuget(IPackage package)
@@ -21,6 +27,8 @@ namespace ripple.Nuget
             Name = package.Id;
             Version = package.Version;
             _downloader = new RemotePackageDownloader(package);
+
+            _dependencies = new Lazy<IEnumerable<Dependency>>(package.ImmediateDependencies);
         }
 
         public INugetDownloader Downloader
@@ -55,7 +63,12 @@ namespace ripple.Nuget
             }    
         }
 
-	    public void Describe(Description description)
+        public IEnumerable<Dependency> Dependencies()
+        {
+            return _dependencies.Value;
+        }
+
+        public void Describe(Description description)
 	    {
 		    description.ShortDescription = "Download {0}".ToFormat(Filename);
 	    }

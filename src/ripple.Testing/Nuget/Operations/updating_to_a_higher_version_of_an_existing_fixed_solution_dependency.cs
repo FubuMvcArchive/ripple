@@ -3,10 +3,10 @@ using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Nuget.Installations
+namespace ripple.Testing.Nuget.Operations
 {
     [TestFixture]
-    public class installing_an_existing_fixed_solution_dependency
+    public class updating_to_a_higher_version_of_an_existing_fixed_solution_dependency : NugetOperationContext
     {
         private SolutionGraphScenario theScenario;
         private Solution theSolution;
@@ -22,7 +22,7 @@ namespace ripple.Testing.Nuget.Installations
             {
                 scenario.Solution("Test", test =>
                 {
-                    test.LocalDependency("fubu", "1.2.0.0");
+                    test.LocalDependency("fubu", "1.0.0.1");
                 });
             });
 
@@ -33,9 +33,8 @@ namespace ripple.Testing.Nuget.Installations
             var request = new NugetPlanRequest
             {
                 Solution = theSolution,
-                Dependency = new Dependency("fubu", "1.2.0.0"),
-                Operation = OperationType.Install,
-                Mode = UpdateMode.Fixed
+                Dependency = new Dependency("fubu", "1.2.0.0", UpdateMode.Fixed),
+                Operation = OperationType.Update
             };
 
             thePlan = theBuilder.PlanFor(request);
@@ -49,9 +48,11 @@ namespace ripple.Testing.Nuget.Installations
         }
 
         [Test]
-        public void no_installation()
+        public void updates_the_solution_dependency()
         {
-            thePlan.ShouldHaveCount(0);
+            thePlan.ShouldHaveTheSameElementsAs(
+                updateSolutionDependency("fubu", "1.2.0.0", UpdateMode.Fixed)
+            );
         }
     }
 }

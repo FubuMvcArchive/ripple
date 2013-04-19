@@ -1,4 +1,6 @@
-﻿using ripple.Model;
+﻿using System;
+using FubuCore;
+using ripple.Model;
 
 namespace ripple.Nuget
 {
@@ -12,10 +14,28 @@ namespace ripple.Nuget
     {
         public Solution Solution { get; set; }
         public Dependency Dependency { get; set; }
+        
         public string Project { get; set; }
-        public string Version { get; set; }
+        
         public OperationType Operation { get; set; }
-        public UpdateMode Mode { get; set; }
+
+        public bool InstallToProject()
+        {
+            return Project.IsNotEmpty();
+        }
+
+        /// <summary>
+        /// Fixed versions are 'fixed'. Use this option to force updates of existing dependencies.
+        /// </summary>
+        public bool ForceUpdates { get; set; }
+
+        public NugetPlanRequest CopyFor(Dependency dependency)
+        {
+            var request = (NugetPlanRequest) MemberwiseClone();
+            request.Dependency = dependency;
+
+            return request;
+        }
 
         protected bool Equals(NugetPlanRequest other)
         {

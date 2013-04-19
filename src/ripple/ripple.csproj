@@ -87,6 +87,7 @@
     <Compile Include="Extract\ExtractInput.cs" />
     <Compile Include="Extract\ExtractCommand.cs" />
     <Compile Include="Extract\NugetFeed.cs" />
+    <Compile Include="IPackageExtensions.cs" />
     <Compile Include="IRippleStep.cs" />
     <Compile Include="IRippleStepRunner.cs" />
     <Compile Include="Local\BuildSolution.cs" />

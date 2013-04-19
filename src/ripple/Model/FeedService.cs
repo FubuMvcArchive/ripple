@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
-using NuGet;
 using ripple.Nuget;
 
 namespace ripple.Model
@@ -72,44 +71,34 @@ namespace ripple.Model
 			return LatestFor(solution, dependency, force);
 		}
 
-		public IEnumerable<PackageDependency> DependenciesFor(Solution solution, Dependency dependency)
-		{
-			var nuget = NugetFor(solution, dependency);
-			var feeds = solution.Feeds.Select(x => x.GetNugetFeed()).ToList();
-			var dependencies = new List<PackageDependency>();
+        // Almost entirely covered by integration tests
+        public IEnumerable<Dependency> DependenciesFor(Solution solution, Dependency dependency, UpdateMode mode)
+        {
+            return findDependenciesFor(solution, dependency, mode);
+        }
 
-			foreach (var feed in feeds)
-			{
-				var package = feed.Repository.FindPackage(nuget.Name, nuget.Version);
-				if (package == null) continue;
+        private IEnumerable<Dependency> findDependenciesFor(Solution solution, Dependency dependency, UpdateMode mode, int depth = 0)
+        {
+            var nuget = NugetFor(solution, dependency);
+            var dependencies = new List<Dependency>();
 
-				var dependents = package
-					.DependencySets
-					.SelectMany(x => x.Dependencies);
+            if (depth != 0)
+            {
+                var dep = dependency;
+                if (dep.IsFloat() && mode == UpdateMode.Fixed)
+                {
+                    dep = new Dependency(nuget.Name, nuget.Version, mode);
+                }
 
-				dependencies.AddRange(dependents);
+                dependencies.Add(dep);
+            }
 
-				dependents.Each(x =>
-				{
-					IEnumerable<PackageDependency> ancestors;
-					if (x.VersionSpec != null)
-					{
-						var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
-						ancestors = DependenciesFor(solution, new Dependency(x.Id, version.ToString(), dependency.Mode));
-					}
-					else
-					{
-						ancestors = DependenciesFor(solution, new Dependency(x.Id));
-					}
-					
-					dependencies.AddRange(ancestors);
-				});
+            nuget
+                .Dependencies()
+                .Each(x => dependencies.AddRange(findDependenciesFor(solution, x, mode, depth + 1)));
 
-				break;
-			}
-			
-			return dependencies;
-		}
+            return dependencies;
+        }
 
 		private Task updateNuget(List<IRemoteNuget> nugets, Solution solution, Dependency dependency)
 		{

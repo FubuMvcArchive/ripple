@@ -71,20 +71,71 @@ namespace ripple.Testing
 		public IEnumerable<IPackageAssemblyReference> AssemblyReferences { get; private set; }
 		#endregion
 
-		public void AddDependency(PackageDependency dependency)
+        public DependencyExpression DependsOn(PackageDependency dependency)
 		{
 			_dependencies.Add(dependency);
+            return new DependencyExpression(dependency, _dependencies);
 		}
 
-		public void AddDependency(string id, string version)
+        public DependencyExpression DependsOn(string id, string version)
 		{
-			AddDependency(new PackageDependency(id, new VersionSpec(SemanticVersion.Parse(version))));
+			return DependsOn(new PackageDependency(id, new VersionSpec(SemanticVersion.Parse(version))));
 		}
 
-		public void AddDependency(string id)
+        public DependencyExpression DependsOn(string id)
 		{
-			AddDependency(new PackageDependency(id));
+			return DependsOn(new PackageDependency(id));
 		}
+
+        // This is painfully stupid
+        public class DependencyExpression
+        {
+            private PackageDependency _dependency;
+            private readonly IList<PackageDependency> _dependencies;
+
+            public DependencyExpression(PackageDependency dependency, IList<PackageDependency> dependencies)
+            {
+                _dependency = dependency;
+                _dependencies = dependencies;
+            }
+
+            public DependencyExpression Min(string version)
+            {
+                var spec = _dependency.VersionSpec as VersionSpec;
+                if (spec != null)
+                {
+                    spec.MinVersion = new SemanticVersion(version);
+                    spec.MaxVersion = null;
+                    return this;
+                }
+
+                spec = new VersionSpec(new SemanticVersion(version)) { MaxVersion = null };
+                _dependencies.Remove(_dependency);
+
+                var dependency = new PackageDependency(_dependency.Id, spec);
+                _dependencies.Fill(dependency);
+
+                return new DependencyExpression(dependency, _dependencies);
+            }
+
+            public DependencyExpression Max(string version)
+            {
+                var spec = _dependency.VersionSpec as VersionSpec;
+                if (spec != null)
+                {
+                    spec.MaxVersion = new SemanticVersion(version);
+                    return this;
+                }
+
+                spec = new VersionSpec(new SemanticVersion(version));
+                _dependencies.Remove(_dependency);
+
+                var dependency = new PackageDependency(_dependency.Id, spec);
+                _dependencies.Fill(dependency);
+
+                return new DependencyExpression(dependency, _dependencies);
+            }
+        }
 	}
 
 	public class StubPackageRepository : IPackageRepository
@@ -105,6 +156,11 @@ namespace ripple.Testing
 		{
 			_packages.Remove(new Dependency(package.Id, package.Version.ToString()));
 		}
+
+        public IPackage GetPackageByDependency(Dependency dependency)
+        {
+            return _packages[dependency];
+        }
 
 		public void ConfigurePackage(string id, string version, Action<StubPackage> configure)
 		{

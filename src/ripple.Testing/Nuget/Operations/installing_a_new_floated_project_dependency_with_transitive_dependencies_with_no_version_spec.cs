@@ -3,10 +3,10 @@ using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Nuget.Installations
+namespace ripple.Testing.Nuget.Operations
 {
     [TestFixture]
-    public class installing_a_new_project_dependency_with_transitive_dependencies_with_no_version_spec : NugetPlanContext
+    public class installing_a_new_floated_project_dependency_with_transitive_dependencies_with_no_version_spec : NugetOperationContext
     {
         private Solution theSolution;
         private NugetPlan thePlan;
@@ -27,12 +27,12 @@ namespace ripple.Testing.Nuget.Installations
                         {
                             teamcity.ConfigurePackage("FubuMVC.Katana", "1.0.0.1", katana =>
                             {
-                                katana.AddDependency("FubuMVC.Core");
-                                katana.AddDependency("FubuMVC.OwinHost");
+                                katana.DependsOn("FubuMVC.Core");
+                                katana.DependsOn("FubuMVC.OwinHost");
                             });
 
-                            teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.2.0.0", owin => owin.AddDependency("FubuMVC.Core"));
-                            teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.3.0.0", owin => owin.AddDependency("FubuMVC.Core"));
+                            teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.2.0.0", owin => owin.DependsOn("FubuMVC.Core"));
+                            teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.3.0.0", owin => owin.DependsOn("FubuMVC.Core"));
                         });
             });
 
@@ -44,10 +44,9 @@ namespace ripple.Testing.Nuget.Installations
             var request = new NugetPlanRequest
             {
                 Solution = theSolution,
-                Dependency = new Dependency("FubuMVC.Katana"),
+                Dependency = new Dependency("FubuMVC.Katana", UpdateMode.Float),
                 Operation = OperationType.Install,
-                Project = "Test",
-                Mode = UpdateMode.Float
+                Project = "Test"
             };
 
             thePlan = theBuilder.PlanFor(request);

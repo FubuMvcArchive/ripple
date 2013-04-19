@@ -190,6 +190,11 @@ namespace ripple.Testing
 				return project;
 			}
 
+            public void SolutionDependency(string id, string version, UpdateMode mode)
+            {
+                Modify(sln => sln.AddDependency(new Dependency(id, version, mode)));
+            }
+
 			public void Modify(Action<Solution> modify)
 			{
 				_builder.AddModification(new SolutionModification(_solution, modify));

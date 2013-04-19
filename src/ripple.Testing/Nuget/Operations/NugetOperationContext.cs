@@ -1,9 +1,9 @@
 ﻿using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Nuget.Installations
+namespace ripple.Testing.Nuget.Operations
 {
-    public class NugetPlanContext
+    public class NugetOperationContext
     {
          public INugetStep projectInstallation(string project, string name)
          {

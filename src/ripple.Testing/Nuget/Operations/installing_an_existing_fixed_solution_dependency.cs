@@ -3,10 +3,10 @@ using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Nuget.Installations
+namespace ripple.Testing.Nuget.Operations
 {
     [TestFixture]
-    public class installing_an_existing_floated_solution_dependency : NugetPlanContext
+    public class installing_an_existing_fixed_solution_dependency
     {
         private SolutionGraphScenario theScenario;
         private Solution theSolution;
@@ -16,13 +16,13 @@ namespace ripple.Testing.Nuget.Installations
         [SetUp]
         public void SetUp()
         {
-            FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("fubu", "1.0.0.1"));
+            FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("fubu", "1.2.0.0"));
 
             theScenario = SolutionGraphScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
-                    test.LocalDependency("fubu", "1.0.0.1");
+                    test.LocalDependency("fubu", "1.2.0.0");
                 });
             });
 
@@ -33,9 +33,8 @@ namespace ripple.Testing.Nuget.Installations
             var request = new NugetPlanRequest
             {
                 Solution = theSolution,
-                Dependency = new Dependency("fubu"),
-                Operation = OperationType.Install,
-                Mode = UpdateMode.Float
+                Dependency = new Dependency("fubu", "1.2.0.0", UpdateMode.Fixed),
+                Operation = OperationType.Install
             };
 
             thePlan = theBuilder.PlanFor(request);
@@ -47,7 +46,7 @@ namespace ripple.Testing.Nuget.Installations
             theScenario.Cleanup();
             FeedRegistry.Reset();
         }
-        
+
         [Test]
         public void no_installation()
         {

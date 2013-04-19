@@ -3,10 +3,10 @@ using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Nuget.Installations
+namespace ripple.Testing.Nuget.Operations
 {
     [TestFixture]
-    public class installing_a_new_fixed_solution_dependency : NugetPlanContext
+    public class installing_a_new_fixed_project_dependency_with_no_transitive_dependencies : NugetOperationContext
     {
         private Solution theSolution;
         private NugetPlan thePlan;
@@ -15,18 +15,19 @@ namespace ripple.Testing.Nuget.Installations
         [SetUp]
         public void SetUp()
         {
-            FeedScenario.Create(scenario => scenario.For(Feed.NuGetV2).Add("fubu", "1.2.0.0"));
+            FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("FubuCore", "1.0.0.1"));
 
             theSolution = new Solution();
+            theSolution.AddProject("Test");
 
             theBuilder = new NugetPlanBuilder();
 
             var request = new NugetPlanRequest
             {
                 Solution = theSolution,
-                Dependency = new Dependency("fubu", "1.2.0.0"),
+                Dependency = new Dependency("FubuCore", "1.0.0.1", UpdateMode.Fixed),
                 Operation = OperationType.Install,
-                Mode = UpdateMode.Fixed
+                Project = "Test"
             };
 
             thePlan = theBuilder.PlanFor(request);
@@ -39,10 +40,13 @@ namespace ripple.Testing.Nuget.Installations
         }
 
         [Test]
-        public void installs_as_fixed_to_solution()
+        public void installs_the_project_dependency_and_marks_solution_level_info()
         {
             thePlan.ShouldHaveTheSameElementsAs(
-                solutionInstallation("fubu", "1.2.0.0", UpdateMode.Fixed)
+
+                solutionInstallation("FubuCore", "1.0.0.1", UpdateMode.Fixed),
+
+                projectInstallation("Test", "FubuCore")
             );
         }
     }

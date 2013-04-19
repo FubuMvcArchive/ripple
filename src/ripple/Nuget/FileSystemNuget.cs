@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FubuCore;
 using FubuCore.Descriptions;
 using NuGet;
@@ -24,7 +25,12 @@ namespace ripple.Nuget
 
 		public string Filename { get { return _nuget.FileName; } }
 
-		public INugetFile File { get { return _nuget; } }
+	    public IEnumerable<Dependency> Dependencies()
+	    {
+	        return new ZipPackage(_nuget.FileName).ImmediateDependencies();
+	    }
+
+	    public INugetFile File { get { return _nuget; } }
 
 		public override string ToString()
 		{

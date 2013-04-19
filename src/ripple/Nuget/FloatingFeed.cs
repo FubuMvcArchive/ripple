@@ -32,7 +32,7 @@ namespace ripple.Nuget
         public IEnumerable<IRemoteNuget> GetLatest()
         {
             var feed = new NugetXmlFeed(_feed.Value);
-            return feed.ReadAll();
+            return feed.ReadAll(this);
         }
     }
 }

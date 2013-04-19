@@ -24,7 +24,12 @@ namespace ripple.Model
 		{	
 		}
 
-		public Dependency(string name, string version, UpdateMode mode)
+	    public Dependency(string name, UpdateMode mode)
+            : this(name, string.Empty, mode)
+	    {
+	    }
+
+	    public Dependency(string name, string version, UpdateMode mode)
 		{
 			Name = name;
 			Version = version ?? string.Empty;
@@ -32,6 +37,11 @@ namespace ripple.Model
 			Mode = mode;
 			Stability = NugetStability.Anything;
 		}
+
+        public Dependency(string name, SemanticVersion version, UpdateMode mode)
+            : this(name, version.ToString(), mode)
+        {
+        }
 
 		[XmlAttribute]
 		public string Name { get; set; }
@@ -121,7 +131,7 @@ namespace ripple.Model
 
 		public static Dependency FloatFor(string name)
 		{
-			return new Dependency(name, null, UpdateMode.Float);
+			return new Dependency(name, UpdateMode.Float);
 		}
 
 		public static Dependency Parse(string input)

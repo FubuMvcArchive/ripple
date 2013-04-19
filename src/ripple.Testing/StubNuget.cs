@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using FubuCore;
 using NuGet;
 using ripple.Model;
@@ -8,15 +10,30 @@ namespace ripple.Testing
 {
 	public class StubNuget : IRemoteNuget
 	{
-		public StubNuget(Dependency dependency)
-			: this(dependency.Name, dependency.Version)
+	    private readonly Lazy<IPackage> _package;
+ 
+        public StubNuget(Dependency dependency)
+            : this(dependency, () => null)
+        {
+        }
+
+		public StubNuget(Dependency dependency, Func<IPackage> package)
+			: this(dependency.Name, dependency.Version, package)
 		{
 		}
 
-		public StubNuget(string name, string version)
+        public StubNuget(string name, string version)
+            : this(name, version, () => null)
+        {
+            
+        }
+
+		public StubNuget(string name, string version, Func<IPackage> package)
 		{
 			Name = name;
 			Version = SemanticVersion.Parse(version);
+
+		    _package = new Lazy<IPackage>(package);
 		}
 
 		public string Name { get; private set; }
@@ -34,5 +51,10 @@ namespace ripple.Testing
 		}
 
 		public string Filename { get; private set; }
+
+	    public IEnumerable<Dependency> Dependencies()
+	    {
+	        return _package.Value.ImmediateDependencies();
+	    }
 	}
 }

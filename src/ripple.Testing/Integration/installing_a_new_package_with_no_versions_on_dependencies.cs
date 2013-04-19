@@ -26,11 +26,11 @@ namespace ripple.Testing.Integration
 						{
 							teamcity.ConfigurePackage("FubuMVC.Katana", "1.0.0.1", katana =>
 							{
-								katana.AddDependency("FubuMVC.Core");
-								katana.AddDependency("FubuMVC.OwinHost");
+								katana.DependsOn("FubuMVC.Core");
+								katana.DependsOn("FubuMVC.OwinHost");
 							});
 
-							teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.2.0.0", owin => owin.AddDependency("FubuMVC.Core"));
+							teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.2.0.0", owin => owin.DependsOn("FubuMVC.Core"));
 						});
 			});
 

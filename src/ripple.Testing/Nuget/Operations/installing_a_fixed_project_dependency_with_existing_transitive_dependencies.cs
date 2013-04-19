@@ -3,10 +3,10 @@ using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
 
-namespace ripple.Testing.Nuget.Installations
+namespace ripple.Testing.Nuget.Operations
 {
     [TestFixture]
-    public class updating_to_a_higher_version_of_an_existing_fixed_solution_dependency : NugetPlanContext
+    public class installing_a_fixed_project_dependency_with_existing_transitive_dependencies : NugetOperationContext
     {
         private SolutionGraphScenario theScenario;
         private Solution theSolution;
@@ -16,13 +16,22 @@ namespace ripple.Testing.Nuget.Installations
         [SetUp]
         public void SetUp()
         {
-            FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("fubu", "1.2.0.0"));
+            FeedScenario.Create(scenario =>
+            {
+                scenario.For(Feed.NuGetV2)
+                    .Add("FubuCore", "1.2.0.0")
+                    .Add("Bottles", "1.1.0.0")
+                    .ConfigureRepository(nuget =>
+                    {
+                       nuget.ConfigurePackage("Bottles", "1.1.0.0", bottles => bottles.DependsOn("FubuCore", "1.2.0.0"));  
+                    });
+            });
 
             theScenario = SolutionGraphScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
-                    test.LocalDependency("fubu", "1.0.0.1");
+                    test.LocalDependency("FubuCore", "1.2.0.0");
                 });
             });
 
@@ -33,9 +42,8 @@ namespace ripple.Testing.Nuget.Installations
             var request = new NugetPlanRequest
             {
                 Solution = theSolution,
-                Dependency = new Dependency("fubu", "1.2.0.0"),
-                Operation = OperationType.Update,
-                Mode = UpdateMode.Fixed
+                Dependency = new Dependency("Bottles", "1.1.0.0", UpdateMode.Fixed),
+                Operation = OperationType.Install
             };
 
             thePlan = theBuilder.PlanFor(request);
@@ -49,10 +57,11 @@ namespace ripple.Testing.Nuget.Installations
         }
 
         [Test]
-        public void updates_the_solution_dependency()
+        public void installs_the_new_package_but_not_the_existing()
         {
             thePlan.ShouldHaveTheSameElementsAs(
-                updateSolutionDependency("fubu", "1.2.0.0", UpdateMode.Fixed)
+                solutionInstallation("Bottles", "1.1.0.0", UpdateMode.Fixed),
+                projectInstallation("Test", "1.1.0.0")
             );
         }
     }

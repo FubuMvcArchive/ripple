@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NuGet;
 using ripple.Model;
 
@@ -9,7 +10,9 @@ namespace ripple.Nuget
         SemanticVersion Version { get; }
         INugetFile DownloadTo(Solution solution, string directory);
         string Filename { get; }
-	}
+
+        IEnumerable<Dependency> Dependencies();
+    }
 
 	public static class RemoteNugetExtensions
 	{

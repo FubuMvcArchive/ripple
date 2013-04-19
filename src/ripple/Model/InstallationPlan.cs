@@ -50,7 +50,7 @@ namespace ripple.Model
 
 		private IEnumerable<PackageDependency> findPackageDependencies()
 		{
-			return _solution.FeedService.DependenciesFor(_solution, _dependency);
+		    yield break;
 		}
 
 		private IEnumerable<Dependency> findDependenciesToInstall()

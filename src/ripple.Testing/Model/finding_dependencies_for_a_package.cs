@@ -29,13 +29,13 @@ namespace ripple.Testing.Model
 
 			theFubuRepository.ConfigurePackage("FubuJson", "0.1.3.1", package =>
 			{
-				package.AddDependency("Newtonsoft.Json", "4.5.9");
+				package.DependsOn("Newtonsoft.Json", "4.5.9");
 			});
 
 			// FeedService should use the first package it finds (in the order the Feeds are specified)
 			theNugetRepository.ConfigurePackage("FubuJson", "0.1.1.1", package =>
 			{
-				package.AddDependency("Newtonsoft.Json", "4.1.1");
+				package.DependsOn("Newtonsoft.Json", "4.1.1");
 			});
 
 			FeedScenario.Create(scenario =>
@@ -59,9 +59,9 @@ namespace ripple.Testing.Model
 		[Test]
 		public void lists_dependencies_from_the_first_feed_found()
 		{
-			var newtonsoft = ClassUnderTest.DependenciesFor(theSolution, fubuJson).Single();
-			newtonsoft.Id.ShouldEqual("Newtonsoft.Json");
-			newtonsoft.VersionSpec.MaxVersion.ToString().ShouldEqual("4.5.9");
+			var newtonsoft = ClassUnderTest.DependenciesFor(theSolution, fubuJson, UpdateMode.Fixed).Single();
+			newtonsoft.Name.ShouldEqual("Newtonsoft.Json");
+			newtonsoft.Version.ShouldEqual("4.5.9");
 		}
 	}
 
@@ -88,12 +88,12 @@ namespace ripple.Testing.Model
 
 			theFubuRepository.ConfigurePackage("FubuMVC.Json", "0.1.3.1", package =>
 			{
-				package.AddDependency("FubuJson", "0.1.3.1");
+				package.DependsOn("FubuJson", "0.1.3.1");
 			});
 
 			theFubuRepository.ConfigurePackage("FubuJson", "0.1.3.1", package =>
 			{
-				package.AddDependency("Newtonsoft.Json", "4.5.9");
+				package.DependsOn("Newtonsoft.Json", "4.5.9");
 			});
 
 			theNugetRepository.AddPackage(new StubPackage("Newtonsoft.Json", "4.5.9"));
@@ -119,9 +119,9 @@ namespace ripple.Testing.Model
 		[Test]
 		public void walks_the_dependencies()
 		{
-			var dependencies = ClassUnderTest.DependenciesFor(theSolution, theDependency);
+			var dependencies = ClassUnderTest.DependenciesFor(theSolution, theDependency, UpdateMode.Fixed);
 			
-			dependencies.ShouldHaveTheSameElementKeysAs(new [] { "FubuJson", "Newtonsoft.Json" }, x => x.Id);
+			dependencies.ShouldHaveTheSameElementKeysAs(new [] { "FubuJson", "Newtonsoft.Json" }, x => x.Name);
 		}
 	}
 }

@@ -25,9 +25,9 @@ namespace ripple.Testing.Integration
 					{
 						teamcity.ConfigurePackage("Serenity", "1.0.0.2", serenity =>
 						{
-							serenity.AddDependency("WebDriver", "1.2.0.0");
-							serenity.AddDependency("Something");
-							serenity.AddDependency("SomethingElse", "0.9.9.9");
+							serenity.DependsOn("WebDriver", "1.2.0.0");
+							serenity.DependsOn("Something");
+							serenity.DependsOn("SomethingElse", "0.9.9.9");
 						});
 					});
 
