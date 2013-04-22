@@ -10,8 +10,8 @@ namespace ripple.Model
 	public class Feed : DescribesItself
 	{
 		public static readonly Feed NuGetV1 = new Feed("http://packages.nuget.org/v1/FeedService.svc/");
-		public static readonly Feed NuGetV2 = new Feed("http://nuget.org/api/v2");
-		public static readonly Feed Fubu = new Feed("http://build.fubu-project.org/guestAuth/app/nuget/v1/FeedService.svc", UpdateMode.Float);
+		public static readonly Feed NuGetV2 = new Feed("http://nuget.org/api/v2/");
+		public static readonly Feed Fubu = new Feed("http://build.fubu-project.org/guestAuth/app/nuget/v1/FeedService.svc/", UpdateMode.Float);
 
 		public Feed()
 		{

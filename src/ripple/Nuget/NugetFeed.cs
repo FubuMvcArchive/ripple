@@ -12,7 +12,7 @@ namespace ripple.Nuget
 
         public NugetFeed(string url)
         {
-            _url = url.TrimEnd('/');
+            _url = url;
             _repository = new PackageRepositoryFactory().CreateRepository(_url);
         }
 
