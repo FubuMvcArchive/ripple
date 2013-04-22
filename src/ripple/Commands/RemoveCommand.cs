@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Xml;
 using FubuCore;
 using FubuCore.CommandLine;
-using ripple.MSBuild;
+using ripple.Steps;
 
 namespace ripple.Commands
 {
@@ -14,102 +9,24 @@ namespace ripple.Commands
     {
         [Description("The name of the nuget to completely remove from the solution")]
         public string Nuget { get; set; }
+
+        [Description("Project to remove from")]
+        [FlagAlias("project", 'p')]
+        public string ProjectFlag { get; set; }
     }
 
 	[CommandDescription("Removes a nuget from the solution")]
     public class RemoveCommand : FubuCommand<RemoveInput>
     {
-        private readonly FileSystem files = new FileSystem();
-
         public override bool Execute(RemoveInput input)
         {
-            input.EachSolution(solution =>
-            {
-				// TODO -- Bring this back
-				throw new NotImplementedException();
+            RippleLog.Info("Trying to remove {0}".ToFormat(input.Nuget));
 
-				//Console.WriteLine("Trying to remove {0} from solution {1}", input.Nuget, solution.Name);
-
-
-				//var assemblies = Directory.GetDirectories(solution.PackagesDirectory())
-				//	.Where(dir =>
-				//	{
-				//		var name = Path.GetFileName(dir).Split('.').First();
-				//		return name == input.Nuget;
-				//	})
-				//	.SelectMany(removePackageFolder).Distinct().ToList();
-
-
-				//if (assemblies.Any())
-				//{
-				//	Console.WriteLine("  - Will try to remove references to these assemblies");
-				//	assemblies.Each(a => Console.WriteLine("     * " + a));
-				//}
-
-				//removeAssemblies(assemblies, solution.Directory);
-
-				//RemoveFromPackageConfigFiles(input.Nuget, solution.Directory);
-            });
-
-
-            return true;
-        }
-
-        public static void RemoveFromPackageConfigFiles(string nugetName, string directory)
-        {
-            new FileSystem().FindFiles(directory, new FileSet{
-                Include = "packages.config",
-                DeepSearch = true
-            }).Each(file =>
-            {
-                var document = new XmlDocument();
-                document.Load(file);
-
-                var node = document.DocumentElement.SelectSingleNode("//package[@id='" + nugetName + "']");
-                if (node != null)
-                {
-                    Console.WriteLine("  - removing a reference to {0} in {1}", nugetName, file);
-                    node.ParentNode.RemoveChild(node);
-
-                    document.Save(file);
-                }
-            });
-        }
-
-        private void removeAssemblies(IEnumerable<string> assemblies, string directory)
-        {
-            Console.WriteLine("  - trying to remove references");
-
-            files.FindFiles(directory, new FileSet{
-                Include = "*.csproj",
-                DeepSearch = true
-            }).Each(csProjFile => {
-                var project = new CsProjFile(csProjFile, null);
-                project.RemoveReferences(assemblies);
-            });
-        }
-
-
-        private IEnumerable<string> removePackageFolder(string dir)
-        {
-            Console.WriteLine("  - Found package at " + dir);
-
-            var assemblies = new List<string>();
-
-            files.FindFiles(dir.AppendPath("lib"), new FileSet{
-                Include = "*.dll",
-                DeepSearch = true
-            }).Each(assem =>
-            {
-                var assemblyName = Path.GetFileNameWithoutExtension(assem);
-
-                assemblies.Fill(assemblyName);
-            });
-
-            Console.WriteLine("  - Deleting directory " + dir);
-            files.DeleteDirectory(dir);
-
-            return assemblies;
+            return RippleOperation
+                .For<RemoveInput>(input)
+                .Step<RemoveNuget>()
+                .ForceSave()
+                .Execute();
         }
     }
 }

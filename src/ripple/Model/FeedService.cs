@@ -104,7 +104,7 @@ namespace ripple.Model
 
             Task.WaitAll(tasks.ToArray());
 
-            return dependencies;
+            return dependencies.OrderBy(x => x.Name);
         }
 
 		private Task updateNuget(List<IRemoteNuget> nugets, Solution solution, Dependency dependency)

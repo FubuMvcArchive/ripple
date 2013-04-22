@@ -52,6 +52,7 @@ namespace ripple.Model
 			if (dependency != null)
 			{
 				_dependencies.Remove(dependency);
+			    reset();
 			}
 		}
 

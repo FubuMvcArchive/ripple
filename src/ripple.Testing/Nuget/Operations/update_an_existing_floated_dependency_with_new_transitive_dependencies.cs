@@ -1,4 +1,6 @@
-﻿using FubuTestingSupport;
+﻿using System.Diagnostics;
+using FubuCore.Descriptions;
+using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
@@ -81,10 +83,11 @@ namespace ripple.Testing.Nuget.Operations
         [Test]
         public void verify_plan()
         {
+            Debug.WriteLine(thePlan.ToDescriptionText());
+
             thePlan.ShouldHaveTheSameElementsAs(
                 
                 updateSolutionDependency("Serenity", "1.2.0.0", UpdateMode.Float),
-                updateSolutionDependency("WebDriver", "1.2.0.0", UpdateMode.Fixed),
                 
                 solutionInstallation("Something", "1.0.0.5", UpdateMode.Fixed),
                 projectInstallation("Test1", "Something"),
@@ -92,7 +95,9 @@ namespace ripple.Testing.Nuget.Operations
 
                 solutionInstallation("SomethingElse", "0.9.9.9", UpdateMode.Fixed),
                 projectInstallation("Test1", "SomethingElse"),
-                projectInstallation("Test2", "SomethingElse")
+                projectInstallation("Test2", "SomethingElse"),
+
+                updateSolutionDependency("WebDriver", "1.2.0.0", UpdateMode.Fixed)
 
             );
         }

@@ -34,7 +34,9 @@ namespace ripple.Testing
 
 		public void Cleanup()
 		{
-			_fileSystem.DeleteDirectory(_directory);
+            _fileSystem.CleanDirectory(_directory);
+            _fileSystem.DeleteDirectory(_directory);
+            _fileSystem.DeleteDirectory(_directory);
 		}
 
 		public string DirectoryForSolution(string solutionName)
@@ -67,7 +69,7 @@ namespace ripple.Testing
 
 			public SolutionGraphScenarioDefinition()
 			{
-				_directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "code");
+				_directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Guid.NewGuid().ToString());
 				var system = new FileSystem();
 
                 system.CleanDirectory(_directory);

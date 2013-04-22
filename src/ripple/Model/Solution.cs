@@ -208,6 +208,16 @@ namespace ripple.Model
 			_configuredDependencies.Fill(dependency);
 		}
 
+        public void RemoveDependency(string name)
+        {
+            var dep = _configuredDependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
+            if (dep != null)
+            {
+                _configuredDependencies.Remove(dep);
+                resetDependencies();
+            }
+        }
+
 		public IEnumerable<string> AllNugetDependencyNames()
 		{
 			return Dependencies.Select(x => x.Name);

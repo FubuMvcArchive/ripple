@@ -179,6 +179,7 @@
     <Compile Include="Steps\DownloadMissingNugets.cs" />
     <Compile Include="Steps\NugetOperation.cs" />
     <Compile Include="Steps\ProcessDirectives.cs" />
+    <Compile Include="Steps\RemoveNuget.cs" />
     <Compile Include="Steps\UpdateAndDownloadDependencies.cs" />
     <Compile Include="Steps\ExplodeDownloadedNugets.cs" />
     <Compile Include="Steps\FixReferences.cs" />

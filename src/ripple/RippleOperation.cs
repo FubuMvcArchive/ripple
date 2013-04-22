@@ -17,6 +17,7 @@ namespace ripple
 		private readonly SolutionInput _input;
 		private readonly IRippleStepRunner _runner;
 		private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
+	    private bool _forceSave = false;
 
 		public RippleOperation(Solution solution, SolutionInput input, IRippleStepRunner runner)
 		{
@@ -43,6 +44,12 @@ namespace ripple
         public RippleOperation Steps(IEnumerable<IRippleStep> steps)
         {
             steps.Each(x => Step(x));
+            return this;
+        }
+
+        public RippleOperation ForceSave(bool force = true)
+        {
+            _forceSave = force;
             return this;
         }
 
@@ -86,7 +93,7 @@ namespace ripple
 			}
 
 			_solution.EachProject(project => project.RemoveDuplicateReferences());
-			_solution.Save();
+            _solution.Save(_forceSave);
 
 			return true;
 		}
