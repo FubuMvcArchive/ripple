@@ -17,7 +17,7 @@ namespace ripple.Testing
 			var s2 = new RecordingStep();
 
             RippleOperation
-                .With(new Solution { Path = "test.config"})
+                .With(new Solution { Directory = ".", Path = "test.config"})
                 .Execute(new TestInput(), new TestCommand(new[] { s1, s2 }));
 
 			s1.Executed.ShouldBeTrue();
