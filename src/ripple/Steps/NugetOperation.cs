@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using FubuCore;
 using ripple.Commands;
 using ripple.Model;
@@ -16,20 +14,6 @@ namespace ripple.Steps
         {
             var nugetRunner = new NugetStepRunner(Solution);
             var aggregatePlan = PlanFor(input.As<INugetOperationContext>(), Solution);
-
-            if (Solution.HasLockedFiles())
-            {
-                if (Process.GetProcessesByName("devenv.exe").Any())
-                {
-                    RippleAssert.Fail("Detected locked files. Do you have Visual Studio open?");
-                }
-                else
-                {
-                    RippleAssert.Fail("Detected locked files. Exiting.");
-                }
-                
-                return;
-            }
 
             RippleLog.InfoMessage(aggregatePlan);
 

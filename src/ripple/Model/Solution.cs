@@ -441,6 +441,19 @@ namespace ripple.Model
             return LocalDependencies().HasLockedFiles(this);
         }
 
+        public void AssertNoLockedFiles()
+        {
+            if (!HasLockedFiles()) return;
+
+            if (Process.GetProcessesByName("devenv.exe").Any())
+            {
+                RippleAssert.Fail("Detected locked files. Do you have Visual Studio open?");
+                return;
+            }
+
+            RippleAssert.Fail("Detected locked files. Exiting.");
+        }
+
 		public void Save(bool force = false)
 		{
 			Storage.Write(this);

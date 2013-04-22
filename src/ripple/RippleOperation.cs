@@ -59,6 +59,8 @@ namespace ripple
 		{
 			RippleLog.DebugMessage(this);
 
+            _solution.AssertNoLockedFiles();
+
 			foreach (var step in _steps)
 			{
 				try
