@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using FubuCore;
+using FubuCore.Util;
 using ripple.Model;
 
 namespace ripple
@@ -138,12 +142,17 @@ namespace ripple
             fileSystem.WriteStringToFile(logsDirectory.AppendPath(filename), contents);
         }
 
+        private static readonly object LogLock = new object();
+
         public static void AppendToLogFile(this IFileSystem fileSystem, string filename, string contents)
         {
-            var logsDirectory = RippleLogsDirectory();
-            fileSystem.CreateDirectory(logsDirectory);
+            lock (LogLock)
+            {
+                var logsDirectory = RippleLogsDirectory();
+                fileSystem.CreateDirectory(logsDirectory);
 
-            fileSystem.AppendStringToFile(logsDirectory.AppendPath(filename), contents);
+                fileSystem.AppendStringToFile(logsDirectory.AppendPath(filename), contents);
+            }
         }
 
         public static string LocationOfRunner(string file)

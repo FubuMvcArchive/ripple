@@ -35,6 +35,9 @@ namespace ripple.Commands
         [FlagAlias("force-updates", 'f')]
         public bool ForceUpdatesFlag { get; set; }
 
+        [Description("Only show what would be installed")]
+        public bool PreviewFlag { get; set; }
+
 		public Dependency Dependency
 		{
 			get
@@ -64,6 +67,19 @@ namespace ripple.Commands
 	{
 		public override bool Execute(InstallInput input)
 		{
+            var solution = Solution.For(input);
+            if(solution.Dependencies.Has(input.Package))
+            {
+                RippleAssert.Fail(input.Package + " already exists");
+                return false;
+            }
+
+            if (input.PreviewFlag)
+            {
+                preview(input, solution);
+                return true;
+            }
+
 			return RippleOperation
 				.For<InstallInput>(input)
 				.Step<NugetOperation>()
@@ -72,5 +88,11 @@ namespace ripple.Commands
 				.Step<FixReferences>()
 				.Execute();
 		}
+
+        private void preview(InstallInput input, Solution solution)
+        {
+            var plan = NugetOperation.PlanFor(input, solution);
+            RippleLog.InfoMessage(plan);
+        }
 	}
 }
