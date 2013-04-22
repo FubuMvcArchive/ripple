@@ -1,4 +1,6 @@
-﻿using FubuTestingSupport;
+﻿using System.Diagnostics;
+using FubuCore.Descriptions;
+using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
@@ -34,6 +36,7 @@ namespace ripple.Testing.Nuget.Operations
                         {
                             test.ProjectDependency("Test", "FubuCore");
                             test.LocalDependency("FubuCore", "1.2.0.0");
+                            test.SolutionDependency("FubuCore", "1.2.0.0", UpdateMode.Fixed);
                         });
                 });
 
@@ -63,6 +66,7 @@ namespace ripple.Testing.Nuget.Operations
         [Test]
         public void installs_the_new_package_but_does_not_update_the_existing()
         {
+            Debug.WriteLine(thePlan.ToDescriptionText());
             thePlan.ShouldHaveTheSameElementsAs(
                 solutionInstallation("Bottles", "1.1.0.0", UpdateMode.Fixed),
                 projectInstallation("Test", "Bottles")

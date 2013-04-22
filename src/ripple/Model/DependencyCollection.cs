@@ -48,7 +48,7 @@ namespace ripple.Model
 
 		public void Remove(string name)
 		{
-			var dependency = _dependencies.SingleOrDefault(x => x.Name == name);
+			var dependency = _dependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
 			if (dependency != null)
 			{
 				_dependencies.Remove(dependency);
@@ -82,7 +82,7 @@ namespace ripple.Model
 
 		public Dependency Find(string name)
 		{
-			var topLevel = _dependencies.SingleOrDefault(x => x.Name == name);
+            var topLevel = _dependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
 			if (topLevel != null)
 			{
 				return topLevel;
@@ -90,7 +90,7 @@ namespace ripple.Model
 
 			return _children
 				.SelectMany(x => x._dependencies)
-				.FirstOrDefault(x => x.Name == name);
+                .FirstOrDefault(x => x.Name.EqualsIgnoreCase(name));
 		}
 
 		public IEnumerator<Dependency> GetEnumerator()

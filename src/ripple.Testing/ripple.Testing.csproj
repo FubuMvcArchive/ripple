@@ -124,6 +124,7 @@
     <Compile Include="Nuget\Operations\NugetOperationContext.cs" />
     <Compile Include="Nuget\Operations\update_an_existing_floated_dependency.cs" />
     <Compile Include="Nuget\Operations\update_an_existing_floated_dependency_with_new_transitive_dependencies.cs" />
+    <Compile Include="Nuget\Operations\updating_an_existing_dependency_with_transitive_dependencies_case_insensitive.cs" />
     <Compile Include="Nuget\Operations\updating_to_a_higher_version_of_an_existing_fixed_solution_dependency.cs" />
     <Compile Include="Nuget\Operations\installing_a_new_fixed_solution_dependency.cs" />
     <Compile Include="Nuget\Operations\installing_a_new_solution_dependency.cs" />

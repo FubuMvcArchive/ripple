@@ -31,7 +31,8 @@ namespace ripple.Nuget
 
             if (request.UpdatesCurrentDependency())
             {
-                var shouldUpdate = (depth != 0 || request.Operation == OperationType.Update) && (request.ForceUpdates || target.IsFloat());
+                var configured = solution.Dependencies.Find(target.Name);
+                var shouldUpdate = (depth != 0 || request.Operation == OperationType.Update) && (request.ForceUpdates || configured.IsFloat());
                 if (shouldUpdate)
                 {
                     plan.AddStep(new UpdateDependency(target));
