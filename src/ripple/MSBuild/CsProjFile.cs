@@ -182,9 +182,7 @@ namespace ripple.MSBuild
             {
                 string assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
 
-                if (assemblyName.StartsWith("System.")) return;
                 if (assemblyName == "_._") return;
-
                 
                 var nugetDir = _solution.NugetFolderFor(dep.Name);
                 var assemblyPath = nugetDir.AppendPath(assem.Path);
