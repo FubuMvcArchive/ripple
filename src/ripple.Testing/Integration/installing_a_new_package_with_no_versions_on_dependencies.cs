@@ -3,7 +3,6 @@ using NUnit.Framework;
 using NuGet;
 using ripple.Commands;
 using ripple.Model;
-using ripple.Steps;
 
 namespace ripple.Testing.Integration
 {
@@ -52,18 +51,13 @@ namespace ripple.Testing.Integration
 		[Test]
 		public void treats_the_dependencies_as_floats_for_installation()
 		{
-			var input = new InstallInput
-			{
-				ProjectFlag = "Test",
-				Package = "FubuMVC.Katana"
-			};
-
-			RippleOperation
-				.For<InstallInput>(input, theSolution)
-				.Step<InstallNuget>()
-				.Step<DownloadMissingNugets>()
-				.Step<ExplodeDownloadedNugets>()
-				.Execute(true);
+            RippleOperation
+                .With(theSolution)
+                .Execute<InstallInput, InstallCommand>(input =>
+                {
+                    input.ProjectFlag = "Test";
+                    input.Package = "FubuMVC.Katana";
+                });
 
 			var local = theSolution.LocalDependencies();
 			local.Get("FubuMVC.Katana").Version.ShouldEqual(new SemanticVersion("1.0.0.1"));

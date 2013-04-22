@@ -26,21 +26,18 @@ namespace ripple.Nuget
 
         public bool UpdatesCurrentDependency()
         {
-            // Going to have to compare against the latest from the feed here
-            if (Dependency.IsFloat()) return true;
-
             if (!Solution.Dependencies.Has(Dependency.Name)) return false;
 
             var configured = Solution.Dependencies.Find(Dependency.Name);
-            var local = Solution.LocalDependencies().Get(Dependency);
 
-            if (local == null)
+            if (!Solution.LocalDependencies().Has(Dependency))
             {
                 if (configured.IsFloat()) return true;
 
                 return configured.SemanticVersion() < Dependency.SemanticVersion();
             }
 
+            var local = Solution.LocalDependencies().Get(Dependency);
             return local.Version < Dependency.SemanticVersion();
         }
 

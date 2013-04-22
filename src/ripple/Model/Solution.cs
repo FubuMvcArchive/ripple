@@ -68,6 +68,7 @@ namespace ripple.Model
 			UseFeedService(new FeedService());
 			UseCache(NugetFolderCache.DefaultFor(this));
 			UsePublisher(PublishingService.For(Mode));
+            UseBuilder(new NugetPlanBuilder());
 
 			_forceRestore = false;
 
@@ -136,6 +137,8 @@ namespace ripple.Model
 		public INugetCache Cache { get; private set; }
 		[XmlIgnore]
 		public IPublishingService Publisher { get; private set; }
+        [XmlIgnore]
+        public INugetPlanBuilder Builder { get; private set; }
 		[XmlIgnore]
 		public string Path
 		{
@@ -244,6 +247,14 @@ namespace ripple.Model
 			return _configuredDependencies.SingleOrDefault(x => x.Name == name);
 		}
 
+        public void UpdateDependency(Dependency dependency)
+        {
+            var existing = FindDependency(dependency.Name);
+            _configuredDependencies.Remove(existing);
+
+            AddDependency(dependency);
+        }
+
 		public void ClearFeeds()
 		{
 			_feeds.Clear();
@@ -321,6 +332,11 @@ namespace ripple.Model
 		{
 			Cache = cache;
 		}
+
+        public void UseBuilder(INugetPlanBuilder builder)
+        {
+            Builder = builder;
+        }
 
 		public void Describe(Description description)
 		{
@@ -419,6 +435,11 @@ namespace ripple.Model
 				.Distinct()
 				.OrderBy(x => x.Name);
 		}
+
+        public bool HasLockedFiles()
+        {
+            return LocalDependencies().HasLockedFiles(this);
+        }
 
 		public void Save(bool force = false)
 		{

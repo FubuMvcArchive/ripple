@@ -48,10 +48,7 @@ namespace ripple.Testing.Integration
 
                     test.ProjectDependency("Test2", "FubuCore");
 
-					test.Modify(sln =>
-					{
-						sln.AddDependency(new Dependency("WebDriver", "1.1.0.0", UpdateMode.Fixed));
-					});
+                    test.SolutionDependency("WebDriver", "1.1.0.0", UpdateMode.Fixed);
 				});
 			});
 
@@ -61,6 +58,7 @@ namespace ripple.Testing.Integration
 				.With(theSolution)
 				.Execute<UpdateInput, UpdateCommand>(input =>
 				{
+                    input.NugetFlag = "Serenity";
 				    input.ForceFlag = true;
 				});
 		}

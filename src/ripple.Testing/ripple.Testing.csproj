@@ -71,7 +71,9 @@
     <Compile Include="CheckXmlPersistence.cs" />
     <Compile Include="Classic\NuGetSolutionLoaderTester.cs" />
     <Compile Include="Commands\ExtractSampleCommandTester.cs" />
+    <Compile Include="Commands\InstallInputTester.cs" />
     <Compile Include="Commands\PublishCommandTester.cs" />
+    <Compile Include="Commands\UpdateInputTester.cs" />
     <Compile Include="DataMother.cs" />
     <Compile Include="DependencyCollectionExtensions.cs" />
     <Compile Include="Directives\DirectiveParserTester.cs" />
@@ -91,10 +93,8 @@
     <Compile Include="Model\DependencyTester.cs" />
     <Compile Include="Model\FeedProviderTester.cs" />
     <Compile Include="Model\FeedTester.cs" />
-    <Compile Include="Model\finding_dependencies_for_a_package.cs" />
     <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
     <Compile Include="Model\finding_the_latest_dependency.cs" />
-    <Compile Include="Model\installing_dependencies.cs" />
     <Compile Include="Model\IntegratedSolutionUpdatesTester.cs" />
     <Compile Include="Model\NugetDependencyStrategyTester.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
@@ -113,6 +113,7 @@
     <Compile Include="Nuget\CacheableNugetTester.cs" />
     <Compile Include="Nuget\FileSystemFeedTester.cs" />
     <Compile Include="Nuget\NugetPlanRequestTester.cs" />
+    <Compile Include="Nuget\NugetStepRunnerTester.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_with_existing_transitive_dependencies.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_with_higher_min_version_than_existing_transitive_dependencies_with_force_option.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_with_higher_min_version_than_existing_transitive_dependencies_without_force_option.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Nuget\Operations\installing_an_existing_floated_solution_dependency.cs" />
     <Compile Include="Nuget\Operations\installing_a_new_fixed_project_dependency_with_no_transitive_dependencies.cs" />
     <Compile Include="Nuget\Operations\NugetOperationContext.cs" />
+    <Compile Include="Nuget\Operations\update_an_existing_floated_dependency.cs" />
     <Compile Include="Nuget\Operations\update_an_existing_floated_dependency_with_new_transitive_dependencies.cs" />
     <Compile Include="Nuget\Operations\updating_to_a_higher_version_of_an_existing_fixed_solution_dependency.cs" />
     <Compile Include="Nuget\Operations\installing_a_new_fixed_solution_dependency.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="RippleOperationTester.cs" />
     <Compile Include="SolutionGraphScenario.cs" />
     <Compile Include="SolutionTester.cs" />
+    <Compile Include="Steps\NugetOperationTester.cs" />
     <Compile Include="StubNuget.cs" />
     <Compile Include="StubNugetFile.cs" />
     <Compile Include="StubNugetStorage.cs" />

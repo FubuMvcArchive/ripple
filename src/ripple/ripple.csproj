@@ -109,7 +109,6 @@
     <Compile Include="Model\FeedService.cs" />
     <Compile Include="Model\IDependencyStrategy.cs" />
     <Compile Include="Model\IFeedService.cs" />
-    <Compile Include="Model\InstallationPlan.cs" />
     <Compile Include="Model\IProjectReader.cs" />
     <Compile Include="Model\IPublishingService.cs" />
     <Compile Include="Model\ISolutionBuilder.cs" />
@@ -117,7 +116,6 @@
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
     <Compile Include="Model\NulloDependencyStrategy.cs" />
-    <Compile Include="Model\PackageInstallation.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\RippleException.cs" />
     <Compile Include="Model\Solution.cs" />
@@ -132,13 +130,13 @@
     <Compile Include="Nuget\FileSystemNugetFeed.cs" />
     <Compile Include="Nuget\FloatingFeed.cs" />
     <Compile Include="Nuget\IFloatingFeed.cs" />
-    <Compile Include="Nuget\InstallationService.cs" />
     <Compile Include="Nuget\InstallProjectDependency.cs" />
     <Compile Include="Nuget\InstallSolutionDependency.cs" />
     <Compile Include="Nuget\INugetCache.cs" />
     <Compile Include="Nuget\INugetDownloader.cs" />
     <Compile Include="Nuget\INugetFeed.cs" />
     <Compile Include="Nuget\INugetFile.cs" />
+    <Compile Include="Nuget\INugetOperationContext.cs" />
     <Compile Include="Nuget\INugetStep.cs" />
     <Compile Include="Nuget\INugetStepRunner.cs" />
     <Compile Include="Nuget\INugetStorage.cs" />
@@ -157,6 +155,7 @@
     <Compile Include="Nuget\RemotePackageDownloader.cs" />
     <Compile Include="Nuget\UpdateDependency.cs" />
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
+    <Compile Include="RippleConnection.cs" />
     <Compile Include="RippleConstants.cs" />
     <Compile Include="RippleFileSystem.cs" />
     <Compile Include="Local\MoveNugetAssemblies.cs" />
@@ -178,10 +177,10 @@
     <Compile Include="RippleOperation.cs" />
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
+    <Compile Include="Steps\NugetOperation.cs" />
     <Compile Include="Steps\ProcessDirectives.cs" />
     <Compile Include="Steps\UpdateAndDownloadDependencies.cs" />
     <Compile Include="Steps\ExplodeDownloadedNugets.cs" />
-    <Compile Include="Steps\InstallNuget.cs" />
     <Compile Include="Steps\FixReferences.cs" />
     <Compile Include="Steps\RippleStep.cs" />
     <Compile Include="Steps\ValidateRepository.cs" />

@@ -18,7 +18,7 @@ namespace ripple.Model
 				nuget = getLatestFromFloatingFeed(feed, dependency);
 				if (nuget != null) break;
 
-				if (dependency.IsFloat())
+				if (dependency.IsFloat() || dependency.Version.IsEmpty())
 				{
 					nuget = feed.FindLatest(dependency);
 					if (nuget != null) break;
@@ -93,9 +93,16 @@ namespace ripple.Model
                 dependencies.Add(dep);
             }
 
+            var tasks = new List<Task>();
             nuget
                 .Dependencies()
-                .Each(x => dependencies.AddRange(findDependenciesFor(solution, x, mode, depth + 1)));
+                .Each(x =>
+                {
+                    var task = Task.Factory.StartNew(() => dependencies.AddRange(findDependenciesFor(solution, x, mode, depth + 1)));
+                    tasks.Add(task);
+                });
+
+            Task.WaitAll(tasks.ToArray());
 
             return dependencies;
         }

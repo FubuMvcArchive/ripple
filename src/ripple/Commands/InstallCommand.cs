@@ -1,12 +1,14 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
+using ripple.Nuget;
 using ripple.Steps;
 
 namespace ripple.Commands
 {
-	public class InstallInput : SolutionInput
+	public class InstallInput : SolutionInput, INugetOperationContext
 	{
 		public InstallInput()
 		{
@@ -18,7 +20,7 @@ namespace ripple.Commands
 		public string Package { get; set; }
 
 		[Description("Version of the package")]
-		[FlagAlias("Version", 'v')]
+		[FlagAlias("version", 'v')]
 		public string VersionFlag { get; set; }
 
 		[Description("The update mode of the package")]
@@ -29,10 +31,9 @@ namespace ripple.Commands
 		[FlagAlias("project", 'p')]
 		public string ProjectFlag { get; set; }
 
-		public InstallationTarget Target
-		{
-			get { return ProjectFlag.IsNotEmpty() ? InstallationTarget.Project : InstallationTarget.Solution; }
-		}
+        [Description("Forces updates of transitive updates")]
+        [FlagAlias("force-updates", 'f')]
+        public bool ForceUpdatesFlag { get; set; }
 
 		public Dependency Dependency
 		{
@@ -46,6 +47,17 @@ namespace ripple.Commands
 		{
 			return "Install {0} to Solution {1}".ToFormat(Package, solution.Name);
 		}
+
+        public IEnumerable<NugetPlanRequest> Requests(Solution solution)
+	    {
+	        yield return new NugetPlanRequest
+	        {
+                Dependency = Dependency,
+                ForceUpdates = ForceUpdatesFlag,
+                Operation = OperationType.Install,
+                Project = ProjectFlag
+	        };
+	    }
 	}
 
 	public class InstallCommand : FubuCommand<InstallInput>
@@ -54,7 +66,7 @@ namespace ripple.Commands
 		{
 			return RippleOperation
 				.For<InstallInput>(input)
-				.Step<InstallNuget>()
+				.Step<NugetOperation>()
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
 				.Step<FixReferences>()

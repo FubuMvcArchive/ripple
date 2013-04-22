@@ -124,6 +124,14 @@ namespace ripple.Model
 			Mode = UpdateMode.Float;
 		}
 
+        public Dependency AsFloat()
+        {
+            var floated = MemberwiseClone().As<Dependency>();
+            floated.Float();
+
+            return floated;
+        }
+
 		public static Dependency For(INugetFile nuget)
 		{
 			return new Dependency(nuget.Name, nuget.Version.ToString());

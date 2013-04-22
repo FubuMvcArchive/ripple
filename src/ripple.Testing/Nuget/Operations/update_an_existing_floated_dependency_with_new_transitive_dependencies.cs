@@ -44,11 +44,15 @@ namespace ripple.Testing.Nuget.Operations
                 scenario.Solution("Test", sln =>
                 {
                     sln.SolutionDependency("WebDriver", "1.1.0.0", UpdateMode.Fixed);
+                    sln.SolutionDependency("Serenity", "1.1.0.0", UpdateMode.Float);
 
                     sln.LocalDependency("Serenity", "1.1.0.0");
 
                     sln.ProjectDependency("Test1", "Serenity");
+                    sln.ProjectDependency("Test1", "WebDriver");
+
                     sln.ProjectDependency("Test2", "Serenity");
+                    sln.ProjectDependency("Test2", "WebDriver");
                 });
             });
 
@@ -61,7 +65,7 @@ namespace ripple.Testing.Nuget.Operations
                 Solution = theSolution,
                 Dependency = new Dependency("Serenity"),
                 Operation = OperationType.Update,
-                ForceUpdates = false
+                ForceUpdates = true
             };
 
             thePlan = theBuilder.PlanFor(request);
@@ -83,13 +87,13 @@ namespace ripple.Testing.Nuget.Operations
                 updateSolutionDependency("WebDriver", "1.2.0.0", UpdateMode.Fixed),
                 
                 solutionInstallation("Something", "1.0.0.5", UpdateMode.Fixed),
-                solutionInstallation("SomethingElse", "0.9.9.9", UpdateMode.Fixed),
-
                 projectInstallation("Test1", "Something"),
-                projectInstallation("Test1", "SomethingElse"),
-
                 projectInstallation("Test2", "Something"),
+
+                solutionInstallation("SomethingElse", "0.9.9.9", UpdateMode.Fixed),
+                projectInstallation("Test1", "SomethingElse"),
                 projectInstallation("Test2", "SomethingElse")
+
             );
         }
 

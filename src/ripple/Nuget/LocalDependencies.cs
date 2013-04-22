@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FubuCore;
 using FubuCore.Descriptions;
@@ -78,6 +79,32 @@ namespace ripple.Nuget
 		{
 			return _dependencies;
 		}
+
+        public bool HasLockedFiles(Solution solution)
+        {
+            return _dependencies.Any(dependency =>
+            {
+                var folder = dependency.NugetFolder(solution);
+                var assemblySet = new FileSet { Include = "*.dll" };
+
+                var files = new FileSystem().FindFiles(folder, assemblySet);
+                return files.Any(file =>
+                {
+                    try
+                    {
+                        using (var read = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None))
+                        {
+                        }
+                        return false;
+                    }
+                    catch
+                    {
+
+                        return true;
+                    }
+                });
+            });
+        }
 
 		public void Describe(Description description)
 		{

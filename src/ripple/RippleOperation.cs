@@ -40,6 +40,12 @@ namespace ripple
 			return this;
 		}
 
+        public RippleOperation Steps(IEnumerable<IRippleStep> steps)
+        {
+            steps.Each(x => Step(x));
+            return this;
+        }
+
 		public void Describe(Description description)
 		{
 			description.ShortDescription = _solution.Name;
@@ -120,11 +126,13 @@ namespace ripple
 		{
 			_target = solution;
 			_forceThrow = true;
+            RippleLog.RemoveFileListener();
 
 			return new CommandExecutionExpression(() =>
 			{
 				_target = null;
 				_forceThrow = false;
+                RippleLog.AddFileListener();
 			});
 		}
 
@@ -144,6 +152,21 @@ namespace ripple
 				Execute<TInput, TCommand>(input => { });
 			}
 
+            public void Execute<TInput, TCommand>(TInput input)
+                where TCommand : FubuCommand<TInput>, new()
+            {
+                Execute(input, new TCommand());
+            }
+
+            public void Execute<TInput, TCommand>(TInput input, TCommand command)
+               where TCommand : FubuCommand<TInput>
+            {
+                command.Execute(input);
+
+                _target.Reset();
+                _done();
+            }
+
 			public void Execute<TInput, TCommand>(Action<TInput> configure)
 				where TCommand : FubuCommand<TInput>, new()
 				where TInput : new()
@@ -151,10 +174,7 @@ namespace ripple
 				var input = new TInput();
 				configure(input);
 				
-				new TCommand().Execute(input);
-
-                _target.Reset();
-				_done();
+				Execute<TInput, TCommand>(input);
 			}
 		}
 	}

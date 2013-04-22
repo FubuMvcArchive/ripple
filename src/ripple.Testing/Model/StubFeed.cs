@@ -46,7 +46,7 @@ namespace ripple.Testing.Model
 
 		public IRemoteNuget Find(Dependency query)
 		{
-            if (query.IsFloat())
+            if (query.IsFloat() || query.Version.IsEmpty())
             {
                 return _nugets.FirstOrDefault(x => x.Name == query.Name);
             }

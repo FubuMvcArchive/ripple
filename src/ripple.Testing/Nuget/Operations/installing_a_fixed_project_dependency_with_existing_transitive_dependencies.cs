@@ -31,6 +31,8 @@ namespace ripple.Testing.Nuget.Operations
             {
                 scenario.Solution("Test", test =>
                 {
+                    test.SolutionDependency("FubuCore", "1.2.0.0", UpdateMode.Float);
+                    test.ProjectDependency("Test", "FubuCore");
                     test.LocalDependency("FubuCore", "1.2.0.0");
                 });
             });

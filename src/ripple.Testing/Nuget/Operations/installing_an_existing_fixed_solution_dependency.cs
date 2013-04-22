@@ -22,6 +22,7 @@ namespace ripple.Testing.Nuget.Operations
             {
                 scenario.Solution("Test", test =>
                 {
+                    test.SolutionDependency("fubu", "1.2.0.0", UpdateMode.Fixed);
                     test.LocalDependency("fubu", "1.2.0.0");
                 });
             });

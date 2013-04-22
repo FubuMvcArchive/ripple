@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -10,62 +12,75 @@ namespace ripple.Nuget
 
     public class NugetPlanBuilder : INugetPlanBuilder
     {
-        // Going to let the update command make multiple calls and aggregate the plans
         public NugetPlan PlanFor(NugetPlanRequest request)
         {
-            if (request.Operation == OperationType.Install)
-            {
-                return InstallFor(request);
-            }
-
-            return UpdateFor(request);
+            return buildPlan(request);
         }
 
-        public NugetPlan UpdateFor(NugetPlanRequest request)
-        {
-            return new NugetPlan();
-        }
-
-        public NugetPlan InstallFor(NugetPlanRequest request, int depth = 0)
+        private NugetPlan buildPlan(NugetPlanRequest request, Dependency parent = null, int depth = 0)
         {
             var plan = new NugetPlan();
             var target = request.Dependency;
             var solution = request.Solution;
 
-            if (target.IsFloat())
+            if (target.Version.IsEmpty())
             {
                 var remote = solution.FeedService.NugetFor(solution, target);
                 target.Version = remote.Version.ToString();
             }
 
-            
             if (request.UpdatesCurrentDependency())
             {
-                var shouldUpdate = (depth != 0) && request.ForceUpdates;
-                if(shouldUpdate) plan.AddStep(new UpdateDependency(target));
+                var shouldUpdate = (depth != 0 || request.Operation == OperationType.Update) && (request.ForceUpdates || target.IsFloat());
+                if (shouldUpdate)
+                {
+                    plan.AddStep(new UpdateDependency(target));
+                }
+                else
+                {
+                    RippleLog.Info("Warning: This operation requires {0} to be updated to {1} but it is marked as fixed. Use the force option to correct this.".ToFormat(target.Name, target.Version));
+                }
             }
-            else
+            else if(!solution.Dependencies.Has(target.Name))
             {
                 plan.AddStep(new InstallSolutionDependency(target));
             }
-            
-            if (request.InstallToProject())
-            {
-                var project = solution.FindProject(request.Project);
-                if (!project.Dependencies.Has(target.Name))
-                {
-                    plan.AddStep(new InstallProjectDependency(request.Project, Dependency.FloatFor(target.Name)));
-                }
-            }
+
+            projectInstallations(plan, parent, request);
 
             var nugetDependencies = solution.FeedService.DependenciesFor(solution, target, target.Mode);
             nugetDependencies.Each(x =>
             {
-                var childPlan = InstallFor(request.CopyFor(x), depth + 1);
+                var childPlan = buildPlan(request.CopyFor(x), target, depth + 1);
                 plan.Import(childPlan);
             });
 
             return plan;
+        }
+
+        private void projectInstallations(NugetPlan plan, Dependency parent, NugetPlanRequest request)
+        {
+            var target = request.Dependency;
+            var solution = request.Solution;
+
+            if (request.InstallToProject())
+            {
+                var project = solution.FindProject(request.Project);
+                installToProject(plan, project, target);
+            }
+
+            if (parent == null) return;
+
+            var projects = solution.Projects.Where(x => x.Dependencies.Has(parent.Name));
+            projects.Each(project => installToProject(plan, project, target));
+        }
+
+        private void installToProject(NugetPlan plan, Project project, Dependency target)
+        {
+            if (!project.Dependencies.Has(target.Name))
+            {
+                plan.AddStep(new InstallProjectDependency(project.Name, Dependency.FloatFor(target.Name)));
+            }
         }
     }
 }

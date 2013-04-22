@@ -7,8 +7,13 @@ namespace ripple
 {
     public static class PackageExtensions
     {
-         public static IEnumerable<Dependency> ImmediateDependencies(this IPackage package)
-         {
+        public static IEnumerable<Dependency> ImmediateDependencies(this IPackage package)
+        {
+            if (package == null)
+            {
+                return new Dependency[0];
+            }
+
             return package.DependencySets.SelectMany(set =>
             {
                 return set.Dependencies.Select(x =>
@@ -22,6 +27,6 @@ namespace ripple
                     return new Dependency(x.Id);
                 });
             }).Distinct();
-         }
+        }
     }
 }

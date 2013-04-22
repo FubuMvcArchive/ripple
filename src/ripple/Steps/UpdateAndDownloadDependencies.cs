@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FubuCore;
 using FubuCore.Descriptions;
 using ripple.Commands;
-using ripple.Model;
-using ripple.Nuget;
 
 namespace ripple.Steps
 {
@@ -14,57 +8,7 @@ namespace ripple.Steps
 	{
 		protected override void execute(UpdateInput input, IRippleStepRunner runner)
 		{
-			var nugets = new List<INugetFile>();
-
-			if (input.NugetFlag.IsNotEmpty())
-			{
-				updateIndividual(input, nugets);
-			}
-			else
-			{
-				updateAll(nugets);
-			}
-
-			nugets.Each(x => Solution.Update(x));
-
-		    var checkForUpdates = nugets.ToArray();
-		    checkForUpdates.Each(nuget =>
-		    {
-		        var dependency = Solution.Dependencies.Find(nuget.Name);
-		        var projects = Solution.Projects.Where(project => project.Dependencies.Has(nuget.Name));
-
-		        projects.Each(project => nugets.AddRange(InstallationService.Install(Solution, dependency, project, input.ForceFlag)));
-		    });
-
-			runner.Set(new DownloadedNugets(nugets));
-		}
-
-		private void updateAll(List<INugetFile> nugets)
-		{
-			var updates = Solution.Updates();
-
-			var tasks = updates.Select(x => download(x, Solution, nugets)).ToArray();
-			Task.WaitAll(tasks);
-		}
-
-		private void updateIndividual(UpdateInput input, List<INugetFile> nugets)
-		{
-			var dependency = Solution.Dependencies.Find(input.NugetFlag);
-			if (dependency.IsFixed() && !input.ForceFlag)
-			{
-				throw new InvalidOperationException("Cannot update 'Fixed' dependency. Please use the --force flag.");
-			}
-
-			download(Solution.UpdateFor(input.NugetFlag), Solution, nugets).Wait();
-		}
-
-		private static Task download(IRemoteNuget nuget, Solution solution, List<INugetFile> nugets)
-		{
-			return Task.Factory.StartNew(() =>
-			{
-				RippleLog.Debug("Downloading " + nuget);
-				nugets.Add(nuget.DownloadTo(solution, solution.PackagesDirectory()));
-			});
+			throw new NotImplementedException();
 		}
 
 		public void Describe(Description description)

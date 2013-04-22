@@ -25,17 +25,36 @@ namespace ripple
 
 	public class RippleLog
 	{
-		private static readonly Lazy<ILogger> _logger;
+		private static Lazy<ILogger> _logger;
 		private static readonly IList<ILogListener> Listeners;
+	    private static readonly ILogListener File;
 
 		static RippleLog()
 		{
 			Listeners = new List<ILogListener>();
-			_logger = new Lazy<ILogger>(() => new Logger(Listeners, new ILogModifier[0]));
 
 			RegisterListener(new RippleLogger());
-			RegisterListener(new FileListener());
+			File = new FileListener();
+            
+            AddFileListener();
 		}
+
+        private static void resetLogger()
+        {
+            _logger = new Lazy<ILogger>(() => new Logger(Listeners, new ILogModifier[0]));
+        }
+
+        public static void RemoveFileListener()
+        {
+            Listeners.Remove(File);
+            resetLogger();
+        }
+
+        public static void AddFileListener()
+        {
+            RegisterListener(File);
+            resetLogger();
+        }
 
 		public static void Verbose(bool verbose)
 		{
