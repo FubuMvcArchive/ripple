@@ -101,6 +101,35 @@ namespace ripple.MSBuild
             return true;
         }
 
+        public bool UsesPackagesConfig()
+        {
+            return FindPackagesConfigItem() != null;
+        }
+
+        public void ConvertToRippleDependenciesConfig()
+        {
+            var item = FindPackagesConfigItem();
+            if (item == null)
+            {
+                throw new InvalidOperationException("Could not find packages.config reference");
+            }
+
+            item.SetAttributeValue("Include", "ripple.dependencies.config");
+        }
+
+        public XElement FindPackagesConfigItem()
+        {
+            foreach (var none in _document.XPathSelectElements("tns:ItemGroup/tns:None", _manager))
+            {
+                if (none.Attribute("Include").Value == "packages.config")
+                {
+                    return none;
+                }
+            }
+
+            return null;
+        }
+
 	    public bool RemoveReferences(IEnumerable<string> references)
 	    {
 		    return references.All(RemoveReference);

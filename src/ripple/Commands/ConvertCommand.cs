@@ -31,7 +31,16 @@ namespace ripple.Commands
 		private void forceFixReferences(ConvertInput input)
 		{
 			var solution = Solution.For(input);
-			solution.EachProject(x => x.RemoveDuplicateReferences());
+			solution.EachProject(x =>
+			{
+			    x.RemoveDuplicateReferences();
+
+                if (x.CsProj.UsesPackagesConfig())
+                {
+                    x.CsProj.ConvertToRippleDependenciesConfig();
+                }
+			});
+
 			solution.Save(true);
 		}
 	}
