@@ -21,6 +21,7 @@ namespace ripple.MSBuild
 		private static readonly XNamespace _xmlns;
         private readonly XElement _document;
         private readonly string _filename;
+        private readonly Solution _solution;
 
         private readonly Lazy<IList<Reference>> _references;
 
@@ -33,11 +34,12 @@ namespace ripple.MSBuild
 	        _xmlns = Schema;
         }
 
-        public CsProjFile(string filename)
+        public CsProjFile(string filename, Solution solution)
         {
             _filename = filename;
+            _solution = solution;
 
-			_document = XElement.Load(filename);
+            _document = XElement.Load(filename);
 	        _document.Name = _xmlns + _document.Name.LocalName;
 
             _references = new Lazy<IList<Reference>>(() => { return new List<Reference>(readReferences()); });
@@ -176,13 +178,18 @@ namespace ripple.MSBuild
 
             assemblies = GetCompatibleItemsCore(assemblies).ToList();
 
-            assemblies.Each(assem => {
+            assemblies.Each(assem => 
+            {
                 string assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
 
                 if (assemblyName.StartsWith("System.")) return;
                 if (assemblyName == "_._") return;
 
-                string hintPath = Path.Combine("..", "packages", dep.Name, assem.Path);
+                
+                var nugetDir = _solution.NugetFolderFor(dep.Name);
+                var assemblyPath = nugetDir.AppendPath(assem.Path);
+
+                var hintPath = assemblyPath.PathRelativeTo(_filename.ParentDirectory());
 
                 if (AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
                 {

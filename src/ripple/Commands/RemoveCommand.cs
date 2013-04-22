@@ -84,7 +84,7 @@ namespace ripple.Commands
                 Include = "*.csproj",
                 DeepSearch = true
             }).Each(csProjFile => {
-                var project = new CsProjFile(csProjFile);
+                var project = new CsProjFile(csProjFile, null);
                 project.RemoveReferences(assemblies);
             });
         }

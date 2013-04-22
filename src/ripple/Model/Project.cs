@@ -17,7 +17,7 @@ namespace ripple.Model
 			Name = Path.GetFileNameWithoutExtension(filePath);
 			Directory = filePath.DirectoryPath();
 
-			_csProj = new Lazy<CsProjFile>(() => new CsProjFile(filePath));
+			_csProj = new Lazy<CsProjFile>(() => new CsProjFile(filePath, Solution));
 		}
 
 		public string Name { get; private set; }

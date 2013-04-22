@@ -22,7 +22,7 @@ namespace ripple.Testing.MSBuild
 
 			new FileSystem().WriteStreamToFile(theFilename, stream);
 
-			theCsProj = new CsProjFile(theFilename);
+			theCsProj = new CsProjFile(theFilename, null);
 
 			theCsProj
 				.References
@@ -41,7 +41,7 @@ namespace ripple.Testing.MSBuild
 			theCsProj.Write();
 
 			theCsProj = null;
-			theCsProj = new CsProjFile(theFilename);
+			theCsProj = new CsProjFile(theFilename, null);
 		}
 
 		[Test]
@@ -79,7 +79,7 @@ namespace ripple.Testing.MSBuild
 
 			new FileSystem().WriteStreamToFile(theFilename, stream);
 
-			theCsProj = new CsProjFile(theFilename);
+			theCsProj = new CsProjFile(theFilename, null);
 
 			theCsProj
 				.References
@@ -121,7 +121,7 @@ namespace ripple.Testing.MSBuild
 			theCsProj.Write();
 
 			theCsProj = null;
-			theCsProj = new CsProjFile(theFilename);
+			theCsProj = new CsProjFile(theFilename, null);
 		}
 
 		[Test]
