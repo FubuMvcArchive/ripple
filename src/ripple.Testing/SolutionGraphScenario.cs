@@ -70,7 +70,9 @@ namespace ripple.Testing
 				_directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "code");
 				var system = new FileSystem();
 
+                system.CleanDirectory(_directory);
 				system.DeleteDirectory(_directory);
+                system.DeleteDirectory(_directory);
 				system.CreateDirectory(_directory);
 			}
 
