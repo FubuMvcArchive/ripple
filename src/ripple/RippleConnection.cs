@@ -17,7 +17,7 @@ namespace ripple
                 try
                 {
                     using (var client = new WebClient())
-                    using (var stream = client.OpenRead(Feed.Fubu.Url))
+                    using (var stream = client.OpenRead(Feed.NuGetV2.Url))
                     {
                         return true;
                     }
