@@ -126,10 +126,15 @@ namespace ripple.Model
 
         public Dependency AsFloat()
         {
-            var floated = MemberwiseClone().As<Dependency>();
+            var floated = Copy();
             floated.Float();
 
             return floated;
+        }
+
+        public Dependency Copy()
+        {
+            return MemberwiseClone().As<Dependency>();
         }
 
 		public static Dependency For(INugetFile nuget)

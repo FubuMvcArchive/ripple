@@ -11,9 +11,11 @@ namespace ripple.Nuget
 
         void Flush();
 
-		INugetFile Find(Dependency query);
+        INugetFile Find(Dependency query);
 
 	    IRemoteNuget Retrieve(IRemoteNuget nuget);
+
+        Feed ToFeed();
     }
 
 	public class NulloNugetCache : INugetCache
@@ -35,7 +37,7 @@ namespace ripple.Nuget
 		{
 		}
 
-		public INugetFile Find(Dependency query)
+	    public INugetFile Find(Dependency query)
 		{
 			return null;
 		}
@@ -44,5 +46,10 @@ namespace ripple.Nuget
 		{
 			return nuget;
 		}
+
+	    public Feed ToFeed()
+	    {
+	        return null;
+	    }
 	}
 }

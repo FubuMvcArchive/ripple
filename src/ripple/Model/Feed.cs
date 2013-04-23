@@ -90,5 +90,10 @@ namespace ripple.Model
 
 			return new Feed(url);
 		}
+
+        public static Feed FromPath(string path)
+        {
+            return new Feed("file://" + path.ToFullPath().Replace("\\", "/"));
+        }
 	}
 }

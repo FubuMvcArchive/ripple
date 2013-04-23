@@ -145,6 +145,13 @@ namespace ripple.Nuget
 		    return new FileSystemNuget(file);
 	    }
 
+        public Feed ToFeed()
+        {
+            return Feed.FromPath(_folder);
+        }
+
+        public string LocalPath { get { return _folder; } }
+
 		public static NugetFolderCache DefaultFor(Solution solution)
 		{
 			var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);

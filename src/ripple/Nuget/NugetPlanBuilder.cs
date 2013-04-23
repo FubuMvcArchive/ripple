@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuCore.Util;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -12,6 +14,13 @@ namespace ripple.Nuget
 
     public class NugetPlanBuilder : INugetPlanBuilder
     {
+        private readonly Cache<Dependency, NugetPlan> _planCache;
+
+        public NugetPlanBuilder()
+        {
+            _planCache = new Cache<Dependency, NugetPlan>();
+        }
+
         public NugetPlan PlanFor(NugetPlanRequest request)
         {
             return buildPlan(request);
@@ -22,6 +31,21 @@ namespace ripple.Nuget
             var plan = new NugetPlan();
             var target = request.Dependency;
             var solution = request.Solution;
+
+            var key = target.Copy();
+            if (key.IsFloat())
+            {
+                key = target.AsFloat();
+            }
+
+            if (_planCache.Has(key))
+            {
+                return _planCache[key];
+            }
+
+            _planCache.Fill(key, plan);
+
+            RippleLog.Info("* Analyzing " + target);
 
             if (target.Version.IsEmpty())
             {

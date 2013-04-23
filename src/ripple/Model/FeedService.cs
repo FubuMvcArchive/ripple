@@ -12,7 +12,7 @@ namespace ripple.Model
 		public virtual IRemoteNuget NugetFor(Solution solution, Dependency dependency)
 		{
 			IRemoteNuget nuget = null;
-			var feeds = solution.Feeds.Select(x => x.GetNugetFeed());
+		    var feeds = feedsFor(solution);
 			foreach (var feed in feeds)
 			{
 				nuget = getLatestFromFloatingFeed(feed, dependency);
@@ -30,7 +30,7 @@ namespace ripple.Model
 
 			if (nuget == null)
 			{
-                RippleLog.Error("Could not find " + dependency, new ArgumentOutOfRangeException("dependency", "Could not find " + dependency));
+                RippleAssert.Fail("Could not find " + dependency);
 			}
 
 			return remoteOrCached(solution, nuget);
@@ -120,7 +120,7 @@ namespace ripple.Model
 			}
 
 			IRemoteNuget latest = null;
-			var feeds = solution.Feeds.Select(x => x.GetNugetFeed());
+            var feeds = feedsFor(solution);
 
 			foreach (var feed in feeds)
 			{
@@ -169,5 +169,16 @@ namespace ripple.Model
 
 			return latest.IsUpdateFor(dependency);
 		}
+
+        private IEnumerable<INugetFeed> feedsFor(Solution solution)
+        {
+            if (!RippleConnection.Connected())
+            {
+                var cache = solution.Cache.ToFeed();
+                return new[] { cache.GetNugetFeed() };
+            }
+
+            return solution.Feeds.Select(x => x.GetNugetFeed());
+        }
 	}
 }

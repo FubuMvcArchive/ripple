@@ -19,9 +19,21 @@ namespace ripple.Testing
 			return theProvider.For(feed).As<StubFeed>();
 		}
 
+        public void Offline()
+        {
+            RippleConnection.Stub(false);
+        }
+
+        public void Online()
+        {
+            RippleConnection.Stub(true);
+        }
+
 		public static void Create(Action<FeedScenario> configure)
 		{
 			var scenario = new FeedScenario();
+            scenario.Online();
+
 			configure(scenario);
 
 			FeedRegistry.Stub(scenario.theProvider);

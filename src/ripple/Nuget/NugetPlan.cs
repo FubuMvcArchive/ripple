@@ -45,6 +45,7 @@ namespace ripple.Nuget
 
         public void Describe(Description description)
         {
+            description.ShortDescription = "";
             description.AddList("Steps", _steps);
         }
     }
