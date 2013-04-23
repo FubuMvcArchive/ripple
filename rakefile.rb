@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'rubygems/package_task'
+require 'ripple/ripple'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 CLR_TOOLS_VERSION = "v4.0.30319"
@@ -124,7 +125,6 @@ end
 
 desc "Creates the gem for fubudocs.exe"
 task :create_gem do
-	cleanDirectory 'lib'
 	cleanDirectory 'bin'	
 	cleanDirectory 'pkg'
 	
@@ -147,7 +147,7 @@ end
 	  s.platform    = Gem::Platform::RUBY
 	  s.name        = 'ripple'
 	  s.version     = BUILD_NUMBER
-	  s.files = Dir['bin/**/*']
+	  s.files = Dir['bin/**/*'] + Dir['lib/*.rb']
 	  s.bindir = 'bin'
 	  s.executables << 'ripple'
 	  
