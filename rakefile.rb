@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'rubygems/package_task'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
 CLR_TOOLS_VERSION = "v4.0.30319"
@@ -111,4 +112,57 @@ desc "Publish new binaries just by copying the file"
 task :publish do
   copyOutputFiles 'src/ripple/bin/Debug', '**', '../buildsupport'
   copyOutputFiles '.', '*.cmd', '../buildsupport'
+end
+
+
+
+
+
+def cleanDirectory(dir)
+  FileUtils.rm_rf dir;
+  waitfor { !exists?(dir) }
+  Dir.mkdir dir
+end
+
+def cleanFile(file)
+  File.delete file unless !File.exist?(file)
+end
+
+desc "Creates the gem for fubudocs.exe"
+task :create_gem do
+	cleanDirectory 'lib'
+	cleanDirectory 'bin'	
+	cleanDirectory 'pkg'
+	
+	dir = "src/ripple/bin/#{COMPILE_TARGET}"
+
+	copyOutputFiles dir, '*.dll', 'bin'
+
+	FileUtils.copy "#{dir}/ripple.exe", 'bin'
+	FileUtils.copy 'ripple', 'bin'
+	
+	Rake::Task[:gem].invoke
+end
+
+	spec = Gem::Specification.new do |s|
+	  s.platform    = Gem::Platform::RUBY
+	  s.name        = 'ripple'
+	  s.version     = BUILD_NUMBER
+	  s.files = Dir['bin/**/*']
+	  s.bindir = 'bin'
+	  s.executables << 'ripple'
+	  
+	  s.summary     = 'Improved dependency management with Nuget'
+	  s.description = 'Ripple is a tool that wraps Nuget with workflow more conducive to upstream/downstream development across code repositories'
+	  
+	  s.authors           = ['Jeremy D. Miller', 'Josh Arnold']
+	  s.email             = 'fubumvc-devel@googlegroups.com'
+	  s.homepage          = 'http://fubu-project.org'
+	  s.rubyforge_project = 'fubudocs'
+	end
+
+
+Gem::PackageTask.new(spec) do |pkg|
+  pkg.need_zip = true
+  pkg.need_tar = true
 end
