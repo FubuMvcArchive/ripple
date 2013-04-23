@@ -10,7 +10,7 @@ load "VERSION.txt"
 
 RESULTS_DIR = "results"
 PRODUCT = "ripple"
-COPYRIGHT = 'Copyright 2011 Jeremy D. Miller, et al. All rights reserved.';
+COPYRIGHT = 'Copyright 2013 Jeremy D. Miller, et al. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 
 buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
@@ -38,7 +38,7 @@ desc "**Default**, compiles and runs tests"
 task :default => [:compile, :unit_test]
 
 desc "Target used for the CI server"
-task :ci => [:default]
+task :ci => [:default, :history, :publish_gem]
 
 desc "Update the version information for the build"
 assemblyinfo :version do |asm|
@@ -85,12 +85,6 @@ end
 desc "Compiles the app"
 task :compile => [:clean, :restore_if_missing, :version] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/ripple.sln', :clrversion => CLR_TOOLS_VERSION
-  
-  targetDir = Dir.glob("src/ripple/bin/#{COMPILE_TARGET}")
-  copyOutputFiles targetDir, 'FubuCore.dll', props[:artifacts]
-  copyOutputFiles targetDir, 'NuGet.Core.dll', ARTIFACTS
-  copyOutputFiles targetDir, 'ripple.exe*', ARTIFACTS
-  copyOutputFiles targetDir, 'ripple.pdb', ARTIFACTS
 end
 
 def copyOutputFiles(fromDir, filePattern, outDir)
@@ -144,6 +138,11 @@ task :create_gem do
 	Rake::Task[:gem].invoke
 end
 
+desc "Pushes any new gem to the artifacts directory"
+task :publish_gem => :create_gem do
+  copyOutputFiles 'pkg', '*.gem', ARTIFACTS
+end
+
 	spec = Gem::Specification.new do |s|
 	  s.platform    = Gem::Platform::RUBY
 	  s.name        = 'ripple'
@@ -155,10 +154,10 @@ end
 	  s.summary     = 'Improved dependency management with Nuget'
 	  s.description = 'Ripple is a tool that wraps Nuget with workflow more conducive to upstream/downstream development across code repositories'
 	  
-	  s.authors           = ['Jeremy D. Miller', 'Josh Arnold']
+	  s.authors           = ['Josh Arnold', 'Jeremy D. Miller']
 	  s.email             = 'fubumvc-devel@googlegroups.com'
 	  s.homepage          = 'http://fubu-project.org'
-	  s.rubyforge_project = 'fubudocs'
+	  s.rubyforge_project = 'ripple'
 	end
 
 
