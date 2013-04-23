@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using FubuCore;
-using FubuCore.Util;
 using ripple.Model;
 
 namespace ripple
@@ -166,11 +162,6 @@ namespace ripple
             }
 
             return FindCodeDirectory().AppendPath("ripple", file);
-        }
-
-        public static string RakeRunnerFile()
-        {
-            return LocationOfRunner("run-rake.cmd");
         }
 
         public static string LocalNugetDirectory()

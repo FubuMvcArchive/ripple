@@ -3,6 +3,7 @@ using FubuCore;
 using FubuTestingSupport;
 using ripple.Local;
 using ripple.Model;
+using ripple.Runners;
 
 namespace ripple.Testing
 {
@@ -15,7 +16,7 @@ namespace ripple.Testing
             var solution = new Solution
             {
                 SourceFolder = "src",
-                BuildCommand = RippleFileSystem.RakeRunnerFile(),
+                BuildCommand = "rake",
                 FastBuildCommand = "rake compile",
 				Directory = "directory1".ToFullPath()
             };
@@ -23,7 +24,7 @@ namespace ripple.Testing
             var processInfo = solution.CreateBuildProcess(false);
 
             processInfo.WorkingDirectory.ShouldEqual("directory1".ToFullPath());
-            processInfo.FileName.ShouldEqual(RippleFileSystem.RakeRunnerFile());
+            processInfo.FileName.ShouldEqual(Runner.Rake.Path);
             processInfo.Arguments.ShouldBeEmpty();
         }
 
@@ -33,7 +34,7 @@ namespace ripple.Testing
 			var solution = new Solution
 			{
 				SourceFolder = "src",
-				BuildCommand = RippleFileSystem.RakeRunnerFile(),
+                BuildCommand = "rake",
 				FastBuildCommand = "rake compile",
 				Directory = "directory1".ToFullPath()
 			};
@@ -41,7 +42,7 @@ namespace ripple.Testing
             var processInfo = solution.CreateBuildProcess(true);
 
             processInfo.WorkingDirectory.ShouldEqual("directory1".ToFullPath());
-            processInfo.FileName.ShouldEqual(RippleFileSystem.RakeRunnerFile());
+            processInfo.FileName.ShouldEqual(Runner.Rake.Path);
             processInfo.Arguments.ShouldEqual("compile");
         }
 

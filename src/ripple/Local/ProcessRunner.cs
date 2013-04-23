@@ -9,10 +9,6 @@ using FubuCore;
 namespace ripple.Local
 {
     // TODO -- move to FubuCore
-
-    // TODO -- move to FubuCore
-
-    // TODO -- move to FubuCore
     public class ProcessRunner : IProcessRunner
     {
         public ProcessReturn Run(ProcessStartInfo info, TimeSpan waitDuration, Action<string> callback)

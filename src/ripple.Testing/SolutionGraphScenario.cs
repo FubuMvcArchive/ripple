@@ -36,7 +36,6 @@ namespace ripple.Testing
 		{
             _fileSystem.CleanDirectory(_directory);
             _fileSystem.DeleteDirectory(_directory);
-            _fileSystem.DeleteDirectory(_directory);
 		}
 
 		public string DirectoryForSolution(string solutionName)

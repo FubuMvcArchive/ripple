@@ -3,6 +3,7 @@ using System.IO;
 using FubuCore.CommandLine;
 using FubuCore;
 using ripple.Model;
+using ripple.Runners;
 
 namespace ripple.Commands
 {
@@ -40,12 +41,11 @@ namespace ripple.Commands
 
         private static void removePackagesFromGit(SolutionConfig config)
         {
-
             var packagesFolder = FileSystem.Combine(config.SourceFolder, "packages");
-
             var arguments = "rm {0} -r".ToFormat(packagesFolder);
-            CLIRunner.RunGit(arguments);
-            CLIRunner.RunGit("status");
+
+            Runner.Git.Run(arguments);
+            Runner.Git.Run("status");
         }
 
         private static void writeRippleConfig(string rippleFilename, FileSystem fileSystem, SolutionConfig config)

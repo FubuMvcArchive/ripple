@@ -53,7 +53,6 @@
     <Compile Include="Classic\NuGetSolutionLoader.cs" />
     <Compile Include="Commands\BatchPublishCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
-    <Compile Include="Commands\CLIRunner.cs" />
     <Compile Include="Commands\ConvertCommand.cs" />
     <Compile Include="Commands\DescribeCommand.cs" />
     <Compile Include="Commands\DescribeGraphCommand.cs" />
@@ -155,6 +154,7 @@
     <Compile Include="Nuget\RemotePackageDownloader.cs" />
     <Compile Include="Nuget\UpdateDependency.cs" />
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
+    <Compile Include="Platform.cs" />
     <Compile Include="RippleConnection.cs" />
     <Compile Include="RippleConstants.cs" />
     <Compile Include="RippleFileSystem.cs" />
@@ -175,6 +175,7 @@
     <Compile Include="Model\SolutionGraphBuilder.cs" />
     <Compile Include="RippleLog.cs" />
     <Compile Include="RippleOperation.cs" />
+    <Compile Include="Runners\Runner.cs" />
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
     <Compile Include="Steps\NugetOperation.cs" />
@@ -189,6 +190,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ripple.dependencies.config" />
+    <EmbeddedResource Include="Runners\run-git.cmd" />
+    <EmbeddedResource Include="Runners\run-rake.cmd" />
+    <EmbeddedResource Include="Runners\run-rake.sh" />
+    <EmbeddedResource Include="Runners\run-git.sh" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

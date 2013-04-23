@@ -12,6 +12,7 @@ using NuGet;
 using ripple.Commands;
 using ripple.Local;
 using ripple.Nuget;
+using ripple.Runners;
 
 namespace ripple.Model
 {
@@ -476,16 +477,18 @@ namespace ripple.Model
 			var commands = StringTokenizer.Tokenize(cmdLine);
 
 			var fileName = commands.First();
+		    ProcessStartInfo info;
 			if (fileName == "rake")
 			{
-				fileName = RippleFileSystem.RakeRunnerFile();
+                info = Runner.Rake.Info(commands.Skip(1).Join(" "));
 			}
-
-			return new ProcessStartInfo(fileName)
+			else
 			{
-				WorkingDirectory = Directory,
-				Arguments = commands.Skip(1).Join(" ")
-			};
+			    info = new ProcessStartInfo(fileName);
+			}
+		    
+		    info.WorkingDirectory = Directory;
+		    return info;
 		}
 
 		public override string ToString()
