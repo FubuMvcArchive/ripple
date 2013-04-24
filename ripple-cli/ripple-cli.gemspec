@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Ripple is a tool that wraps Nuget with workflow more conducive to upstream/downstream development across code repositories"
   spec.summary       = "Improved dependency management with Nuget"
   spec.homepage      = "http://fubu-project.org"
-  spec.license       = "MIT"
+  spec.license       = "Apache 2.0"
 
   spec.files         = Dir.glob("bin/**/*").to_a
   spec.executables   = ["ripple"]
