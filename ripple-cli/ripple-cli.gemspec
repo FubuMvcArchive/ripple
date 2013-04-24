@@ -1,15 +1,12 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
 Gem::Specification.new do |spec|
   spec.name          = "ripple-cli"
   spec.version       = BUILD_NUMBER
-  spec.authors       = ["Matthew Smith"]
-  spec.email         = ["mtscout6@gmail.com"]
-  spec.description   = ""
-  spec.summary       = ""
-  spec.homepage      = ""
+  spec.authors       = ["Jeremy Miller", "Josh Arnold", "Ryan Rauh", "Matthew Smith"]
+  spec.email         = ["fubumvc-devel@googlegroups.com"]
+  spec.description   = "Ripple is a tool that wraps Nuget with workflow more conducive to upstream/downstream development across code repositories"
+  spec.summary       = "Improved dependency management with Nuget"
+  spec.homepage      = "http://fubu-project.org"
   spec.license       = "MIT"
 
   spec.files         = Dir.glob("bin/**/*").to_a
