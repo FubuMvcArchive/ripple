@@ -9,22 +9,53 @@ namespace ripple.Model
 {
 	public class FeedService : IFeedService
 	{
+        private readonly IList<INugetFeed> _offline = new List<INugetFeed>(); 
+
+        private void markOffline(INugetFeed feed)
+        {
+            _offline.Fill(feed);
+        }
+
+        private bool isOffline(INugetFeed feed)
+        {
+            return _offline.Contains(feed);
+        }
+
+        private void tryFeed(INugetFeed feed, Action<INugetFeed> action)
+        {
+            try
+            {
+                if (isOffline(feed))
+                {
+                    RippleLog.Debug("Feed offline. Ignoring.");
+                    return;
+                }
+
+                action(feed);
+            }
+            catch (Exception)
+            {
+                markOffline(feed);
+                RippleLog.Debug("Feed unavalable");
+            }
+        }
+
 		public virtual IRemoteNuget NugetFor(Solution solution, Dependency dependency)
 		{
 			IRemoteNuget nuget = null;
 		    var feeds = feedsFor(solution);
 			foreach (var feed in feeds)
 			{
-				nuget = getLatestFromFloatingFeed(feed, dependency);
+                tryFeed(feed, x => nuget = getLatestFromFloatingFeed(x, dependency));
 				if (nuget != null) break;
 
 				if (dependency.IsFloat() || dependency.Version.IsEmpty())
 				{
-					nuget = feed.FindLatest(dependency);
+				    tryFeed(feed, x => nuget = x.FindLatest(dependency));
 					if (nuget != null) break;
 				}
 
-				nuget = feed.Find(dependency);
+                tryFeed(feed, x => nuget = x.Find(dependency));
 				if (nuget != null) break;
 			}
 
@@ -126,7 +157,9 @@ namespace ripple.Model
 			{
 				try
 				{
-					var nuget = feed.FindLatest(dependency);
+				    IRemoteNuget nuget = null;
+                    tryFeed(feed, x => nuget = feed.FindLatest(dependency));
+					
 					if (latest == null)
 					{
 						latest = nuget;

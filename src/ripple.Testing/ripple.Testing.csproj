@@ -79,6 +79,7 @@
     <Compile Include="Directives\DirectiveParserTester.cs" />
     <Compile Include="Directives\DirectiveRunnerTester.cs" />
     <Compile Include="FeedScenario.cs" />
+    <Compile Include="Integration\ignore_offline_feeds.cs" />
     <Compile Include="Integration\installing_a_new_package_with_no_versions_on_dependencies.cs" />
     <Compile Include="Integration\IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="Integration\IntegratedPackagingTester.cs" />

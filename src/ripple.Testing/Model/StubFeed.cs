@@ -27,6 +27,7 @@ namespace ripple.Testing.Model
 	public class StubFeed : INugetFeed
 	{
 		private readonly IList<IRemoteNuget> _nugets = new List<IRemoteNuget>();
+        private readonly IList<DependencyError> _explicitErrors = new List<DependencyError>(); 
 
 		public StubFeed()
 		{
@@ -46,6 +47,8 @@ namespace ripple.Testing.Model
 
 		public IRemoteNuget Find(Dependency query)
 		{
+            throwIfNeeded(query);
+
             if (query.IsFloat() || query.Version.IsEmpty())
             {
                 return _nugets.FirstOrDefault(x => x.Name == query.Name);
@@ -57,10 +60,32 @@ namespace ripple.Testing.Model
 
 		public IRemoteNuget FindLatest(Dependency query)
 		{
+            throwIfNeeded(query);
+
 			return _nugets.Where(x => x.Name == query.Name)
 			              .OrderByDescending(x => x.Version)
 			              .FirstOrDefault();
 		}
+
+        private void throwIfNeeded(Dependency dependency)
+        {
+            var error = _explicitErrors.FirstOrDefault(x => x.Matches(dependency));
+            if (error != null)
+            {
+                throw error.Exception;
+            }
+        }
+
+        public StubFeed ThrowWhenSearchingFor(string name, string version, Exception exception)
+        {
+            return ThrowWhenSearchingFor(new Dependency(name, version), exception);
+        }
+
+        public StubFeed ThrowWhenSearchingFor(Dependency dependency, Exception exception)
+        {
+            _explicitErrors.Add(new DependencyError(dependency, exception));
+            return this;
+        }
 
 		public void ConfigureRepository(Action<StubPackageRepository> configure)
 		{
@@ -73,5 +98,22 @@ namespace ripple.Testing.Model
 		}
 
 		public IPackageRepository Repository { get; private set; }
+
+        public class DependencyError
+        {
+            public DependencyError(Dependency dependency, Exception exception)
+            {
+                Dependency = dependency;
+                Exception = exception;
+            }
+
+            public Dependency Dependency { get; private set; }
+            public Exception Exception { get; private set; }
+
+            public bool Matches(Dependency dependency)
+            {
+                return Dependency.Equals(dependency);
+            }
+        }
 	}
 }
