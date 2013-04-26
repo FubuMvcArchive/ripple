@@ -79,6 +79,7 @@
     <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Commands\UseTheirsCommand.cs" />
+    <Compile Include="Commands\ValidateCommand.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
     <Compile Include="Directives\DirectiveProcessor.cs" />
     <Compile Include="Directives\DirectiveParser.cs" />
@@ -119,10 +120,11 @@
     <Compile Include="Model\NulloDependencyStrategy.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\RestoreSettings.cs" />
-    <Compile Include="Model\RippleException.cs" />
+    <Compile Include="Model\RippleProblem.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\SolutionConfig.cs" />
     <Compile Include="Model\UpdateMode.cs" />
+    <Compile Include="Model\ValidationResult.cs" />
     <Compile Include="MSBuild\CsProjFile.cs" />
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="Runners\Runner.cs" />
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
+    <Compile Include="Steps\FloatDependency.cs" />
     <Compile Include="Steps\NugetOperation.cs" />
     <Compile Include="Steps\ProcessDirectives.cs" />
     <Compile Include="Steps\RemoveNuget.cs" />
@@ -188,7 +191,6 @@
     <Compile Include="Steps\ExplodeDownloadedNugets.cs" />
     <Compile Include="Steps\FixReferences.cs" />
     <Compile Include="Steps\RippleStep.cs" />
-    <Compile Include="Steps\ValidateRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

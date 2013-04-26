@@ -220,26 +220,40 @@ namespace ripple.Model
 			return Dependencies.Select(x => x.Name);
 		}
 
+        public ValidationResult Validate()
+        {
+            var localDependencies = LocalDependencies();
+            var result = new ValidationResult(this);
+
+            Dependencies.Each(dependency =>
+            {
+                if (!localDependencies.Has(dependency))
+                {
+                    result.AddProblem(dependency.Name, "Not found");
+                    return;
+                }
+
+                var local = localDependencies.Get(dependency);
+                if (dependency.Version.IsNotEmpty() && local.Version < dependency.SemanticVersion())
+                {
+                    result.AddProblem(dependency.Name, "Solution requires {0} but the local copy is {1}".ToFormat(dependency.Version, local.Version.ToString()));
+                }
+            });
+
+            return result;
+        }
+
 		public void AssertIsValid()
 		{
-			var exception = new RippleException(this);
+		    var result = Validate();
+		    if (result.IsValid())
+		    {
+		        RippleLog.Info("Solution valid");
+		        return;
+		    };
 
-			_projects
-				.SelectMany(x => x.Dependencies)
-				.GroupBy(x => x.Name)
-				.Each(group =>
-				{
-					var version = group.First().Version;
-					if (group.Any(d => d.Version != version))
-					{
-						exception.AddProblem("Validation", "Multiple dependencies found for " + group.Key);
-					}
-				});
-
-			if (exception.HasProblems())
-			{
-				throw exception;
-			}
+            RippleLog.InfoMessage(result);
+            RippleAssert.Fail("Validation failed");
 		}
 
 		public void ConvertTo(SolutionMode mode)

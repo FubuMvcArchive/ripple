@@ -7,7 +7,6 @@ using FubuCore.Descriptions;
 using FubuCore.Logging;
 using ripple.Commands;
 using ripple.Model;
-using ripple.Steps;
 
 namespace ripple
 {
@@ -125,7 +124,7 @@ namespace ripple
 			input.Apply(target);
 
 			var runner = new RippleStepRunner(new FileSystem());
-			return new RippleOperation(target, input, runner).Step<ValidateRepository>();
+			return new RippleOperation(target, input, runner);
 		}
 
 		private static Solution _target;

@@ -79,57 +79,6 @@ namespace ripple.Testing.Model
 			solution.LocalDependencies().ShouldEqual(dependencies);
 		}
 
-		[Test]
-		public void valid_for_matching_dependencies()
-		{
-			var solution = new Solution();
-			
-			var p1 = new Project("Project1.csproj");
-			p1.Dependencies.Add(new Dependency("Bottles", "1.0.0.0"));
-
-			var p2 = new Project("Project2.csproj");
-			p2.Dependencies.Add(new Dependency("Bottles", "1.0.0.0"));
-
-			solution.AddProject(p1);
-			solution.AddProject(p2);
-
-			solution.AssertIsValid();
-		}
-
-		[Test]
-		public void valid_for_floated_nugets()
-		{
-			var solution = new Solution();
-
-			var p1 = new Project("Project1.csproj");
-			p1.Dependencies.Add(new Dependency("Bottles"));
-
-			var p2 = new Project("Project2.csproj");
-			p2.Dependencies.Add(new Dependency("Bottles"));
-
-			solution.AddProject(p1);
-			solution.AddProject(p2);
-
-			solution.AssertIsValid();
-		}
-
-		[Test]
-		public void invalid_for_mismatched_dependencies()
-		{
-			var solution = new Solution();
-
-			var p1 = new Project("Project1.csproj");
-			p1.Dependencies.Add(new Dependency("Bottles", "1.0.0.0"));
-
-			var p2 = new Project("Project2.csproj");
-			p2.Dependencies.Add(new Dependency("Bottles", "0.9.0.0"));
-
-			solution.AddProject(p1);
-			solution.AddProject(p2);
-
-			Exception<RippleException>.ShouldBeThrownBy(() => solution.AssertIsValid())
-				.HasProblems().ShouldBeTrue();
-		}
 
 		[Test]
 		public void find_the_dependency_configuration()

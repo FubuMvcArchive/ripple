@@ -2,6 +2,7 @@ using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
+using ripple.Steps;
 
 namespace ripple.Commands
 {
@@ -11,18 +12,22 @@ namespace ripple.Commands
         public string Name { get; set; }
     }
 
-    [CommandDescription("Allows a nuget to 'float' and be automatically updated from the Update command")]
-    public class FloatCommand : FubuCommand<NugetInput>
+    public class FloatInput : NugetInput
     {
-        public override bool Execute(NugetInput input)
-        {
-			input.EachSolution(solution =>
-			{
-				solution.Dependencies.Find(input.Name).Float();
-				solution.Save();
-			});
+        [Description("The minimum version required")]
+        [FlagAlias("min-version", 'm')]
+        public string MinVersionFlag { get; set; }
+    }
 
-            return true;
+    [CommandDescription("Allows a nuget to 'float' and be automatically updated from the Update command")]
+    public class FloatCommand : FubuCommand<FloatInput>
+    {
+        public override bool Execute(FloatInput input)
+        {
+            return RippleOperation
+                .For<FloatInput>(input)
+                .Step<FloatDependency>()
+                .Execute();
         }
     }
 
