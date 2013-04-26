@@ -39,11 +39,12 @@ namespace :gem do
     end
   end
 
-  desc "publishes an official release of the build artifacts"
-  task :publish do
-    gem_file = Dir.glob("artifacts/*.gem").sort.last
-    sh("gem push #{gem_file}")
-
+  desc "Installs a local copy of the gem"
+  task :install => :archive do 
+    Dir.chdir ARTIFACTS do
+      gem_file = Dir.glob("*.gem").sort.last
+      sh "gem install #{gem_file}"
+    end
   end
 
   desc "copies the files necessary to build the gemspec to the bin directory"
