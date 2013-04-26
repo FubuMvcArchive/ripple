@@ -41,12 +41,14 @@ namespace :gem do
 
   end
 
+  desc "copies the files necessary to build the gemspec to the bin directory"
   task :prepare_bin => :clean do
     dir = "src/ripple/bin/#{COMPILE_TARGET}/"
 
     FileUtils.cp_r "#{dir}/.", File.expand_path('bin/ripple_exe/.', RIPPLE_CLI_FOLDER)
   end
 
+  desc "cleans up gem artifacts"
   task :clean do
     Dir.chdir(RIPPLE_CLI_FOLDER) do
       ['bin/ripple_exe'].each do |d|

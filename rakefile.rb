@@ -70,7 +70,8 @@ task :clean => [:update_buildsupport] do
     waitfor { !exists?(props[:stage]) }
 	Dir.mkdir props[:stage]
     
-	Dir.mkdir props[:artifacts] unless exists?(props[:artifacts])
+	FileUtils.rm_rf props[:artifacts]
+	Dir.mkdir props[:artifacts]
 end
 
 def waitfor(&block)
