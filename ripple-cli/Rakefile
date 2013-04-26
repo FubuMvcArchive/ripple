@@ -16,9 +16,10 @@ module Bundler
     def build_gem
       @gemspec = Bundler.load_gemspec(@spec_path)
 
-      puts @gemspec.files
 
       Dir.chdir(RIPPLE_CLI_FOLDER) do
+        @gemspec.files = Dir.glob("bin/**/*").to_a
+        puts @gemspec.files
         Gem::Package::build @gemspec, true
       end
     end
@@ -45,6 +46,7 @@ namespace :gem do
   task :prepare_bin => :clean do
     dir = "src/ripple/bin/#{COMPILE_TARGET}/"
 
+    FileUtils.mkdir_p File.expand_path("bin/ripple_exe", RIPPLE_CLI_FOLDER)
     FileUtils.cp_r "#{dir}/.", File.expand_path('bin/ripple_exe/.', RIPPLE_CLI_FOLDER)
   end
 
