@@ -98,10 +98,13 @@
     <Compile Include="Model\FeedTester.cs" />
     <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
     <Compile Include="Model\finding_the_latest_dependency.cs" />
-    <Compile Include="Model\IntegratedSolutionUpdatesTester.cs" />
+    <Compile Include="Model\missing_files_with_force_all_restore.cs" />
+    <Compile Include="Model\missing_files_with_force_restore_of_specific_dependency.cs" />
     <Compile Include="Model\NugetDependencyStrategyTester.cs" />
+    <Compile Include="Model\missing_files_with_no_forced_restore.cs" />
     <Compile Include="Model\NuspecDocumentTester.cs" />
     <Compile Include="Model\ProjectReaderTester.cs" />
+    <Compile Include="Model\RestoreSettingsTester.cs" />
     <Compile Include="Model\RippleDependencyReaderTester.cs" />
     <Compile Include="Model\SolutionBuilderTester.cs" />
     <Compile Include="Model\SolutionConfigTester.cs" />

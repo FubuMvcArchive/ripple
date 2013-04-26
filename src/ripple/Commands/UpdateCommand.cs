@@ -29,11 +29,6 @@ namespace ripple.Commands
 		[FlagAlias("force", 'f')]
 		public bool ForceFlag { get; set; }
 
-		public override void ApplyTo(Solution solution)
-		{
-			solution.ForceRestore();
-		}
-
 		public override string DescribePlan(Solution solution)
 		{
 			return "Updating dependencies for solution {0}".ToFormat(solution.Name);

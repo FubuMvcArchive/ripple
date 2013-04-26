@@ -87,21 +87,6 @@ namespace ripple.Model
 			return floatedResult;
 		}
 
-		public IEnumerable<IRemoteNuget> UpdatesFor(Solution solution)
-		{
-			var nugets = new List<IRemoteNuget>();
-			var tasks = solution.Dependencies.Select(dependency => updateNuget(nugets, solution, dependency)).ToArray();
-
-			Task.WaitAll(tasks);
-
-			return nugets;
-		}
-
-		public IRemoteNuget UpdateFor(Solution solution, Dependency dependency, bool force = true)
-		{
-			return LatestFor(solution, dependency, force);
-		}
-
         // Almost entirely covered by integration tests
         public IEnumerable<Dependency> DependenciesFor(Solution solution, Dependency dependency, UpdateMode mode)
         {
@@ -137,11 +122,6 @@ namespace ripple.Model
 
             return dependencies.OrderBy(x => x.Name);
         }
-
-		private Task updateNuget(List<IRemoteNuget> nugets, Solution solution, Dependency dependency)
-		{
-			return Task.Factory.StartNew(() => LatestFor(solution, dependency).CallIfNotNull(nugets.Add));
-		}
 
 		public IRemoteNuget LatestFor(Solution solution, Dependency dependency, bool forced = false)
 		{

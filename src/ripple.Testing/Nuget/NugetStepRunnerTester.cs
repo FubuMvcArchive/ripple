@@ -50,5 +50,17 @@ namespace ripple.Testing.Nuget
 
             theSolution.Dependencies.Find("FubuCore").ShouldEqual(newDependency);
         }
+
+        [Test]
+        public void updating_a_solution_level_dependency_forces_a_restore()
+        {
+            var oldDependency = new Dependency("FubuCore", "1.2.0.0", UpdateMode.Fixed);
+            theSolution.AddDependency(oldDependency);
+
+            var newDependency = new Dependency("FubuCore", "1.3.0.0", UpdateMode.Fixed);
+            theRunner.UpdateDependency(newDependency);
+
+            theSolution.RestoreSettings.ShouldForce(new Dependency("FubuCore")).ShouldBeTrue();
+        }
     }
 }

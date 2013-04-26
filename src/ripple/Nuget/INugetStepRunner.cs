@@ -35,6 +35,7 @@ namespace ripple.Nuget
             dependency.Mode = existing.Mode;
 
             _solution.UpdateDependency(dependency);
+            _solution.ForceRestore(dependency.Name);
         }
     }
 }

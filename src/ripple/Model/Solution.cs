@@ -44,11 +44,9 @@ namespace ripple.Model
 		private readonly IList<Feed> _feeds = new List<Feed>();
 		private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
 		private Lazy<IEnumerable<Dependency>> _missing;
-		private Lazy<IEnumerable<IRemoteNuget>> _updates;
 		private Lazy<IList<NugetSpec>> _specifications;
 		private Lazy<DependencyCollection> _dependencies;
 		private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
-		private bool _forceRestore;
 		private string _path;
 
 		public Solution()
@@ -71,7 +69,7 @@ namespace ripple.Model
 			UsePublisher(PublishingService.For(Mode));
             UseBuilder(new NugetPlanBuilder());
 
-			_forceRestore = false;
+			RestoreSettings = new RestoreSettings();
 
 			Reset();
 		}
@@ -140,6 +138,9 @@ namespace ripple.Model
 		public IPublishingService Publisher { get; private set; }
         [XmlIgnore]
         public INugetPlanBuilder Builder { get; private set; }
+        [XmlIgnore]
+        public RestoreSettings RestoreSettings { get; private set; }
+
 		[XmlIgnore]
 		public string Path
 		{
@@ -172,11 +173,6 @@ namespace ripple.Model
 			specs.AddRange(Publisher.SpecificationsFor(this));
 
 			return specs;
-		}
-
-		private IEnumerable<IRemoteNuget> findUpdates()
-		{
-			return FeedService.UpdatesFor(this);
 		}
 
 		public void AddFeed(Feed feed)
@@ -380,15 +376,18 @@ namespace ripple.Model
 
 		public void ForceRestore()
 		{
-			_forceRestore = true;
-			Reset();
+			RestoreSettings.ForceAll();
 		}
+
+        public void ForceRestore(string name)
+        {
+            RestoreSettings.Force(name);
+        }
 
 		// Mostly for testing
 		public void Reset()
 		{
-			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this, _forceRestore));
-			_updates = new Lazy<IEnumerable<IRemoteNuget>>(findUpdates);
+			_missing = new Lazy<IEnumerable<Dependency>>(() => Storage.MissingFiles(this));
 			_specifications = new Lazy<IList<NugetSpec>>(findSpecifications);
 
 			resetDependencies();
@@ -397,16 +396,6 @@ namespace ripple.Model
 		public LocalDependencies LocalDependencies()
 		{
 			return Storage.Dependencies(this);
-		}
-
-		public IEnumerable<IRemoteNuget> Updates()
-		{
-			return _updates.Value;
-		}
-
-		public IRemoteNuget UpdateFor(string name)
-		{
-			return FeedService.UpdateFor(this, Dependencies.Find(name));
 		}
 
 		public void Update(INugetFile nuget)
