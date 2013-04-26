@@ -29,6 +29,10 @@ end
 namespace :gem do
   require "bundler/gem_tasks"
 
+  %w{install release}.each do |task|
+    Rake::Task["gem:#{task}"].clear
+  end
+
   task :archive => %w{compile prepare_bin build} do
     Dir.chdir(RIPPLE_CLI_FOLDER) do
       copyOutputFiles '.', '*.gem', ARTIFACTS
