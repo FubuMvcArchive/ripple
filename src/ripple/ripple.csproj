@@ -57,6 +57,7 @@
     <Compile Include="Commands\DescribeCommand.cs" />
     <Compile Include="Commands\DescribeGraphCommand.cs" />
     <Compile Include="Commands\InstallCommand.cs" />
+    <Compile Include="Commands\ReplacePackagesConfigCommand.cs" />
     <Compile Include="Commands\RestoreCommand.cs" />
     <Compile Include="Commands\Samples\ExtractSampleCommand.cs" />
     <Compile Include="Commands\FloatCommand.cs" />

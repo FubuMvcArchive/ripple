@@ -127,6 +127,14 @@ namespace ripple.MSBuild
                 }
             }
 
+            foreach (var content in _document.XPathSelectElements("tns:ItemGroup/tns:Content", _manager))
+            {
+                if (content.Attribute("Include").Value == "packages.config")
+                {
+                    return content;
+                }
+            }
+
             return null;
         }
 
