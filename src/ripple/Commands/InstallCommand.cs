@@ -68,9 +68,25 @@ namespace ripple.Commands
 		public override bool Execute(InstallInput input)
 		{
             var solution = Solution.For(input);
-            if(solution.Dependencies.Has(input.Package))
+
+            if (input.ProjectFlag.IsNotEmpty())
             {
-                RippleAssert.Fail(input.Package + " already exists");
+                var project = solution.FindProject(input.ProjectFlag);
+                if (project == null)
+                {
+                    RippleAssert.Fail("Project " + input.ProjectFlag + " does not exist");
+                    return false;
+                }
+
+                if (project.Dependencies.Has(input.Package))
+                {
+                    RippleAssert.Fail(input.Package + " already exists in Project " + input.ProjectFlag);
+                    return false;
+                }
+            }
+            else if(solution.Dependencies.Has(input.Package))
+            {
+                RippleAssert.Fail(input.Package + " already exists in solution");
                 return false;
             }
 
