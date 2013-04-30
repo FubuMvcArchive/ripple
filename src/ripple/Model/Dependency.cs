@@ -154,6 +154,16 @@ namespace ripple.Model
             return MemberwiseClone().As<Dependency>();
         }
 
+        public bool MatchesName(Dependency dependency)
+        {
+            return MatchesName(dependency.Name);
+        }
+
+        public bool MatchesName(string name)
+        {
+            return Name.EqualsIgnoreCase(name);
+        }
+
 		public static Dependency For(INugetFile nuget)
 		{
 			return new Dependency(nuget.Name, nuget.Version.ToString());

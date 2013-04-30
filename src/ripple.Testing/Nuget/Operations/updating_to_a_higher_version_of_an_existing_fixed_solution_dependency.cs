@@ -34,9 +34,9 @@ namespace ripple.Testing.Nuget.Operations
             var request = new NugetPlanRequest
             {
                 Solution = theSolution,
-                Dependency = new Dependency("fubu", "1.2.0.0", UpdateMode.Fixed),
+                Dependency = new Dependency("fubu"),
                 Operation = OperationType.Update,
-                ForceUpdates = true
+                ForceUpdates = false
             };
 
             thePlan = theBuilder.PlanFor(request);

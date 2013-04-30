@@ -32,6 +32,7 @@ namespace ripple.Testing.Commands
             var request = theInput.Requests(theSolution).Single();
             request.Dependency.ShouldEqual(new Dependency("FubuCore"));
             request.Operation.ShouldEqual(OperationType.Update);
+            request.Batched.ShouldBeFalse();
         }
 
         [Test]
@@ -42,6 +43,7 @@ namespace ripple.Testing.Commands
 
             var request = theInput.Requests(theSolution).Single();
             request.Dependency.ShouldEqual(new Dependency("FubuCore", "1.1.0.0"));
+            request.Batched.ShouldBeFalse();
         }
 
         [Test]
@@ -54,6 +56,7 @@ namespace ripple.Testing.Commands
             var request = theInput.Requests(theSolution).Single();
             request.Dependency.ShouldEqual(new Dependency("FubuCore", "1.1.0.0"));
             request.ForceUpdates.ShouldBeTrue();
+            request.Batched.ShouldBeFalse();
         }
 
         [Test]
@@ -62,8 +65,59 @@ namespace ripple.Testing.Commands
             var requests = theInput.Requests(theSolution).ToArray();
 
             requests[0].Dependency.ShouldEqual(new Dependency("Bottles"));
+            requests[0].Batched.ShouldBeTrue();
+
             requests[1].Dependency.ShouldEqual(new Dependency("FubuCore"));
+            requests[1].Batched.ShouldBeTrue();
+
             requests[2].Dependency.ShouldEqual(new Dependency("FubuLocalization"));
+            requests[2].Batched.ShouldBeTrue();
+        }
+
+        [Test]
+        public void requests_for_a_single_dependency_in_a_group()
+        {
+            var group = new DependencyGroup();
+            group.Dependencies.Add(new GroupedDependency("FubuCore"));
+            group.Dependencies.Add(new GroupedDependency("FubuLocalization"));
+
+            theSolution.Groups.Add(group);
+            theInput.NugetFlag = "FubuCore";
+
+            var requests = theInput.Requests(theSolution).ToArray();
+
+            requests[0].Dependency.ShouldEqual(new Dependency("FubuCore"));
+            requests[0].Batched.ShouldBeFalse();
+
+            requests[1].Dependency.ShouldEqual(new Dependency("FubuLocalization"));
+            requests[1].Batched.ShouldBeFalse();
+        }
+
+        [Test]
+        public void requests_for_a_single_dependency_in_multiple_groups()
+        {
+            var g1 = new DependencyGroup();
+            g1.Dependencies.Add(new GroupedDependency("FubuCore"));
+            g1.Dependencies.Add(new GroupedDependency("FubuLocalization"));
+            theSolution.Groups.Add(g1);
+
+            var g2 = new DependencyGroup();
+            g2.Dependencies.Add(new GroupedDependency("FubuLocalization"));
+            g2.Dependencies.Add(new GroupedDependency("Bottles"));
+            theSolution.Groups.Add(g2);
+
+            theInput.NugetFlag = "FubuCore";
+
+            var requests = theInput.Requests(theSolution).ToArray();
+
+            requests[0].Dependency.ShouldEqual(new Dependency("FubuCore"));
+            requests[0].Batched.ShouldBeFalse();
+
+            requests[1].Dependency.ShouldEqual(new Dependency("FubuLocalization"));
+            requests[1].Batched.ShouldBeFalse();
+
+            requests[2].Dependency.ShouldEqual(new Dependency("Bottles"));
+            requests[2].Batched.ShouldBeFalse();
         }
     }
 }

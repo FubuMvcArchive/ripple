@@ -131,12 +131,26 @@ namespace ripple.Testing.Nuget
         }
 
         [Test]
-        public void no_update_for_fixed_when_not_forced()
+        public void update_for_fixed_when_not_forced_and_not_batched()
         {
             var request = new NugetPlanRequest
             {
                 Dependency = new Dependency("FubuCore"),
                 ForceUpdates = false,
+                Operation = OperationType.Update,
+            };
+
+            request.ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Fixed)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void no_update_for_fixed_when_not_forced_and_batched()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Batched = true,
                 Operation = OperationType.Update,
             };
 
@@ -154,6 +168,69 @@ namespace ripple.Testing.Nuget
             };
 
             request.ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Float)).ShouldBeFalse();
+        }
+
+        [Test]
+        public void original_dependency()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Operation = OperationType.Install,
+            };
+
+            request.Origin().ShouldEqual(request.Dependency);
+        }
+
+        [Test]
+        public void original_dependency_recursive()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Operation = OperationType.Install,
+            };
+
+            request.CopyFor(new Dependency("Bottles"))
+                   .CopyFor(new Dependency("Something"))
+                   .Origin()
+                   .ShouldEqual(request.Dependency);
+        }
+
+        [Test]
+        public void should_force_update_for_the_original_dependency_when_not_batched()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Batched = false,
+                Operation = OperationType.Install,
+            };
+
+            request.CopyFor(new Dependency("Bottles"))
+                   .CopyFor(new Dependency("Something"))
+                   .ShouldForce(request.Dependency)
+                   .ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_not_force_update_for_the_original_dependency_when_batched()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Batched = true,
+                Operation = OperationType.Install,
+            };
+
+            request.CopyFor(new Dependency("Bottles"))
+                   .CopyFor(new Dependency("Something"))
+                   .ShouldForce(request.Dependency)
+                   .ShouldBeFalse();
         }
     }
 }

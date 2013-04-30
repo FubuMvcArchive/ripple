@@ -56,6 +56,7 @@ namespace ripple.Model
 			BuildCommand = "rake";
 			FastBuildCommand = "rake compile";
 			Mode = SolutionMode.Ripple;
+            Groups = new List<DependencyGroup>();
 
 			AddFeed(Feed.Fubu);
 			AddFeed(Feed.NuGetV2);
@@ -100,6 +101,10 @@ namespace ripple.Model
 				resetDependencies();
 			}
 		}
+
+        [XmlArray("Groups")]
+        [XmlArrayItem("Group")]
+        public List<DependencyGroup> Groups { get; set; }
 
 		[XmlIgnore]
 		public DependencyCollection Dependencies

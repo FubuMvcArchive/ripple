@@ -252,6 +252,17 @@ namespace ripple.Testing
 			{
 				_projects[project].AddDependency(new Dependency(id));
 			}
+
+		    public void GroupDependencies(params string[] dependencies)
+		    {
+		        Modify(solution =>
+		        {
+                    var group = new DependencyGroup();
+		            dependencies.Each(x => group.Dependencies.Add(new GroupedDependency(x)));
+
+                    solution.Groups.Add(group);
+		        });
+		    }
 		}
 
 		public class PublishesExpression

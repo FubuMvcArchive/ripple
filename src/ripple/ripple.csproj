@@ -106,6 +106,7 @@
     <Compile Include="Model\BranchDetector.cs" />
     <Compile Include="Model\Dependency.cs" />
     <Compile Include="Model\DependencyCollection.cs" />
+    <Compile Include="Model\DependencyGroup.cs" />
     <Compile Include="Model\Feed.cs" />
     <Compile Include="Model\FeedRegistry.cs" />
     <Compile Include="Model\FeedService.cs" />

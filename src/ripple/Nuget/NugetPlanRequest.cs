@@ -16,6 +16,7 @@ namespace ripple.Nuget
         public string Project { get; set; }
         public OperationType Operation { get; set; }
         public NugetPlanRequest Parent { get; set; }
+        public bool Batched { get; set; }
 
         /// <summary>
         /// Fixed versions are 'fixed'. Use this option to force updates of existing dependencies.
@@ -58,9 +59,29 @@ namespace ripple.Nuget
             return request;
         }
 
+        public Dependency Origin()
+        {
+            var origin = Dependency;
+            var parent = Parent;
+            while (parent != null)
+            {
+                origin = parent.Dependency;
+                parent = parent.Parent;
+            }
+
+            return origin;
+        }
+
+        public bool ShouldForce(Dependency dependency)
+        {
+            if (ForceUpdates) return true;
+
+            return !Batched && Origin().MatchesName(dependency);
+        }
+
         public bool ShouldUpdate(Dependency configured)
         {
-            return (IsTransitive() || Operation == OperationType.Update) && (ForceUpdates || configured.IsFloat());
+            return (IsTransitive() || Operation == OperationType.Update) && (ShouldForce(configured) || configured.IsFloat());
         }
 
         protected bool Equals(NugetPlanRequest other)

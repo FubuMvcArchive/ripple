@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
@@ -42,22 +43,53 @@ namespace ripple.Commands
 	    {
 	        if (NugetFlag.IsNotEmpty())
 	        {
-	            var dependency = solution.Dependencies.Find(NugetFlag);
-                yield return new NugetPlanRequest
-                {
-                    ForceUpdates = ForceFlag,
-                    Operation = OperationType.Update,
-                    Dependency = new Dependency(dependency.Name, VersionFlag, dependency.Mode) { NugetStability = StabilityFlag}
-                };
+                var requests = new List<NugetPlanRequest>();
+	            gatherDependencies(requests, solution, NugetFlag);
+
+	            return requests;
 	        }
-	        else
-	        {
-                foreach (var dependency in solution.Dependencies)
-                {
-                    yield return requestForDependency(dependency);
-                }
-	        }
+
+	        return solution.Dependencies.Select(requestForDependency);
 	    }
+
+        private NugetPlanRequest requestForExisting(Solution solution, string name)
+        {
+            var dependency = solution.Dependencies.Find(name);
+            return new NugetPlanRequest
+            {
+                ForceUpdates = ForceFlag,
+                Operation = OperationType.Update,
+                Dependency = new Dependency(dependency.Name, VersionFlag, dependency.Mode) { NugetStability = StabilityFlag }
+            };
+        }
+
+        private void gatherDependencies(List<NugetPlanRequest> requests, Solution solution, string name)
+        {
+            if (!solution.Groups.Any(group => group.Has(name)))
+            {
+                requests.Fill(requestForExisting(solution, name));
+                return;
+            }
+
+
+            var dependencies = solution
+                .Groups
+                .Where(group => group.Has(name))
+                .SelectMany(group => group.Dependencies.Select(x => x.Name))
+                .Distinct();
+
+            var newItems = new List<string>();
+            dependencies.Each(x =>
+            {
+                if (!requests.Any(r => r.Dependency.MatchesName(x)))
+                {
+                    newItems.Add(x);
+                    requests.Fill(requestForExisting(solution, x));
+                }
+            });
+
+            newItems.Each(x => gatherDependencies(requests, solution, x));
+        }
 
 	    private NugetPlanRequest requestForDependency(Dependency dependency)
 	    {
@@ -65,6 +97,7 @@ namespace ripple.Commands
             {
                 ForceUpdates = ForceFlag,
                 Operation = OperationType.Update,
+                Batched = true,
                 Dependency = new Dependency(dependency.Name, dependency.Mode)
             };
 	    }
