@@ -15,7 +15,7 @@ namespace ripple.Testing.Model
 
 		public StubFeedProvider()
 		{
-			_feeds = new Cache<Feed, StubFeed>(feed => new StubFeed());
+			_feeds = new Cache<Feed, StubFeed>(feed => new StubFeed(feed));
 		}
 
 		public INugetFeed For(Feed feed)
@@ -27,14 +27,17 @@ namespace ripple.Testing.Model
 	public class StubFeed : INugetFeed
 	{
 		private readonly IList<IRemoteNuget> _nugets = new List<IRemoteNuget>();
-        private readonly IList<DependencyError> _explicitErrors = new List<DependencyError>(); 
+        private readonly IList<DependencyError> _explicitErrors = new List<DependencyError>();
+	    private readonly Feed _feed;
 
-		public StubFeed()
+		public StubFeed(Feed feed)
 		{
-			UseRepository(new StubPackageRepository());
+		    _feed = feed;
+
+		    UseRepository(new StubPackageRepository());
 		}
 
-		public StubFeed Add(string name, string version)
+	    public StubFeed Add(string name, string version)
 		{
 			return Add(new Dependency(name, version));
 		}
@@ -55,7 +58,14 @@ namespace ripple.Testing.Model
             }
 
 			var version = SemanticVersion.Parse(query.Version);
-			return _nugets.FirstOrDefault(x => x.Name == query.Name && x.Version.Equals(version));
+			var matching = _nugets.Where(x => x.Name == query.Name);
+
+            if (query.DetermineStability(_feed.Stability) == NugetStability.ReleasedOnly)
+            {
+                return matching.FirstOrDefault(x => x.Version.SpecialVersion.IsEmpty() && x.Version.Equals(version));
+            }
+
+		    return matching.FirstOrDefault(x => x.Version.Version.Equals(version.Version));
 		}
 
 		public IRemoteNuget FindLatest(Dependency query)

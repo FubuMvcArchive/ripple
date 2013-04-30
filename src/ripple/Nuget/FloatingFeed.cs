@@ -12,7 +12,8 @@ namespace ripple.Nuget
 
 		private readonly Lazy<XmlDocument> _feed;
 
-        public FloatingFeed(string url) : base(url)
+        public FloatingFeed(string url, NugetStability stability) 
+            : base(url, stability)
         {
             _feed = new Lazy<XmlDocument>(loadLatestFeed);
         }

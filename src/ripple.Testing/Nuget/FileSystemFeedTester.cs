@@ -31,7 +31,7 @@ namespace ripple.Testing.Nuget
             createNuget("FubuNew", "1.0.0.0");
             createNuget("FubuNew", "1.0.0.1-alpha");
 
-            theFeed = new FileSystemNugetFeed(theDirectory);
+            theFeed = new FileSystemNugetFeed(theDirectory, NugetStability.ReleasedOnly);
         }
 
         private void createNuget(string id, string version)
@@ -63,8 +63,8 @@ namespace ripple.Testing.Nuget
         [Test]
         public void finds_the_latest_for_a_special_version()
         {
-            theFeed.FindLatest(new Dependency("FubuNew") { Stability = NugetStability.ReleasedOnly }).Version.ShouldEqual(new SemanticVersion("1.0.0.0"));
-            theFeed.FindLatest(new Dependency("FubuNew") {Stability = NugetStability.Anything}).Version.ShouldEqual(new SemanticVersion("1.0.0.1-alpha"));
+            theFeed.FindLatest(new Dependency("FubuNew") { NugetStability = NugetStability.ReleasedOnly }).Version.ShouldEqual(new SemanticVersion("1.0.0.0"));
+            theFeed.FindLatest(new Dependency("FubuNew") { NugetStability = NugetStability.Anything }).Version.ShouldEqual(new SemanticVersion("1.0.0.1-alpha"));
         }
     }
 
@@ -90,7 +90,7 @@ namespace ripple.Testing.Nuget
             createNuget("FubuNew", "1.0.0.0");
             createNuget("FubuNew", "1.0.0.1-alpha");
 
-            theFeed = new FloatingFileSystemNugetFeed(theDirectory);
+            theFeed = new FloatingFileSystemNugetFeed(theDirectory, NugetStability.Anything);
         }
 
         private void createNuget(string id, string version)

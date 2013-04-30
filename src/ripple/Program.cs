@@ -13,6 +13,7 @@ namespace ripple
             {
                 var factory = new CommandFactory();
                 factory.RegisterCommands(typeof (Program).Assembly);
+                factory.RegisterCommands(typeof(FubuCommand<>).Assembly);
 
                 var executor = new CommandExecutor(factory);
                 success = executor.Execute(args);

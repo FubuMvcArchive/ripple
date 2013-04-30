@@ -38,11 +38,15 @@ namespace ripple.Commands
         [Description("Only show what would be installed")]
         public bool PreviewFlag { get; set; }
 
+        [Description("Override the feed-level stability configuration")]
+        [FlagAlias("stability", 's')]
+        public NugetStability? StabilityFlag { get; set; }
+
 		public Dependency Dependency
 		{
 			get
 			{
-				return new Dependency(Package, VersionFlag, ModeFlag);
+				return new Dependency(Package, VersionFlag, ModeFlag) { NugetStability = StabilityFlag };
 			}
 		}
 

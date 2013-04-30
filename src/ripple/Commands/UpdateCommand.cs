@@ -29,6 +29,10 @@ namespace ripple.Commands
 		[FlagAlias("force", 'f')]
 		public bool ForceFlag { get; set; }
 
+        [Description("Override the feed-level stability configuration")]
+        [FlagAlias("stability", 's')]
+        public NugetStability? StabilityFlag { get; set; }
+
 		public override string DescribePlan(Solution solution)
 		{
 			return "Updating dependencies for solution {0}".ToFormat(solution.Name);
@@ -43,7 +47,7 @@ namespace ripple.Commands
                 {
                     ForceUpdates = ForceFlag,
                     Operation = OperationType.Update,
-                    Dependency = new Dependency(dependency.Name, VersionFlag, dependency.Mode)
+                    Dependency = new Dependency(dependency.Name, VersionFlag, dependency.Mode) { NugetStability = StabilityFlag}
                 };
 	        }
 	        else

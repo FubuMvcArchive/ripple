@@ -9,10 +9,12 @@ namespace ripple.Nuget
     {
         private readonly IPackageRepository _repository;
         private readonly string _url;
+        private readonly NugetStability _stability;
 
-        public NugetFeed(string url)
+        public NugetFeed(string url, NugetStability stability)
         {
             _url = url;
+            _stability = stability;
             _repository = new PackageRepositoryFactory().CreateRepository(_url);
         }
 
@@ -31,7 +33,7 @@ namespace ripple.Nuget
 			}
 
             var versionSpec = new VersionSpec(version);
-            var package = _repository.FindPackages(query.Name, versionSpec, query.Stability == NugetStability.Anything, true).SingleOrDefault();
+            var package = _repository.FindPackages(query.Name, versionSpec, query.DetermineStability(_stability) == NugetStability.Anything, true).SingleOrDefault();
 
             if (package == null)
             {
@@ -39,15 +41,13 @@ namespace ripple.Nuget
             }
             
             return new RemoteNuget(package);
-            
-            
         }
 
 
 		public IRemoteNuget FindLatest(Dependency query)
         {
 			RippleLog.Debug("Searching for {0} from {1}".ToFormat(query, _url));
-            var candidates = _repository.Search(query.Name, query.Stability == NugetStability.Anything)
+            var candidates = _repository.Search(query.Name, query.DetermineStability(_stability) == NugetStability.Anything)
                                         .Where(x => x.Id == query.Name).OrderBy(x => x.Id).ToList();
 
             var candidate = candidates.FirstOrDefault(x => x.IsAbsoluteLatestVersion)

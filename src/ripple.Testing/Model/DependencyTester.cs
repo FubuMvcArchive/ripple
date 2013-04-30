@@ -1,6 +1,7 @@
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
+using ripple.Nuget;
 
 namespace ripple.Testing.Model
 {
@@ -47,5 +48,32 @@ namespace ripple.Testing.Model
 			new Dependency("Bottles", "1.0.0.0").ToString().ShouldEqual("Bottles,1.0.0.0");
 			new Dependency("Bottles", "1.0.0.1", UpdateMode.Fixed).ToString().ShouldEqual("Bottles,1.0.0.1,Fixed");
 		}
+
+        [Test]
+        public void determine_stability()
+        {
+            new Dependency("FubuCore").DetermineStability(NugetStability.Anything).ShouldEqual(NugetStability.Anything);
+            new Dependency("FubuCore") { NugetStability = NugetStability.ReleasedOnly }.DetermineStability(NugetStability.Anything).ShouldEqual(NugetStability.ReleasedOnly);
+        }
+
+        [Test]
+        public void parsing_stability()
+        {
+            new Dependency("FubuCore") {Stability = "Anything"}.NugetStability.ShouldEqual(NugetStability.Anything);
+            new Dependency("FubuCore") { Stability = "ReleasedOnly" }.NugetStability.ShouldEqual(NugetStability.ReleasedOnly);
+        }
+
+        [Test]
+        public void released_only()
+        {
+            new Dependency("FubuCore").IsReleasedOnly().ShouldBeTrue();
+            new Dependency("FubuCore") { NugetStability = NugetStability.ReleasedOnly}.IsReleasedOnly().ShouldBeTrue();
+        }
+
+        [Test]
+        public void released_only_negative()
+        {
+            new Dependency("FubuCore") { NugetStability = NugetStability.Anything }.IsReleasedOnly().ShouldBeFalse();
+        }
 	}
 }

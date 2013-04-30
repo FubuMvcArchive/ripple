@@ -127,6 +127,8 @@
     <Compile Include="Nuget\FileSystemFeedTester.cs" />
     <Compile Include="Nuget\NugetPlanRequestTester.cs" />
     <Compile Include="Nuget\NugetStepRunnerTester.cs" />
+    <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_any_stability.cs" />
+    <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_released_only.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_with_existing_transitive_dependencies.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_with_higher_min_version_than_existing_transitive_dependencies_with_force_option.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_with_higher_min_version_than_existing_transitive_dependencies_without_force_option.cs" />
@@ -146,7 +148,6 @@
     <Compile Include="Nuget\InstallProjectDependencyTester.cs" />
     <Compile Include="Nuget\InstallSolutionDependencyTester.cs" />
     <Compile Include="Nuget\LocalDependenciesTester.cs" />
-    <Compile Include="Nuget\NugetFeedSmokeTester.cs" />
     <Compile Include="Nuget\NugetFileTester.cs" />
     <Compile Include="Nuget\NugetFolderCacheSmokeTester.cs" />
     <Compile Include="Nuget\NugetFolderCacheTester.cs" />

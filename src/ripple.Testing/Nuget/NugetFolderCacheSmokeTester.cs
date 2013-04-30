@@ -74,10 +74,10 @@ namespace ripple.Testing.Nuget
             fileSystem.WriteStringToFile(@"c:\nugets\lib2.1.0.0.0.nupkg", "foo");
             fileSystem.WriteStringToFile(@"c:\nugets\lib3.1.0.0.0.nupkg", "foo");
 
-            theCache.Latest(new Dependency("foo") { Stability = NugetStability.Anything})
+            theCache.Latest(new Dependency("foo") { NugetStability = NugetStability.Anything })
                     .Version.ShouldEqual(SemanticVersion.Parse("1.3.0.0-alpha"));
 
-            theCache.Latest(new Dependency("foo") { Stability = NugetStability.ReleasedOnly })
+            theCache.Latest(new Dependency("foo") { NugetStability = NugetStability.ReleasedOnly })
                     .Version.ShouldEqual(SemanticVersion.Parse("1.2.0.0"));
 
         }
@@ -114,7 +114,7 @@ namespace ripple.Testing.Nuget
         {
             //theCache.Flush();
             
-            var feed = new FloatingFeed(RippleConstants.FubuTeamCityFeed);
+            var feed = new FloatingFeed(Feed.Fubu.Url, Feed.Fubu.Stability);
             theCache.UpdateAll(feed.GetLatest());
 
             fileSystem.FindFiles("c:\\nugets", FileSet.Deep("*.nupkg"))

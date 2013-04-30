@@ -11,10 +11,12 @@ namespace ripple.Nuget
     {
         private readonly string _directory;
         private readonly FubuCore.IFileSystem _fileSystem;
+        private readonly NugetStability _stability;
 
-        public FileSystemNugetFeed(string directory)
+        public FileSystemNugetFeed(string directory, NugetStability stability)
         {
             _directory = directory;
+            _stability = stability;
             _fileSystem = new FileSystem();
         }
 
@@ -60,7 +62,7 @@ namespace ripple.Nuget
         public IRemoteNuget FindLatest(Dependency query)
         {
             var nugets = files
-                .Where(x => x.Name == query.Name && (!x.IsPreRelease || (x.IsPreRelease && query.Stability == NugetStability.Anything)))
+                .Where(x => x.Name == query.Name && (!x.IsPreRelease || (x.IsPreRelease && query.DetermineStability(_stability) == NugetStability.Anything)))
                 .ToList();
                 
             var nuget = nugets
@@ -80,8 +82,8 @@ namespace ripple.Nuget
 
     public class FloatingFileSystemNugetFeed : FileSystemNugetFeed, IFloatingFeed
     {
-        public FloatingFileSystemNugetFeed(string directory) 
-            : base(directory)
+        public FloatingFileSystemNugetFeed(string directory, NugetStability stability) 
+            : base(directory, stability)
         {
         }
 

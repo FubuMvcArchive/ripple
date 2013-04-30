@@ -104,7 +104,7 @@ namespace ripple.Nuget
 		public INugetFile Latest(Dependency query)
         {
             IEnumerable<INugetFile> files = Dependencies.Where(x => x.Name == query.Name).ToList();
-            if (query.Stability == NugetStability.ReleasedOnly)
+            if (query.IsReleasedOnly())
             {
                 files = files.Where(x => x.Version.SpecialVersion.IsEmpty());
             }
@@ -159,7 +159,6 @@ namespace ripple.Nuget
 
 			new FileSystem().CreateDirectory(ripple);
 
-			// TODO -- Be smart enough to switch off the Solution "mode"
 			return new NugetFolderCache(solution, ripple);
 		}
     }

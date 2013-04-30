@@ -35,7 +35,6 @@ namespace ripple.Model
 			Version = version ?? string.Empty;
 
 			Mode = mode;
-			Stability = NugetStability.Anything;
 		}
 
         public Dependency(string name, SemanticVersion version, UpdateMode mode)
@@ -49,8 +48,26 @@ namespace ripple.Model
 		public string Version { get; set; }
 		[XmlAttribute]
 		public UpdateMode Mode { get; set; }
-		[XmlAttribute]
-		public NugetStability Stability { get; set; }
+
+	    public string Stability
+	    {
+	        get { return NugetStability.HasValue ? NugetStability.Value.ToString() : null; }
+            set
+            {
+                if (value.IsNotEmpty())
+                {
+                    NugetStability = (NugetStability) Enum.Parse(typeof (NugetStability), value);
+                }
+            }
+	    }
+
+		[XmlIgnore]
+        public NugetStability? NugetStability { get; set; }
+
+        public NugetStability DetermineStability(NugetStability stability)
+        {
+            return NugetStability ?? stability;
+        }
 
 		public SemanticVersion SemanticVersion()
 		{
@@ -173,5 +190,10 @@ namespace ripple.Model
 		{
 			return new Dependency(element.GetAttribute("id"), element.GetAttribute("version"), UpdateMode.Fixed);
 		}
+
+	    public bool IsReleasedOnly()
+	    {
+	        return DetermineStability(Nuget.NugetStability.ReleasedOnly) == Nuget.NugetStability.ReleasedOnly;
+	    }
 	}
 }

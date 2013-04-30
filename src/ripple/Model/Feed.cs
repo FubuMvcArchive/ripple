@@ -15,6 +15,7 @@ namespace ripple.Model
 
 		public Feed()
 		{
+            Stability = NugetStability.ReleasedOnly;
 		}
 
 		public Feed(string url)
@@ -23,22 +24,29 @@ namespace ripple.Model
 		}
 
 		public Feed(string url, UpdateMode mode)
+            : this(url, mode, NugetStability.ReleasedOnly)
 		{
-			Url = url.TrimEnd('/');
-			Mode = mode;
 		}
 
-		[XmlAttribute]
+	    public Feed(string url, UpdateMode mode, NugetStability stability)
+	    {
+            Url = url.TrimEnd('/');
+            Mode = mode;
+	        Stability = stability;
+	    }
+
+	    [XmlAttribute]
 		public string Url { get; set; }
 		[XmlAttribute]
 		public UpdateMode Mode { get; set; }
+        [XmlAttribute]
+        public NugetStability Stability { get; set; }
 
 		public INugetFeed GetNugetFeed()
 		{
 			return FeedRegistry.FeedFor(this);
 		}
 
-		// This is stupid
 		public IRemoteNuget Find(Dependency query)
 		{
 			var feed = GetNugetFeed();

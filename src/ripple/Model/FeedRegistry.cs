@@ -31,10 +31,10 @@ namespace ripple.Model
 
 			if (feed.Mode == UpdateMode.Fixed)
 			{
-				return new NugetFeed(feed.Url);
+				return new NugetFeed(feed.Url, feed.Stability);
 			}
 
-			return new FloatingFeed(feed.Url);
+            return new FloatingFeed(feed.Url, feed.Stability);
 		}
 
         private const string BranchPlaceholder = "{branch}";
@@ -51,10 +51,10 @@ namespace ripple.Model
 
             if (feed.Mode == UpdateMode.Fixed)
             {
-                return new FileSystemNugetFeed(directory);
+                return new FileSystemNugetFeed(directory, feed.Stability);
             }
 
-            return new FloatingFileSystemNugetFeed(directory);
+            return new FloatingFileSystemNugetFeed(directory, feed.Stability);
         }
 	}
 
