@@ -77,10 +77,10 @@ namespace ripple.Testing.Integration
         [Test]
         public void verify_updates_of_all_grouped_items()
         {
-            theSolution.Dependencies.Find("RavenDB.Client").Version.ShouldEqual(new SemanticVersion("2.0.2330.0"));
-            theSolution.Dependencies.Find("RavenDB.Database").Version.ShouldEqual(new SemanticVersion("2.0.2330.0"));
-            theSolution.Dependencies.Find("RavenDB.Embedded").Version.ShouldEqual(new SemanticVersion("2.0.2330.0"));
-            theSolution.Dependencies.Find("RavenDB.Server").Version.ShouldEqual(new SemanticVersion("2.0.2330.0"));
+            theSolution.Dependencies.Find("RavenDB.Client").SemanticVersion().ShouldEqual(new SemanticVersion("2.0.2330"));
+            theSolution.Dependencies.Find("RavenDB.Database").SemanticVersion().ShouldEqual(new SemanticVersion("2.0.2330"));
+            theSolution.Dependencies.Find("RavenDB.Embedded").SemanticVersion().ShouldEqual(new SemanticVersion("2.0.2330"));
+            theSolution.Dependencies.Find("RavenDB.Server").SemanticVersion().ShouldEqual(new SemanticVersion("2.0.2330"));
         }
     }
 }
