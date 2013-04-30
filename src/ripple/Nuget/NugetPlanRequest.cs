@@ -1,5 +1,4 @@
-﻿using System;
-using FubuCore;
+﻿using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -14,10 +13,19 @@ namespace ripple.Nuget
     {
         public Solution Solution { get; set; }
         public Dependency Dependency { get; set; }
-        
         public string Project { get; set; }
-        
         public OperationType Operation { get; set; }
+        public NugetPlanRequest Parent { get; set; }
+
+        /// <summary>
+        /// Fixed versions are 'fixed'. Use this option to force updates of existing dependencies.
+        /// </summary>
+        public bool ForceUpdates { get; set; }
+
+        public bool IsTransitive()
+        {
+            return Parent != null;
+        }
 
         public bool InstallToProject()
         {
@@ -41,17 +49,18 @@ namespace ripple.Nuget
             return local.Version < Dependency.SemanticVersion();
         }
 
-        /// <summary>
-        /// Fixed versions are 'fixed'. Use this option to force updates of existing dependencies.
-        /// </summary>
-        public bool ForceUpdates { get; set; }
-
         public NugetPlanRequest CopyFor(Dependency dependency)
         {
             var request = (NugetPlanRequest) MemberwiseClone();
             request.Dependency = dependency;
+            request.Parent = this;
 
             return request;
+        }
+
+        public bool ShouldUpdate(Dependency configured)
+        {
+            return (IsTransitive() || Operation == OperationType.Update) && (ForceUpdates || configured.IsFloat());
         }
 
         protected bool Equals(NugetPlanRequest other)

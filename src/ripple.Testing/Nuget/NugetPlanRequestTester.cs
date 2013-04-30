@@ -37,7 +37,123 @@ namespace ripple.Testing.Nuget
             copied.ForceUpdates.ShouldEqual(request.ForceUpdates);
             copied.Operation.ShouldEqual(request.Operation);
             copied.Solution.ShouldEqual(request.Solution);
+        }
 
+        [Test]
+        public void is_transitive()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = true,
+                Operation = OperationType.Update,
+            };
+
+            request.IsTransitive().ShouldBeFalse();
+        }
+
+        [Test]
+        public void copying_the_request_marks_as_transitive()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = true,
+                Operation = OperationType.Update,
+            };
+
+            request.CopyFor(new Dependency("Bottles")).IsTransitive().ShouldBeTrue();
+        }
+
+        [Test]
+        public void copying_the_request_sets_the_parent()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = true,
+                Operation = OperationType.Update,
+            };
+
+            request.CopyFor(new Dependency("Bottles")).Parent.ShouldEqual(request);
+        }
+
+        [Test]
+        public void should_update_forced_transitive_install()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = true,
+                Operation = OperationType.Install,
+            };
+
+            request.CopyFor(new Dependency("Bottles", "1.0.0.0", UpdateMode.Fixed)).ShouldUpdate(new Dependency("Bottles")).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_update_forced_update()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = true,
+                Operation = OperationType.Update,
+            };
+
+            request.ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Fixed)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_update_transitive_floats()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Operation = OperationType.Install,
+            };
+
+            request.CopyFor(new Dependency("Bottles", "1.0.0.0", UpdateMode.Fixed)).ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Float)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_update_floats_when_forced()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = true,
+                Operation = OperationType.Update,
+            };
+
+            request.ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Float)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void no_update_for_fixed_when_not_forced()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Operation = OperationType.Update,
+            };
+
+            request.ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Fixed)).ShouldBeFalse();
+        }
+
+        [Test]
+        public void no_update_for_float_when_not_an_update()
+        {
+            var request = new NugetPlanRequest
+            {
+                Dependency = new Dependency("FubuCore"),
+                ForceUpdates = false,
+                Operation = OperationType.Install,
+            };
+
+            request.ShouldUpdate(new Dependency("FubuCore", "1.0.0.0", UpdateMode.Float)).ShouldBeFalse();
         }
     }
 }

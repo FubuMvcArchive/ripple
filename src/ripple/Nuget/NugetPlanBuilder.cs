@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using FubuCore.Util;
@@ -26,7 +25,7 @@ namespace ripple.Nuget
             return buildPlan(request);
         }
 
-        private NugetPlan buildPlan(NugetPlanRequest request, Dependency parent = null, int depth = 0)
+        private NugetPlan buildPlan(NugetPlanRequest request, Dependency parent = null)
         {
             var plan = new NugetPlan();
             var target = request.Dependency;
@@ -55,16 +54,7 @@ namespace ripple.Nuget
 
             if (request.UpdatesCurrentDependency())
             {
-                var configured = solution.Dependencies.Find(target.Name);
-                var shouldUpdate = (depth != 0 || request.Operation == OperationType.Update) && (request.ForceUpdates || configured.IsFloat());
-                if (shouldUpdate)
-                {
-                    plan.AddStep(new UpdateDependency(target));
-                }
-                else
-                {
-                    RippleLog.Info("Warning: This operation requires {0} to be updated to {1} but it is marked as fixed. Use the force option to correct this.".ToFormat(target.Name, target.Version));
-                }
+                updateDependency(plan, request);
             }
             else if(!solution.Dependencies.Has(target.Name))
             {
@@ -76,11 +66,27 @@ namespace ripple.Nuget
             var nugetDependencies = solution.FeedService.DependenciesFor(solution, target, target.Mode);
             nugetDependencies.Each(x =>
             {
-                var childPlan = buildPlan(request.CopyFor(x), target, depth + 1);
+                var childPlan = buildPlan(request.CopyFor(x), target);
                 plan.Import(childPlan);
             });
 
             return plan;
+        }
+
+        private void updateDependency(NugetPlan plan, NugetPlanRequest request)
+        {
+            var target = request.Dependency;
+            var solution = request.Solution;
+
+            var configured = solution.Dependencies.Find(target.Name);
+
+            if (!request.ShouldUpdate(configured))
+            {
+                RippleLog.Info("Warning: This operation requires {0} to be updated to {1} but it is marked as fixed. Use the force option to correct this.".ToFormat(target.Name, target.Version));
+                return;
+            }
+
+            plan.AddStep(new UpdateDependency(target));
         }
 
         private void projectInstallations(NugetPlan plan, Dependency parent, NugetPlanRequest request)
