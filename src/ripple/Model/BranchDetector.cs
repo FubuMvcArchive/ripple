@@ -6,23 +6,37 @@ namespace ripple.Model
 {
     public static class BranchDetector
     {
-        public static Func<string> ProvideBranchName = () =>
+        private static Func<string> _current;
+ 
+        static BranchDetector()
         {
-            var startInfo = Runner.Git.Info("symbolic-ref HEAD");
-            var returnValue = new ProcessRunner().Run(startInfo, x => { });
-            if (returnValue.ExitCode != 0)
+            Live();
+        }
+        
+        public static void Live()
+        {
+            _current = () =>
             {
-                RippleAssert.Fail("Cannot use branch detection when not in a git repository");
-            }
-            var output = returnValue.OutputText;
+                var startInfo = Runner.Git.Info("symbolic-ref HEAD");
+                var returnValue = new ProcessRunner().Run(startInfo, x => { });
+                if (returnValue.ExitCode != 0)
+                {
+                    RippleAssert.Fail("Cannot use branch detection when not in a git repository");
+                }
 
-            return output.Substring(output.LastIndexOf('/') + 1)
-                .Replace("\n", string.Empty);
-        };
+                var output = returnValue.OutputText;
+                return output.Substring(output.LastIndexOf('/') + 1).Replace("\n", string.Empty).Replace("\r", string.Empty).Trim();
+            };
+        }
 
-        public static string GetBranch()
+        public static void Stub(Func<string> current)
         {
-            return ProvideBranchName();
+            _current = current;
+        }
+
+        public static string Current()
+        {
+            return _current();
         }
     }
 }

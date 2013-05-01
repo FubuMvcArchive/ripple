@@ -45,7 +45,7 @@ namespace ripple.Model
 
             if (directory.Contains(BranchPlaceholder))
             {
-                var branchName = BranchDetector.GetBranch();
+                var branchName = BranchDetector.Current();
                 directory = directory.Replace(BranchPlaceholder, branchName);
             }
 

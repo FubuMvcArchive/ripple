@@ -67,7 +67,7 @@
     <Compile Include="Commands\LocalCommand.cs" />
     <Compile Include="Commands\LocalNugetCommand.cs" />
     <Compile Include="Commands\LowerBoundsCommand.cs" />
-    <Compile Include="Commands\OpenLogCommand.cs" />
+    <Compile Include="Commands\LogCommand.cs" />
     <Compile Include="Commands\OpenNugetCommand.cs" />
     <Compile Include="Commands\OpenRakeCommand.cs" />
     <Compile Include="Commands\PublishCommand.cs" />
@@ -77,6 +77,7 @@
     <Compile Include="Commands\Samples\SampleCollector.cs" />
     <Compile Include="Commands\Samples\SampleReader.cs" />
     <Compile Include="Commands\SolutionInput.cs" />
+    <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Commands\UseTheirsCommand.cs" />
     <Compile Include="Commands\ValidateCommand.cs" />

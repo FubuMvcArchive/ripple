@@ -55,9 +55,10 @@ namespace ripple.Local
                 if (processReturn.ExitCode != 0)
                 {
                     _logger.Trace("Opening the log file for " + solution.Name);
-                    new OpenLogCommand().Execute(new OpenLogInput()
+                    new LogCommand().Execute(new LogInput()
                     {
-                        Solution = solution.Name
+                        SolutionFlag = solution.Name,
+                        OpenFlag = true
                     });
                     throw new ApplicationException("Command line execution failed!!!!");
                 } 

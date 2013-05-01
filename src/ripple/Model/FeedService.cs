@@ -21,6 +21,11 @@ namespace ripple.Model
             return _offline.Contains(feed);
         }
 
+        private bool allOffline(IEnumerable<INugetFeed> feeds)
+        {
+            return feeds.All(isOffline);
+        }
+
         private void tryFeed(INugetFeed feed, Action<INugetFeed> action)
         {
             try
@@ -33,39 +38,50 @@ namespace ripple.Model
 
                 action(feed);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
                 markOffline(feed);
-                RippleLog.Debug("Feed unavalable");
+                RippleLog.Debug("Feed unavailable: " + feed);
+                RippleLog.Debug(exc.ToString());
             }
         }
 
 		public virtual IRemoteNuget NugetFor(Solution solution, Dependency dependency)
 		{
-			IRemoteNuget nuget = null;
-		    var feeds = feedsFor(solution);
-			foreach (var feed in feeds)
-			{
-                tryFeed(feed, x => nuget = getLatestFromFloatingFeed(x, dependency));
-				if (nuget != null) break;
+		    return nugetFor(solution, dependency);
+		}
 
-				if (dependency.IsFloat() || dependency.Version.IsEmpty())
-				{
-				    tryFeed(feed, x => nuget = x.FindLatest(dependency));
-					if (nuget != null) break;
-				}
+        private IRemoteNuget nugetFor(Solution solution, Dependency dependency, bool retrying = false)
+        {
+            IRemoteNuget nuget = null;
+            var feeds = feedsFor(solution);
+            foreach (var feed in feeds)
+            {
+                tryFeed(feed, x => nuget = getLatestFromFloatingFeed(x, dependency));
+                if (nuget != null) break;
+
+                if (dependency.IsFloat() || dependency.Version.IsEmpty())
+                {
+                    tryFeed(feed, x => nuget = x.FindLatest(dependency));
+                    if (nuget != null) break;
+                }
 
                 tryFeed(feed, x => nuget = x.Find(dependency));
-				if (nuget != null) break;
-			}
+                if (nuget != null) break;
+            }
 
-			if (nuget == null)
-			{
+            if (nuget == null)
+            {
+                if (allOffline(feeds) && !retrying)
+                {
+                    return nugetFor(solution, dependency, true);
+                }
+
                 RippleAssert.Fail("Could not find " + dependency);
-			}
+            }
 
-			return remoteOrCached(solution, nuget);
-		}
+            return remoteOrCached(solution, nuget);
+        }
 
 		private IRemoteNuget remoteOrCached(Solution solution, IRemoteNuget nuget)
 		{
@@ -185,13 +201,15 @@ namespace ripple.Model
 
         private IEnumerable<INugetFeed> feedsFor(Solution solution)
         {
-            if (!RippleConnection.Connected())
+            var feeds = solution.Feeds.Select(x => x.GetNugetFeed());
+            if (!RippleConnection.Connected() || allOffline(feeds))
             {
                 var cache = solution.Cache.ToFeed();
                 return new[] { cache.GetNugetFeed() };
             }
 
-            return solution.Feeds.Select(x => x.GetNugetFeed());
+
+            return feeds;
         }
 	}
 }

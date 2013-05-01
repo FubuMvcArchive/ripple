@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FubuCore;
 using NuGet;
@@ -15,7 +16,16 @@ namespace ripple.Nuget
 
         public FileSystemNugetFeed(string directory, NugetStability stability)
         {
-            _directory = directory;
+            _directory = directory.ToCanonicalPath();
+
+            Path.GetInvalidPathChars().Each(x =>
+            {
+                if (_directory.Contains(x))
+                {
+                    throw new InvalidOperationException("Invalid character in path: {0} ({1})".ToFormat(x, (int)x));
+                }
+            });
+
             _stability = stability;
             _fileSystem = new FileSystem();
         }
@@ -78,6 +88,11 @@ namespace ripple.Nuget
         }
 
         public IPackageRepository Repository { get; private set; }
+
+        public override string ToString()
+        {
+            return _directory;
+        }
     }
 
     public class FloatingFileSystemNugetFeed : FileSystemNugetFeed, IFloatingFeed

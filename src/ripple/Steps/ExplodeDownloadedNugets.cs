@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FubuCore.Descriptions;
 using ripple.Commands;
 using ripple.Model;
@@ -12,6 +13,11 @@ namespace ripple.Steps
 		public void Execute(SolutionInput input, IRippleStepRunner runner)
 		{
 			var missing = runner.Get<DownloadedNugets>();
+
+            if (missing.Any())
+            {
+                Solution.AssertNoLockedFiles();
+            }
 
 			missing.Each(nuget =>
 			{

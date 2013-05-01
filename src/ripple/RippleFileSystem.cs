@@ -140,6 +140,17 @@ namespace ripple
 
         private static readonly object LogLock = new object();
 
+        public static void TruncateLogFile(this IFileSystem fileSystem, string filename)
+        {
+            lock (LogLock)
+            {
+                var logsDirectory = RippleLogsDirectory();
+                fileSystem.CreateDirectory(logsDirectory);
+
+                fileSystem.AlterFlatFile(logsDirectory.AppendPath(filename), contents => contents.Clear());
+            }
+        }
+
         public static void AppendToLogFile(this IFileSystem fileSystem, string filename, string contents)
         {
             lock (LogLock)
@@ -172,6 +183,14 @@ namespace ripple
         public static string RippleExeLocation()
         {
             return Assembly.GetExecutingAssembly().Location;
+        }
+
+        public static string ToCanonicalPath(this string input)
+        {
+            input = input.Replace('\\', Path.DirectorySeparatorChar);
+            input = input.Replace('/', Path.DirectorySeparatorChar);
+
+            return input;
         }
     }
 }

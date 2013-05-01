@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.IO;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -11,20 +11,18 @@ namespace ripple.Testing.Model
     public class FeedProviderTester
     {
         private FeedProvider theProvider;
-        private Func<string> originalBranchHelper;
 
         [SetUp]
         public void SetUp()
         {
             theProvider = new FeedProvider();
-            originalBranchHelper = BranchDetector.ProvideBranchName;
-            BranchDetector.ProvideBranchName = () => "testBranch";
+            BranchDetector.Stub(() => "testBranch");
         }
 
         [TearDown]
         public void TearDown()
         {
-            BranchDetector.ProvideBranchName = originalBranchHelper;
+            BranchDetector.Live();
         }
 
         [Test]
@@ -33,7 +31,7 @@ namespace ripple.Testing.Model
             theProvider.For(new Feed("file://C:/code/nugets", UpdateMode.Fixed))
                        .As<FileSystemNugetFeed>()
                        .Directory
-                       .ShouldEqual("C:/code/nugets");
+                       .ShouldEqual(Path.Combine("C:" + Path.DirectorySeparatorChar, "code", "nugets"));
         }
 
         [Test]
@@ -42,7 +40,7 @@ namespace ripple.Testing.Model
             theProvider.For(new Feed("file://C:/code/nugets", UpdateMode.Float))
                        .As<FloatingFileSystemNugetFeed>()
                        .Directory
-                       .ShouldEqual("C:/code/nugets");
+                       .ShouldEqual(Path.Combine("C:" + Path.DirectorySeparatorChar, "code", "nugets"));
         }
 
         [Test]
@@ -51,7 +49,7 @@ namespace ripple.Testing.Model
             theProvider.For(new Feed("file://C:/code/nugets/{branch}", UpdateMode.Float))
                        .As<FloatingFileSystemNugetFeed>()
                        .Directory
-                       .ShouldEqual("C:/code/nugets/testBranch");
+                       .ShouldEqual(Path.Combine("C:" + Path.DirectorySeparatorChar, "code", "nugets", "testBranch"));
         }
 
         [Test]
