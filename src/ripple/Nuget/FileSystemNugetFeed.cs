@@ -59,6 +59,8 @@ namespace ripple.Nuget
 
         public IRemoteNuget Find(Dependency query)
         {
+            RippleLog.Debug("Searching for {0} in {1}".ToFormat(query, _directory));
+
             SemanticVersion version;
 			if (!SemanticVersion.TryParse(query.Version, out version))
 			{
@@ -71,6 +73,8 @@ namespace ripple.Nuget
 
         public IRemoteNuget FindLatest(Dependency query)
         {
+            RippleLog.Debug("Searching for latest of {0} in {1}".ToFormat(query, _directory));
+
             var nugets = files
                 .Where(x => x.Name == query.Name && (!x.IsPreRelease || (x.IsPreRelease && query.DetermineStability(_stability) == NugetStability.Anything)))
                 .ToList();
@@ -105,6 +109,8 @@ namespace ripple.Nuget
         public IEnumerable<IRemoteNuget> GetLatest()
         {
             var nugets = new List<INugetFile>();
+
+            RippleLog.Debug("Retrieving all latest from " + Directory);
             
             files
                 .GroupBy(x => x.Name)

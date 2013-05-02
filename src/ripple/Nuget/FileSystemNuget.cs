@@ -34,7 +34,7 @@ namespace ripple.Nuget
 
 		public override string ToString()
 		{
-			return "From Cache: {0}".ToFormat(Filename);
+			return "From filesystem: {0}".ToFormat(Filename);
 		}
 
 		public void Describe(Description description)
