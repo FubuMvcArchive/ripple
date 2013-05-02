@@ -54,7 +54,14 @@ namespace ripple
 
 		public void Describe(Description description)
 		{
-			description.ShortDescription = _solution.Name;
+            if (!BranchDetector.CanDetectBranch())
+            {
+                description.ShortDescription = _solution.Name;
+            }
+            else
+            {
+                description.ShortDescription = _solution.Name + " ({0})".ToFormat(BranchDetector.Current());
+            }
 
 			var list = description.AddList("RippleSteps", _steps);
 			list.Label = "Ripple Steps";

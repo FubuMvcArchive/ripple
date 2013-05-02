@@ -7,6 +7,7 @@ namespace ripple.Model
     public static class BranchDetector
     {
         private static Func<string> _current;
+        private static Func<bool> _canDetect; 
  
         static BranchDetector()
         {
@@ -15,10 +16,10 @@ namespace ripple.Model
         
         public static void Live()
         {
+            _canDetect = () => detectBranch().ExitCode == 0;
             _current = () =>
             {
-                var startInfo = Runner.Git.Info("symbolic-ref HEAD");
-                var returnValue = new ProcessRunner().Run(startInfo, x => { });
+                var returnValue = detectBranch();
                 if (returnValue.ExitCode != 0)
                 {
                     RippleAssert.Fail("Cannot use branch detection when not in a git repository");
@@ -29,9 +30,25 @@ namespace ripple.Model
             };
         }
 
+        private static ProcessReturn detectBranch()
+        {
+            var startInfo = Runner.Git.Info("symbolic-ref HEAD");
+            return new ProcessRunner().Run(startInfo, x => { });
+        }
+
         public static void Stub(Func<string> current)
         {
             _current = current;
+        }
+
+        public static void Stub(Func<bool> canDetect)
+        {
+            _canDetect = canDetect;
+        }
+
+        public static bool CanDetectBranch()
+        {
+            return _canDetect();
         }
 
         public static string Current()
