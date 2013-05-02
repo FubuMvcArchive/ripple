@@ -77,6 +77,9 @@ namespace ripple.Model
                     return nugetFor(solution, dependency, true);
                 }
 
+                feeds.OfType<FloatingFileSystemNugetFeed>()
+                    .Each(files => files.DumpLatest());
+
                 RippleAssert.Fail("Could not find " + dependency);
             }
 

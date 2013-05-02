@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
+using FubuCore.Descriptions;
+using FubuCore.Logging;
 using NuGet;
 using ripple.Model;
 
@@ -101,17 +103,20 @@ namespace ripple.Nuget
 
     public class FloatingFileSystemNugetFeed : FileSystemNugetFeed, IFloatingFeed
     {
+        private readonly Lazy<IEnumerable<IRemoteNuget>> _nugets; 
+
         public FloatingFileSystemNugetFeed(string directory, NugetStability stability) 
             : base(directory, stability)
         {
+            _nugets = new Lazy<IEnumerable<IRemoteNuget>>(findLatest);
         }
 
-        public IEnumerable<IRemoteNuget> GetLatest()
+        private IEnumerable<IRemoteNuget> findLatest()
         {
             var nugets = new List<INugetFile>();
 
             RippleLog.Debug("Retrieving all latest from " + Directory);
-            
+
             files
                 .GroupBy(x => x.Name)
                 .Each(x =>
@@ -123,6 +128,38 @@ namespace ripple.Nuget
             return nugets
                 .Select(x => new FileSystemNuget(x))
                 .OrderBy(x => x.Name);
+        }
+
+        public IEnumerable<IRemoteNuget> GetLatest()
+        {
+            return _nugets.Value;
+        }
+
+        public void DumpLatest()
+        {
+            var latest = GetLatest();
+            var topic = new LatestFileNugets(latest, Directory);
+
+            RippleLog.DebugMessage(topic);
+        }
+
+        public class LatestFileNugets : LogTopic, DescribesItself
+        {
+            private readonly IEnumerable<IRemoteNuget> _nugets;
+            private readonly string _directory;
+
+            public LatestFileNugets(IEnumerable<IRemoteNuget> nugets, string directory)
+            {
+                _nugets = nugets;
+                _directory = directory;
+            }
+
+            public void Describe(Description description)
+            {
+                description.ShortDescription = "Files found in " + _directory;
+                var list = description.AddList("Files", _nugets);
+                list.Label = "Files";
+            }
         }
     }
 }

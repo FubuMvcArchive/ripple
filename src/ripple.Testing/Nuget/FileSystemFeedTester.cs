@@ -87,6 +87,9 @@ namespace ripple.Testing.Nuget
             createNuget("FubuCore", "1.0.0.0");
             createNuget("Bottles", "1.0.0.0");
 
+            createNuget("ExtendHealth.Quoting.Imm.Data", "2.2.0.275");
+            createNuget("ExtendHealth.Quoting.Imm.Data", "2.2.0.249");
+
             createNuget("FubuNew", "1.0.0.0");
             createNuget("FubuNew", "1.0.0.1-alpha");
 
@@ -108,7 +111,7 @@ namespace ripple.Testing.Nuget
         public void finds_the_latest_of_all_nugets()
         {
             var nugets = theFeed.GetLatest().Select(x => "{0},{1}".ToFormat(x.Name, x.Version)).ToArray();
-            nugets.ShouldHaveTheSameElementsAs("Bottles,1.0.0.0", "FubuCore,1.0.0.0", "FubuNew,1.0.0.1-alpha");
+            nugets.ShouldHaveTheSameElementsAs("Bottles,1.0.0.0", "ExtendHealth.Quoting.Imm.Data,2.2.0.275", "FubuCore,1.0.0.0", "FubuNew,1.0.0.1-alpha");
         }
     }
 }
