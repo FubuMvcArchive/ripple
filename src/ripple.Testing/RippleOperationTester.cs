@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using FubuCore;
 using FubuCore.CommandLine;
+using FubuCore.Descriptions;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Commands;
@@ -23,6 +25,38 @@ namespace ripple.Testing
 			s1.Executed.ShouldBeTrue();
 			s2.Executed.ShouldBeTrue();
 		}
+
+        [Test]
+        public void description_for_branch()
+        {
+            BranchDetector.Stub(() => true);
+            BranchDetector.Stub(() => "test");
+
+            var operation = new RippleOperation(new Solution {Name = "Test"}, new SolutionInput(), new RippleStepRunner(new FileSystem()));
+            var description = new Description();
+
+            operation.Describe(description);
+
+            description.ShortDescription.ShouldEqual("Test (test)");
+
+            BranchDetector.Live();
+        }
+
+        [Test]
+        public void description_for_no_branch()
+        {
+            BranchDetector.Stub(() => false);
+            BranchDetector.Stub(() => "test");
+
+            var operation = new RippleOperation(new Solution { Name = "Test" }, new SolutionInput(), new RippleStepRunner(new FileSystem()));
+            var description = new Description();
+
+            operation.Describe(description);
+
+            description.ShortDescription.ShouldEqual("Test");
+
+            BranchDetector.Live();
+        }
 
         public class TestCommand : FubuCommand<TestInput>
         {

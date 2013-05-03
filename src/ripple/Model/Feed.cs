@@ -76,6 +76,11 @@ namespace ripple.Model
 			return Url.GetHashCode();
 		}
 
+        public override string ToString()
+        {
+            return "{0} ({1})".ToFormat(Url, Mode);
+        }
+
 		public void Describe(Description description)
 		{
 			description.ShortDescription = "{0} ({1})".ToFormat(Url, Mode);

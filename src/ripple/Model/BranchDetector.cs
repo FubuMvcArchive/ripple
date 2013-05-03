@@ -6,7 +6,8 @@ namespace ripple.Model
 {
     public static class BranchDetector
     {
-        private static Func<string> _current;
+        private static Lazy<string> _current;
+        private static Func<string> _detectCurrent;
         private static Func<bool> _canDetect; 
  
         static BranchDetector()
@@ -17,7 +18,7 @@ namespace ripple.Model
         public static void Live()
         {
             _canDetect = () => detectBranch().ExitCode == 0;
-            _current = () =>
+            _detectCurrent = () =>
             {
                 var returnValue = detectBranch();
                 if (returnValue.ExitCode != 0)
@@ -28,6 +29,13 @@ namespace ripple.Model
                 var output = returnValue.OutputText;
                 return output.Substring(output.LastIndexOf('/') + 1).Replace("\n", string.Empty).Replace("\r", string.Empty).Trim();
             };
+
+            reset();
+        }
+
+        private static void reset()
+        {
+            _current = new Lazy<string>(_detectCurrent);
         }
 
         private static ProcessReturn detectBranch()
@@ -38,7 +46,8 @@ namespace ripple.Model
 
         public static void Stub(Func<string> current)
         {
-            _current = current;
+            _detectCurrent = current;
+            reset();
         }
 
         public static void Stub(Func<bool> canDetect)
@@ -53,7 +62,7 @@ namespace ripple.Model
 
         public static string Current()
         {
-            return _current();
+            return _current.Value;
         }
     }
 }

@@ -1,3 +1,4 @@
+using FubuCore;
 using FubuCore.Util;
 using ripple.Nuget;
 
@@ -47,6 +48,8 @@ namespace ripple.Model
             {
                 var branchName = BranchDetector.Current();
                 directory = directory.Replace(BranchPlaceholder, branchName);
+
+                RippleLog.Debug("Detected branch feed: {0}. Current branch is {1}. Setting directory to {2}".ToFormat(feed, branchName, directory));
             }
 
             if (feed.Mode == UpdateMode.Fixed)
