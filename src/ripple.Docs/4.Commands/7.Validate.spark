@@ -1,0 +1,6 @@
+<!--Title: Validate-->
+
+<markdown>
+  <Command app="ripple" command="validate">
+  </Command>
+</markdown>

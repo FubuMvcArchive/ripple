@@ -1,0 +1,6 @@
+<!--Title: Lock-->
+
+<markdown>
+  <Command app="ripple" command="lock">
+  </Command>
+</markdown>

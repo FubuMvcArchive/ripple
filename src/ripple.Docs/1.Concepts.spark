@@ -1,0 +1,29 @@
+﻿<markdown>
+
+  <Section title="Dependency Versioning" id="dependency-versioning">
+    <p>ripple enforces a rule that all projects in your solution must target the same version of any particular dependency. Because of this rule, dependency versions are configured in the solution-level configuration file: <code>ripple.config</code>.</p>
+    <p>Because the dependency versions are unique per solution, there is no need to have version numbers in the exploded folders (e.g., src/packages/Bottles vs. src/packages/Bottles.1.0.0.0). This had lead to far less changes in csproj files and less merge conflicts.</p>
+  </Section>
+  
+  <Section title="Fixed Versioning" id="fixed-versioning">
+    <p>Fixed versioning forces dependencies to stay "fixed". That is, fixed dependencies are locked at a particular version until they are explicitly updated.</p>
+  </Section>
+  
+  <Section title="Floated Versioning" id="floated-versioning">
+    <p>Floated versioning allows dependencies to stay on the most recent release. This means that every time you restore dependencies, you will get the latest and greatest.</p>
+    <p>Floated versioning can be combined with: <code>minimum version</code> restrictions and any <code>NugetStability</code> setting (Anything or StableOnly).</p>
+  </Section>
+  
+  <Section title="Minimum Version" id="minimum-version">
+    <p>Floated dependencies can specify a version. This version will be treated as the "minimum required" version of the nuget.</p>
+  </Section>
+  
+  <Section title="Dependency Groups" id="dependency-groups">
+    <p>Some dependencies are always updated together and it's easier to treat them in logical groups (e.g., RavenDB, WebDriver). ripple provides a logical grouping mechanism such that all members of the group participate in any <code>operation</code>.</p>
+  </Section>
+  
+  See the Nugets section of the sample ripple file:
+
+  <EmbedFile name="sample-ripple.config" />
+
+</markdown>

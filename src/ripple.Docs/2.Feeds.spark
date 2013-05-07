@@ -1,0 +1,22 @@
+﻿<markdown>
+  <Section title="Fixed Versioning" id="fixed-versioning">
+    <p>Fixed versioning forces dependencies to stay "fixed". That is, fixed dependencies are locked at a particular version until they are explicitly updated.</p>
+  </Section>
+  <Section title="Floated Versioning" id="floated-versioning">
+    <p>Floated versioning allows dependencies to stay on the most recent release. This means that every time you restore dependencies, you will get the latest and greatest. Marking a Feed as Float means that any configured Dependency that exists in that Feed will operate as Fixed, unless explicitly configured as Float.</p>
+  </Section>
+  <Section title="Nuget Stability" id="nuget-stability">
+    <p>Stability can be specified at the Feed level to indicate the desired release status of dependencies (i.e, Released or Anything). All dependencies found in that Feed will default to the feed-level configuration unless explicitly configured.</p>
+  </Section>
+  <Section title="File System Feeds" id="file-system-feeds">
+    <p>File system paths can be provided as feeds. To do so, simply prefix the path with <code>file://</code> and it will be treated as a file system feed.</p>
+  </Section>
+  <Section title="File System Branch Feeds" id="file-system-branch-feeds">
+    <p>File system paths can be used in conjunction with the current branch of your git repository. To utilize this feature, simply include the <code>{branch}</code> placeholder in your feed url. The current branch will be injected into the feed.</p>
+  </Section>
+  
+  See the Feeds section of the sample ripple file for an example of how feeds are configured:
+
+  <EmbedFile name="sample-ripple.config" />
+
+</markdown>

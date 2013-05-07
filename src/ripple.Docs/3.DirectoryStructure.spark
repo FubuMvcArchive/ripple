@@ -1,0 +1,18 @@
+﻿<!--Title:Directory Structure-->
+<markdown>
+
+  <Section title="The ripple directory" id="ripple-directory">
+    <p>The ripple.config file must exist in the root of your directory (repository). Ripple treats this as the root directory and will throw errors if it cannot locate a ripple.config in the parent tree.</p>
+  </Section>
+  
+  <Section title="The code directory" id="code-directory">
+    <p>The parent directory of any given ripple solution is treated as the "code" directory. This means that ripple is capable of interrogating the sibling directories for other ripple solutions and providing various ripple commands.</p>
+  </Section>
+  
+  <Section title="Source Directory" id="source-directory">
+    <p>The source directory can be configured in your ripple.config file. The default value is <code>src</code></p>
+  </Section>
+
+  <EmbedFile name="sample-ripple.config" />
+
+</markdown>

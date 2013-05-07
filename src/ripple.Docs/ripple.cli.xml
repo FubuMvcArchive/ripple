@@ -1,0 +1,940 @@
+<?xml version="1.0"?>
+<CommandLineApplicationReport xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ApplicationName>ripple</ApplicationName>
+  <Commands>
+    <CommandReport>
+      <Name>batchpublish</Name>
+      <Description>Batch publishes all the nupkg files in a directory to the main nuget feed</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>directory</Name>
+          <Description>Directory holding the nuget package files to be published</Description>
+        </ArgumentReport>
+        <ArgumentReport>
+          <Name>apikey</Name>
+          <Description>APIKey for Nuget.org</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags />
+      <Usages>
+        <UsageReport>
+          <Description>Batch publishes all the nupkg files in a directory to the main nuget feed</Description>
+          <Usage>ripple batchpublish &lt;directory&gt; &lt;apikey&gt;</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>clean</Name>
+      <Description>Cleans out existing package folders and/or project bin &amp; obj directories of existing build products</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-m, --mode all|packages|projects]</UsageDescription>
+          <Description>choose what gets cleaned up</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Cleans out existing package folders and/or project bin &amp; obj directories of existing build products</Description>
+          <Usage>ripple clean [-m, --mode all|packages|projects] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>convert</Name>
+      <Description>ConvertCommand</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>ConvertCommand</Description>
+          <Usage>ripple convert [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>describe</Name>
+      <Description>DescribeCommand</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>DescribeCommand</Description>
+          <Usage>ripple describe [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>describe-graph</Name>
+      <Description>Describes the current solution graph</Description>
+      <Arguments />
+      <Flags />
+      <Usages>
+        <UsageReport>
+          <Description>Describes the current solution graph</Description>
+          <Usage>ripple describe-graph </Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>install</Name>
+      <Description>InstallCommand</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>package</Name>
+          <Description>The NuGet to install</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-v, --version &lt;version&gt;]</UsageDescription>
+          <Description>Version of the package</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-m, --modeflag Fixed|Float]</UsageDescription>
+          <Description>The update mode of the package</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-p, --project &lt;project&gt;]</UsageDescription>
+          <Description>Project to install to</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-f, --force-updates]</UsageDescription>
+          <Description>Forces updates of transitive updates</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-p, --preview]</UsageDescription>
+          <Description>Only show what would be installed</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-s, --stability &lt;stability&gt;]</UsageDescription>
+          <Description>Override the feed-level stability configuration</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>InstallCommand</Description>
+          <Usage>ripple install &lt;package&gt; [-v, --version &lt;version&gt;] [-m, --modeflag Fixed|Float] [-p, --project &lt;project&gt;] [-f, --force-updates] [-p, --preview] [-s, --stability &lt;stability&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>replace-packages-config</Name>
+      <Description>Replaces all references to packages.config with ripple.dependencies.config</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Replaces all references to packages.config with ripple.dependencies.config</Description>
+          <Usage>ripple replace-packages-config [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>restore</Name>
+      <Description>Restores nugets for the solution</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-f, --feeds &lt;feeds&gt;]</UsageDescription>
+          <Description>Additional NuGet feed urls separated by '#'</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-f, --force]</UsageDescription>
+          <Description>Forces the restoration to correct any version mismatches</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Restores nugets for the solution</Description>
+          <Usage>ripple restore [-f, --feeds &lt;feeds&gt;] [-f, --force] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>extract-samples</Name>
+      <Description>Extracts sample code snippets out of a directory by looking for // SAMPLE: [name] and // END: [name] comments in C# code</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>codefolder</Name>
+          <Description>CodeFolder</Description>
+        </ArgumentReport>
+        <ArgumentReport>
+          <Name>outputfolder</Name>
+          <Description>OutputFolder</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags />
+      <Usages>
+        <UsageReport>
+          <Description>Extracts sample code snippets out of a directory by looking for // SAMPLE: [name] and // END: [name] comments in C# code</Description>
+          <Usage>ripple extract-samples &lt;codefolder&gt; &lt;outputfolder&gt;</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>float</Name>
+      <Description>Allows a nuget to 'float' and be automatically updated from the Update command</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>name</Name>
+          <Description>The name of the nuget</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-m, --min-version &lt;minversion&gt;]</UsageDescription>
+          <Description>The minimum version required</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Allows a nuget to 'float' and be automatically updated from the Update command</Description>
+          <Usage>ripple float &lt;name&gt; [-m, --min-version &lt;minversion&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>lock</Name>
+      <Description>Locks a nuget to prevent it from being automatically updated from the Update command</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>version</Name>
+          <Description>The version to lock to</Description>
+        </ArgumentReport>
+        <ArgumentReport>
+          <Name>name</Name>
+          <Description>The name of the nuget</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Locks a nuget to prevent it from being automatically updated from the Update command</Description>
+          <Usage>ripple lock &lt;version&gt; &lt;name&gt; [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>flo</Name>
+      <Description>Equivalent to a ripple local -from [from] -to [to] -fast -direct</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>from</Name>
+          <Description>The origin</Description>
+        </ArgumentReport>
+        <ArgumentReport>
+          <Name>to</Name>
+          <Description>The destination</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-n, --no-build]</UsageDescription>
+          <Description>Use the 'no build' option to just shuffle binaries around (i.e., don't compile after moving)</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes out all the build output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Equivalent to a ripple local -from [from] -to [to] -fast -direct</Description>
+          <Usage>ripple flo &lt;from&gt; &lt;to&gt; [-n, --no-build] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>history</Name>
+      <Description>HistoryCommand</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-r, --artifacts &lt;artifacts&gt;]</UsageDescription>
+          <Description>Override the local folder where the dependency-history.txt file will be written</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>HistoryCommand</Description>
+          <Usage>ripple history [-r, --artifacts &lt;artifacts&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>list</Name>
+      <Description>lists information about the current ripple environment</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-m, --mode all|published|dependencies|projects|solutions|assemblies]</UsageDescription>
+          <Description>Filters the information shown</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-n, --nuget &lt;nuget&gt;]</UsageDescription>
+          <Description>If set, only shows information for a named nuget</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>lists all projects</Description>
+          <Usage>ripple list [-m, --mode all|published|dependencies|projects|solutions|assemblies] [-n, --nuget &lt;nuget&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+        <UsageReport>
+          <Description>filters the information shown</Description>
+          <Usage>ripple list [-m, --mode all|published|dependencies|projects|solutions|assemblies] [-n, --nuget &lt;nuget&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>local</Name>
+      <Description>Performs the local ripple</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-f, --from &lt;from&gt;]</UsageDescription>
+          <Description>Optionally specifies a solution to start from</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-t, --to &lt;to&gt;]</UsageDescription>
+          <Description>Optionally specifies a solution to stop at</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-d, --direct]</UsageDescription>
+          <Description>If set, bypasses all intermediate solutions and moves build products directly</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-x, --fast]</UsageDescription>
+          <Description>Use the 'fast' build option for solutions, i.e. compile but don't run any pesky unit test kinda things</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-n, --nobuild]</UsageDescription>
+          <Description>Use the 'no build' option to just shuffle binaries around (i.e., don't compile after moving)</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes out all the build output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Performs the local ripple</Description>
+          <Usage>ripple local [-f, --from &lt;from&gt;] [-t, --to &lt;to&gt;] [-d, --direct] [-x, --fast] [-n, --nobuild] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>local-nuget</Name>
+      <Description>Creates the nuget files locally</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-v, --version &lt;version&gt;]</UsageDescription>
+          <Description>Override the version of the nuget file</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-d, --destination &lt;destination&gt;]</UsageDescription>
+          <Description>Specify where the nuget file should be written, otherwise it just goes to the nuget default</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Creates the nuget files locally</Description>
+          <Usage>ripple local-nuget [-v, --version &lt;version&gt;] [-d, --destination &lt;destination&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>lower-bounds</Name>
+      <Description>Sets the nuget dependency for all published nuspec's to greater or equal than the current version of the named nuget</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>nuget</Name>
+          <Description>Nuget</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Sets the nuget dependency for all published nuspec's to greater or equal than the current version of the named nuget</Description>
+          <Usage>ripple lower-bounds &lt;nuget&gt; [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>log</Name>
+      <Description>Modifies the ripple log file</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-s, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>Specify the name of a solution log to open</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-o, --open]</UsageDescription>
+          <Description>Open the ripple log for the solution</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-t, --truncate]</UsageDescription>
+          <Description>Truncate the ripple log for the solution</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Opens the log file for the solution</Description>
+          <Usage>ripple log [-s, --solution &lt;solution&gt;] [-o, --open] [-t, --truncate]</Usage>
+        </UsageReport>
+        <UsageReport>
+          <Description>Truncates the log file for the solution</Description>
+          <Usage>ripple log [-s, --solution &lt;solution&gt;] [-o, --open] [-t, --truncate]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>open-nuget</Name>
+      <Description>Opens your text editor for a given nuspec file by Id, not file name</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>name</Name>
+          <Description>The Id of the nuget file to open in an editor</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags />
+      <Usages>
+        <UsageReport>
+          <Description>Opens your text editor for a given nuspec file by Id, not file name</Description>
+          <Usage>ripple open-nuget &lt;name&gt;</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>open-rake</Name>
+      <Description>Open the rake file (assuming it exists) for the current solution or a named solution</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Open the rake file (assuming it exists) for the current solution or a named solution</Description>
+          <Usage>ripple open-rake [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>publish</Name>
+      <Description>Builds and pushes all the nuspec files for a solution(s) to nuget.org</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>version</Name>
+          <Description>Nuget version number</Description>
+        </ArgumentReport>
+        <ArgumentReport>
+          <Name>apikey</Name>
+          <Description>Api key for the NuGet server</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-r, --artifacts &lt;artifacts&gt;]</UsageDescription>
+          <Description>Overrides the location of the artifacts folder</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-s, --server &lt;server&gt;]</UsageDescription>
+          <Description>Custom url for the NuGet server</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Builds and pushes all the nuspec files for a solution(s) to nuget.org</Description>
+          <Usage>ripple publish &lt;version&gt; &lt;apikey&gt; [-r, --artifacts &lt;artifacts&gt;] [-s, --server &lt;server&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>remove</Name>
+      <Description>Removes a nuget from the solution</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>nuget</Name>
+          <Description>The name of the nuget to completely remove from the solution</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-p, --project &lt;project&gt;]</UsageDescription>
+          <Description>Project to remove from</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Removes a nuget from the solution</Description>
+          <Usage>ripple remove &lt;nuget&gt; [-p, --project &lt;project&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>test</Name>
+      <Description>TestCommand</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>TestCommand</Description>
+          <Usage>ripple test [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>update</Name>
+      <Description>Updates the nugets for the solution</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-n, --nuget &lt;nuget&gt;]</UsageDescription>
+          <Description>Only update a specific nuget by name</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-p, --preview]</UsageDescription>
+          <Description>Only show what would be updated</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --version &lt;version&gt;]</UsageDescription>
+          <Description>Version of the nuget</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-f, --force]</UsageDescription>
+          <Description>Forces the update command to override all dependencies even if they are locked</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-s, --stability &lt;stability&gt;]</UsageDescription>
+          <Description>Override the feed-level stability configuration</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Updates the nugets for the solution</Description>
+          <Usage>ripple update [-n, --nuget &lt;nuget&gt;] [-p, --preview] [-v, --version &lt;version&gt;] [-f, --force] [-s, --stability &lt;stability&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>use-theirs</Name>
+      <Description>Does a 'use theirs' merge on all the project and packages file in a solution</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>directory</Name>
+          <Description>Directory</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags />
+      <Usages>
+        <UsageReport>
+          <Description>Does a 'use theirs' merge on all the project and packages file in a solution</Description>
+          <Usage>ripple use-theirs &lt;directory&gt;</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>validate</Name>
+      <Description>ValidateCommand</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>ValidateCommand</Description>
+          <Usage>ripple validate [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>whereami</Name>
+      <Description>Tells you where ripple thinks the root folder is at</Description>
+      <Arguments />
+      <Flags />
+      <Usages>
+        <UsageReport>
+          <Description>Tells you where ripple thinks the root folder is at</Description>
+          <Usage>ripple whereami </Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>extract</Name>
+      <Description>Extracts all the latest nugets from a remote feed </Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>directory</Name>
+          <Description>Directory to dump the nuget files</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-f, --feed &lt;feed&gt;]</UsageDescription>
+          <Description>Nuget feed.  If not specified, will use the Fubu TeamCity</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-m, --max &lt;max&gt;]</UsageDescription>
+          <Description>Maximum number of nugets to download, capped at 200 by default</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Extracts all the latest nugets from a remote feed </Description>
+          <Usage>ripple extract &lt;directory&gt; [-f, --feed &lt;feed&gt;] [-m, --max &lt;max&gt;]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>gitignore</Name>
+      <Description>Lists or adds values to the .gitignore file in this directory</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>line</Name>
+          <Description>A line of text to add to a .gitignore file</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-f, --folder &lt;folder&gt;]</UsageDescription>
+          <Description>Overrides the current folder</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>List the text in the .gitignore file for this folder</Description>
+          <Usage>ripple gitignore [-f, --folder &lt;folder&gt;]</Usage>
+        </UsageReport>
+        <UsageReport>
+          <Description>Adds a line to the .gitignore file for this folder if it does not already exist</Description>
+          <Usage>ripple gitignore &lt;line&gt; [-f, --folder &lt;folder&gt;]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>init</Name>
+      <Description>Initializes a project directory as a 'rippled' project</Description>
+      <Arguments>
+        <ArgumentReport>
+          <Name>name</Name>
+          <Description>Shorthand name for the project</Description>
+        </ArgumentReport>
+      </Arguments>
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-s, --src &lt;sourcefolder&gt;]</UsageDescription>
+          <Description>Relative path to the solution directory.  Default is 'src'</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-o, --open]</UsageDescription>
+          <Description>Open the ripple.config file after creating it</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-f, --folder &lt;folder&gt;]</UsageDescription>
+          <Description>Overrides the current folder</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Initializes a project directory as a 'rippled' project</Description>
+          <Usage>ripple init &lt;name&gt; [-s, --src &lt;sourcefolder&gt;] [-o, --open] [-f, --folder &lt;folder&gt;]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+  </Commands>
+</CommandLineApplicationReport>

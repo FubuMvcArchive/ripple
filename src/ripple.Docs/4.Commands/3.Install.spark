@@ -1,0 +1,6 @@
+<!--Title: Install-->
+
+<markdown>
+  <Command app="ripple" command="install">
+  </Command>
+</markdown>

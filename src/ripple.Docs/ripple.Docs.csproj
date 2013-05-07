@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5F6B1A70-3A36-4A4D-90F5-884B7413A79E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ripple.Docs</RootNamespace>
+    <AssemblyName>ripple.Docs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".package-manifest" />
+    <None Include="1.Concepts.spark">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="2.Feeds.spark">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="3.DirectoryStructure.spark" />
+    <None Include="4.Commands\1.Clean.spark" />
+    <None Include="4.Commands\2.Float.spark" />
+    <None Include="4.Commands\3.Install.spark" />
+    <None Include="4.Commands\4.List.spark" />
+    <None Include="4.Commands\5.Lock.spark" />
+    <None Include="4.Commands\6.Update.spark" />
+    <None Include="4.Commands\7.Validate.spark" />
+    <None Include="4.Commands\index.spark" />
+    <None Include="index.spark">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="sample-ripple.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Project.xml" />
+    <Content Include="ripple.cli.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="pak-WebContent.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="pak-Data.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="pak-Config.zip" />
+  </ItemGroup>
+</Project>
