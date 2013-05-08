@@ -3,7 +3,7 @@
     <p>Fixed versioning forces dependencies to stay "fixed". That is, fixed dependencies are locked at a particular version until they are explicitly updated.</p>
   </Section>
   <Section title="Floated Versioning" id="floated-versioning">
-    <p>Floated versioning allows dependencies to stay on the most recent release. This means that every time you restore dependencies, you will get the latest and greatest. Marking a Feed as Float means that any configured Dependency that exists in that Feed will operate as Fixed, unless explicitly configured as Float.</p>
+    <p>Floated versioning allows dependencies to stay on the most recent release. This means that every time you restore dependencies, you will get the latest and greatest. Marking a Feed as Float means that any configured Dependency that exists in that Feed will operate as Float, unless explicitly configured as Fixed.</p>
   </Section>
   <Section title="Nuget Stability" id="nuget-stability">
     <p>Stability can be specified at the Feed level to indicate the desired release status of dependencies (i.e, Released or Anything). All dependencies found in that Feed will default to the feed-level configuration unless explicitly configured.</p>
