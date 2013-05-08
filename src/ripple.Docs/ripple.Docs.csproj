@@ -55,8 +55,9 @@
     <None Include="4.Commands\3.Install.spark" />
     <None Include="4.Commands\4.List.spark" />
     <None Include="4.Commands\5.Lock.spark" />
-    <None Include="4.Commands\6.Update.spark" />
-    <None Include="4.Commands\7.Validate.spark" />
+    <None Include="4.Commands\7.Update.spark" />
+    <None Include="4.Commands\8.Validate.spark" />
+    <None Include="4.Commands\6.Restore.spark" />
     <None Include="4.Commands\index.spark" />
     <None Include="index.spark">
       <SubType>Designer</SubType>
