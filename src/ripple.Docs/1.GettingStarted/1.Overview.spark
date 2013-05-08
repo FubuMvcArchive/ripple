@@ -1,0 +1,28 @@
+﻿<markdown>
+
+  <Section title="Introduction" id="introduction">
+    <p>Ripple is a new kind of package manager that was created out of heavy usage of the standard NuGet client. The feeds,
+    the protocol, and the packages are the same. Ripple just embodies differing opinions and provides a new way of consuming them that is friendlier for continuous integration.</p>
+  </Section>
+
+  <Section title="Internal Dependencies" id="internal-dependencies">
+    <p>The Fubu family of projects uses TeamCity for continuous integration and makes use of the built-in NuGet server support for managing internal dependencies. There are roughly 46 active projects publishing over 60 nugets.
+    Managing all of these libraries is not trivial -- especially when fixing a bug might expose a bug in more than one NuGet in your dependency tree. Ripple was originally created to help the Fubu team 
+    "ripple" changes through that tree without having to publish nugets to test out the changes.</p>
+  </Section>
+  
+  <Section title="Staying on the edge" id="edge">
+    <p>With the vast number of dependencies that the Fubu team manages, it's easy to have libraries fall out of sync with their dependencies. This is one of the reasons
+    why we believe that each project should be built against the latest version of its <code>internal</code> dependencies.</p>
+    <p>Ripple introduces a concept that we call "floating" dependencies. This means that a restore <code>operation</code> will pull down the latest and greatest
+    version of a particular dependency. Floated dependencies can also specify a <code>minimum version</code> to ensure compatibility. The restore <code>operation</code> respects this minimum version and will update your local versions if the versions do not match.</p>
+    <p>Over time, we discovered that it would be much easier if dependencies could be configured at the Feed-level rather than specifying each dependency. Ripple 2.0 introduced
+    the concept of "floating" feeds. Any NuGet found in a floating feed is treated as Float unless it is explicitly configured as Fixed.</p>
+  </Section>
+  
+  <Section title="Command Line over Visual Studio" id="command-line">
+    <p>With an eye on automation, Ripple was created strictly for command line usage and does *not* integrate directly with Visual Studio. All ripple 
+    <code>operations</code> can modify csproj files but do so through custom libraries rather than interoperating with Visual Studio.</p>
+  </Section>
+  
+</markdown>

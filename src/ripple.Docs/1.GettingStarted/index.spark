@@ -1,0 +1,9 @@
+<!--Title: Getting Started -->
+
+<br/>
+<h3 class="half-margin">Downloading ripple</h3>
+
+<p>Ripple is currently distributed through the buildsupport git module from the Fubu github account. We have plans as early as Friday of this week to remove the submodule and distribute ripple as a ruby gem. If there is enough interest, we might distribute it as a NuGet package for consumption through Chocolately as well.</p>
+<p>In the meantime, you can obtain our recent build of ripple at <a href="http://build.fubu-project.org">http://build.fubu-project.org</a>.
+  
+<TableOfContents />

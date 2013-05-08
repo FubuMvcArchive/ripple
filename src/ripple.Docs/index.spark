@@ -4,8 +4,7 @@
 <h3 class="half-margin">Why not use NuGet?</h3>
 
 <p class="margin">
-  NuGet worked great for "Fixed" versions of dependencies. However, our differing opinions quickly began to cause friction. We believe that all of our projects should be built against the latest of their Fubu dependencies. For example, any of our projects that depend on FubuMVC.Core.dll should *always* be built against the *latest* version of FubuMVC.Core.dll.
-  We still utilize NuGet feeds but we just layer on additional concepts - namely Float vs. Fixed dependencies and feeds.
+  Ripple is a new kind of package manager that was created out of heavy usage of the standard NuGet client. The feeds, the protocol, and the packages are the same. Ripple just embodies differing opinions and provides a new way of consuming them that is friendlier for continuous integration
 </p>
 
 <TableOfContents />
