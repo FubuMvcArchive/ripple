@@ -5,12 +5,15 @@ $(document).ready(function () {
         $('.sidebar h3.half-margin').hide();
     }
     else {
-        $('section').each(function(i, section) {
-            var id = section.id;
-            var heading = $('.section-header', section).text();
+        var toc = $("#page-toc");
+        if (toc.find('li').size() == 0) {
+            sections.each(function(i, section) {
+                var id = $(this).attr('id');
+                var heading = $('.section-header', section).text();
 
-            $('<li><a href="#' + id + '">' + heading + '</a>').appendTo("#page-toc");
-        });
+                $('<li><a href="#' + id + '">' + heading + '</a>').appendTo("#page-toc");
+            });
+        }
     }
 
     $('#page-toc').affix();
