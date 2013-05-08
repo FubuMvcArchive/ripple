@@ -46,8 +46,8 @@
       <div class="navbar" id="nav-follow">
         <div class="navbar-inner">
           <div class="container">
-            <ul class="nav"><li><a data-key="index" href="/ripple">ripple »</a></li><li><a data-key="index" href="/ripple/commands">Commands »</a></li><li class="active"><a data-key="Update" href="/ripple/commands/update">Update »</a></li></ul>
-<ul style="float:right" class="nav"><li><a title="Restore" href="/ripple/commands/restore">Previous</a></li><li><a title="Validate" href="/ripple/commands/validate">Next</a></li><li><a title="ripple" href="/ripple">Index</a></li></ul>
+            <ul class="nav"><li><a data-key="index" href="/ripple">ripple »</a></li><li><a data-key="index" href="/ripple/commands">Commands »</a></li><li class="active"><a data-key="Restore" href="/ripple/commands/restore">Restore »</a></li></ul>
+<ul style="float:right" class="nav"><li><a title="Lock" href="/ripple/commands/lock">Previous</a></li><li><a title="Update" href="/ripple/commands/update">Next</a></li><li><a title="ripple" href="/ripple">Index</a></li></ul>
           </div>
         </div>
       </div>
@@ -59,18 +59,18 @@
           <div class="span3 sidebar">
             <h3 class="half-margin">Topics</h3>
             <ul class="nav nav-tabs nav-stacked affix-top" id="page-toc">
-            <li><a href="#undefined">ripple update</a></li></ul>
+            <li><a href="#undefined">ripple restore</a></li></ul>
             <br />
             <h3 class="no-margin">Next</h3>
-<p><a data-key="Validate" href="/ripple/commands/validate">Validate</a></p>
+<p><a data-key="Update" href="/ripple/commands/update">Update</a></p>
 <h3 class="no-margin">Previous</h3>
-<p><a data-key="Restore" href="/ripple/commands/restore">Restore</a></p>
+<p><a data-key="Lock" href="/ripple/commands/lock">Lock</a></p>
           </div>
           <div class="span9">
-            <h1>Update</h1>
-             <!--Title: Update-->
-<p></p><section class="command-section"><h4><span class="section-header" id="update">ripple update</span><i class="command-description">Updates the nugets for the solution</i></h4><div class="single-command-usage"><em>ripple update</em>[-n, --nuget <nuget>] [-p, --preview] [-v, --version <version>] [-f, --force] [-s, --stability <stability>] [-l, --solution <solution>] [-c, --cache <cache>] [-a, --all] [-v, --verbose]</cache></solution></stability></version></nuget></div>
-<table class="table"><thead><tr><th colspan="2">Flags</th></tr></thead><tbody><tr><td class="command-flag-usage">[-n, --nuget &lt;nuget&gt;]</td><td class="command-flag-description">Only update a specific nuget by name</td></tr><tr><td class="command-flag-usage">[-p, --preview]</td><td class="command-flag-description">Only show what would be updated</td></tr><tr><td class="command-flag-usage">[-v, --version &lt;version&gt;]</td><td class="command-flag-description">Version of the nuget</td></tr><tr><td class="command-flag-usage">[-f, --force]</td><td class="command-flag-description">Forces the update command to override all dependencies even if they are locked</td></tr><tr><td class="command-flag-usage">[-s, --stability &lt;stability&gt;]</td><td class="command-flag-description">Override the feed-level stability configuration</td></tr><tr><td class="command-flag-usage">[-l, --solution &lt;solution&gt;]</td><td class="command-flag-description">override the solution to be cleaned</td></tr><tr><td class="command-flag-usage">[-c, --cache &lt;cache&gt;]</td><td class="command-flag-description">Override the NuGet cache</td></tr><tr><td class="command-flag-usage">[-a, --all]</td><td class="command-flag-description">Apply restore to all solutions</td></tr><tr><td class="command-flag-usage">[-v, --verbose]</td><td class="command-flag-description">Writes all output to the screen</td></tr></tbody></table></section><p></p>
+            <h1>Restore</h1>
+             <!--Title: Restore-->
+<p></p><section class="command-section"><h4><span class="section-header" id="restore">ripple restore</span><i class="command-description">Restores nugets for the solution</i></h4><div class="single-command-usage"><em>ripple restore</em>[-f, --feeds <feeds>] [-f, --force] [-l, --solution <solution>] [-c, --cache <cache>] [-a, --all] [-v, --verbose]</cache></solution></feeds></div>
+<table class="table"><thead><tr><th colspan="2">Flags</th></tr></thead><tbody><tr><td class="command-flag-usage">[-f, --feeds &lt;feeds&gt;]</td><td class="command-flag-description">Additional NuGet feed urls separated by '#'</td></tr><tr><td class="command-flag-usage">[-f, --force]</td><td class="command-flag-description">Forces the restoration to correct any version mismatches</td></tr><tr><td class="command-flag-usage">[-l, --solution &lt;solution&gt;]</td><td class="command-flag-description">override the solution to be cleaned</td></tr><tr><td class="command-flag-usage">[-c, --cache &lt;cache&gt;]</td><td class="command-flag-description">Override the NuGet cache</td></tr><tr><td class="command-flag-usage">[-a, --all]</td><td class="command-flag-description">Apply restore to all solutions</td></tr><tr><td class="command-flag-usage">[-v, --verbose]</td><td class="command-flag-description">Writes all output to the screen</td></tr></tbody></table></section><p></p>
 
             </div>
         </div>
