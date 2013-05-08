@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+    <meta charset="utf-8" />
+    <meta content="FubuWorld" name="description" />
+    <meta content="FubuWorld" name="author" />
+    <title>ripple</title>
+    
+    
+    <link type="text/css" rel="stylesheet" href="/ripple/_content/styles/toastr.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/twitter/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/twitter/bootstrap-responsive.min.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/toastr-responsive.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/fubuworld.core.css" />
+    <link media="screen" type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,300" />
+  </head>
+  <body data-target=".bs-docs-sidebar" data-spy="scroll">
+    <div class="container">
+      <div class="row">
+        <div class="span6">
+          <p class="logo">
+            <a href="#">
+              <span>Fubu</span>
+            </a>
+          </p>
+        </div>
+        <div class="span6">
+          <div class="top-header text-right">
+            <em>
+              Join our vibrant mailing list - <a href="#">fubumvc-devel</a>
+            </em>
+            <div class="social">
+              <a class="ico-google-plus" href="#">
+                <img src="/ripple/_content/images/google-plus-icon.png" />
+              </a>
+              <a class="ico-twitter" href="http://twitter.com/fubumvc">
+                <img src="/ripple/_content/images/twitter-icon.png" />
+              </a>
+              <a class="ico-facebook" href="http://github.com/DarthFubuMVC">
+                <img src="/ripple/_content/images/github-icon.png" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="navbar" id="nav-follow">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a data-key="index" href="/ripple">ripple »</a></li><li><a data-key="index" href="/ripple/gettingstarted">Getting Started »</a></li><li class="active"><a data-key="Overview" href="/ripple/gettingstarted/overview">Overview »</a></li></ul>
+<ul style="float:right" class="nav"><li><a title="Getting Started" href="/ripple/gettingstarted">Previous</a></li><li><a title="Concepts" href="/ripple/gettingstarted/concepts">Next</a></li><li><a title="ripple" href="/ripple">Index</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        
+
+        <div class="row">
+          <div class="span3 sidebar">
+            <h3 class="half-margin">Topics</h3>
+            <ul class="nav nav-tabs nav-stacked affix-top" id="page-toc">
+            <li><a href="#undefined">Introduction</a></li><li><a href="#undefined">Internal Dependencies</a></li><li><a href="#undefined">Staying on the edge</a></li><li><a href="#undefined">Command Line over Visual Studio</a></li></ul>
+            <br />
+            <h3 class="no-margin">Next</h3>
+<p><a data-key="Concepts" href="/ripple/gettingstarted/concepts">Concepts</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a data-key="index" href="/ripple/gettingstarted">Getting Started</a></p>
+          </div>
+          <div class="span9">
+            <h1>Overview</h1>
+             <p></p><section><h4 class="section-header" id="introduction">Introduction</h4>
+    <p>Ripple is a new kind of package manager that was created out of heavy usage of the standard NuGet client. The feeds,
+    the protocol, and the packages are the same. Ripple just embodies differing opinions and provides a new way of consuming them that is friendlier for continuous integration.</p></section><p></p>
+
+<p></p><section><h4 class="section-header" id="internal-dependencies">Internal Dependencies</h4>
+    <p>The Fubu family of projects uses TeamCity for continuous integration and makes use of the built-in NuGet server support for managing internal dependencies. There are roughly 46 active projects publishing over 60 nugets.
+    Managing all of these libraries is not trivial -- especially when fixing a bug might expose a bug in more than one NuGet in your dependency tree. Ripple was originally created to help the Fubu team 
+    "ripple" changes through that tree without having to publish nugets to test out the changes.</p></section><p></p>
+
+<p></p><section><h4 class="section-header" id="edge">Staying on the edge</h4>
+    <p>With the vast number of dependencies that the Fubu team manages, it's easy to have libraries fall out of sync with their dependencies. This is one of the reasons
+    why we believe that each project should be built against the latest version of its <code>internal</code> dependencies.</p>
+    <p>Ripple introduces a concept that we call "floating" dependencies. This means that a restore <code>operation</code> will pull down the latest and greatest
+    version of a particular dependency. Floated dependencies can also specify a <code>minimum version</code> to ensure compatibility. The restore <code>operation</code> respects this minimum version and will update your local versions if the versions do not match.</p>
+    <p>Over time, we discovered that it would be much easier if dependencies could be configured at the Feed-level rather than specifying each dependency. Ripple 2.0 introduced
+    the concept of "floating" feeds. Any NuGet found in a floating feed is treated as Float unless it is explicitly configured as Fixed.</p></section><p></p>
+
+<p></p><section><h4 class="section-header" id="command-line">Command Line over Visual Studio</h4>
+    <p>With an eye on automation, Ripple was created strictly for command line usage and does <em>not</em> integrate directly with Visual Studio. All ripple 
+    <code>operations</code> can modify csproj files but do so through custom libraries rather than interoperating with Visual Studio.</p></section><p></p>
+
+            </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="/ripple/_content/scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/fubuworld.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/twitter/bootstrap.min.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/twitter/bootstrap-affix.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/topics.js" type="text/javascript"></script>
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-right">
+          <a href="#">Back to top</a>
+        </p>
+        <p>
+          Powered by <a href="#">FubuMVC</a>.
+        </p>
+        <p>
+          Code licensed under the <a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.
+        </p>
+      </div>
+    </footer>
+
+  
+
+
+
+
+
+
+</body></html>
