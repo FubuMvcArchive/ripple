@@ -212,7 +212,7 @@ namespace ripple.Model
 
         public void RemoveDependency(string name)
         {
-            var dep = _configuredDependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
+            var dep = _configuredDependencies.SingleOrDefault(x => x.MatchesName(name));
             if (dep != null)
             {
                 _configuredDependencies.Remove(dep);
@@ -270,7 +270,7 @@ namespace ripple.Model
 
 		public Dependency FindDependency(string name)
 		{
-			return _configuredDependencies.SingleOrDefault(x => x.Name == name);
+			return _configuredDependencies.SingleOrDefault(x => x.MatchesName(name));
 		}
 
         public void UpdateDependency(Dependency dependency)

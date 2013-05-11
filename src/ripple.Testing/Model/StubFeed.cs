@@ -54,11 +54,11 @@ namespace ripple.Testing.Model
 
             if (query.IsFloat() || query.Version.IsEmpty())
             {
-                return _nugets.FirstOrDefault(x => x.Name == query.Name);
+                return _nugets.FirstOrDefault(x => query.MatchesName(x.Name));
             }
 
 			var version = SemanticVersion.Parse(query.Version);
-			var matching = _nugets.Where(x => x.Name == query.Name);
+            var matching = _nugets.Where(x => query.MatchesName(x.Name));
 
             if (query.DetermineStability(_feed.Stability) == NugetStability.ReleasedOnly)
             {

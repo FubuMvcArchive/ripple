@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FubuCore;
 
 namespace ripple.Model
 {
@@ -17,7 +16,7 @@ namespace ripple.Model
 
         public void Force(string name)
         {
-            _filters.Add(x => x.Name.EqualsIgnoreCase(name));
+            _filters.Add(x => x.MatchesName(name));
         }
 
         public bool ShouldForce(Dependency dependency)

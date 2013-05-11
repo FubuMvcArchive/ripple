@@ -94,6 +94,7 @@
     <Compile Include="Integration\IntegratedSolutionGraphTester.cs" />
     <Compile Include="Integration\remove_a_dependency_from_a_project.cs" />
     <Compile Include="Integration\remove_a_dependency_from_solution.cs" />
+    <Compile Include="Integration\restore_dependencies_case_insensitive.cs" />
     <Compile Include="Integration\updating_an_existing_dependency_in_a_group.cs" />
     <Compile Include="Integration\updating_a_dependency_with_transitive_updates.cs" />
     <Compile Include="Integration\valid_solution.cs" />

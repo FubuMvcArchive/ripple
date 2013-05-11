@@ -124,7 +124,7 @@ namespace ripple.Nuget
 
 		public virtual INugetFile Find(Dependency query)
         {
-            return Dependencies.FirstOrDefault(x => x.Name == query.Name && x.Version.Version.ToString() == query.Version);
+            return Dependencies.FirstOrDefault(x => query.MatchesName(x.Name) && x.Version.Version.ToString() == query.Version);
         }
 
 	    public IRemoteNuget Retrieve(IRemoteNuget nuget)

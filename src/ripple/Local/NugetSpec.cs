@@ -68,7 +68,7 @@ namespace ripple.Local
 
         public bool DependsOn(string nuget)
         {
-            return Dependencies.Any(x => x.Name == nuget);
+            return Dependencies.Any(x => x.MatchesName(nuget));
         }
 
     }

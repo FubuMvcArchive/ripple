@@ -70,7 +70,7 @@ namespace ripple.Nuget
 				return null;
 			}
 
-            return findMatching(nuget => nuget.Name == query.Name && nuget.Version == version);
+            return findMatching(nuget => query.MatchesName(nuget.Name) && nuget.Version == version);
         }
 
         public IRemoteNuget FindLatest(Dependency query)
@@ -78,7 +78,7 @@ namespace ripple.Nuget
             RippleLog.Debug("Searching for latest of {0} in {1}".ToFormat(query, _directory));
 
             var nugets = files
-                .Where(x => x.Name == query.Name && (!x.IsPreRelease || (x.IsPreRelease && query.DetermineStability(_stability) == NugetStability.Anything)))
+                .Where(x => query.MatchesName(x.Name) && (!x.IsPreRelease || (x.IsPreRelease && query.DetermineStability(_stability) == NugetStability.Anything)))
                 .ToList();
                 
             var nuget = nugets

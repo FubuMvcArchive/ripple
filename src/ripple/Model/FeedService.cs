@@ -97,7 +97,7 @@ namespace ripple.Model
 			var floatingFeed = feed as IFloatingFeed;
 			if (floatingFeed == null) return null;
 
-			var floatedResult = floatingFeed.GetLatest().SingleOrDefault(x => x.Name == dependency.Name);
+			var floatedResult = floatingFeed.GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
 			if (floatedResult != null && dependency.Mode == UpdateMode.Fixed && floatedResult.IsUpdateFor(dependency))
 			{
 				return null;

@@ -66,7 +66,7 @@ namespace ripple.Model
 
         public IEnumerable<NugetSpec> FindFromDependencies(IEnumerable<Dependency> dependencies)
         {
-            return AllNugets().Where(x => dependencies.Any(d => d.Name == x.Name));
+            return AllNugets().Where(x => dependencies.Any(d => d.MatchesName(x.Name)));
         }
 
         public void Describe(Description description)
