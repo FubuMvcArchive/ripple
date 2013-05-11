@@ -11,11 +11,16 @@ namespace ripple.Commands
 {
     public class BatchPublishInput
     {
+        public BatchPublishInput()
+        {
+            ApiKeyFlag = Environment.GetEnvironmentVariable(PublishingService.ApiKey, EnvironmentVariableTarget.User);
+        }
+
         [Description("Directory holding the nuget package files to be published")]
         public string Directory { get; set; }
 
-        [Description("APIKey for Nuget.org")]
-        public string ApiKey { get; set; }
+        [Description("API Key for Nuget.org")]
+        public string ApiKeyFlag { get; set; }
     }
 
     [CommandDescription("Batch publishes all the nupkg files in a directory to the main nuget feed")]
@@ -36,7 +41,7 @@ namespace ripple.Commands
                 _index++;
 
 				RippleLog.Info("Trying to publish {0}, {1} or {2}".ToFormat(file, _index, _count));
-				publisher.PublishPackage(file, input.ApiKey);
+				publisher.PublishPackage(file, input.ApiKeyFlag);
             });
 
             return true;

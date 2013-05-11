@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Ripple.Test</id>
+    <version>0.0.0</version>
+    <authors>Josh Arnold</authors>
+    <owners>Joshua Arnold</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://fubu-project.org/</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuMVC_256.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>*NOT* for public consumption. This is just a test package for ripple publish testing.</description>
+    <tags>ripple</tags>
+  </metadata>
+  <files>
+    <file src="..\..\src\ripple.Docs\bin\Release\ripple.Docs.*" target="lib\net40" />
+  </files>
+</package>

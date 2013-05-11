@@ -16,6 +16,8 @@ namespace ripple.Model
 
 	public class PublishingService : IPublishingService
 	{
+	    public const string ApiKey = "ripple-api-key";
+
 		private readonly ISolutionFiles _files;
 
 		public PublishingService(ISolutionFiles files)
@@ -54,11 +56,12 @@ namespace ripple.Model
 
 		public void PublishPackage(string file, string apiKey)
 		{
-			var packageServer = new PackageServer(Feed.NuGetV2.Url, "ripple");
-			var package = new ZipPackage(file);
+            var packageServer = new PackageServer("https://nuget.org/", "ripple");
+		    var package = new OptimizedZipPackage(file);
 
-			RippleLog.Info("Publishing " + file);
-			packageServer.PushPackage(apiKey, package.GetStream, (int)60.Minutes().TotalMilliseconds);
+			RippleLog.Info("Publishing " + file + " with " + apiKey);
+
+            packageServer.PushPackage(apiKey, package, (int)60.Minutes().TotalMilliseconds);
 		}
 
 		private IPackage createPackage(PackageBuilder builder, string outputPath)
@@ -81,7 +84,7 @@ namespace ripple.Model
 			}
 
 			RippleLog.Info("Created nuget at: " + outputPath);
-			return new ZipPackage(outputPath);
+            return new OptimizedZipPackage(outputPath);
 		}
 
 

@@ -4,7 +4,7 @@ using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
 using NuGet;
-using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Commands
 {
@@ -13,6 +13,8 @@ namespace ripple.Commands
         public PublishInput()
         {
             ArtifactsFlag = "artifacts";
+
+            ApiKey = Environment.GetEnvironmentVariable(PublishingService.ApiKey, EnvironmentVariableTarget.User);
         }
 
         [Description("Nuget version number")]

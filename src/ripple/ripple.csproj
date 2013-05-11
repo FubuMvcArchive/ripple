@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classic\NuGetSolutionLoader.cs" />
+    <Compile Include="Commands\ApiKeyCommand.cs" />
     <Compile Include="Commands\BatchPublishCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\ConvertCommand.cs" />
