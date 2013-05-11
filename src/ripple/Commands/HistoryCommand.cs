@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Collections.Generic;
-using FubuCore.Descriptions;
+using ripple.Model;
+using ripple.Steps;
 
 namespace ripple.Commands
 {
@@ -23,37 +25,38 @@ namespace ripple.Commands
     {
         public override bool Execute(HistoryInput input)
         {
+            return RippleOperation
+                .For<HistoryInput>(input)
+                .Step<WriteHistory>()
+                .Execute();
+        }
+    }
+
+    public class WriteHistory : RippleStep<HistoryInput>
+    {
+        protected override void execute(HistoryInput input, IRippleStepRunner runner)
+        {
+            var list = new List<string>();
+            var local = Solution.LocalDependencies();
+
+            local.All().Each(x => list.Add("{0}/{1}".ToFormat(x.Name, x.Version)));
+
+            var historyFile = Solution.Directory.AppendPath(input.ArtifactsFlag, "dependency-history.txt");
+            Console.WriteLine("Writing nuget dependency history to " + historyFile);
+
+            list.Each(x => Console.WriteLine(x));
+
             var system = new FileSystem();
-
-            input.FindSolutions().Each(solution =>
+            if (!system.DirectoryExists(Solution.Directory, input.ArtifactsFlag))
             {
-                var list = new List<string>();
+                system.CreateDirectory(Solution.Directory, input.ArtifactsFlag);
+            }
 
-                solution.Dependencies.Each(x =>
-                {
-                    list.Add("{0}/{1}".ToFormat(x.Name, x.Version));
-                });
-
-                var historyFile = solution.Directory.AppendPath(input.ArtifactsFlag, "dependency-history.txt");
-                Console.WriteLine("Writing nuget dependency history to " + historyFile);
-
-                list.Each(x => Console.WriteLine(x));
-
-                system.AlterFlatFile(historyFile, record =>
-                {
-                    record.Clear();
-                    record.AddRange(list);
-
-					record.Add("");
-					record.Add("");
-
-					record.Add(solution.ToDescriptionText());
-                });
-
-
+            system.AlterFlatFile(historyFile, record =>
+            {
+                record.Clear();
+                record.AddRange(list);
             });
-
-            return true;
         }
     }
 }
