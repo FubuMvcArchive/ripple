@@ -1,0 +1,76 @@
+<!--Title: ripple -->
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <h1 class="no-margin">ripple</h1>
+      <p class="lead">Fubu-inspired dependency management</p>
+    </div>
+  </div>
+</div>
+
+<div class="wide-bg" style="padding-bottom:0px;">
+  <div class="container">
+    <div class="row">
+      <div class="span8">
+        <em>
+          Ripple is a new kind of package manager that was created out of heavy usage of the standard NuGet client. The feeds, the protocol, and the packages are the same. Ripple just embodies differing opinions and provides a new way of consuming them that is friendlier for continuous integration.<br>
+            <br>
+              It's <strong>lightning</strong> fast and gives you more flexibility when dealing with lots of dependencies. Not to mention, you'll have <strong>far less</strong> merge conflicts.
+            </em>
+      </div>
+        <div class="span4">
+          <h1 class="no-margin">Where is it?</h1>
+          <p class="lead no-margin">Can I use it too?</p>
+          <br/>
+          <a href="!{this.ProjectIndexUrl("ripple")}" class="btn btn-large btn-primary margin">Learn more</a>
+        </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <h2>Feature List</h2>
+      <p class="lead">Some highlights</p>
+
+      <!-- Services List -->
+      <ul class="thumbnails">
+        <li class="span3" style="opacity: 1;">
+          <div class="text-center">
+                <a href="#" class="btn half-margin">Lightning fast</a>
+                <p class="caption">
+                  Parallelization and caching make all operations super quick.
+                </p>
+              </div>
+        </li>
+        <li class="span3" style="opacity: 1;">
+          <div class="text-center">
+                <a href="#" class="btn half-margin">Command-line friendly</a>
+                <p class="caption">
+                  Purely designed to be used from the command line, ripple gives you full control over your dependencies without the need for Visual Studio.
+                </p>
+              </div>
+        </li>
+        <li class="span3" style="opacity: 1;">
+          <div class="text-center">
+                <a href="#" class="btn half-margin">Cross-platform</a>
+                <p class="caption">
+                  Designed to work for both .NET and Mono. No ties to either platform.
+                </p>
+              </div>
+        </li>
+        <li class="span3" style="opacity: 1;">
+          <div class="text-center">
+                <a href="#" class="btn half-margin">Automation</a>
+                <p class="caption">
+                  Perfect integration with your continuous integration server and build scripts.
+                </p>
+              </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

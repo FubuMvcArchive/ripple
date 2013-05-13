@@ -1,11 +1,20 @@
 <?xml version="1.0"?>
-<ProjectRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ProjectRoot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <TagLine>Fubu-inspired dependency management</TagLine>
   <Description>ripple was originally created to aide the Fubu team in managing large numbers of dependencies both locally and in continuation integration environments. It was designed to fill a gap in usage found with the NuGet client.</Description>
+  <Name>ripple</Name>
   <GitHubPage>https://github.com/DarthFubuMVC/ripple</GitHubPage>
-  <UserGroupUrl>https://groups.google.com/forum/?fromgroups#!forum/fubumvc-devel</UserGroupUrl>
+  <UserGroupUrl>https://groups.google.com/forum/?fromgroups#!forum/ripple-dev</UserGroupUrl>
   <BuildServerUrl>http://build.fubu-project.org/project.html?projectId=project53</BuildServerUrl>
+  <TeamCityBuildType>bt93</TeamCityBuildType>
   <BottleName>ripple.Docs</BottleName>
   <PluginTo />
-  <Name>ripple</Name>
+  <NugetWhitelist>Ripple</NugetWhitelist>
+  <Nugets>
+    <PublishedNuget>
+      <Name>Ripple</Name>
+      <Description>Improved cross solution dependency management using Nuget</Description>
+    </PublishedNuget>
+  </Nugets>
+  <Url>ripple</Url>
 </ProjectRoot>
