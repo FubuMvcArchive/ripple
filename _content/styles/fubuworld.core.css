@@ -144,10 +144,6 @@ pre ul, pre ol {
 	right: -20px;
 }
 .label, .badge {
-	padding: 0px 5px;
-	background-color: #CCC;
-	font: 300 12px/30px Oswald, Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
 	display: inline-block;
 }
 .lead {
@@ -553,13 +549,13 @@ body.boxed .nav-tabs .dropdown a.dropdown-toggle {
 	margin-right: -90px;
 	right: 50%;
 }
-.social .ico-facebook, .social .ico-twitter, .social .ico-google-plus, .social .ico-flickr, .social .ico-rss {
+.social .ico-github, .social .ico-twitter, .social .ico-google-plus, .social .ico-flickr, .social .ico-rss {
 	width: 30px;
 	height: 30px;
 	position: absolute;
 	top: 0px;
 }
-.social .ico-facebook {
+.social .ico-github {
 	right: 120px;
 }
 .social .ico-twitter {
@@ -574,7 +570,7 @@ body.boxed .nav-tabs .dropdown a.dropdown-toggle {
 .social .ico-rss {
 	right: 0px;
 }
-.social .ico-facebook img, .social .ico-twitter img, .social .ico-google-plus img, .social .ico-flickr img, .social .ico-rss img {
+.social .ico-github img, .social .ico-twitter img, .social .ico-google-plus img, .social .ico-flickr img, .social .ico-rss img {
 	width: 30px;
 	height: 30px;
 	background: #CCC;
@@ -583,10 +579,10 @@ body.boxed .nav-tabs .dropdown a.dropdown-toggle {
 	top: 0px;
 	right: 0px;
 }
-.social .ico-facebook:hover, .social .ico-twitter:hover, .social .ico-google-plus:hover, .social .ico-flickr:hover, .social .ico-rss:hover {
+.social .ico-github:hover, .social .ico-twitter:hover, .social .ico-google-plus:hover, .social .ico-flickr:hover, .social .ico-rss:hover {
 	width: 40px;
 }
-.social .ico-facebook img:hover, .social .ico-twitter img:hover, .social .ico-google-plus img:hover, .social .ico-flickr img:hover, .social .ico-rss img:hover {
+.social .ico-github img:hover, .social .ico-twitter img:hover, .social .ico-google-plus img:hover, .social .ico-flickr img:hover, .social .ico-rss img:hover {
 	width: 40px;
 	height: 40px;
 	background: #333;
@@ -623,7 +619,14 @@ body.boxed .nav-tabs .dropdown a.dropdown-toggle {
 	min-width: 110px;
     background: #C30;
 	display: inline-block;
+    box-shadow: 0 1px 1px #ccc !important;
 }
+
+.logo a.project-logo span {
+    background: #fff;
+    color: #c30;
+}
+
 .logo a img {
 	height: 100px;
 }
@@ -2556,5 +2559,40 @@ text-align: right;
 }
 
 .tag-line {
-    margin-top: -40px;
+}
+
+.header-line {
+    margin-bottom:40px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.build-list {
+    list-style-type: none;
+    margin-left:0;
+}
+
+.build-list .btn {
+    width:100px;
+    padding: 0px 5px;
+    background-color: #CCC;
+    font: 300 16px/30px Oswald, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom:5px;
+    cursor:default;
+}
+
+.build-list .btn.build-success {
+    background-color: #468847;
+}
+
+.build-list .btn.build-failure {
+    background-color: #b94a48;
+}
+
+.no-release {
+    max-width: 175px;
 }
