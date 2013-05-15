@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using FubuCore;
@@ -12,6 +13,8 @@ namespace ripple.Nuget
 {
     public class NugetFolderCache : INugetCache
     {
+        private static bool _validatePackages = true;
+
 	    private readonly Solution _solution;
 	    private readonly string _folder;
 	    private IFileSystem _fileSystem;
@@ -46,10 +49,12 @@ namespace ripple.Nuget
 							_fileSystem.DeleteFile(file);
 						}
 
-						// Validate the package file
-						using (new ZipPackage(file).GetStream())
-						{	
-						}
+					    if (_validatePackages)
+					    {
+					        using (new ZipPackage(file).GetStream())
+					        {
+					        }
+					    }
 					}
 					catch
 					{
@@ -124,7 +129,7 @@ namespace ripple.Nuget
 
 		public virtual INugetFile Find(Dependency query)
         {
-            return Dependencies.FirstOrDefault(x => query.MatchesName(x.Name) && x.Version.Version.ToString() == query.Version);
+            return Dependencies.FirstOrDefault(x => query.MatchesName(x.Name) && x.Version.Equals(query.SemanticVersion()));
         }
 
 	    public IRemoteNuget Retrieve(IRemoteNuget nuget)
@@ -157,9 +162,23 @@ namespace ripple.Nuget
 			var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 			var ripple = Path.Combine(appData, "ripple");
 
-			new FileSystem().CreateDirectory(ripple);
-
-			return new NugetFolderCache(solution, ripple);
+		    return For(ripple, solution);
 		}
+
+        public static NugetFolderCache For(string directory, Solution solution)
+        {
+            new FileSystem().CreateDirectory(directory);
+            return new NugetFolderCache(solution, directory);
+        }
+
+        public static void DisableValidation()
+        {
+            _validatePackages = false;
+        }
+
+        public static void Reset()
+        {
+            _validatePackages = true;
+        }
     }
 }

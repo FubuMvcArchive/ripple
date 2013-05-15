@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using FubuCore;
 using FubuCore.CommandLine;
 using System.Linq;
 using NuGet;
-using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Commands
 {
@@ -22,6 +21,11 @@ namespace ripple.Commands
 
         [Description("Specify where the nuget file should be written, otherwise it just goes to the nuget default")]
         public string DestinationFlag { get; set; }
+
+        public IEnumerable<Project> Projects(Solution solution)
+        {
+            yield break;
+        }
     }
 
     [CommandDescription("Creates the nuget files locally", Name = "local-nuget")]

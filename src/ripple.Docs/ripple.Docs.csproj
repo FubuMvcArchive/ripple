@@ -61,7 +61,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="sample-ripple.config" />
-    <None Include="splash.spark" />
+    <None Include="splash.spark">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Project.xml" />

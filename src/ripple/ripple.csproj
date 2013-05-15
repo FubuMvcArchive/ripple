@@ -128,6 +128,8 @@
     <Compile Include="Model\SolutionConfig.cs" />
     <Compile Include="Model\UpdateMode.cs" />
     <Compile Include="Model\ValidationResult.cs" />
+    <Compile Include="Model\VersionConstraint.cs" />
+    <Compile Include="Model\VersionToken.cs" />
     <Compile Include="MSBuild\CsProjFile.cs" />
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />

@@ -5,19 +5,22 @@ using FubuCore;
 using FubuCore.Util;
 using ripple.Local;
 using ripple.Model;
+using ripple.Nuget;
 
 namespace ripple.Testing
 {
 	public class SolutionGraphScenario
 	{
 		private readonly string _directory;
-		private readonly IFileSystem _fileSystem;
+	    private readonly string _cacheDirectory;
+	    private readonly IFileSystem _fileSystem;
 		private readonly Lazy<SolutionGraph> _graph;
 
-		public SolutionGraphScenario(string directory)
+		public SolutionGraphScenario(string directory, string cacheDirectory)
 		{
 			_directory = directory;
-			_fileSystem = new FileSystem();
+		    _cacheDirectory = cacheDirectory;
+		    _fileSystem = new FileSystem();
 
 			var builder = new SolutionGraphBuilder(_fileSystem);
 			_graph = new Lazy<SolutionGraph>(() => builder.ReadFrom(_directory));
@@ -25,7 +28,10 @@ namespace ripple.Testing
 
 		public Solution Find(string name)
 		{
-			return Graph[name];
+			var solution =  Graph[name];
+            solution.UseCache(NugetFolderCache.For(_cacheDirectory, solution));
+
+		    return solution;
 		}
 
 		public SolutionGraph Graph { get { return _graph.Value; } }
@@ -64,18 +70,27 @@ namespace ripple.Testing
 			private readonly IList<Solution> _solutions = new List<Solution>();
 			private readonly IList<SolutionModification> _modifications = new List<SolutionModification>();
 			private readonly string _directory;
-
+		    private readonly IFileSystem _fileSystem = new FileSystem();
 
 			public SolutionGraphScenarioDefinition()
 			{
 				_directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Guid.NewGuid().ToString());
-				var system = new FileSystem();
 
-                system.CleanDirectory(_directory);
-				system.DeleteDirectory(_directory);
-                system.DeleteDirectory(_directory);
-				system.CreateDirectory(_directory);
+                _fileSystem.CleanDirectory(_directory);
+				_fileSystem.DeleteDirectory(_directory);
+                _fileSystem.DeleteDirectory(_directory);
+				_fileSystem.CreateDirectory(_directory);
+
+                _fileSystem.CreateDirectory(cacheDirectory);
 			}
+
+            private string cacheDirectory { get { return _directory.AppendPath("cache"); } }
+
+            public void AddCachedNuget(string id, string version)
+            {
+                var fileName = "{0}.{1}.nupkg".ToFormat(id, version);
+                _fileSystem.WriteStringToFile(Path.Combine(cacheDirectory, fileName), fileName);
+            }
 
 			public void Solution(string name)
 			{
@@ -104,7 +119,7 @@ namespace ripple.Testing
 	 		{
 	 			_modifications.Each(x => x.Execute());
 	 			_solutions.Each(solution => solution.Save(true));
-	 			return new SolutionGraphScenario(this.As<ISolutionGraphScenarioBuilder>().Directory);
+	 			return new SolutionGraphScenario(this.As<ISolutionGraphScenarioBuilder>().Directory, cacheDirectory);
 	 		}
 	 	}
 
