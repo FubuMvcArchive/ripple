@@ -41,6 +41,8 @@ namespace ripple.Model
             _version = version;
         }
 
+        public string Key { get { return _key; } }
+
         public SemanticVersion Value(SemanticVersion version)
         {
             return _version(version);

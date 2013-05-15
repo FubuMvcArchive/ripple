@@ -75,5 +75,28 @@ namespace ripple.Testing.Model
         {
             new Dependency("FubuCore") { NugetStability = NugetStability.Anything }.IsReleasedOnly().ShouldBeFalse();
         }
+
+        [Test]
+        public void gets_the_constraint_attribute()
+        {
+            var dependency = new Dependency("FubuCore") {VersionConstraint = VersionConstraint.DefaultFloat};
+
+            dependency.Constraint.ShouldEqual(VersionConstraint.DefaultFloat.ToString());
+        }
+
+        [Test]
+        public void gets_the_constraint_attribute_for_no_constraint()
+        {
+            var dependency = new Dependency("FubuCore");
+
+            dependency.Constraint.ShouldBeNull();
+        }
+
+        [Test]
+        public void parses_the_constraint_attribute()
+        {
+            var dependency = new Dependency("FubuCore") {Constraint = VersionConstraint.DefaultFloat.ToString()};
+            dependency.VersionConstraint.ShouldEqual(VersionConstraint.DefaultFloat);
+        }
 	}
 }

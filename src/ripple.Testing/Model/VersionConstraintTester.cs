@@ -50,5 +50,17 @@ namespace ripple.Testing.Model
             spec.MaxVersion.ShouldEqual(new SemanticVersion("2.0.0.0"));
             spec.IsMaxInclusive.ShouldBeFalse();
         }
+
+        [Test]
+        public void tostring_a_min_constraint()
+        {
+            new VersionConstraint(VersionToken.Current).ToString().ShouldEqual("Current");
+        }
+
+        [Test]
+        public void tostring_a_min_and_max_constraint()
+        {
+            new VersionConstraint(VersionToken.Current, VersionToken.NextMin).ToString().ShouldEqual("Current,NextMin");
+        }
     }
 }

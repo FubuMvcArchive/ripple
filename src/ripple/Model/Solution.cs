@@ -71,6 +71,7 @@ namespace ripple.Model
             UseBuilder(new NugetPlanBuilder());
 
 			RestoreSettings = new RestoreSettings();
+            NuspecSettings = new NuspecSettings();
 
 			Reset();
 		}
@@ -80,6 +81,30 @@ namespace ripple.Model
 		public string SourceFolder { get; set; }
 		public string BuildCommand { get; set; }
 		public string FastBuildCommand { get; set; }
+
+	    public string DefaultFloatConstraint
+	    {
+            get { return NuspecSettings.Float.ToString(); }
+            set
+            {
+                if (value.IsNotEmpty())
+                {
+                    NuspecSettings.Float = VersionConstraint.Parse(value);
+                }
+            }
+	    }
+
+	    public string DefaultFixedConstraint
+	    {
+            get { return NuspecSettings.Fixed.ToString(); }
+            set
+            {
+                if (value.IsNotEmpty())
+                {
+                    NuspecSettings.Fixed = VersionConstraint.Parse(value);
+                }
+            }
+	    }
 
 		public Feed[] Feeds
 		{
@@ -145,6 +170,8 @@ namespace ripple.Model
         public INugetPlanBuilder Builder { get; private set; }
         [XmlIgnore]
         public RestoreSettings RestoreSettings { get; private set; }
+        [XmlIgnore]
+        public NuspecSettings NuspecSettings { get; private set; }
 
 		[XmlIgnore]
 		public string Path
@@ -473,6 +500,16 @@ namespace ripple.Model
             RippleAssert.Fail("Detected locked files. Exiting.");
         }
 
+        public VersionConstraint ConstraintFor(Dependency dependency)
+        {
+            if (dependency.VersionConstraint != null)
+            {
+                return dependency.VersionConstraint;
+            }
+
+            return NuspecSettings.ConstraintFor(dependency.Mode);
+        }
+
 		public void Save(bool force = false)
 		{
 			Storage.Write(this);
@@ -517,6 +554,6 @@ namespace ripple.Model
 			// TODO -- Need to allow a specific solution
 			// TODO -- Need to be smarter about the current directory maybe
 			return SolutionBuilder.ReadFromCurrentDirectory();
-		}	
+		}
 	}
 }

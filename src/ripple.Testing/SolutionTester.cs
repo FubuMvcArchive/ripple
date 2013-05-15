@@ -70,5 +70,73 @@ namespace ripple.Testing
                 .ShouldEqual(".".ToFullPath().AppendPath(solution.PackagesDirectory(), "FubuCore"));
         
         }
+
+        [Test]
+        public void gets_the_default_float_constraint()
+        {
+            var solution = new Solution();
+            solution.DefaultFloatConstraint.ShouldEqual(solution.NuspecSettings.Float.ToString());
+        }
+
+        [Test]
+        public void gets_the_default_fixed_constraint()
+        {
+            var solution = new Solution();
+            solution.DefaultFloatConstraint.ShouldEqual(solution.NuspecSettings.Float.ToString());
+        }
+
+        [Test]
+        public void sets_the_default_float_constraint()
+        {
+            var solution = new Solution();
+            solution.DefaultFloatConstraint = "Current,NextMin";
+
+            solution.NuspecSettings.Float.ToString().ShouldEqual("Current,NextMin");
+        }
+
+        [Test]
+        public void sets_the_default_fixed_constraint()
+        {
+            var solution = new Solution();
+            solution.DefaultFixedConstraint = "Current";
+
+            solution.NuspecSettings.Fixed.ToString().ShouldEqual("Current");
+        }
+
+        [Test]
+        public void uses_explicit_dependency_constraint()
+        {
+            var explicitDep = new Dependency("FubuCore") { Constraint = "Current,NextMin"};
+
+
+            var solution = new Solution();
+            solution.AddDependency(explicitDep);
+
+            solution.ConstraintFor(explicitDep).ToString().ShouldEqual("Current,NextMin");
+        }
+
+        [Test]
+        public void falls_back_to_default_constraint_for_float()
+        {
+            var dep = new Dependency("FubuCore", UpdateMode.Float);
+
+
+            var solution = new Solution();
+            solution.AddDependency(dep);
+
+            solution.ConstraintFor(dep).ShouldEqual(solution.NuspecSettings.Float);
+        }
+
+        [Test]
+        public void falls_back_to_default_constraint_for_fixed()
+        {
+            var dep = new Dependency("FubuCore", UpdateMode.Fixed);
+
+
+            var solution = new Solution();
+            solution.AddDependency(dep);
+
+            solution.ConstraintFor(dep).ShouldEqual(solution.NuspecSettings.Fixed);
+        }
     }
 }

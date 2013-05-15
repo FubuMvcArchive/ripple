@@ -61,6 +61,22 @@ namespace ripple.Model
             }
 	    }
 
+        [XmlAttribute]
+	    public string Constraint
+	    {
+            get { return VersionConstraint == null ? null : VersionConstraint.ToString(); }
+            set
+            {
+                if (value.IsNotEmpty())
+                {
+                    VersionConstraint = VersionConstraint.Parse(value);
+                }
+            }
+	    }
+
+        [XmlIgnore]
+        public VersionConstraint VersionConstraint { get; set; }
+
 		[XmlIgnore]
         public NugetStability? NugetStability { get; set; }
 

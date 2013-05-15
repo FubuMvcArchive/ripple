@@ -20,8 +20,13 @@ namespace ripple.Testing.Model
 
 		    var group = new DependencyGroup();
             group.Dependencies.Add(new GroupedDependency("FubuCore"));
-
             solution.Groups.Add(group);
+
+		    var constrainedDependency = new Dependency("Bottles", "1.0.0.0")
+		    {
+		        VersionConstraint = VersionConstraint.DefaultFloat
+		    };
+            solution.AddDependency(constrainedDependency);
 
 			CheckXmlPersistence.For(solution);
 		}
