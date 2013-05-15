@@ -100,6 +100,7 @@
     <Compile Include="Integration\updating_an_existing_dependency_in_a_group.cs" />
     <Compile Include="Integration\updating_a_dependency_with_transitive_updates.cs" />
     <Compile Include="Integration\valid_solution.cs" />
+    <Compile Include="Model\PublishingServiceTester.cs" />
     <Compile Include="Model\VersionConstraintTester.cs" />
     <Compile Include="Model\VersionTokenTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />

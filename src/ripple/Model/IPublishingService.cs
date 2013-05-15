@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FubuCore;
 using NuGet;
 using ripple.Local;
@@ -17,6 +19,21 @@ namespace ripple.Model
 	public class PublishingService : IPublishingService
 	{
 	    public const string ApiKey = "ripple-api-key";
+
+	    public static readonly IEnumerable<IPackageRule> Rules;
+  
+        static PublishingService()
+        {
+            try
+            {
+                var types = typeof (IPackageRule).Assembly.GetTypes();
+                Rules = types.Where(x => x.IsConcreteTypeOf<IPackageRule>()).Select(x => (IPackageRule)Activator.CreateInstance(x));
+            }
+            catch
+            {
+                Rules = new IPackageRule[0];
+            }
+        }
 
 		private readonly ISolutionFiles _files;
 
@@ -49,7 +66,17 @@ namespace ripple.Model
 			var builder = packageBuilderFor(spec, version);
 			var nupkgFileName = Path.Combine(outputPath, "{0}.{1}.nupkg".ToFormat(spec.Name, version));
 
-			createPackage(builder, nupkgFileName);
+			var package = createPackage(builder, nupkgFileName);
+		    var issues = package.Validate(Rules);
+            
+            if (issues.Any())
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                issues.Each(issue => Console.WriteLine("[{0}] {1} - {2}", issue.Level, issue.Title, issue.Description));
+                Console.ResetColor();
+
+                RippleAssert.Fail("Package failed validation");
+            }
 
 			return nupkgFileName;
 		}
@@ -74,26 +101,35 @@ namespace ripple.Model
 					builder.Save(stream);
 				}
 			}
-			catch
+			catch(Exception exc)
 			{
 				if (!isExistingPackage && File.Exists(outputPath))
 				{
 					File.Delete(outputPath);
 				}
-				throw;
+
+                RippleAssert.Fail("Error creating package: " + exc.Message);
 			}
 
 			RippleLog.Info("Created nuget at: " + outputPath);
             return new OptimizedZipPackage(outputPath);
 		}
 
-
 		private PackageBuilder packageBuilderFor(NugetSpec spec, SemanticVersion version)
 		{
-			return new PackageBuilder(spec.Filename, NullPropertyProvider.Instance, true)
-			{
-				Version = version
-			};
+		    try
+		    {
+                return new PackageBuilder(spec.Filename, NullPropertyProvider.Instance, true)
+                {
+                    Version = version
+                };
+		    }
+		    catch (Exception exc)
+		    {
+                RippleAssert.Fail("Error creating package: " + exc.Message);
+		        return null;
+		    }
+			
 		}
 	}
 }
