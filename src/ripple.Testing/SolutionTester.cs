@@ -89,9 +89,9 @@ namespace ripple.Testing
         public void sets_the_default_float_constraint()
         {
             var solution = new Solution();
-            solution.DefaultFloatConstraint = "Current,NextMin";
+            solution.DefaultFloatConstraint = "Current,NextMinor";
 
-            solution.NuspecSettings.Float.ToString().ShouldEqual("Current,NextMin");
+            solution.NuspecSettings.Float.ToString().ShouldEqual("Current,NextMinor");
         }
 
         [Test]
@@ -106,13 +106,13 @@ namespace ripple.Testing
         [Test]
         public void uses_explicit_dependency_constraint()
         {
-            var explicitDep = new Dependency("FubuCore") { Constraint = "Current,NextMin"};
+            var explicitDep = new Dependency("FubuCore") { Constraint = "Current,NextMinor"};
 
 
             var solution = new Solution();
             solution.AddDependency(explicitDep);
 
-            solution.ConstraintFor(explicitDep).ToString().ShouldEqual("Current,NextMin");
+            solution.ConstraintFor(explicitDep).ToString().ShouldEqual("Current,NextMinor");
         }
 
         [Test]

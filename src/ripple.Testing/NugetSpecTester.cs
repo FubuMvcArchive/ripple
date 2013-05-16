@@ -5,7 +5,6 @@ using FubuTestingSupport;
 using System.Linq;
 using ripple.Directives;
 using ripple.Local;
-using ripple.Model;
 
 namespace ripple.Testing
 {
@@ -36,10 +35,10 @@ namespace ripple.Testing
         public void should_read_all_the_dependencies()
         {
             theSpec.Dependencies.ShouldHaveTheSameElementsAs(
-				new Dependency("Bottles", "1.0.0.412"),
-				new Dependency("FubuCore", "0.9.9.172"),
-				new Dependency("FubuLocalization", "0.9.5.48"),
-				new Dependency("HtmlTags", "1.1.0.114")
+				new NuspecDependency("Bottles", "1.0.0.412"),
+                new NuspecDependency("FubuCore", "0.9.9.172"),
+                new NuspecDependency("FubuLocalization", "0.9.5.48"),
+                new NuspecDependency("HtmlTags", "1.1.0.114")
             );
         }
 
@@ -47,9 +46,6 @@ namespace ripple.Testing
         [Test]
         public void should_read_all_the_published_assemblies()
         {
-			// TODO -- I'm punting on this. We should bring it back
-			if (DirectiveRunner.IsUnix()) return;
-
             var names = theSpec.PublishedAssemblies.Select(x => x.Name);
             names.ShouldContain("FubuMVC.Core");
 
@@ -58,9 +54,6 @@ namespace ripple.Testing
         [Test]
         public void read_the_published_assembly_correctly()
         {
-			// TODO -- I'm punting on this. We should bring it back
-	        if (DirectiveRunner.IsUnix()) return;
-
             var assembly = theSpec.PublishedAssemblies.First(x => x.Name == "FubuMVC.Core");
 
             var expectedPath = Path.GetDirectoryName(theSpec.Filename)

@@ -11,7 +11,7 @@ namespace ripple.Model
     {
         public static readonly VersionToken Current = new VersionToken("Current", x => x);
         public static readonly VersionToken NextMajor = new VersionToken("NextMajor", findNextMajor);
-        public static readonly VersionToken NextMin = new VersionToken("NextMin", findNextMin);
+        public static readonly VersionToken NextMinor = new VersionToken("NextMinor", findNextMin);
 
         private static readonly FieldInfo[] Fields;
         private static readonly Cache<string, VersionToken> Tokens;

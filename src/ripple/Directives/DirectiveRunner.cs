@@ -28,7 +28,7 @@ namespace ripple.Directives
             var text = "{0} %*".ToFormat(_current.AppendPath(file));
             var runnerName = alias + ".cmd";
 
-            if (IsUnix())
+            if (Platform.IsUnix())
             {
                 runnerName = alias + ".sh";
                 text = "ln -s #!/bin/sh {0} $*".ToFormat(file);
@@ -59,12 +59,6 @@ namespace ripple.Directives
 
             Console.WriteLine("Copying {0} to {1}", from, to);
             _fileSystem.Copy(from, to);
-        }
-
-        public static bool IsUnix()
-        {
-            var pf = Environment.OSVersion.Platform;
-            return pf == PlatformID.Unix || pf == PlatformID.MacOSX;
         }
     }
 }

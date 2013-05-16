@@ -69,7 +69,7 @@ namespace ripple.Model
 			var package = createPackage(builder, nupkgFileName);
 		    var issues = package.Validate(Rules);
             
-            if (issues.Any())
+            if (issues.Any(x => x.Level == PackageIssueLevel.Error))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 issues.Each(issue => Console.WriteLine("[{0}] {1} - {2}", issue.Level, issue.Title, issue.Description));

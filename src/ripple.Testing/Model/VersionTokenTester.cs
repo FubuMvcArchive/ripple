@@ -19,7 +19,7 @@ namespace ripple.Testing.Model
         [Test]
         public void current_gets_the_current_value()
         {
-            var version = new SemanticVersion("1.0.0.0");
+            var version = new SemanticVersion("1.0.1.244");
             VersionToken.Current.Value(version).ShouldEqual(version);
         }
 
@@ -36,7 +36,7 @@ namespace ripple.Testing.Model
         public void next_min()
         {
             VersionToken
-                .NextMin
+                .NextMinor
                 .Value(new SemanticVersion("1.1.3.987"))
                 .ShouldEqual(new SemanticVersion("1.2.0.0"));
         }
@@ -58,8 +58,8 @@ namespace ripple.Testing.Model
         [Test]
         public void finds_the_next_min_token()
         {
-            VersionToken.Find("NextMin").ShouldEqual(VersionToken.NextMin);
-            VersionToken.Find("nextmin").ShouldEqual(VersionToken.NextMin);
+            VersionToken.Find("NextMinor").ShouldEqual(VersionToken.NextMinor);
+            VersionToken.Find("nextminor").ShouldEqual(VersionToken.NextMinor);
         }
 
         [Test]

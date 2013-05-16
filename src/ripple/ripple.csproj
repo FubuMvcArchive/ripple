@@ -104,7 +104,9 @@
     <Compile Include="Local\IRippleLogger.cs" />
     <Compile Include="Local\IRippleStep.cs" />
     <Compile Include="Local\IRippleStepRunner.cs" />
+    <Compile Include="Local\NuspecDependency.cs" />
     <Compile Include="Local\NuspecDocument.cs" />
+    <Compile Include="Local\ProjectNuspec.cs" />
     <Compile Include="Model\BranchDetector.cs" />
     <Compile Include="Model\Dependency.cs" />
     <Compile Include="Model\DependencyCollection.cs" />
@@ -187,6 +189,7 @@
     <Compile Include="RippleLog.cs" />
     <Compile Include="RippleOperation.cs" />
     <Compile Include="Runners\Runner.cs" />
+    <Compile Include="Steps\CreatePackages.cs" />
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
     <Compile Include="Steps\FloatDependency.cs" />
@@ -197,6 +200,7 @@
     <Compile Include="Steps\ExplodeDownloadedNugets.cs" />
     <Compile Include="Steps\FixReferences.cs" />
     <Compile Include="Steps\RippleStep.cs" />
+    <Compile Include="Steps\UpdateNuspecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

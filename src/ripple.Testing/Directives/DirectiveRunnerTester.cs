@@ -83,7 +83,7 @@ namespace ripple.Testing.Directives
         [Test]
         public void should_have_written_a_file_to_the_root_of_the_project()
         {
-	        if (DirectiveRunner.IsUnix()) return;
+	        if (Platform.IsUnix()) return;
 
             var cmdText = FileSystem.Combine("current", "BottleRunner.exe") + " %*";
             var filename = FileSystem.Combine(theSolutionDir, "bottles.cmd");
@@ -93,7 +93,7 @@ namespace ripple.Testing.Directives
         [Test]
         public void should_add_the_file_to_git_ignore()
         {
-			if (DirectiveRunner.IsUnix()) return;
+            if (Platform.IsUnix()) return;
             MockFor<ISolution>().AssertWasCalled(x => x.IgnoreFile("bottles.cmd"));
         }
 

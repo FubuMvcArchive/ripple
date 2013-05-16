@@ -291,7 +291,7 @@ namespace ripple.Testing
 
 			public PublishesExpression DependsOn(string name)
 			{
-				_spec.AddDependency(new Dependency(name));
+				_spec.AddDependency(new NuspecDependency(name));
 				return this;
 			}
 

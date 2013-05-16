@@ -2,14 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using FubuCore;
-using ripple.Model;
 
 namespace ripple.Local
 {
     public class NuspecDocument
     {
         private const string EdgeSuffix = "-Edge";
+        public const string Schema = "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd";
+        private static readonly XmlNamespaceManager _xmlNamespaceManager;
+        private static readonly XNamespace _xmlns;
 
         static NuspecDocument()
         {
@@ -17,18 +21,19 @@ namespace ripple.Local
 
             _xmlNamespaceManager = new XmlNamespaceManager(nameTable);
             _xmlNamespaceManager.AddNamespace("nuspec", "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd");
+
+            _xmlns = Schema;
         }
 
         private readonly string _filename;
-        private readonly XmlDocument _document;
-        private static readonly XmlNamespaceManager _xmlNamespaceManager;
+        private readonly XElement _document;
 
         public NuspecDocument(string filename)
         {
             _filename = filename;
 
-            _document = new XmlDocument();
-            _document.Load(filename);
+            _document = XElement.Load(filename);
+            _document.Name = _xmlns + _document.Name.LocalName;
         }
 
         public void SaveChanges()
@@ -36,63 +41,63 @@ namespace ripple.Local
             _document.Save(_filename);
         }
 
-        private XmlElement findNugetElement(string name)
+        private XElement findNugetElement(string name)
         {
             var search = "//nuspec:{0}".ToFormat(name);
-            return _document.DocumentElement.SelectSingleNode(search, _xmlNamespaceManager) as XmlElement;
+            return _document.XPathSelectElement(search, _xmlNamespaceManager);
         }
 
-        private IEnumerable<XmlElement> findNugetElements(string name)
+        private IEnumerable<XElement> findNugetElements(string name)
         {
             var search = "//nuspec:{0}".ToFormat(name);
-            foreach (XmlElement element in _document.DocumentElement.SelectNodes(search, _xmlNamespaceManager))
+            foreach (XElement element in _document.XPathSelectElements(search, _xmlNamespaceManager))
             {
                 yield return element;
             }
         }
 
-		public void AddDependency(Dependency dependency)
+        public void AddDependency(NuspecDependency dependency)
 		{
-			var dependencies = _document.DocumentElement.SelectSingleNode("//nuspec:dependencies", _xmlNamespaceManager);
+            var dependencies = _document.XPathSelectElement("//nuspec:dependencies", _xmlNamespaceManager);
 
-			var element = _document.CreateElement("dependency");
-			element.SetAttribute("id", dependency.Name);
+            var element = new XElement(_xmlns + "dependency");
+			element.SetAttributeValue("id", dependency.Name);
 
-			if (!dependency.IsFloat())
+			if (dependency.VersionSpec != null)
 			{
-				element.SetAttribute("version", dependency.Version);
+				element.SetAttributeValue("version", dependency.VersionSpec.ToString());
 			}
 
-			dependencies.AppendChild(element);
+			dependencies.Add(element);
 		}
 
 		public void AddPublishedAssembly(string src, string target = "lib")
 		{
-			var files = _document.DocumentElement.SelectSingleNode("//files", _xmlNamespaceManager);
+			var files = _document.XPathSelectElement("//files", _xmlNamespaceManager);
 
-			var element = _document.CreateElement("file");
-			element.SetAttribute("src", src);
-			element.SetAttribute("target", target);
+            var element = new XElement("file");
+			element.SetAttributeValue("src", src);
+			element.SetAttributeValue("target", target);
 
-			files.AppendChild(element);
+			files.Add(element);
 		}
 
-		public IEnumerable<Dependency> FindDependencies()
+        public IEnumerable<NuspecDependency> FindDependencies()
         {
-            return findNugetElements("dependency").Select(Dependency.ReadFrom);
+            return findNugetElements("dependency").Select(NuspecDependency.ReadFrom);
         }
 
         public IEnumerable<PublishedAssembly> FindPublishedAssemblies()
         {
             var nuspecDirectory = _filename.ParentDirectory();
 
-            foreach (XmlElement element in _document.DocumentElement.SelectNodes("//file"))
+            foreach (var element in _document.XPathSelectElements("//file", _xmlNamespaceManager))
             {
-                var target = element.GetAttribute("target");
+                var target = element.Attribute("target").Value;
                 if (target.StartsWith("lib") || target.StartsWith("tools"))
                 {
                     var path = target.Replace('\\', '/');
-                    var assemblyReference = element.GetAttribute("src");
+                    var assemblyReference = element.Attribute("src").Value;
 
                     yield return new PublishedAssembly(nuspecDirectory, assemblyReference, path);
                 }
@@ -104,11 +109,11 @@ namespace ripple.Local
         {
             get
             {
-                return findNugetElement("id").InnerText;
+                return findNugetElement("id").Value;
             }
             set
             {
-                findNugetElement("id").InnerText = value;
+                findNugetElement("id").Value = value;
             }
         }
 
@@ -160,7 +165,7 @@ namespace ripple.Local
                 throw new InvalidOperationException("Unable to find dependency " + dependency);
             }
 
-            element.SetAttribute("version", version);
+            element.SetAttributeValue("version", version);
         }
     }
 }

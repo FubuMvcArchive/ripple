@@ -74,6 +74,7 @@
     <Compile Include="Commands\FloatCommandTester.cs" />
     <Compile Include="Commands\floating_command_with_min_version.cs" />
     <Compile Include="Commands\InstallInputTester.cs" />
+    <Compile Include="Commands\LocalNugetInputTester.cs" />
     <Compile Include="Commands\PublishCommandTester.cs" />
     <Compile Include="Commands\UpdateInputTester.cs" />
     <Compile Include="DataMother.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Integration\remove_a_dependency_from_solution.cs" />
     <Compile Include="Integration\restore_dependencies_case_insensitive.cs" />
     <Compile Include="Integration\restoring_prelease_nugets_from_cache.cs" />
+    <Compile Include="Integration\update_dependencies_while_creating_local_nugets.cs" />
     <Compile Include="Integration\updating_an_existing_dependency_in_a_group.cs" />
     <Compile Include="Integration\updating_a_dependency_with_transitive_updates.cs" />
     <Compile Include="Integration\valid_solution.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="Nuget\NugetFolderCacheTester.cs" />
     <Compile Include="Nuget\NugetPlanTester.cs" />
     <Compile Include="Nuget\NugetXmlFeedTester.cs" />
+    <Compile Include="Nuget\ProjectNuspecTester.cs" />
     <Compile Include="Nuget\RemoteNugetTester.cs" />
     <Compile Include="Nuget\UpdateDependencyTester.cs" />
     <Compile Include="PackageExtensionsTester.cs" />

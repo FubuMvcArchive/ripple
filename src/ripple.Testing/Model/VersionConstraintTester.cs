@@ -19,9 +19,9 @@ namespace ripple.Testing.Model
         [Test]
         public void parse_min_and_max()
         {
-            var constraint = VersionConstraint.Parse("Current,NextMin");
+            var constraint = VersionConstraint.Parse("Current,NextMinor");
             constraint.Min.ShouldEqual(VersionToken.Current);
-            constraint.Max.ShouldEqual(VersionToken.NextMin);
+            constraint.Max.ShouldEqual(VersionToken.NextMinor);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace ripple.Testing.Model
         [Test]
         public void tostring_a_min_and_max_constraint()
         {
-            new VersionConstraint(VersionToken.Current, VersionToken.NextMin).ToString().ShouldEqual("Current,NextMin");
+            new VersionConstraint(VersionToken.Current, VersionToken.NextMinor).ToString().ShouldEqual("Current,NextMinor");
         }
     }
 }

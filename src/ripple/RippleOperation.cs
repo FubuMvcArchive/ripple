@@ -111,7 +111,8 @@ namespace ripple
 			packageFiles.Each(file => files.DeleteFile(file));
 		}
 
-		public static RippleOperation For<T>(SolutionInput input)
+		public static RippleOperation For<T>(T input)
+            where T : SolutionInput
 		{
             return For<T>(input, _target ?? Solution.For(input));
 		}
@@ -135,10 +136,10 @@ namespace ripple
 		private static Solution _target;
 		private static bool _forceThrow;
 
-		public static CommandExecutionExpression With(Solution solution)
+		public static CommandExecutionExpression With(Solution solution, bool throwOnFailure = true)
 		{
 			_target = solution;
-			_forceThrow = true;
+            _forceThrow = throwOnFailure;
             RippleLog.RemoveFileListener();
 
 			return new CommandExecutionExpression(() =>

@@ -6,9 +6,7 @@ namespace ripple.Local
 {
     public class NugetSpec
     {
-        // Recursive -- thanks Josh
-
-		private readonly IList<Dependency> _dependencies = new List<Dependency>();
+        private readonly IList<NuspecDependency> _dependencies = new List<NuspecDependency>();
         private readonly string _filename;
         private readonly string _name;
         private readonly IList<PublishedAssembly> _publishedAssemblies = new List<PublishedAssembly>();
@@ -29,9 +27,14 @@ namespace ripple.Local
             get { return _filename; }
         }
 
-		public IList<Dependency> Dependencies
+        public IList<NuspecDependency> Dependencies
         {
             get { return _dependencies; }
+        }
+
+        public NuspecDependency FindDependency(string name)
+        {
+            return _dependencies.SingleOrDefault(x => x.MatchesName(name));
         }
 
         public IEnumerable<PublishedAssembly> PublishedAssemblies
@@ -71,5 +74,25 @@ namespace ripple.Local
             return Dependencies.Any(x => x.MatchesName(nuget));
         }
 
+        protected bool Equals(NugetSpec other)
+        {
+            return string.Equals(_filename, other._filename) && string.Equals(_name, other._name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((NugetSpec) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_filename != null ? _filename.GetHashCode() : 0)*397) ^ (_name != null ? _name.GetHashCode() : 0);
+            }
+        }
     }
 }

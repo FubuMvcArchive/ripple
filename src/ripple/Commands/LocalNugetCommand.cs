@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
-using System.Linq;
-using NuGet;
+using ripple.Local;
 using ripple.Model;
+using ripple.Steps;
 
 namespace ripple.Commands
 {
@@ -22,9 +22,27 @@ namespace ripple.Commands
         [Description("Specify where the nuget file should be written, otherwise it just goes to the nuget default")]
         public string DestinationFlag { get; set; }
 
-        public IEnumerable<Project> Projects(Solution solution)
+        [Description("Modify the nuspec files to match the current dependency version constraints")]
+        [FlagAlias("update-dependencies", 'd')]
+        public bool UpdateDependenciesFlag { get; set; }
+
+        public IEnumerable<ProjectNuspec> SpecsFor(Solution solution)
         {
-            yield break;
+            if (!UpdateDependenciesFlag)
+            {
+                yield break;
+            }
+
+            foreach (var project in solution.Projects)
+            {
+                foreach (var spec in solution.Specifications)
+                {
+                    if (spec.Name.EqualsIgnoreCase(project.Name))
+                    {
+                        yield return new ProjectNuspec(project, spec);
+                    }
+                }
+            }
         }
     }
 
@@ -33,24 +51,11 @@ namespace ripple.Commands
     {
         public override bool Execute(LocalNugetInput input)
         {
-            new FileSystem().CreateDirectory(input.DestinationFlag);
-
-            input.EachSolution(solution =>
-            {
-                solution.Specifications.Each(spec => {
-                    var version = spec.Dependencies.Any(x => x.Version.Contains("-"))
-                                      ? input.VersionFlag + "-alpha"
-                                      : input.VersionFlag;
-
-
-                    RippleLog.Info("Building the nuget spec file at " + spec.Filename + " as version " + version);
-
-                    solution.Package(spec, SemanticVersion.Parse(version), input.DestinationFlag);
-                    ConsoleWriter.PrintHorizontalLine();
-                });
-            });
-
-            return true;
+            return RippleOperation
+                .For(input)
+                .Step<UpdateNuspecs>()
+                .Step<CreatePackages>()
+                .Execute();
         }
     }
 }
