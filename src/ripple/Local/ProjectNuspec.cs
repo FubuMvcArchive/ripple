@@ -51,7 +51,7 @@ namespace ripple.Local
             return Project
                 .Dependencies
                 .Where(x => !_spec.Dependencies.Any(y => y.MatchesName(x.Name)))
-                .Select(x => _project.Solution.FindDependency(x.Name));
+                .Select(x => _project.Solution.Dependencies.Find(x.Name));
         }
     }
 }

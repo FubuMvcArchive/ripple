@@ -152,10 +152,17 @@ namespace ripple.Commands
 
 
                     var nugets = solution.NugetDependencies;
+                    var local = solution.LocalDependencies();
 					solution.Dependencies.Each(dep =>
                     {
                         var nuget = nugets.FirstOrDefault(x => x.Name == dep.Name);
                         var name = dep.ToString();
+                        if (dep.IsFloat() && local.Has(dep))
+                        {
+                            name = "{0},{1}".ToFormat(dep.Name, local.Get(dep).Version);
+                        }
+
+
                         if (nuget != null)
                         {
                             name += " published by {0}".ToFormat(nuget.Publisher.Name);

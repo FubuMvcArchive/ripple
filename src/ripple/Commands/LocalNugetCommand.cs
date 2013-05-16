@@ -23,7 +23,7 @@ namespace ripple.Commands
         public string DestinationFlag { get; set; }
 
         [Description("Modify the nuspec files to match the current dependency version constraints")]
-        [FlagAlias("update-dependencies", 'd')]
+        [FlagAlias("update-dependencies", 'u')]
         public bool UpdateDependenciesFlag { get; set; }
 
         public IEnumerable<ProjectNuspec> SpecsFor(Solution solution)
