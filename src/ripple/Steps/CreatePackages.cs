@@ -7,9 +7,9 @@ using ripple.Commands;
 
 namespace ripple.Steps
 {
-    public class CreatePackages : RippleStep<LocalNugetInput>
+    public class CreatePackages : RippleStep<CreatePackagesInput>
     {
-        protected override void execute(LocalNugetInput input, IRippleStepRunner runner)
+        protected override void execute(CreatePackagesInput input, IRippleStepRunner runner)
         {
             new FileSystem().CreateDirectory(input.DestinationFlag);
 

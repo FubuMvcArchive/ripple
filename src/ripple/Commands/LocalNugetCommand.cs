@@ -9,9 +9,9 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-    public class LocalNugetInput : SolutionInput
+    public class CreatePackagesInput : SolutionInput
     {
-        public LocalNugetInput()
+        public CreatePackagesInput()
         {
             VersionFlag = "0.0.0.0";
             DestinationFlag = RippleFileSystem.LocalNugetDirectory();
@@ -55,9 +55,19 @@ namespace ripple.Commands
     }
 
     [CommandDescription("Creates the nuget files locally", Name = "local-nuget")]
-    public class LocalNugetCommand : FubuCommand<LocalNugetInput>
+    public class LocalNugetCommand : FubuCommand<CreatePackagesInput>
     {
-        public override bool Execute(LocalNugetInput input)
+        public override bool Execute(CreatePackagesInput input)
+        {
+            // TODO -- Kill off this command completely and transition to the new alias
+            return new CreatePackagesCommand().Execute(input);
+        }
+    }
+
+    [CommandDescription("Creates the nuget files locally", Name = "create-packages")]
+    public class CreatePackagesCommand : FubuCommand<CreatePackagesInput>
+    {
+        public override bool Execute(CreatePackagesInput input)
         {
             return RippleOperation
                 .For(input)

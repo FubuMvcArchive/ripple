@@ -7,9 +7,9 @@ using ripple.Model;
 
 namespace ripple.Steps
 {
-    public class UpdateNuspecs : RippleStep<LocalNugetInput>
+    public class UpdateNuspecs : RippleStep<CreatePackagesInput>
     {
-        protected override void execute(LocalNugetInput input, IRippleStepRunner runner)
+        protected override void execute(CreatePackagesInput input, IRippleStepRunner runner)
         {
             if (!input.UpdateDependenciesFlag)
             {
@@ -20,7 +20,7 @@ namespace ripple.Steps
             groups.Each(x => updateSpecification(input, x, groups));
         }
 
-        private void updateSpecification(LocalNugetInput input, SpecGroup group, IEnumerable<SpecGroup> groups)
+        private void updateSpecification(CreatePackagesInput input, SpecGroup group, IEnumerable<SpecGroup> groups)
         {
             var spec = group.Spec;
             var local = Solution.LocalDependencies();

@@ -11,7 +11,7 @@ namespace ripple.Testing.Commands
     {
         private SolutionGraphScenario theScenario;
         private Solution theSolution;
-        private LocalNugetInput theInput;
+        private CreatePackagesInput theInput;
 
         [SetUp]
         public void SetUp()
@@ -32,7 +32,7 @@ namespace ripple.Testing.Commands
             theSolution = theScenario.Find("Test");
             theSolution.Nuspecs.Add(new NuspecMap { File = "SomethingElse.nuspec", Project = "Something"});
 
-            theInput = new LocalNugetInput
+            theInput = new CreatePackagesInput
             {
                 UpdateDependenciesFlag = true
             };

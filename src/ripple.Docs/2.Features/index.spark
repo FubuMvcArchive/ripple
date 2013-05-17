@@ -1,0 +1,8 @@
+<!--Title: Features -->
+
+<p class="margin">
+    Ripple has been dogfooded for a couple of years by the FubuMVC team to manage the very large number of nugets and build configurations in TeamCity. It is primarily
+    designed to help with shuffling dependencies around locally and keeping your builds in sync.
+</p>
+
+<TableOfContents />

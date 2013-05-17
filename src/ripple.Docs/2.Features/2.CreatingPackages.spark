@@ -1,0 +1,47 @@
+<!--Title: Creating packages -->
+
+<p class="margin">
+    One of the hardest parts about maintaining a large number of dependencies is keeping your versioning sane. You generally have a fast feedback cycle with your dependencies
+    in your build, but the nugets that you generate aren't always kept up to date. Ripple provides a mechanism for auto-generating the dependency elements in your nuspec files while generating files.
+</p>
+<h3>File locations</h3>
+<p class="margin">
+    Your <code>ripple.code</code> file has a <code>NugetSpecFolder</code> element that can be used to specify the location of your nuspec files. The default value is <code>packaging/nuget</code>. All files
+    found in this location are used when the <code>create-packages</code> command is invoked.
+</p>
+
+<h3>Generating Dependencies</h3>
+<p class="margin">
+    During generation, nuspec files are matched to projects by one of the following: 
+    1) the name of the nuspec is a case-insensitive match for a project (E.g., fubumvc.core.nuspec => fubumvc.core.csproj) or 2) a mapping has been specified in your <code>ripple.config</code> file.
+</p>
+<p class="margin">
+    Once your projects and nuspec files are correlated, the generator determines what dependencies the project has (via the <code>ripple.dependencies.config</code> file). Each dependency is then written to the file
+    as long as it does not explicitly exist in the file. This is important to note. If you wish to generate all dependencies except for one, you can simply define that element in your nuspec file and it will remain untouched.
+</p>
+
+<h3>Generated Version Constraints</h3>
+<p class="half-margin">
+    The generation of version constraints is configured two ways: a) solution-wide and b) individually for a dependency (overriding the solution default). A constraint is defined
+    by using <code>Version tokens</code>. The following tokens are available:
+</p>
+
+<ul class="margin">
+    <li><code>Current</code>: The current/local version of the dependency</li>
+    <li><code>NextMinor</code>: The next minor SemVer version (e.g., 1.0.0.0 => 1.1.0.0)</li>
+    <li><code>NextMajor</code>: The next major SemVer version (e.g., 1.0.0.0 => 2.0.0.0)</li>
+</ul>
+
+<p class="margin">The default Float constraint is <code>Current</code>. This means that floated dependencies define a dependency with a version constraint like: <code>version="1.1.0.0"</code>.</p>
+
+<p class="margin">The default Fixed constraint is <code>Current,NextMajor</code>. This means that floated dependencies define a dependency with a version constraint like: <code>version="[1.1.0.0,2.0.0.0)"</code>.</p>
+
+<p class="margin">Projects that reference other published projects (i.e., other nugets) use the configured Float constraint.</p>
+
+<p class="margin">To configure the solution-level defaults, you can modify the <code>DefaultFloatConstraint</code> and <code>DefaultFixConstraint</code> properties. 
+These properties control the generation of versions for Float and Fixed dependencies, respectively.
+</p>
+
+<h3>Mapping Projects to Nuspec files</h3>
+<p class="margin">The following is an example <code>ripple.config</code> utilizing mappings:</p>
+<EmbedFile name="mappingExample.config" />

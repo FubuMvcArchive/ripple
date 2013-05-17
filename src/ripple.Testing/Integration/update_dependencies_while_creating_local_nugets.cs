@@ -53,7 +53,7 @@ namespace ripple.Testing.Integration
 
             RippleOperation
                 .With(theSolution, false)
-                .Execute<LocalNugetInput, LocalNugetCommand>(input =>
+                .Execute<CreatePackagesInput, LocalNugetCommand>(input =>
                 {
                     input.VersionFlag = "1.0.1.244";
                     input.UpdateDependenciesFlag = true;
