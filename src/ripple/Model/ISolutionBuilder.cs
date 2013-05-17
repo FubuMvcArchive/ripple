@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FubuCore;
 using ripple.Nuget;
 
@@ -36,6 +37,23 @@ namespace ripple.Model
 				}
 			});
 
+            solution.EachProject(project =>
+            {
+                if (!project.HasCsProjFile())
+                {
+                    return;
+                }
+
+                var references = project.CsProj.ProjectReferences;
+                references.Each(r =>
+                {
+                    var projectRef = solution.FindProject(r);
+                    if (projectRef != null)
+                    {
+                        project.AddProjectReference(projectRef);
+                    }
+                });
+            });
 
 			solution.UseStorage(NugetStorage.For(solution.Mode));
 

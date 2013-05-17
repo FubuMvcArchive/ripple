@@ -24,6 +24,7 @@ namespace ripple.MSBuild
         private readonly Solution _solution;
 
         private readonly Lazy<IList<Reference>> _references;
+        private readonly Lazy<IList<string>> _projectReferences; 
 
         static CsProjFile()
         {
@@ -42,7 +43,8 @@ namespace ripple.MSBuild
             _document = XElement.Load(filename);
 	        _document.Name = _xmlns + _document.Name.LocalName;
 
-            _references = new Lazy<IList<Reference>>(() => { return new List<Reference>(readReferences()); });
+            _references = new Lazy<IList<Reference>>(() => new List<Reference>(readReferences()));
+            _projectReferences = new Lazy<IList<string>>(() => new List<string>(readProjectReferences()));
         }
 
         public string ToolsVersion
@@ -53,6 +55,11 @@ namespace ripple.MSBuild
         public IEnumerable<Reference> References
         {
             get { return _references.Value; }
+        }
+
+        public IEnumerable<string> ProjectReferences
+        {
+            get { return _projectReferences.Value;  }
         }
 
         public ReferenceStatus AddReference(string name, string hintPath)
@@ -173,6 +180,19 @@ namespace ripple.MSBuild
             }
 
             _document.Save(_filename);
+        }
+
+        private IEnumerable<string> readProjectReferences()
+        {
+            var references = _document.XPathSelectElements("tns:ItemGroup/tns:ProjectReference", _manager);
+            foreach (var reference in references)
+            {
+                var name = reference.XPathSelectElement("tns:Name", _manager);
+                if (name != null)
+                {
+                    yield return name.Value;
+                }
+            }
         }
 
         private IEnumerable<Reference> readReferences()
