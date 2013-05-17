@@ -124,6 +124,7 @@
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
     <Compile Include="Model\NulloDependencyStrategy.cs" />
+    <Compile Include="Model\NuspecMap.cs" />
     <Compile Include="Model\NuspecSettings.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\RestoreSettings.cs" />
@@ -170,7 +171,7 @@
     <Compile Include="Nuget\UpdateDependency.cs" />
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
     <Compile Include="Platform.cs" />
-    <Compile Include="RippleConnection.cs" />
+    <Compile Include="RippleEnvironment.cs" />
     <Compile Include="RippleConstants.cs" />
     <Compile Include="RippleFileSystem.cs" />
     <Compile Include="Local\MoveNugetAssemblies.cs" />

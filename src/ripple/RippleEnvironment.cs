@@ -4,13 +4,13 @@ using ripple.Model;
 
 namespace ripple
 {
-    public class RippleConnection
+    public class RippleEnvironment
     {
         private static Func<bool> _connected;
 
         private readonly static Lazy<bool> HasConnection;
 
-        static RippleConnection()
+        static RippleEnvironment()
         {
             HasConnection = new Lazy<bool>(() =>
             {
@@ -36,7 +36,7 @@ namespace ripple
             _connected = () => HasConnection.Value;
         }
 
-        public static void Stub(bool connected)
+        public static void StubConnection(bool connected)
         {
             _connected = () => connected;
         }

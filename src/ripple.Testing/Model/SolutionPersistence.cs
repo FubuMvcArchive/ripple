@@ -28,6 +28,8 @@ namespace ripple.Testing.Model
 		    };
             solution.AddDependency(constrainedDependency);
 
+            solution.Nuspecs.Add(new NuspecMap { File = "Temp", Project = "Test"});
+
 			CheckXmlPersistence.For(solution);
 		}
 	}

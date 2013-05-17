@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Local;
@@ -26,23 +27,30 @@ namespace ripple.Commands
         [FlagAlias("update-dependencies", 'u')]
         public bool UpdateDependenciesFlag { get; set; }
 
-        public IEnumerable<ProjectNuspec> SpecsFor(Solution solution)
+        public IEnumerable<SpecGroup> SpecsFor(Solution solution)
         {
             if (!UpdateDependenciesFlag)
             {
-                yield break;
+                return new SpecGroup[0];
             }
 
-            foreach (var project in solution.Projects)
+            var specs = new List<ProjectNuspec>();
+            solution.EachProject(project =>
             {
-                foreach (var spec in solution.Specifications)
+                solution.Specifications.Each(spec =>
                 {
                     if (spec.Name.EqualsIgnoreCase(project.Name))
                     {
-                        yield return new ProjectNuspec(project, spec);
+                        specs.Add(new ProjectNuspec(project, spec));
                     }
-                }
-            }
+                });
+            });
+
+            specs.AddRange(solution.Nuspecs.Select(x => x.ToSpec(solution)));
+
+            return specs
+                .GroupBy(x => x.Spec)
+                .Select(x => new SpecGroup(x.Key, x.Select(y => y.Project)));
         }
     }
 

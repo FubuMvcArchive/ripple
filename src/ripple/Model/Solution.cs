@@ -57,6 +57,7 @@ namespace ripple.Model
 			FastBuildCommand = "rake compile";
 			Mode = SolutionMode.Ripple;
             Groups = new List<DependencyGroup>();
+            Nuspecs = new List<NuspecMap>();
 
 			AddFeed(Feed.Fubu);
 			AddFeed(Feed.NuGetV2);
@@ -131,6 +132,10 @@ namespace ripple.Model
 	    [XmlArray("Groups")]
         [XmlArrayItem("Group")]
         public List<DependencyGroup> Groups { get; set; }
+
+        [XmlArray("Nuspecs")]
+        [XmlArrayItem("Nuspec")]
+        public List<NuspecMap> Nuspecs { get; set; }
 
 	    [XmlIgnore]
 		public DependencyCollection Dependencies

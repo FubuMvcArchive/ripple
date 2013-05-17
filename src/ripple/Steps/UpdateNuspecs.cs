@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using NuGet;
 using ripple.Commands;
 using ripple.Local;
+using ripple.Model;
 
 namespace ripple.Steps
 {
@@ -13,16 +16,17 @@ namespace ripple.Steps
                 return;
             }
 
-            var specsToUpdate = input.SpecsFor(Solution);
-            specsToUpdate.Each(updateSpecification);
+            var groups = input.SpecsFor(Solution).ToArray();
+            groups.Each(x => updateSpecification(input, x, groups));
         }
 
-        private void updateSpecification(ProjectNuspec spec)
+        private void updateSpecification(LocalNugetInput input, SpecGroup group, IEnumerable<SpecGroup> groups)
         {
+            var spec = group.Spec;
             var local = Solution.LocalDependencies();
-            var nuspec = new NuspecDocument(spec.Spec.Filename);
+            var nuspec = new NuspecDocument(spec.Filename);
 
-            spec
+            group
                 .DetermineDependencies()
                 .Each(dependency =>
                 {
@@ -33,6 +37,24 @@ namespace ripple.Steps
                     var nuspecDep = new NuspecDependency(dependency.Name, version);
                     nuspec.AddDependency(nuspecDep);
                 });
+
+            group
+                .Projects
+                .SelectMany(project => project.References)
+                .Each(projectRef =>
+                {
+                    var target = groups.FirstOrDefault(x => x.Projects.Contains(projectRef));
+                    if (target == null) return;
+
+                    // TODO -- Do we need another setting for project references?
+                    var constraint = Solution.NuspecSettings.Float;
+                    var version = constraint.SpecFor(new SemanticVersion(input.VersionFlag));
+
+                    var nuspecDep = new NuspecDependency(target.Spec.Name, version);
+                    nuspec.AddDependency(nuspecDep);
+                });
+
+
 
             nuspec.SaveChanges();
         }

@@ -44,9 +44,10 @@ namespace ripple.Testing.Commands
         [Test]
         public void finds_nuspecs_with_corresponding_projects()
         {
-            var spec = theInput.SpecsFor(theSolution).Single();
-            spec.Project.ShouldBeTheSameAs(theSolution.FindProject("SomeProject"));
-            spec.Spec.Name.ShouldEqual("SomeProject");
+            var group = theInput.SpecsFor(theSolution).Single();
+
+            group.Spec.Name.ShouldEqual("SomeProject");
+            group.Projects.Single().ShouldBeTheSameAs(theSolution.FindProject("SomeProject"));
         }
 
         [Test]
