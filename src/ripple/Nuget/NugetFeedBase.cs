@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FubuCore.Util;
 using NuGet;
 using ripple.Model;
 
@@ -7,55 +8,90 @@ namespace ripple.Nuget
     public abstract class NugetFeedBase : INugetFeed
     {
         private static readonly NullRemoteNuget Null = new NullRemoteNuget();
-        private readonly Dictionary<Dependency, IRemoteNuget> _findCache = new Dictionary<Dependency, IRemoteNuget>();
-        private readonly Dictionary<string, IRemoteNuget> _findLatest = new Dictionary<string, IRemoteNuget>();
-        
+        private readonly Cache<CacheKey<Dependency>, IRemoteNuget> _findCache = new Cache<CacheKey<Dependency>, IRemoteNuget>();
+        private readonly Cache<CacheKey<string>, IRemoteNuget> _findLatest = new Cache<CacheKey<string>, IRemoteNuget>();
+
         public IRemoteNuget Find(Dependency query)
         {
-            IRemoteNuget nuget;
-            if (_findCache.TryGetValue(query, out nuget) == false)
+            var key = new CacheKey<Dependency>(GetBoolStability(query), query);
+
+            if (_findCache.Has(key) == false)
             {
-                nuget = FindImpl(query);
-                _findCache[query] = nuget ?? Null;
+                _findCache[key] = FindImpl(query) ?? Null;
             }
 
-            return Return(nuget);
+            return Return(_findCache[key]);
         }
 
         protected abstract IRemoteNuget FindImpl(Dependency query);
 
         public IRemoteNuget FindLatest(Dependency query)
         {
-            IRemoteNuget nuget;
-            if (_findLatest.TryGetValue(query.Name, out nuget) == false)
-            {
-                nuget = FindLatestImpl(query);
+            var stability = GetBoolStability(query);
+            var key = new CacheKey<string>(stability, query.Name);
 
-                _findLatest[query.Name] = nuget ?? Null;
+            if (_findLatest.Has(key) == false)
+            {
+                var nuget = FindLatestImpl(query);
+                _findLatest[key] = nuget ?? Null;
 
                 if (nuget != null && nuget.Version != null)
                 {
-                    var key = new Dependency(nuget.Name, nuget.Version.ToString());
+                    var findKey = new CacheKey<Dependency>(stability, new Dependency(nuget.Name, nuget.Version.ToString()));
 
-                    if (_findCache.ContainsKey(key) == false)
-                        _findCache[key] = nuget;
+                    if (_findCache.Has(findKey) == false)
+                        _findCache[findKey] = nuget;
                 }
             }
 
-            return Return(nuget);
+            return Return(_findLatest[key]);
         }
 
         protected abstract IRemoteNuget FindLatestImpl(Dependency query);
+
+        private static bool GetBoolStability(Dependency query)
+        {
+            return query.NugetStability.HasValue && query.NugetStability.Value == NugetStability.Anything;
+        }
 
         private static IRemoteNuget Return(object nuget)
         {
             if (ReferenceEquals(Null, nuget))
                 return null;
 
-            return (IRemoteNuget) nuget;
+            return (IRemoteNuget)nuget;
         }
 
         public abstract IPackageRepository Repository { get; }
+
+        private class CacheKey<TKeyPart>
+        {
+            private readonly bool _stableOnly;
+            private readonly TKeyPart _part;
+
+            public CacheKey(bool stableOnly, TKeyPart part)
+            {
+                _stableOnly = stableOnly;
+                _part = part;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                var other = (CacheKey<TKeyPart>)obj;
+                return _stableOnly.Equals(other._stableOnly) && _part.Equals(other._part);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (_stableOnly.GetHashCode() * 397) ^ EqualityComparer<TKeyPart>.Default.GetHashCode(_part);
+                }
+            }
+        }
 
         private class NullRemoteNuget : IRemoteNuget
         {
