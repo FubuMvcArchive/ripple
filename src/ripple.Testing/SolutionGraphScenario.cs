@@ -233,11 +233,12 @@ namespace ripple.Testing
 				var packagingDir = _solution.NugetSpecFolder;
 				var specFile = Path.Combine(packagingDir, "{0}.nuspec".ToFormat(name));
 
-				var stream = GetType()
+				var nuspec = GetType()
 					.Assembly
-					.GetManifestResourceStream(GetType(), "NuspecTemplate.txt");
+					.GetManifestResourceStream(GetType(), "NuspecTemplate.txt")
+                    .ReadAllText();
 
-				_fileSystem.WriteStreamToFile(specFile, stream);
+				_fileSystem.WriteStringToFile(specFile, nuspec.Replace("${Name}", name));
 
 				var document = new NuspecDocument(specFile);
 				document.Name = name;

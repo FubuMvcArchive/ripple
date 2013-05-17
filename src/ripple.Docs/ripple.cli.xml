@@ -3,6 +3,27 @@
   <ApplicationName>ripple</ApplicationName>
   <Commands>
     <CommandReport>
+      <Name>api-key</Name>
+      <Description>Store your API key for future usage</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-k, --key &lt;key&gt;]</UsageDescription>
+          <Description>Store your API key for NuGet.org</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --list]</UsageDescription>
+          <Description>List out the configured key</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Store your API key for future usage</Description>
+          <Usage>ripple api-key [-k, --key &lt;key&gt;] [-l, --list]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
       <Name>batchpublish</Name>
       <Description>Batch publishes all the nupkg files in a directory to the main nuget feed</Description>
       <Arguments>
@@ -10,16 +31,17 @@
           <Name>directory</Name>
           <Description>Directory holding the nuget package files to be published</Description>
         </ArgumentReport>
-        <ArgumentReport>
-          <Name>apikey</Name>
-          <Description>APIKey for Nuget.org</Description>
-        </ArgumentReport>
       </Arguments>
-      <Flags />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-a, --api-key &lt;apikey&gt;]</UsageDescription>
+          <Description>API Key for Nuget.org</Description>
+        </FlagReport>
+      </Flags>
       <Usages>
         <UsageReport>
           <Description>Batch publishes all the nupkg files in a directory to the main nuget feed</Description>
-          <Usage>ripple batchpublish &lt;directory&gt; &lt;apikey&gt;</Usage>
+          <Usage>ripple batchpublish &lt;directory&gt; [-a, --api-key &lt;apikey&gt;]</Usage>
         </UsageReport>
       </Usages>
     </CommandReport>
@@ -502,6 +524,10 @@
           <Description>Specify where the nuget file should be written, otherwise it just goes to the nuget default</Description>
         </FlagReport>
         <FlagReport>
+          <UsageDescription>[-u, --update-dependencies]</UsageDescription>
+          <Description>Modify the nuspec files to match the current dependency version constraints</Description>
+        </FlagReport>
+        <FlagReport>
           <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
           <Description>override the solution to be cleaned</Description>
         </FlagReport>
@@ -521,7 +547,48 @@
       <Usages>
         <UsageReport>
           <Description>Creates the nuget files locally</Description>
-          <Usage>ripple local-nuget [-v, --version &lt;version&gt;] [-d, --destination &lt;destination&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+          <Usage>ripple local-nuget [-v, --version &lt;version&gt;] [-d, --destination &lt;destination&gt;] [-u, --update-dependencies] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+        </UsageReport>
+      </Usages>
+    </CommandReport>
+    <CommandReport>
+      <Name>create-packages</Name>
+      <Description>Creates the nuget files locally</Description>
+      <Arguments />
+      <Flags>
+        <FlagReport>
+          <UsageDescription>[-v, --version &lt;version&gt;]</UsageDescription>
+          <Description>Override the version of the nuget file</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-d, --destination &lt;destination&gt;]</UsageDescription>
+          <Description>Specify where the nuget file should be written, otherwise it just goes to the nuget default</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-u, --update-dependencies]</UsageDescription>
+          <Description>Modify the nuspec files to match the current dependency version constraints</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
+        </FlagReport>
+      </Flags>
+      <Usages>
+        <UsageReport>
+          <Description>Creates the nuget files locally</Description>
+          <Usage>ripple create-packages [-v, --version &lt;version&gt;] [-d, --destination &lt;destination&gt;] [-u, --update-dependencies] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
         </UsageReport>
       </Usages>
     </CommandReport>

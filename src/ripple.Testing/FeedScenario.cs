@@ -21,12 +21,12 @@ namespace ripple.Testing
 
         public void Offline()
         {
-            RippleConnection.Stub(false);
+            RippleEnvironment.StubConnection(false);
         }
 
         public void Online()
         {
-            RippleConnection.Stub(true);
+            RippleEnvironment.StubConnection(true);
         }
 
 		public static void Create(Action<FeedScenario> configure)

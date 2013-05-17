@@ -34,15 +34,30 @@ namespace ripple.Testing.Integration
                     test.ProjectDependency("SomeProject", "Bottles");
                     test.ProjectDependency("SomeProject", "FubuCore");
                     test.ProjectDependency("SomeProject", "FubuLocalization");
+
+                    test.ProjectDependency("JustToBeComplicated", "FubuMVC.Core");
                 });
             });
 
             theSolution = theScenario.Find("Test");
+
+            // Map Something.nuspec to the "JustToBeComplicated" project
+            theSolution.Nuspecs.Add(new NuspecMap { File = "Something.nuspec", Project = "JustToBeComplicated"});
+
+            var someProject = theSolution.FindProject("SomeProject");
+            var justToBeComplicated = theSolution.FindProject("JustToBeComplicated");
+
+            someProject.AddProjectReference(justToBeComplicated);
+
             theSolution.FindDependency("FubuLocalization").Constraint = "Current,NextMinor";
 
             RippleOperation
                 .With(theSolution, false)
-                .Execute<LocalNugetInput, LocalNugetCommand>(input => input.UpdateDependenciesFlag = true);
+                .Execute<CreatePackagesInput, LocalNugetCommand>(input =>
+                {
+                    input.VersionFlag = "1.0.1.244";
+                    input.UpdateDependenciesFlag = true;
+                });
         }
 
         [TearDown]
@@ -60,6 +75,7 @@ namespace ripple.Testing.Integration
             verifyVersion(spec, "Bottles", "[1.1.0.255, 2.0.0.0)");
             verifyVersion(spec, "FubuCore", "1.0.1.244");
             verifyVersion(spec, "FubuLocalization", "[1.8.0.0, 1.9.0.0)");
+            verifyVersion(spec, "Something", "1.0.1.244");
         }
 
         private void verifyVersion(NugetSpec spec, string name, string version)

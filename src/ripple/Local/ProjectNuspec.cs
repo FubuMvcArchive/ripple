@@ -4,6 +4,26 @@ using ripple.Model;
 
 namespace ripple.Local
 {
+    public class SpecGroup
+    {
+        public SpecGroup(NugetSpec spec, IEnumerable<Project> projects)
+        {
+            Spec = spec;
+            Projects = projects;
+        }
+
+        public NugetSpec Spec { get; private set; }
+        public IEnumerable<Project> Projects { get; private set; }
+
+        public IEnumerable<Dependency> DetermineDependencies()
+        {
+            return Projects
+                .SelectMany(project => project.Dependencies
+                .Where(x => !Spec.Dependencies.Any(y => y.MatchesName(x.Name)))
+                .Select(x => project.Solution.Dependencies.Find(x.Name)));
+        }
+    }
+
     public class ProjectNuspec
     {
         private readonly Project _project;
@@ -44,14 +64,6 @@ namespace ripple.Local
             {
                 return (_project.GetHashCode()*397) ^ _spec.GetHashCode();
             }
-        }
-
-        public IEnumerable<Dependency> DetermineDependencies()
-        {
-            return Project
-                .Dependencies
-                .Where(x => !_spec.Dependencies.Any(y => y.MatchesName(x.Name)))
-                .Select(x => _project.Solution.Dependencies.Find(x.Name));
         }
     }
 }

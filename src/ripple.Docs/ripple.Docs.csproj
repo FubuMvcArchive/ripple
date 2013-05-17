@@ -60,6 +60,7 @@
     <None Include="index.spark">
       <SubType>Designer</SubType>
     </None>
+    <None Include="mappingExample.config" />
     <None Include="sample-ripple.config" />
     <None Include="splash.spark">
       <SubType>Designer</SubType>

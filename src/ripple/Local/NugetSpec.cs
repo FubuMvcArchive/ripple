@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using FubuCore;
 using ripple.Model;
 
 namespace ripple.Local
@@ -64,6 +66,11 @@ namespace ripple.Local
             return string.Format("Nuget {0} from {1}", _name, Publisher);
         }
 
+        public bool MatchesFilename(string file)
+        {
+            return new FileInfo(Filename).Name == file;
+        }
+
         public NuspecDocument ToDocument()
         {
             return new NuspecDocument(_filename);
@@ -76,7 +83,7 @@ namespace ripple.Local
 
         protected bool Equals(NugetSpec other)
         {
-            return string.Equals(_filename, other._filename) && string.Equals(_name, other._name);
+            return _filename.EqualsIgnoreCase(other._filename);
         }
 
         public override bool Equals(object obj)
@@ -89,10 +96,7 @@ namespace ripple.Local
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return ((_filename != null ? _filename.GetHashCode() : 0)*397) ^ (_name != null ? _name.GetHashCode() : 0);
-            }
+            return _filename.GetHashCode();
         }
     }
 }
