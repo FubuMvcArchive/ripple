@@ -1,3 +1,4 @@
+using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
@@ -15,7 +16,6 @@ namespace ripple.Testing.Model
 		[SetUp]
 		public void SetUp()
 		{
-			theFeedService = new FeedService();
 
 			theFeed = new Feed("testing");
 			theStorage = new StubNugetStorage();
@@ -26,6 +26,8 @@ namespace ripple.Testing.Model
 			theSolution.AddDependency(new Dependency("Bottles", "1.0.0.0"));
 			theSolution.AddDependency(new Dependency("FubuCore"));
 			theSolution.AddDependency(new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
+
+		    theFeedService = theSolution.FeedService.As<FeedService>();
 
 			FeedScenario.Create(scenario =>
 			{

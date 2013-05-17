@@ -65,7 +65,7 @@ namespace ripple.Model
 			AddFeed(Feed.NuGetV1);
 
 			UseStorage(NugetStorage.Basic());
-			UseFeedService(new FeedService());
+			UseFeedService(Model.FeedService.Basic(this));
 			UseCache(NugetFolderCache.DefaultFor(this));
 			UsePublisher(PublishingService.For(Mode));
             UseBuilder(new NugetPlanBuilder());
@@ -352,7 +352,7 @@ namespace ripple.Model
 
 		public IRemoteNuget Restore(Dependency dependency)
 		{
-			return FeedService.NugetFor(this, dependency);
+			return FeedService.NugetFor(dependency);
 		}
 
 		public Project FindProject(string name)

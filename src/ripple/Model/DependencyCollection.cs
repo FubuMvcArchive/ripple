@@ -34,8 +34,8 @@ namespace ripple.Model
 		{
 			var cache = new Cache<string, Dependency>();
 
-			_dependencies.Each(d => cache.Fill(d.Name, d));
-			_children.Each(child => child._dependencies.Each(d => cache.Fill(d.Name, d)));
+			_dependencies.Each(d => cache.Fill(d.Name.ToLower(), d));
+			_children.Each(child => child._dependencies.Each(d => cache.Fill(d.Name.ToLower(), d)));
 
 			return cache;
 		}

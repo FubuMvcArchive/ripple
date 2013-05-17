@@ -115,6 +115,7 @@
     <Compile Include="Model\FeedRegistry.cs" />
     <Compile Include="Model\FeedService.cs" />
     <Compile Include="Model\IDependencyStrategy.cs" />
+    <Compile Include="Model\IFeedConnectivity.cs" />
     <Compile Include="Model\IFeedService.cs" />
     <Compile Include="Model\IProjectReader.cs" />
     <Compile Include="Model\IPublishingService.cs" />

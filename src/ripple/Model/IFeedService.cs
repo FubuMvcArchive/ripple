@@ -5,8 +5,8 @@ namespace ripple.Model
 {
 	public interface IFeedService
 	{
-		IRemoteNuget NugetFor(Solution solution, Dependency dependency);
+		IRemoteNuget NugetFor(Dependency dependency);
 
-		IEnumerable<Dependency> DependenciesFor(Solution solution, Dependency dependency, UpdateMode mode);
+		IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode);
 	}
 }

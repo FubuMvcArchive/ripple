@@ -48,7 +48,7 @@ namespace ripple.Nuget
 
             if (target.Version.IsEmpty())
             {
-                var remote = solution.FeedService.NugetFor(solution, target);
+                var remote = solution.FeedService.NugetFor(target);
                 target.Version = remote.Version.ToString();
             }
 
@@ -63,7 +63,7 @@ namespace ripple.Nuget
 
             projectInstallations(plan, parent, request);
 
-            var nugetDependencies = solution.FeedService.DependenciesFor(solution, target, target.Mode);
+            var nugetDependencies = solution.FeedService.DependenciesFor(target, target.Mode);
             nugetDependencies.Each(x =>
             {
                 var childPlan = buildPlan(request.CopyFor(x), target);
