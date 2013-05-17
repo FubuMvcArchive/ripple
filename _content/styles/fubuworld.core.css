@@ -16,7 +16,7 @@
 	text-shadow: none !important;
 }
 body {
-	font: normal 12px/20px Arial, Helvetica, sans-serif;
+	font: normal 16px/24px Arial, Helvetica, sans-serif;
 	color: #666;
 	background-color: #F9F9F9;
 	overflow-x: hidden;
@@ -943,6 +943,10 @@ body.boxed .navbar .navbar-inner .nav li ul {
 	box-shadow: 0 1px 1px #CCC !important;
 	text-align: center;
 }
+.thumbnail.tool {
+    text-align:left;
+    min-height: 230px;
+}
 .thumbnail a.thumb {
 	overflow: hidden;
 	display: block;
@@ -953,6 +957,10 @@ body.boxed .navbar .navbar-inner .nav li ul {
 }
 .thumbnail .caption {
 	padding: 20px 20px 0px 20px;
+	color: inherit;
+}
+.thumbnail.tool .caption {
+	padding: 20px 20px 20px 20px;
 	color: inherit;
 }
 .thumbnail .caption em {

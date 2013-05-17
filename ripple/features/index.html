@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
     <title>
-      Lock | ripple
+      Features | ripple
     </title><meta charset="utf-8" />
 <meta content="FubuWorld" name="description" />
 <meta content="FubuWorld" name="author" />
@@ -42,8 +42,8 @@
       <div class="navbar" id="nav-follow">
         <div class="navbar-inner">
           <div class="container">
-            <ul class="nav"><li><a data-key="index" href="/ripple/ripple/index">ripple »</a></li><li><a data-key="index" href="/ripple/ripple/commands">Commands »</a></li><li class="active"><a data-key="Lock" href="/ripple/ripple/commands/lock">Lock »</a></li></ul>
-<ul style="float:right" class="nav"><li><a title="List" href="/ripple/ripple/commands/list">Previous</a></li><li><a title="Restore" href="/ripple/ripple/commands/restore">Next</a></li></ul>
+            <ul class="nav"><li><a data-key="index" href="/ripple/ripple/index">ripple »</a></li><li class="active"><a data-key="index" href="/ripple/ripple/features">Features »</a></li></ul>
+<ul style="float:right" class="nav"><li><a title="Getting Started" href="/ripple/ripple/gettingstarted">Previous</a></li><li><a title="Local" href="/ripple/ripple/features/local">Next</a></li></ul>
           </div>
         </div>
       </div>
@@ -53,24 +53,25 @@
 
         <div class="row">
           <div class="span3 sidebar">
-            <h3 class="half-margin">Topics</h3>
+            <h3 class="half-margin" style="display: none;">Topics</h3>
             <ul class="nav nav-tabs nav-stacked affix-top" id="page-toc">
-            <li><a href="#undefined">ripple lock</a></li></ul>
+            </ul>
             <br />
             <h3 class="no-margin">Next</h3>
-<p><a data-key="Restore" href="/ripple/ripple/commands/restore">Restore</a></p>
+<p><a data-key="Local" href="/ripple/ripple/features/local">Local</a></p>
 <h3 class="no-margin">Previous</h3>
-<p><a data-key="List" href="/ripple/ripple/commands/list">List</a></p>
+<p><a data-key="index" href="/ripple/ripple/gettingstarted">Getting Started</a></p>
           </div>
           <div class="span9">
-            <h1 class="no-margin">Lock</h1><hr class="header-line" />
-             <!--Title: Lock-->
-<p></p><section class="command-section"><h4><span class="section-header" id="lock">ripple lock</span><i class="command-description">Locks a nuget to prevent it from being automatically updated from the Update command</i></h4><div class="single-command-usage"><em>ripple lock</em><version> <name> [-l, --solution <solution>] [-c, --cache <cache>] [-a, --all] [-v, --verbose]</cache></solution></name></version></div><p></p>
+            <h1 class="no-margin">Features</h1><hr class="header-line" />
+             <!--Title: Features -->
 
-<table class="table"><thead><tr><th colspan="2">Arguments</th></tr></thead><tbody><tr><td class="command-arg-name">version</td><td class="command-arg-description">The version to lock to</td></tr><tr><td class="command-arg-name">name</td><td class="command-arg-description">The name of the nuget</td></tr></tbody></table>
+<p class="margin">
+    Ripple has been dogfooded for a couple of years by the FubuMVC team to manage the very large number of nugets and build configurations in TeamCity. It is primarily
+    designed to help with shuffling dependencies around locally and keeping your builds in sync.
+</p>
 
-<p></p><table class="table"><thead><tr><th colspan="2">Flags</th></tr></thead><tbody><tr><td class="command-flag-usage">[-l, --solution &lt;solution&gt;]</td><td class="command-flag-description">override the solution to be cleaned</td></tr><tr><td class="command-flag-usage">[-c, --cache &lt;cache&gt;]</td><td class="command-flag-description">Override the NuGet cache</td></tr><tr><td class="command-flag-usage">[-a, --all]</td><td class="command-flag-description">Apply restore to all solutions</td></tr><tr><td class="command-flag-usage">[-v, --verbose]</td><td class="command-flag-description">Writes all output to the screen</td></tr></tbody></table></section><p></p>
-
+<div><h2 class="half-margin">Table of Contents</h2><ul class="table-of-contents"><li><a href="/ripple/ripple/features/local">Local</a></li><li><a href="/ripple/ripple/features/creatingpackages">Creating packages</a></li></ul></div>
             </div>
         </div>
       </div>

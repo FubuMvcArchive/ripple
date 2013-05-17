@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+    <title>
+      Local | ripple
+    </title><meta charset="utf-8" />
+<meta content="FubuWorld" name="description" />
+<meta content="FubuWorld" name="author" />
+
+
+
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/sons-of-obsidian.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/toastr.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/twitter/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/twitter/bootstrap-responsive.min.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/toastr-responsive.css" />
+<link type="text/css" rel="stylesheet" href="/ripple/_content/styles/fubuworld.core.css" />
+
+<link href="http://fonts.googleapis.com/css?family=Oswald:400,300" rel="stylesheet" type="text/css" media="screen" />
+  </head>
+  <body data-target=".bs-docs-sidebar" data-spy="scroll">
+    <div class="container">
+      
+      
+
+<div class="row">
+  <div class="span6">
+    <p class="logo">
+      <a title="Fubu" href="/ripple/topics"><span>Fubu</span></a>
+      <a class="project-logo" title="Fubu-inspired dependency management" href="/ripple/ripple"><span>ripple</span></a>
+    </p>
+  </div>
+  <div class="span6">
+    <div class="top-header text-right">
+      <em>
+        <em><a href="https://groups.google.com/forum/?fromgroups#%21forum/ripple-dev">Join our vibrant mailing list</a></em>
+      </em>
+      <div class="social">
+        <a class="ico-github" href="https://github.com/DarthFubuMVC/ripple"><img src="/ripple/_content/images/github-icon.png" alt="Github" /></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div class="navbar" id="nav-follow">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul class="nav"><li><a data-key="index" href="/ripple/ripple/index">ripple »</a></li><li><a data-key="index" href="/ripple/ripple/features">Features »</a></li><li class="active"><a data-key="Local" href="/ripple/ripple/features/local">Local »</a></li></ul>
+<ul style="float:right" class="nav"><li><a title="Features" href="/ripple/ripple/features">Previous</a></li><li><a title="Creating packages" href="/ripple/ripple/features/creatingpackages">Next</a></li></ul>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        
+
+        <div class="row">
+          <div class="span3 sidebar">
+            <h3 class="half-margin" style="display: none;">Topics</h3>
+            <ul class="nav nav-tabs nav-stacked affix-top" id="page-toc">
+            </ul>
+            <br />
+            <h3 class="no-margin">Next</h3>
+<p><a data-key="CreatingPackages" href="/ripple/ripple/features/creatingpackages">Creating packages</a></p>
+<h3 class="no-margin">Previous</h3>
+<p><a data-key="index" href="/ripple/ripple/features">Features</a></p>
+          </div>
+          <div class="span9">
+            <h1 class="no-margin">Local</h1><hr class="header-line" />
+             <!--Title: Local -->
+
+<p class="margin">
+    The parent directory of any given ripple solution is treated as the <code>code</code> directory. This means that ripple is capable of interrogating the sibling directories for other ripple solutions and providing various ripple commands.
+</p>
+
+<h3>ripple local</h3>
+<p class="half-margin">Assuming a directory structure as described above, the ripple local command can be used to move dependencies between your local clone of your repositories. As an example, consider the following dependency tree:</p>
+
+<ul>
+    <li>FubuMVC depends on Bottles</li>
+    <li>FubuMVC depends on FubuCore</li>
+    <li>Bottles depends on FubuCore</li>
+</ul>
+    
+<p class="half-margin">
+  Occassionally, bug fixes will require effort in multiple libraries. As an example, a bug fix in FubuMVC.Core may require a bug fix in Bottles...which requires a fix to FubuCore. You most certainly
+  want to do an end to end sweep of the fixes before blindly pushing the updates as nugets. Running <code>ripple local</code> in this case will create a <code>plan</code> to build and move the binaries to all of the appropriate packages directories.
+  
+  The following snippet illustrates the plan:
+</p>
+
+<pre class="prettyprint lang-cs linenums:149 prettyprinted" data-linenums="149" style=""><ol class="linenums"><li value="149" class="L8"><span class="pln">        </span><span class="pun">[</span><span class="typ">Test</span><span class="pun">]</span></li><li class="L9"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> create_a_plan_for_setting_from_and_to</span><span class="pun">()</span></li><li class="L0"><span class="pln">        </span><span class="pun">{</span></li><li class="L1"><span class="pln">            theRequirements </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">RipplePlanRequirements</span><span class="pun">{</span></li><li class="L2"><span class="pln">                </span><span class="typ">From</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="str">"FubuCore"</span><span class="pun">,</span></li><li class="L3"><span class="pln">                </span><span class="typ">To</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="str">"FubuMVC"</span></li><li class="L4"><span class="pln">            </span><span class="pun">};</span></li><li class="L5"><span class="pln"> </span></li><li class="L6"><span class="pln">            theRippleStepsShouldBe</span><span class="pun">(</span></li><li class="L7"><span class="pln">                build</span><span class="pun">(</span><span class="str">"FubuCore"</span><span class="pun">),</span></li><li class="L8"><span class="pln">                move</span><span class="pun">(</span><span class="str">"FubuCore"</span><span class="pun">).</span><span class="typ">To</span><span class="pun">(</span><span class="str">"Bottles"</span><span class="pun">),</span></li><li class="L9"><span class="pln"> </span></li><li class="L0"><span class="pln">                build</span><span class="pun">(</span><span class="str">"Bottles"</span><span class="pun">),</span><span class="pln"> </span></li><li class="L1"><span class="pln">                </span></li><li class="L2"><span class="pln">                move</span><span class="pun">(</span><span class="str">"FubuCore"</span><span class="pun">).</span><span class="typ">To</span><span class="pun">(</span><span class="str">"FubuLocalization"</span><span class="pun">),</span></li><li class="L3"><span class="pln">                build</span><span class="pun">(</span><span class="str">"FubuLocalization"</span><span class="pun">),</span></li><li class="L4"><span class="pln"> </span></li><li class="L5"><span class="pln">                move</span><span class="pun">(</span><span class="str">"Bottles"</span><span class="pun">).</span><span class="typ">To</span><span class="pun">(</span><span class="str">"FubuMVC"</span><span class="pun">),</span></li><li class="L6"><span class="pln">                move</span><span class="pun">(</span><span class="str">"FubuCore"</span><span class="pun">).</span><span class="typ">To</span><span class="pun">(</span><span class="str">"FubuMVC"</span><span class="pun">),</span></li><li class="L7"><span class="pln">                move</span><span class="pun">(</span><span class="str">"FubuLocalization"</span><span class="pun">).</span><span class="typ">To</span><span class="pun">(</span><span class="str">"FubuMVC"</span><span class="pun">),</span></li><li class="L8"><span class="pln">				</span></li><li class="L9"><span class="pln">                build</span><span class="pun">(</span><span class="str">"FubuMVC"</span><span class="pun">)</span></li><li class="L0"><span class="pln">            </span><span class="pun">);</span></li><li class="L1"><span class="pln">        </span><span class="pun">}</span></li></ol></pre>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script src="/ripple/_content/scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/prettify.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/bootstrap-prettify.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/fubuworld.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/toastr.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/twitter/bootstrap.min.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/fubudocs-tools.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/twitter/bootstrap-affix.js" type="text/javascript"></script>
+<script src="/ripple/_content/scripts/topics.js" type="text/javascript"></script>
+
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>
+      Powered by <a href="http://github.com/DarthFubuMVC/FubuWorld">FubuDocs</a>.
+    </p>
+    <p>
+      Code licensed under the <a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.
+    </p>
+  </div>
+</footer>
+  
+</body></html>
