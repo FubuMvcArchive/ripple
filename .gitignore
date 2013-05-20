@@ -22,3 +22,5 @@ ripple.log
 
 ripple_exe
 *.gem
+
+Gemfile.lock
