@@ -24,3 +24,5 @@ ripple_exe
 *.gem
 
 Gemfile.lock
+
+src/ripple.Docs/pak-WebContent.zip
