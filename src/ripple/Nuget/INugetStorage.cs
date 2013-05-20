@@ -5,104 +5,103 @@ using ripple.Model;
 
 namespace ripple.Nuget
 {
-	public interface INugetStorage
-	{
-		void Clean(Solution solution, CleanMode mode);
+    public interface INugetStorage
+    {
+        void Clean(Solution solution, CleanMode mode);
 
-		void Write(Solution solution);
-		void Write(Project project);
+        void Write(Solution solution);
+        void Write(Project project);
 
-		void Reset(Solution solution);
+        void Reset(Solution solution);
 
-		LocalDependencies Dependencies(Solution solution);
+        LocalDependencies Dependencies(Solution solution);
 
-		IEnumerable<Dependency> MissingFiles(Solution solution);
-	}
+        IEnumerable<Dependency> MissingFiles(Solution solution);
+    }
 
-	public class NugetStorage : INugetStorage
-	{
-		private readonly IFileSystem _fileSystem;
-		private readonly IDependencyStrategy _strategy;
+    public class NugetStorage : INugetStorage
+    {
+        private readonly IFileSystem _fileSystem;
+        private readonly IDependencyStrategy _strategy;
 
-		public NugetStorage(IFileSystem fileSystem, IDependencyStrategy strategy)
-		{
-			_fileSystem = fileSystem;
-			_strategy = strategy;
-		}
+        public NugetStorage(IFileSystem fileSystem, IDependencyStrategy strategy)
+        {
+            _fileSystem = fileSystem;
+            _strategy = strategy;
+        }
 
-		public IDependencyStrategy Strategy { get { return _strategy; } }
+        public IDependencyStrategy Strategy { get { return _strategy; } }
 
-		public void Clean(Solution solution, CleanMode mode)
-		{
-			if (mode == CleanMode.all || mode == CleanMode.packages)
-			{
-				var packagesFolder = solution.PackagesDirectory();
-				RippleLog.Debug("Deleting " + packagesFolder);
-				_fileSystem.CleanDirectory(packagesFolder);
-			}
+        public void Clean(Solution solution, CleanMode mode)
+        {
+            if (mode == CleanMode.all || mode == CleanMode.packages)
+            {
+                var packagesFolder = solution.PackagesDirectory();
+                _fileSystem.CleanWithTracing(packagesFolder);
+            }
 
-			if (mode == CleanMode.all || mode == CleanMode.projects)
-			{
-				solution.Projects.Each(p => p.Clean(_fileSystem));
-			}
-			
-		}
+            if (mode == CleanMode.all || mode == CleanMode.projects)
+            {
+                solution.Projects.Each(p => p.Clean(_fileSystem));
+            }
 
-		public void Write(Solution solution)
-		{
-			_fileSystem.PersistToFile(solution, solution.Path);
-		}
+        }
 
-		public void Write(Project project)
-		{
-			_strategy.Write(project);
-			project.CsProj.Write();
-		}
+        public void Write(Solution solution)
+        {
+            _fileSystem.PersistToFile(solution, solution.Path);
+        }
 
-		public void Reset(Solution solution)
-		{
-			solution.Projects.Each(x => _strategy.RemoveDependencyConfigurations(x));
-			Clean(solution, CleanMode.packages);
-		}
+        public void Write(Project project)
+        {
+            _strategy.Write(project);
+            project.CsProj.Write();
+        }
 
-		public LocalDependencies Dependencies(Solution solution)
-		{
-			var nupkgSet = new FileSet
-			{
-				DeepSearch = true,
-				Include = "*.nupkg"
-			};
+        public void Reset(Solution solution)
+        {
+            solution.Projects.Each(x => _strategy.RemoveDependencyConfigurations(x));
+            Clean(solution, CleanMode.packages);
+        }
 
-			var files = _fileSystem
-				.FindFiles(solution.PackagesDirectory(), nupkgSet)
-				.Select(x => _strategy.FileFor(x)).ToList();
+        public LocalDependencies Dependencies(Solution solution)
+        {
+            var nupkgSet = new FileSet
+            {
+                DeepSearch = true,
+                Include = "*.nupkg"
+            };
 
-			return new LocalDependencies(files);
-		}
+            var files = _fileSystem
+              .FindFiles(solution.PackagesDirectory(), nupkgSet)
+              .Select(x => _strategy.FileFor(x)).ToList();
 
-		public IEnumerable<Dependency> MissingFiles(Solution solution)
-		{
-			var dependencies = Dependencies(solution);
-		    var restore = solution.RestoreSettings;
+            return new LocalDependencies(files);
+        }
 
-			return solution
-				.Dependencies
-				.Where(dependency => dependencies.ShouldRestore(dependency, restore.ShouldForce(dependency)));
-		}
+        public IEnumerable<Dependency> MissingFiles(Solution solution)
+        {
+            var dependencies = Dependencies(solution);
+            var restore = solution.RestoreSettings;
 
-		public static NugetStorage Basic()
-		{
-			return new NugetStorage(new FileSystem(), new RippleDependencyStrategy());
-		}
+            return solution
+              .Dependencies
+              .Where(dependency => dependencies.ShouldRestore(dependency, restore.ShouldForce(dependency)));
+        }
 
-		public static NugetStorage Classic()
-		{
-			return new NugetStorage(new FileSystem(), new NuGetDependencyStrategy());
-		}
+        public static NugetStorage Basic()
+        {
+            return new NugetStorage(new FileSystem(), new RippleDependencyStrategy());
+        }
 
-		public static NugetStorage For(SolutionMode mode)
-		{
-			return mode == SolutionMode.Classic ? Classic() : Basic();
-		}
-	}
+        public static NugetStorage Classic()
+        {
+            return new NugetStorage(new FileSystem(), new NuGetDependencyStrategy());
+        }
+
+        public static NugetStorage For(SolutionMode mode)
+        {
+            return mode == SolutionMode.Classic ? Classic() : Basic();
+        }
+    }
 }

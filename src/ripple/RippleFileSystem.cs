@@ -99,7 +99,7 @@ namespace ripple
         public static void CleanWithTracing(this IFileSystem system, string directory)
         {
             RippleLog.Info("Cleaning contents of directory " + directory);
-            system.CleanDirectory(directory);
+            system.ForceClean(directory);
         }
 
         public static string ParentDirectory(this string path)

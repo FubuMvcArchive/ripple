@@ -29,7 +29,7 @@ namespace ripple
 
 		public void CleanDirectory(string directory)
 		{
-			_fileSystem.CleanDirectory(directory);
+			_fileSystem.ForceClean(directory);
 		}
 
 		public T Get<T>()

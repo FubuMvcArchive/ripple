@@ -119,7 +119,7 @@ namespace ripple.Nuget
 
         public void Flush()
         {
-            _fileSystem.CleanDirectory(_folder);
+            _fileSystem.ForceClean(_folder);
         }
 
         public IEnumerable<INugetFile> AllFiles()

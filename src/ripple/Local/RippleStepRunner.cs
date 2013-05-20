@@ -98,7 +98,7 @@ namespace ripple.Local
         public void CleanDirectory(string directory)
         {
             Trace("Cleaning directory " + directory);
-            _fileSystem.CleanDirectory(directory);
+            _fileSystem.ForceClean(directory);
         }
 
         public void Trace(string format, params object[] parameters)

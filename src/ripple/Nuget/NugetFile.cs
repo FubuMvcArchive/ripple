@@ -80,7 +80,7 @@ namespace ripple.Nuget
 
             var fileSystem = new FileSystem();
             fileSystem.CreateDirectory(explodedDirectory);
-            fileSystem.CleanDirectory(explodedDirectory);
+            fileSystem.ForceClean(explodedDirectory);
 
             var package = new ZipPackage(_path);
 
