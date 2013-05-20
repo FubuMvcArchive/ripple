@@ -33,6 +33,11 @@ namespace ripple.Nuget
             _fileSystem = new FileSystem();
         }
 
+        public override string Url
+        {
+            get { return Directory; }
+        }
+
         public string Directory { get { return _directory; } }
 
         protected IEnumerable<INugetFile> files

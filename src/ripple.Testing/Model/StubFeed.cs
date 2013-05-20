@@ -49,6 +49,11 @@ namespace ripple.Testing.Model
             return this;
         }
 
+        public override string Url
+        {
+            get { return _feed.Url; }
+        }
+
         protected override IRemoteNuget FindImpl(Dependency query)
         {
             throwIfNeeded(query);

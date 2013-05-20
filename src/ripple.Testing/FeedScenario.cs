@@ -36,6 +36,8 @@ namespace ripple.Testing
 
 			configure(scenario);
 
+            FeedConnectivity.Stub(x => true);
+
 			FeedRegistry.Stub(scenario.theProvider);
 		}
 	}

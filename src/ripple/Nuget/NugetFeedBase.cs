@@ -11,6 +11,8 @@ namespace ripple.Nuget
         private readonly Cache<CacheKey<Dependency>, IRemoteNuget> _findCache = new Cache<CacheKey<Dependency>, IRemoteNuget>();
         private readonly Cache<CacheKey<string>, IRemoteNuget> _findLatest = new Cache<CacheKey<string>, IRemoteNuget>();
 
+        public abstract string Url { get; }
+
         public IRemoteNuget Find(Dependency query)
         {
             var key = new CacheKey<Dependency>(GetBoolStability(query), query);

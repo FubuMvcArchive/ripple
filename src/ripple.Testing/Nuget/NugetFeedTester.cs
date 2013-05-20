@@ -6,7 +6,7 @@ using FubuTestingSupport;
 
 namespace ripple.Testing.Nuget
 {
-    [TestFixture]
+    [TestFixture, Explicit]
     public class NugetFeedTester
     {
         private NugetFeed theFeed;

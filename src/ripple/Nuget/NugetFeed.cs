@@ -18,7 +18,7 @@ namespace ripple.Nuget
             _repository = new PackageRepositoryFactory().CreateRepository(_url);
         }
 
-        public string Url
+        public override string Url
         {
             get { return _url; }
         }

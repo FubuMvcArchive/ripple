@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using ripple.Nuget;
 
 namespace ripple.Model
@@ -15,7 +16,46 @@ namespace ripple.Model
     // Covered with integration tests
     public class FeedConnectivity : IFeedConnectivity
     {
+        private readonly IList<INugetFeed> _checked = new List<INugetFeed>(); 
         private readonly IList<INugetFeed> _offline = new List<INugetFeed>();
+
+        private static Func<INugetFeed, bool> _checkConnectivity;
+
+        static FeedConnectivity()
+        {
+            Live();
+        }
+
+        public static void Stub(Func<INugetFeed, bool> checkConnectivity)
+        {
+            _checkConnectivity = checkConnectivity;
+        }
+
+        public static void Live()
+        {
+            _checkConnectivity = feed =>
+            {
+                if (feed.Url.StartsWith("file"))
+                {
+                    return true;
+                }
+
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        using (var stream = client.OpenRead(feed.Url))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            };
+        }
 
         public void IfOnline(INugetFeed feed, Action<INugetFeed> continuation)
         {
@@ -61,9 +101,17 @@ namespace ripple.Model
 
         private bool isOffline(INugetFeed feed)
         {
+            if (!_checked.Contains(feed))
+            {
+                if (!_checkConnectivity(feed))
+                {
+                    _offline.Add(feed);
+                }
+
+                _checked.Add(feed);
+            }
+
             return _offline.Contains(feed);
         }
-
-        
     }
 }

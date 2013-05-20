@@ -54,6 +54,7 @@ namespace ripple.Testing.Nuget.Operations
         public void TearDown()
         {
             theScenario.Cleanup();
+            FeedConnectivity.Live();
             FeedRegistry.Reset();
         }
 

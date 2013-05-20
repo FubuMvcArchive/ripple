@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using FubuCore;
 using FubuCore.Util;
 using ripple.Nuget;
@@ -22,6 +23,8 @@ namespace ripple.Model
             _connectivity = connectivity;
 
             _nugetForCache = new Cache<Dependency, IRemoteNuget>(x => nugetFor(x));
+
+            ServicePointManager.DefaultConnectionLimit = 10;
         }
 
         public virtual IRemoteNuget NugetFor(Dependency dependency)
