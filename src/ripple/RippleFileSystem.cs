@@ -67,7 +67,16 @@ namespace ripple
             var parent = new DirectoryInfo(path).Parent;
             if (parent == null)
             {
-                if (shouldThrow) RippleAssert.Fail("Not a ripple repository (or any of the parent directories)");
+                if (shouldThrow)
+                {
+                    const string msg = "Not a ripple repository (or any of the parent directories)";
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(msg);
+                    Console.ResetColor();
+
+                    throw new RippleFatalError(msg);
+                }
+
                 return null;
             }
 
