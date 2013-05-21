@@ -14,10 +14,7 @@ namespace ripple.Steps
             new FileSystem().CreateDirectory(input.DestinationFlag);
 
             Solution.Specifications.Each(spec => {
-                var version = spec.Dependencies.Any(x => x.VersionSpec != null && x.VersionSpec.ToString().Contains("-"))
-                                  ? input.VersionFlag + "-alpha"
-                                  : input.VersionFlag;
-
+                var version = input.VersionFlag;
 
                 RippleLog.Info("Building the nuget spec file at " + spec.Filename + " as version " + version);
 
