@@ -10,7 +10,8 @@ rescue LoadError
 end
 
 
-FubuRake::Solution.new do |sln|
+
+@solution = FubuRake::Solution.new do |sln|
 	sln.compile = {
 		:solutionfile => 'src/ripple.sln'
 	}
@@ -22,4 +23,10 @@ FubuRake::Solution.new do |sln|
 
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
+	
+	sln.ci_steps = ["gem:archive"]
 end
+
+BUILD_NUMBER = @solution.options[:build_number]
+
+load File.expand_path('../ripple-cli/rakefile', __FILE__)
