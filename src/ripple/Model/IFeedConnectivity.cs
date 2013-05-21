@@ -35,7 +35,7 @@ namespace ripple.Model
         {
             _checkConnectivity = feed =>
             {
-                if (feed.Url.StartsWith("file"))
+                if (feed.Url.StartsWith("file") || feed is FileSystemNugetFeed)
                 {
                     return true;
                 }

@@ -19,10 +19,7 @@ run_st.cmd
 artifacts
 ripple.log
 *.user
-
 ripple_exe
 *.gem
-
 Gemfile.lock
-
 src/ripple.Docs/pak-WebContent.zip
