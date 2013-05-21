@@ -2,6 +2,8 @@ require 'bundler'
 require "rubygems/package"
 
 RIPPLE_CLI_FOLDER = File.dirname(__FILE__)
+COMPILE_TARGET = @solution.options[:compilemode]
+ARTIFACTS = :artifacts
 
 module Bundler
   class GemHelper
