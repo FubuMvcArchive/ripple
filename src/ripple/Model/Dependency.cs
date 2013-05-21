@@ -85,6 +85,7 @@ namespace ripple.Model
             return NugetStability ?? stability;
         }
 
+
 		public SemanticVersion SemanticVersion()
 		{
 			return NuGet.SemanticVersion.Parse(Version);
@@ -221,5 +222,10 @@ namespace ripple.Model
 	    {
 	        return DetermineStability(Nuget.NugetStability.ReleasedOnly) == Nuget.NugetStability.ReleasedOnly;
 	    }
+
+        public bool IncludesPrelease()
+        {
+            return !IsReleasedOnly();
+        }
 	}
 }

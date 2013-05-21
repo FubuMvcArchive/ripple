@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using FubuCore;
 using NuGet;
 using ripple.Model;
@@ -18,12 +19,30 @@ namespace ripple.Nuget
             _repository = new PackageRepositoryFactory().CreateRepository(_url);
         }
 
-        public override string Url
+        public string Url
         {
             get { return _url; }
         }
 
-        protected override IRemoteNuget FindImpl(Dependency query)
+        public override bool IsOnline()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    using (var stream = client.OpenRead(_url))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected override IRemoteNuget find(Dependency query)
 		{
 			SemanticVersion version;
 			if (!SemanticVersion.TryParse(query.Version, out version))
@@ -43,7 +62,7 @@ namespace ripple.Nuget
             return new RemoteNuget(package);
         }
 
-        protected override IRemoteNuget FindLatestImpl(Dependency query)
+        protected override IRemoteNuget findLatest(Dependency query)
         {
 			RippleLog.Debug("Searching for {0} from {1}".ToFormat(query, _url));
             var candidates = _repository.Search(query.Name, query.DetermineStability(_stability) == NugetStability.Anything)
@@ -61,5 +80,10 @@ namespace ripple.Nuget
         }
 
 		public override IPackageRepository Repository { get { return _repository; } }
+
+        public override string ToString()
+        {
+            return _url;
+        }
     }
 }

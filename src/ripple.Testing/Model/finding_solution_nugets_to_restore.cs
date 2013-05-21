@@ -34,6 +34,8 @@ namespace ripple.Testing.Model
 			theSolution.AddDependency(rhinomocks = new Dependency("RhinoMocks", "3.6.1", UpdateMode.Fixed));
 			theSolution.AddDependency(structuremap = new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
 
+            RippleEnvironment.StubConnection(true);
+
 			theFubuFeed = MockRepository.GenerateStub<IFloatingFeed>();
 			theFubuFeed.Stub(x => x.GetLatest()).Return(new IRemoteNuget[]
 			{
@@ -41,10 +43,12 @@ namespace ripple.Testing.Model
 				new StubNuget("FubuCore", "1.0.2.232"), 
 				new StubNuget("StructureMap", "2.6.4.71"),
 			});
+            theFubuFeed.Stub(x => x.IsOnline()).Return(true);
 
 			theNugetFeed = MockRepository.GenerateStub<INugetFeed>();
 			theNugetFeed.Stub(x => x.Find(rhinomocks)).Return(new StubNuget("RhinoMocks", "3.6.1"));
 			theNugetFeed.Stub(x => x.Find(structuremap)).Return(new StubNuget("StructureMap", "2.6.3"));
+            theNugetFeed.Stub(x => x.IsOnline()).Return(true);
 
 			theFeedProvider = MockRepository.GenerateStub<IFeedProvider>();
 			theFeedProvider.Stub(x => x.For(Feed.Fubu)).Return(theFubuFeed);
@@ -52,6 +56,12 @@ namespace ripple.Testing.Model
 
 			FeedRegistry.Stub(theFeedProvider);
 		}
+
+        [TearDown]
+        public void TearDown()
+        {
+            RippleEnvironment.Live();
+        }
 
 		private void theVersionIs(Dependency dependency, string version)
 		{
@@ -116,17 +126,27 @@ namespace ripple.Testing.Model
 				new StubNuget("FubuCore", "1.0.2.232"), 
 				new StubNuget("StructureMap", "2.6.4.71"),
 			});
+            theFubuFeed.Stub(x => x.IsOnline()).Return(true);
 
 			theNugetFeed = MockRepository.GenerateStub<INugetFeed>();
 			theNugetFeed.Stub(x => x.Find(rhinomocks)).Return(new StubNuget("RhinoMocks", "3.6.1"));
 			theNugetFeed.Stub(x => x.Find(structuremap)).Return(new StubNuget("StructureMap", "2.6.3"));
+		    theNugetFeed.Stub(x => x.IsOnline()).Return(true);
 
 			theFeedProvider = MockRepository.GenerateStub<IFeedProvider>();
 			theFeedProvider.Stub(x => x.For(Feed.Fubu)).Return(theFubuFeed);
 			theFeedProvider.Stub(x => x.For(Feed.NuGetV2)).Return(theNugetFeed);
 
+            RippleEnvironment.StubConnection(true);
+
 			FeedRegistry.Stub(theFeedProvider);
 		}
+
+        [TearDown]
+        public void TearDown()
+        {
+            RippleEnvironment.Live();
+        }
 
 		private void theVersionIs(Dependency dependency, string version)
 		{

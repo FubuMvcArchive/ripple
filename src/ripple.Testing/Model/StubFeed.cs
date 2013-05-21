@@ -30,10 +30,12 @@ namespace ripple.Testing.Model
         private readonly IList<DependencyError> _explicitErrors = new List<DependencyError>();
         private readonly Feed _feed;
         private IPackageRepository _repository;
+        private bool _online;
 
         public StubFeed(Feed feed)
         {
             _feed = feed;
+            _online = true;
 
             UseRepository(new StubPackageRepository());
         }
@@ -49,12 +51,17 @@ namespace ripple.Testing.Model
             return this;
         }
 
-        public override string Url
+        public override bool IsOnline()
         {
-            get { return _feed.Url; }
+            return _online;
         }
 
-        protected override IRemoteNuget FindImpl(Dependency query)
+        public void MarkOffline()
+        {
+            _online = false;
+        }
+
+        protected override IRemoteNuget find(Dependency query)
         {
             throwIfNeeded(query);
 
@@ -74,7 +81,7 @@ namespace ripple.Testing.Model
             return matching.FirstOrDefault(x => x.Version.Version.Equals(version.Version));
         }
 
-        protected override IRemoteNuget FindLatestImpl(Dependency query)
+        protected override IRemoteNuget findLatest(Dependency query)
         {
             Console.WriteLine("FindLatest in {0} for {1}", _repository.GetHashCode(), query);
             throwIfNeeded(query);

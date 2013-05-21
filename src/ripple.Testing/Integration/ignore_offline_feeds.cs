@@ -30,14 +30,11 @@ namespace ripple.Testing.Integration
             theSolution.AddFeed(Feed.NuGetV2);
 
             theFeedService = theSolution.FeedService.As<FeedService>();
-
-            FeedConnectivity.Stub(x => true);
         }
 
         [TearDown]
         public void TearDown()
         {
-            FeedConnectivity.Live();
             FeedRegistry.Reset();
         }
 

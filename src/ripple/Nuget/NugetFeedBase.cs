@@ -11,50 +11,46 @@ namespace ripple.Nuget
         private readonly Cache<CacheKey<Dependency>, IRemoteNuget> _findCache = new Cache<CacheKey<Dependency>, IRemoteNuget>();
         private readonly Cache<CacheKey<string>, IRemoteNuget> _findLatest = new Cache<CacheKey<string>, IRemoteNuget>();
 
-        public abstract string Url { get; }
+        public abstract bool IsOnline();
 
         public IRemoteNuget Find(Dependency query)
         {
-            var key = new CacheKey<Dependency>(GetBoolStability(query), query);
+            var key = new CacheKey<Dependency>(query.IncludesPrelease(), query);
 
             if (_findCache.Has(key) == false)
             {
-                _findCache[key] = FindImpl(query) ?? Null;
+                _findCache[key] = find(query) ?? Null;
             }
 
             return Return(_findCache[key]);
         }
 
-        protected abstract IRemoteNuget FindImpl(Dependency query);
+        protected abstract IRemoteNuget find(Dependency query);
 
         public IRemoteNuget FindLatest(Dependency query)
         {
-            var stability = GetBoolStability(query);
+            var stability = query.IncludesPrelease();
             var key = new CacheKey<string>(stability, query.Name);
 
             if (_findLatest.Has(key) == false)
             {
-                var nuget = FindLatestImpl(query);
+                var nuget = findLatest(query);
                 _findLatest[key] = nuget ?? Null;
 
                 if (nuget != null && nuget.Version != null)
                 {
                     var findKey = new CacheKey<Dependency>(stability, new Dependency(nuget.Name, nuget.Version.ToString()));
-
                     if (_findCache.Has(findKey) == false)
+                    {
                         _findCache[findKey] = nuget;
+                    }
                 }
             }
 
             return Return(_findLatest[key]);
         }
 
-        protected abstract IRemoteNuget FindLatestImpl(Dependency query);
-
-        private static bool GetBoolStability(Dependency query)
-        {
-            return query.NugetStability.HasValue && query.NugetStability.Value == NugetStability.Anything;
-        }
+        protected abstract IRemoteNuget findLatest(Dependency query);
 
         private static IRemoteNuget Return(object nuget)
         {
@@ -68,12 +64,12 @@ namespace ripple.Nuget
 
         private class CacheKey<TKeyPart>
         {
-            private readonly bool _stableOnly;
+            private readonly bool _anything;
             private readonly TKeyPart _part;
 
-            public CacheKey(bool stableOnly, TKeyPart part)
+            public CacheKey(bool anything, TKeyPart part)
             {
-                _stableOnly = stableOnly;
+                _anything = anything;
                 _part = part;
             }
 
@@ -83,14 +79,14 @@ namespace ripple.Nuget
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != GetType()) return false;
                 var other = (CacheKey<TKeyPart>)obj;
-                return _stableOnly.Equals(other._stableOnly) && _part.Equals(other._part);
+                return _anything.Equals(other._anything) && _part.Equals(other._part);
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    return (_stableOnly.GetHashCode() * 397) ^ EqualityComparer<TKeyPart>.Default.GetHashCode(_part);
+                    return (_anything.GetHashCode() * 397) ^ EqualityComparer<TKeyPart>.Default.GetHashCode(_part);
                 }
             }
         }

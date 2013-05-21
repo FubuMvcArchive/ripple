@@ -33,11 +33,6 @@ namespace ripple.Nuget
             _fileSystem = new FileSystem();
         }
 
-        public override string Url
-        {
-            get { return Directory; }
-        }
-
         public string Directory { get { return _directory; } }
 
         protected IEnumerable<INugetFile> files
@@ -65,7 +60,13 @@ namespace ripple.Nuget
             return new FileSystemNuget(file); 
         }
 
-        protected override IRemoteNuget FindImpl(Dependency query)
+        public override bool IsOnline()
+        {
+            // TODO -- Make this smarter
+            return true;
+        }
+
+        protected override IRemoteNuget find(Dependency query)
         {
             RippleLog.Debug("Searching for {0} in {1}".ToFormat(query, _directory));
 
@@ -79,7 +80,7 @@ namespace ripple.Nuget
             return findMatching(nuget => query.MatchesName(nuget.Name) && nuget.Version == version);
         }
 
-        protected override IRemoteNuget FindLatestImpl(Dependency query)
+        protected override IRemoteNuget findLatest(Dependency query)
         {
             RippleLog.Debug("Searching for latest of {0} in {1}".ToFormat(query, _directory));
 

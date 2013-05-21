@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using ripple.Nuget;
 
 namespace ripple.Model
@@ -19,51 +18,13 @@ namespace ripple.Model
         private readonly IList<INugetFeed> _checked = new List<INugetFeed>(); 
         private readonly IList<INugetFeed> _offline = new List<INugetFeed>();
 
-        private static Func<INugetFeed, bool> _checkConnectivity;
-
-        static FeedConnectivity()
-        {
-            Live();
-        }
-
-        public static void Stub(Func<INugetFeed, bool> checkConnectivity)
-        {
-            _checkConnectivity = checkConnectivity;
-        }
-
-        public static void Live()
-        {
-            _checkConnectivity = feed =>
-            {
-                if (feed.Url.StartsWith("file") || feed is FileSystemNugetFeed)
-                {
-                    return true;
-                }
-
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        using (var stream = client.OpenRead(feed.Url))
-                        {
-                            return true;
-                        }
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-            };
-        }
-
         public void IfOnline(INugetFeed feed, Action<INugetFeed> continuation)
         {
             try
             {
                 if (isOffline(feed))
                 {
-                    RippleLog.Debug("Feed offline. Ignoring.");
+                    RippleLog.Debug("Feed offline. Ignoring " + feed);
                     return;
                 }
 
@@ -72,7 +33,7 @@ namespace ripple.Model
             catch (Exception exc)
             {
                 markOffline(feed);
-                RippleLog.Debug("Feed unavailable: " + feed);
+                RippleLog.Info("Feed unavailable: " + feed);
                 RippleLog.Debug(exc.ToString());
             }
         }
@@ -103,7 +64,7 @@ namespace ripple.Model
         {
             if (!_checked.Contains(feed))
             {
-                if (!_checkConnectivity(feed))
+                if (!feed.IsOnline())
                 {
                     _offline.Add(feed);
                 }
