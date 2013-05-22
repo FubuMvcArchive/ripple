@@ -3,6 +3,7 @@ using FubuCore;
 using FubuTestingSupport;
 using ripple.Local;
 using ripple.Model;
+using ripple.Nuget;
 using ripple.Runners;
 
 namespace ripple.Testing
@@ -137,6 +138,16 @@ namespace ripple.Testing
             solution.AddDependency(dep);
 
             solution.ConstraintFor(dep).ShouldEqual(solution.NuspecSettings.Fixed);
+        }
+
+        [Test]
+        public void resets_the_cache_when_a_custom_directory_is_specified()
+        {
+            var directory = "MyCache";
+            var solution = new Solution();
+            solution.NugetCacheDirectory = directory;
+
+            solution.Cache.As<NugetFolderCache>().LocalPath.ShouldEqual(directory);
         }
     }
 }
