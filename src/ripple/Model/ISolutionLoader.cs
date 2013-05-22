@@ -18,7 +18,26 @@ namespace ripple.Model
 
 		public void SolutionLoaded(Solution solution)
 		{
-			//no-op
 		}
 	}
+
+    public class InMemorySolutionLoader : ISolutionLoader
+    {
+        private readonly Solution _solution;
+
+        public InMemorySolutionLoader(Solution solution)
+        {
+            _solution = solution;
+        }
+
+        public Solution LoadFrom(IFileSystem fileSystem, string filePath)
+        {
+            _solution.Directory = RippleFileSystem.CurrentDirectory();
+            return _solution;
+        }
+
+        public void SolutionLoaded(Solution solution)
+        {
+        }
+    }
 }

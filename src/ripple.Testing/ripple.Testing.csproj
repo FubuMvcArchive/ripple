@@ -74,6 +74,8 @@
     <Compile Include="Commands\finding_nuspecs_by_convention_and_mapping.cs" />
     <Compile Include="Commands\FloatCommandTester.cs" />
     <Compile Include="Commands\floating_command_with_min_version.cs" />
+    <Compile Include="Commands\initializing_an_existing_ripple_solution.cs" />
+    <Compile Include="Commands\InitInputTester.cs" />
     <Compile Include="Commands\InstallInputTester.cs" />
     <Compile Include="Commands\LocalNugetInputTester.cs" />
     <Compile Include="Commands\NuspecMapTester.cs" />

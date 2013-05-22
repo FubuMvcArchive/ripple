@@ -63,9 +63,6 @@ namespace ripple.Model
             AddFeed(Feed.Fubu);
             AddFeed(Feed.NuGetV2);
 
-            // TODO -- Do we even need v1?
-            AddFeed(Feed.NuGetV1);
-
             UseStorage(NugetStorage.Basic());
             UseFeedService(Model.FeedService.Basic(this));
             UseCache(NugetFolderCache.DefaultFor(this));

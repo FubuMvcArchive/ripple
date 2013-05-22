@@ -30,7 +30,10 @@ namespace ripple.Model
 
 		public SolutionFiles(IFileSystem fileSystem, ISolutionLoader loader)
 		{
-			resetDirectories(RippleFileSystem.FindSolutionDirectory());
+            if (RippleFileSystem.IsSolutionDirectory())
+            {
+                resetDirectories(RippleFileSystem.FindSolutionDirectory());
+            }
 
 			_fileSystem = fileSystem;
 			_loader = loader;
@@ -95,10 +98,10 @@ namespace ripple.Model
 
 		public static SolutionFiles Basic()
 		{
-			return new SolutionFiles(new FileSystem(), new SolutionLoader());
+		    return new SolutionFiles(new FileSystem(), new SolutionLoader());
 		}
 
-		public static SolutionFiles FromDirectory(string directory)
+	    public static SolutionFiles FromDirectory(string directory)
 		{
 			var rippleConfigs = new FileSet
 			{
@@ -120,6 +123,14 @@ namespace ripple.Model
 
 			return files;
 		}
+
+        public static SolutionFiles FromDirectory(string directory, ISolutionLoader loader)
+        {
+            var files = new SolutionFiles(new FileSystem(), loader);
+            files.resetDirectories(directory);
+
+            return files;
+        }
 
 		public static SolutionFiles Classic()
 		{

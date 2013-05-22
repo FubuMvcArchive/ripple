@@ -16,7 +16,7 @@ namespace ripple.Testing.Model
 		{
 			new Solution()
 				.Feeds
-				.ShouldHaveTheSameElementsAs(Feed.Fubu, Feed.NuGetV2, Feed.NuGetV1);
+				.ShouldHaveTheSameElementsAs(Feed.Fubu, Feed.NuGetV2);
 		}
 
 		[Test]

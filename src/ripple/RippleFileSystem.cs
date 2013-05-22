@@ -80,7 +80,7 @@ namespace ripple
                 return null;
             }
 
-            return findSolutionDir(parent.FullName);
+            return findSolutionDir(parent.FullName, shouldThrow);
         }
 
         public static string FindCodeDirectory()
@@ -200,6 +200,11 @@ namespace ripple
             input = input.Replace('/', Path.DirectorySeparatorChar);
 
             return input;
+        }
+
+        public static string CurrentDirectory()
+        {
+            return _currentDir().ToFullPath();
         }
     }
 }

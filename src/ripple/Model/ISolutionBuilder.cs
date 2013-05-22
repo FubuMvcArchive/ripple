@@ -30,11 +30,7 @@ namespace ripple.Model
 			_files.ForProjects(solution, x =>
 			{
 				var project = _project.Read(x);
-				// Account of no packages/ripple config
-				if (project != null)
-				{
-					solution.AddProject(project);
-				}
+                solution.AddProject(project);
 			});
 
             solution.EachProject(project =>

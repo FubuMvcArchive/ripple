@@ -3,7 +3,7 @@ require "rubygems/package"
 
 RIPPLE_CLI_FOLDER = File.dirname(__FILE__)
 COMPILE_TARGET = @solution.options[:compilemode]
-ARTIFACTS = '../artifacts'
+ARTIFACTS = File.expand_path('../artifacts', RIPPLE_CLI_FOLDER)
 
 module Bundler
   class GemHelper

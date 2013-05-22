@@ -22,7 +22,7 @@ namespace ripple.Model
 			var project = new Project(projectFile);
 
 			var reader = _dependencies.FirstOrDefault(x => x.Matches(project));
-			if (reader == null) return null;
+			if (reader == null) return project;
 
 			var dependencies = reader.Read(project);
 
