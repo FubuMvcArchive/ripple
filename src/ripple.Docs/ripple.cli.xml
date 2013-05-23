@@ -84,6 +84,10 @@
       <Arguments />
       <Flags>
         <FlagReport>
+          <UsageDescription>[-f, --feeds &lt;feeds&gt;]</UsageDescription>
+          <Description>Additional NuGet feed urls separated by '#'</Description>
+        </FlagReport>
+        <FlagReport>
           <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
           <Description>override the solution to be cleaned</Description>
         </FlagReport>
@@ -103,7 +107,7 @@
       <Usages>
         <UsageReport>
           <Description>ConvertCommand</Description>
-          <Usage>ripple convert [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
+          <Usage>ripple convert [-f, --feeds &lt;feeds&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
         </UsageReport>
       </Usages>
     </CommandReport>
@@ -975,7 +979,7 @@
     </CommandReport>
     <CommandReport>
       <Name>init</Name>
-      <Description>Initializes a project directory as a 'rippled' project</Description>
+      <Description>Initialize a new ripple solution</Description>
       <Arguments>
         <ArgumentReport>
           <Name>name</Name>
@@ -988,18 +992,42 @@
           <Description>Relative path to the solution directory.  Default is 'src'</Description>
         </FlagReport>
         <FlagReport>
-          <UsageDescription>[-o, --open]</UsageDescription>
-          <Description>Open the ripple.config file after creating it</Description>
+          <UsageDescription>[-n, --nuspecs &lt;nuspecfolder&gt;]</UsageDescription>
+          <Description>Relative path to the nuspec diretory. Default is 'packaging/nuget'</Description>
         </FlagReport>
         <FlagReport>
-          <UsageDescription>[-f, --folder &lt;folder&gt;]</UsageDescription>
-          <Description>Overrides the current folder</Description>
+          <UsageDescription>[-f, --feeds &lt;feeds&gt;]</UsageDescription>
+          <Description>NuGet feed urls separated by '#'. Defaults to Fubu and NuGet V2 feeds.</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-b, --build-command &lt;buildcommand&gt;]</UsageDescription>
+          <Description>Build command for your solution. Defaults to 'rake'</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-f, --fast-build-command &lt;fastbuildcommand&gt;]</UsageDescription>
+          <Description>Fast build command (e.g., rake compile vs. rake). Defaults to 'rake compile'</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-l, --solution &lt;solution&gt;]</UsageDescription>
+          <Description>override the solution to be cleaned</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-c, --cache &lt;cache&gt;]</UsageDescription>
+          <Description>Override the NuGet cache</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-a, --all]</UsageDescription>
+          <Description>Apply restore to all solutions</Description>
+        </FlagReport>
+        <FlagReport>
+          <UsageDescription>[-v, --verbose]</UsageDescription>
+          <Description>Writes all output to the screen</Description>
         </FlagReport>
       </Flags>
       <Usages>
         <UsageReport>
-          <Description>Initializes a project directory as a 'rippled' project</Description>
-          <Usage>ripple init &lt;name&gt; [-s, --src &lt;sourcefolder&gt;] [-o, --open] [-f, --folder &lt;folder&gt;]</Usage>
+          <Description>Initialize a new ripple solution</Description>
+          <Usage>ripple init &lt;name&gt; [-s, --src &lt;sourcefolder&gt;] [-n, --nuspecs &lt;nuspecfolder&gt;] [-f, --feeds &lt;feeds&gt;] [-b, --build-command &lt;buildcommand&gt;] [-f, --fast-build-command &lt;fastbuildcommand&gt;] [-l, --solution &lt;solution&gt;] [-c, --cache &lt;cache&gt;] [-a, --all] [-v, --verbose]</Usage>
         </UsageReport>
       </Usages>
     </CommandReport>
