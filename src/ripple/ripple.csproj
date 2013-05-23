@@ -96,6 +96,7 @@
     <Compile Include="IRippleStep.cs" />
     <Compile Include="IRippleStepRunner.cs" />
     <Compile Include="Local\BuildSolution.cs" />
+    <Compile Include="Local\CreateNugetException.cs" />
     <Compile Include="Local\FileCopyRequest.cs" />
     <Compile Include="Commands\GitIgnoreCommand.cs" />
     <Compile Include="Commands\GitIgnoreInput.cs" />

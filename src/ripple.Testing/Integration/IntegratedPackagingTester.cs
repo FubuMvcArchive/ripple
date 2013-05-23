@@ -32,7 +32,7 @@ namespace ripple.Testing.Integration
 
 			theSolution = theScenario.Find("FubuCore");
 
-			theSolution.Package(theSolution.Specifications.Single(), new SemanticVersion("1.1.1.1"), theNugetDirectory);
+			theSolution.Package(theSolution.Specifications.Single(), new SemanticVersion("1.1.1.1"), theNugetDirectory, false);
 		}
 
 		[TestFixtureTearDown]
