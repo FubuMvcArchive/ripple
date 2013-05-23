@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
     <title>
-      Float | ripple
+      Init | ripple
     </title><meta charset="utf-8" />
 <meta content="FubuWorld" name="description" />
 <meta content="FubuWorld" name="author" />
@@ -42,8 +42,8 @@
       <div class="navbar" id="nav-follow">
         <div class="navbar-inner">
           <div class="container">
-            <ul class="nav"><li><a data-key="index" href="/ripple/ripple/index">ripple »</a></li><li><a data-key="index" href="/ripple/ripple/commands">Commands »</a></li><li class="active"><a data-key="Float" href="/ripple/ripple/commands/float">Float »</a></li></ul>
-<ul style="float:right" class="nav"><li><a title="Create Packages" href="/ripple/ripple/commands/createpackages">Previous</a></li><li><a title="Init" href="/ripple/ripple/commands/init">Next</a></li></ul>
+            <ul class="nav"><li><a data-key="index" href="/ripple/ripple/index">ripple »</a></li><li><a data-key="index" href="/ripple/ripple/commands">Commands »</a></li><li class="active"><a data-key="Init" href="/ripple/ripple/commands/init">Init »</a></li></ul>
+<ul style="float:right" class="nav"><li><a title="Float" href="/ripple/ripple/commands/float">Previous</a></li><li><a title="Install" href="/ripple/ripple/commands/install">Next</a></li></ul>
           </div>
         </div>
       </div>
@@ -55,21 +55,21 @@
           <div class="span3 sidebar">
             <h3 class="half-margin">Topics</h3>
             <ul class="nav nav-tabs nav-stacked affix-top" id="page-toc">
-            <li><a href="#undefined">ripple float</a></li></ul>
+            <li><a href="#undefined">ripple init</a></li></ul>
             <br />
             <h3 class="no-margin">Next</h3>
-<p><a data-key="Init" href="/ripple/ripple/commands/init">Init</a></p>
+<p><a data-key="Install" href="/ripple/ripple/commands/install">Install</a></p>
 <h3 class="no-margin">Previous</h3>
-<p><a data-key="CreatePackages" href="/ripple/ripple/commands/createpackages">Create Packages</a></p>
+<p><a data-key="Float" href="/ripple/ripple/commands/float">Float</a></p>
           </div>
           <div class="span9">
-            <h1 class="no-margin">Float</h1><hr class="header-line" />
-             <!--Title: Float-->
-<p></p><section class="command-section"><h4><span class="section-header" id="float">ripple float</span><i class="command-description">Allows a nuget to 'float' and be automatically updated from the Update command</i></h4><div class="single-command-usage"><em>ripple float</em><name> [-m, --min-version <minversion>] [-l, --solution <solution>] [-c, --cache <cache>] [-a, --all] [-v, --verbose]</cache></solution></minversion></name></div><p></p>
+            <h1 class="no-margin">Init</h1><hr class="header-line" />
+             <!--Title: Init-->
+<p></p><section class="command-section"><h4><span class="section-header" id="init">ripple init</span><i class="command-description">Initialize a new ripple solution</i></h4><div class="single-command-usage"><em>ripple init</em><name> [-s, --src <sourcefolder>] [-n, --nuspecs <nuspecfolder>] [-f, --feeds <feeds>] [-b, --build-command <buildcommand>] [-f, --fast-build-command <fastbuildcommand>] [-l, --solution <solution>] [-c, --cache <cache>] [-a, --all] [-v, --verbose]</cache></solution></fastbuildcommand></buildcommand></feeds></nuspecfolder></sourcefolder></name></div><p></p>
 
-<table class="table"><thead><tr><th colspan="2">Arguments</th></tr></thead><tbody><tr><td class="command-arg-name">name</td><td class="command-arg-description">The name of the nuget</td></tr></tbody></table>
+<table class="table"><thead><tr><th colspan="2">Arguments</th></tr></thead><tbody><tr><td class="command-arg-name">name</td><td class="command-arg-description">Shorthand name for the project</td></tr></tbody></table>
 
-<p></p><table class="table"><thead><tr><th colspan="2">Flags</th></tr></thead><tbody><tr><td class="command-flag-usage">[-m, --min-version &lt;minversion&gt;]</td><td class="command-flag-description">The minimum version required</td></tr><tr><td class="command-flag-usage">[-l, --solution &lt;solution&gt;]</td><td class="command-flag-description">override the solution to be cleaned</td></tr><tr><td class="command-flag-usage">[-c, --cache &lt;cache&gt;]</td><td class="command-flag-description">Override the NuGet cache</td></tr><tr><td class="command-flag-usage">[-a, --all]</td><td class="command-flag-description">Apply restore to all solutions</td></tr><tr><td class="command-flag-usage">[-v, --verbose]</td><td class="command-flag-description">Writes all output to the screen</td></tr></tbody></table></section><p></p>
+<p></p><table class="table"><thead><tr><th colspan="2">Flags</th></tr></thead><tbody><tr><td class="command-flag-usage">[-s, --src &lt;sourcefolder&gt;]</td><td class="command-flag-description">Relative path to the solution directory.  Default is 'src'</td></tr><tr><td class="command-flag-usage">[-n, --nuspecs &lt;nuspecfolder&gt;]</td><td class="command-flag-description">Relative path to the nuspec diretory. Default is 'packaging/nuget'</td></tr><tr><td class="command-flag-usage">[-f, --feeds &lt;feeds&gt;]</td><td class="command-flag-description">NuGet feed urls separated by '#'. Defaults to Fubu and NuGet V2 feeds.</td></tr><tr><td class="command-flag-usage">[-b, --build-command &lt;buildcommand&gt;]</td><td class="command-flag-description">Build command for your solution. Defaults to 'rake'</td></tr><tr><td class="command-flag-usage">[-f, --fast-build-command &lt;fastbuildcommand&gt;]</td><td class="command-flag-description">Fast build command (e.g., rake compile vs. rake). Defaults to 'rake compile'</td></tr><tr><td class="command-flag-usage">[-l, --solution &lt;solution&gt;]</td><td class="command-flag-description">override the solution to be cleaned</td></tr><tr><td class="command-flag-usage">[-c, --cache &lt;cache&gt;]</td><td class="command-flag-description">Override the NuGet cache</td></tr><tr><td class="command-flag-usage">[-a, --all]</td><td class="command-flag-description">Apply restore to all solutions</td></tr><tr><td class="command-flag-usage">[-v, --verbose]</td><td class="command-flag-description">Writes all output to the screen</td></tr></tbody></table></section><p></p>
 
             </div>
         </div>

@@ -55,7 +55,7 @@
           <div class="span3 sidebar">
             <h3 class="half-margin">Topics</h3>
             <ul class="nav nav-tabs nav-stacked affix-top" id="page-toc">
-            <li><a href="#undefined">Introduction</a></li><li><a href="#undefined">Internal Dependencies</a></li><li><a href="#undefined">Staying on the edge</a></li><li><a href="#undefined">Command Line over Visual Studio</a></li></ul>
+            <li><a href="#undefined">Introduction</a></li><li><a href="#undefined">Initializing a new solution</a></li><li><a href="#undefined">Internal Dependencies</a></li><li><a href="#undefined">Staying on the edge</a></li><li><a href="#undefined">Command Line over Visual Studio</a></li></ul>
             <br />
             <h3 class="no-margin">Next</h3>
 <p><a data-key="Concepts" href="/ripple/ripple/gettingstarted/concepts">Concepts</a></p>
@@ -67,6 +67,10 @@
              <p></p><section><h4 class="section-header" id="introduction">Introduction</h4>
     <p>Ripple is a new kind of package manager that was created out of heavy usage of the standard NuGet client. The feeds,
     the protocol, and the packages are the same. Ripple just embodies differing opinions and provides a new way of consuming them that is friendlier for continuous integration.</p></section><p></p>
+
+<p></p><section><h4 class="section-header" id="init">Initializing a new solution</h4>
+    <p>To start using ripple in your solution, simply run <code>ripple init MySolution</code>. This will "ripple-ize" your solution and create the appropriate configuration files. After your solution has been initialized,
+    it is recommended that you add your <code>packages directory</code> (default is src/packages) to the ignore list of your source control.</p></section><p></p>
 
 <p></p><section><h4 class="section-header" id="internal-dependencies">Internal Dependencies</h4>
     <p>The Fubu family of projects uses TeamCity for continuous integration and makes use of the built-in NuGet server support for managing internal dependencies. There are roughly 46 active projects publishing over 60 nugets.

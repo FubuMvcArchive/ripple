@@ -19,9 +19,9 @@ $.fn.teamCityWidget = function() {
         };
         
         $('#status-widget').find('.alert').remove();
-        
+
         var noReleaseBuild = function() {
-            buildMessage('Not public yet', 'This project is currently only available on our edge feed.').insertBefore('#community');
+            buildMessage('Not public yet', 'This project is currently only available on our edge feed or there is a problem communicating with the build server.').insertBefore('#community');
         };
         
         var renderBuild = function(build) {
@@ -33,10 +33,13 @@ $.fn.teamCityWidget = function() {
             item.appendTo(container);
         };
 
-        $.teamCity.api.forLatestBuild(buildType, renderBuild, function() {
-            // maybe hide the build status text if we can't find a build
-        });
-        $.teamCity.api.forLatestRelease(buildType, renderBuild, noReleaseBuild);
+        // TODO -- bring these back when we get TC configured
+        //$.teamCity.api.forLatestBuild(buildType, renderBuild, function() {
+        //    // maybe hide the build status text if we can't find a build
+        //});
+        //$.teamCity.api.forLatestRelease(buildType, renderBuild, noReleaseBuild);
+
+        noReleaseBuild();
     });
 };
 
