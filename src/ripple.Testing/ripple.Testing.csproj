@@ -94,6 +94,7 @@
     <Compile Include="Integration\installing_a_new_package_with_no_versions_on_dependencies.cs" />
     <Compile Include="Integration\IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="Integration\IntegratedHistoryCommandTester.cs" />
+    <Compile Include="Integration\IntegratedInitCommandTester.cs" />
     <Compile Include="Integration\IntegratedPackagingTester.cs" />
     <Compile Include="Integration\IntegratedRestoreWithError.cs" />
     <Compile Include="Integration\IntegratedRipplePlanCreationTester.cs" />

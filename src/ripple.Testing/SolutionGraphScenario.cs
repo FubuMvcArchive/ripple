@@ -9,6 +9,28 @@ using ripple.Nuget;
 
 namespace ripple.Testing
 {
+    public class ProjectGenerator
+    {
+        private static readonly IFileSystem FileSystem = new FileSystem();
+
+        public static Project Create(string projectDir, string name)
+        {
+            FileSystem.CreateDirectory(projectDir);
+
+            var stream = typeof(SolutionGraphScenario)
+                .Assembly
+                .GetManifestResourceStream("{0}.ProjectTemplate.txt".ToFormat(typeof(SolutionGraphScenario).Namespace));
+
+            var projectFile = Path.Combine(projectDir, RippleDependencyStrategy.RippleDependenciesConfig);
+            FileSystem.WriteStringToFile(projectFile, "");
+
+            var csProjectFile = Path.Combine(projectDir, "{0}.csproj".ToFormat(name));
+            FileSystem.WriteStreamToFile(csProjectFile, stream);
+
+            return new Project(csProjectFile);
+        }
+    }
+
 	public class SolutionGraphScenario
 	{
 		private readonly string _directory;
@@ -186,23 +208,12 @@ namespace ripple.Testing
 			private Project createAndAddProject(string name)
 			{
 				var projectDir = Path.Combine(_solution.SourceFolder, name);
-				_fileSystem.CreateDirectory(projectDir);
-
-				var stream = typeof(SolutionGraphScenario)
-					.Assembly
-					.GetManifestResourceStream("{0}.ProjectTemplate.txt".ToFormat(typeof(SolutionGraphScenario).Namespace));
-
-				var projectFile = Path.Combine(projectDir, RippleDependencyStrategy.RippleDependenciesConfig);
-				_fileSystem.WriteStringToFile(projectFile, "");
-
-				var csProjectFile = Path.Combine(projectDir, "{0}.csproj".ToFormat(name));
-				_fileSystem.WriteStreamToFile(csProjectFile, stream);
+			    var project = ProjectGenerator.Create(projectDir, name);
 
 				var debugDir = Path.Combine(projectDir, "bin", "Debug");
 				_fileSystem.CreateDirectory(debugDir);
 				_fileSystem.WriteStringToFile(Path.Combine(debugDir, "{0}.dll".ToFormat(name)), "");
 
-				var project =  new Project(csProjectFile);
 				_solution.AddProject(project);
 
 				return project;
