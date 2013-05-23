@@ -37,7 +37,8 @@ namespace ripple.Testing.Integration
             theFileSystem = new FileSystem();
             theFileSystem.CreateDirectory(theNugetDirectory);
 
-            theSolution = theScenario.Find("FubuCore");
+			theSolution.Package(theSolution.Specifications.Single(), new SemanticVersion("1.1.1.1"), theNugetDirectory, false);
+		}
 
             theSolution.Package(theSolution.Specifications.Single(), new SemanticVersion("1.1.1.1"), theNugetDirectory, _publishSymbols);
         }
