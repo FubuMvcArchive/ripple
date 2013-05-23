@@ -11,7 +11,7 @@ namespace ripple.Commands
 
         public override bool Execute(InitInput input)
         {
-	        var rippleConfigDirectory = RippleFileSystem.FindSolutionDirectory();
+	        var rippleConfigDirectory = RippleFileSystem.FindSolutionDirectory(false);
 	        if (rippleConfigDirectory.IsNotEmpty())
             {
                 RippleAssert.Fail(ExistingSolution.ToFormat(rippleConfigDirectory));
