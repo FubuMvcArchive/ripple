@@ -13,7 +13,7 @@ namespace ripple.Steps
 	{
 		public Solution Solution { get; set; }
 
-		public void Execute(SolutionInput input, IRippleStepRunner runner)
+        public void Execute(RippleInput input, IRippleStepRunner runner)
 		{
 			var feeds = Solution.Feeds.ToArray();
 

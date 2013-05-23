@@ -567,7 +567,7 @@ namespace ripple.Model
             return solution;
         }
 
-        public static Solution For(SolutionInput input)
+        public static Solution For(RippleInput input)
         {
             // TODO -- Need to allow a specific solution
             // TODO -- Need to be smarter about the current directory maybe

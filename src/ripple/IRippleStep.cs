@@ -6,6 +6,6 @@ namespace ripple
 	public interface IRippleStep
 	{
 		Solution Solution { get; set; }
-		void Execute(SolutionInput input, IRippleStepRunner runner);
+        void Execute(RippleInput input, IRippleStepRunner runner);
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FubuCore;
 using FubuCore.Util;
+using ripple.Commands;
 using ripple.Local;
 using ripple.Model;
 using ripple.Nuget;
@@ -46,6 +47,8 @@ namespace ripple.Testing
 
 			var builder = new SolutionGraphBuilder(_fileSystem);
 			_graph = new Lazy<SolutionGraph>(() => builder.ReadFrom(_directory));
+
+            RippleFileSystem.StubCurrentDirectory(_directory);
 		}
 
 		public Solution Find(string name)
@@ -64,6 +67,8 @@ namespace ripple.Testing
 		{
             _fileSystem.CleanDirectory(_directory);
             _fileSystem.DeleteDirectory(_directory);
+
+		    RippleFileSystem.Live();
 		}
 
 		public string DirectoryForSolution(string solutionName)
@@ -96,7 +101,7 @@ namespace ripple.Testing
 
 			public SolutionGraphScenarioDefinition()
 			{
-				_directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Guid.NewGuid().ToString());
+				_directory = Path.GetTempPath().AppendRandomPath();
 
                 _fileSystem.CleanDirectory(_directory);
 				_fileSystem.DeleteDirectory(_directory);

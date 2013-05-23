@@ -60,6 +60,7 @@
     <Compile Include="Commands\InstallCommand.cs" />
     <Compile Include="Commands\ReplacePackagesConfigCommand.cs" />
     <Compile Include="Commands\RestoreCommand.cs" />
+    <Compile Include="Commands\RippleInput.cs" />
     <Compile Include="Commands\Samples\ExtractSampleCommand.cs" />
     <Compile Include="Commands\FloatCommand.cs" />
     <Compile Include="Commands\FloCommand.cs" />
@@ -182,7 +183,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Local\PublishedAssembly.cs" />
-    <Compile Include="Commands\RippleInput.cs" />
     <Compile Include="Local\RipplePlan.cs" />
     <Compile Include="Local\RipplePlanRequirements.cs" />
     <Compile Include="Local\RippleRunner.cs" />

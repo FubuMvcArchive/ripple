@@ -84,7 +84,7 @@ namespace ripple.Testing
 		public Solution Solution { get; set; }
 		public bool Executed { get; set; }
 
-		public void Execute(SolutionInput input, IRippleStepRunner runner)
+		public void Execute(RippleInput input, IRippleStepRunner runner)
 		{
 			Executed = true;
 		}

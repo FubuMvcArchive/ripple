@@ -13,12 +13,12 @@ namespace ripple
 	public class RippleOperation : DescribesItself, LogTopic
 	{
 		private readonly Solution _solution;
-		private readonly SolutionInput _input;
+		private readonly RippleInput _input;
 		private readonly IRippleStepRunner _runner;
 		private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
 	    private bool _forceSave = false;
 
-		public RippleOperation(Solution solution, SolutionInput input, IRippleStepRunner runner)
+		public RippleOperation(Solution solution, RippleInput input, IRippleStepRunner runner)
 		{
 			_solution = solution;
 			_input = input;
@@ -112,12 +112,12 @@ namespace ripple
 		}
 
 		public static RippleOperation For<T>(T input)
-            where T : SolutionInput
+            where T : RippleInput
 		{
             return For<T>(input, _target ?? Solution.For(input));
 		}
 
-		public static RippleOperation For<T>(SolutionInput input, Solution solution)
+		public static RippleOperation For<T>(RippleInput input, Solution solution)
 		{
 			var target = _target ?? solution;
 
@@ -142,11 +142,14 @@ namespace ripple
             _forceThrow = throwOnFailure;
             RippleLog.RemoveFileListener();
 
+            RippleFileSystem.StubCurrentDirectory(solution.Directory);
+
 			return new CommandExecutionExpression(() =>
 			{
 				_target = null;
 				_forceThrow = false;
                 RippleLog.AddFileListener();
+                RippleFileSystem.Live();
 			});
 		}
 

@@ -13,7 +13,7 @@ namespace ripple.Commands
 		IEnumerable<Feed> Feeds();
 	}
 
-	public class SolutionInput
+    public class SolutionInput : RippleInput
 	{
 		private readonly Lazy<SolutionGraph> _graph = new Lazy<SolutionGraph>(SolutionGraphBuilder.BuildForCurrentDirectory);
 
@@ -21,15 +21,8 @@ namespace ripple.Commands
 		[FlagAlias("solution", 'l')]
 		public string SolutionFlag { get; set; }
 
-		[Description("Override the NuGet cache")]
-		[FlagAlias("cache", 'c')]
-		public string CacheFlag { get; set; }
-
 		[Description("Apply restore to all solutions")]
 		public bool AllFlag { get; set; }
-
-		[Description("Writes all output to the screen")]
-		public bool VerboseFlag { get; set; }
 
 		public void EachSolution(Action<Solution> configure)
 		{
@@ -61,27 +54,6 @@ namespace ripple.Commands
 				    yield return SolutionBuilder.ReadFromCurrentDirectory();
 				}
 			}
-		}
-
-		public void Apply(Solution solution)
-		{
-			RippleLog.Verbose(VerboseFlag);
-
-			if (CacheFlag.IsNotEmpty())
-			{
-				solution.UseCache(new NugetFolderCache(solution, CacheFlag.ToFullPath()));
-			}
-
-			ApplyTo(solution);
-		}
-
-		public virtual void ApplyTo(Solution solution)
-		{
-		}
-
-		public virtual string DescribePlan(Solution solution)
-		{
-			return string.Empty;
 		}
 	}
 }

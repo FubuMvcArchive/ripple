@@ -42,6 +42,7 @@ namespace ripple.Testing.Model
 		[TearDown]
 		public void TearDown()
 		{
+            theFileSystem.DeleteDirectory(theSolution.Directory);
 			theFileSystem.DeleteDirectory(theSolutionFiles.RootDir);
 		}
 

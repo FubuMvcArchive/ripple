@@ -17,7 +17,7 @@ namespace ripple.Commands
         {
             var fileSystem = new FileSystem();
 
-            var gitIgnoreFile = input.CurrentFolder().AppendPath(".gitignore");
+            var gitIgnoreFile = RippleFileSystem.FindSolutionDirectory().AppendPath(".gitignore");
 
             if (input.Line.IsNotEmpty())
             {

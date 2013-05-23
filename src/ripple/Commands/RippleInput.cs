@@ -1,24 +1,39 @@
 using System.ComponentModel;
 using FubuCore;
+using FubuCore.CommandLine;
 using ripple.Model;
+using ripple.Nuget;
 
 namespace ripple.Commands
 {
     public class RippleInput
     {
-        [Description("Overrides the current folder")]
-        public string FolderFlag { get; set; }
+        [Description("Writes all output to the screen")]
+        public bool VerboseFlag { get; set; }
 
-        public string CurrentFolder()
+        [Description("Override the NuGet cache")]
+        [FlagAlias("cache", 'c')]
+        public string CacheFlag { get; set; }
+
+        public void Apply(Solution solution)
         {
-            return FolderFlag.IsNotEmpty() 
-                ? FolderFlag.ToFullPath() 
-                : ".".ToFullPath();
+            RippleLog.Verbose(VerboseFlag);
+
+            if (CacheFlag.IsNotEmpty())
+            {
+                solution.UseCache(new NugetFolderCache(solution, CacheFlag.ToFullPath()));
+            }
+
+            ApplyTo(solution);
         }
 
-        public string GetRippleFileName()
+        public virtual void ApplyTo(Solution solution)
         {
-            return CurrentFolder().AppendPath(SolutionConfig.FileName);
+        }
+
+        public virtual string DescribePlan(Solution solution)
+        {
+            return string.Empty;
         }
     }
 }

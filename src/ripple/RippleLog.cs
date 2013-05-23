@@ -197,6 +197,11 @@ namespace ripple
 
             private void write(string level, string message)
             {
+                if (!RippleFileSystem.IsSolutionDirectory())
+                {
+                    return;
+                }
+
                 var log = "{0}: [{1}] {2}{3}".ToFormat(DateTime.Now.ToString(), level, message, Environment.NewLine);
                 _fileSystem.AppendToLogFile(File, log);
             }
