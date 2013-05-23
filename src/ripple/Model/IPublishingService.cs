@@ -18,6 +18,8 @@ namespace ripple.Model
 
 	public class PublishingService : IPublishingService
 	{
+        // NOTE: the file exclusions taken from the original NuGet
+
         // Target file paths to exclude when building the lib package for symbol server scenario
         private static readonly string[] _libPackageExcludes = new[] {
             @"**\*.pdb",
