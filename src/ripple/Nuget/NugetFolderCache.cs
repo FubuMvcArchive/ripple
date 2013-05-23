@@ -157,7 +157,28 @@ namespace ripple.Nuget
 
         public string LocalPath { get { return _folder; } }
 
-		public static NugetFolderCache DefaultFor(Solution solution)
+        protected bool Equals(NugetFolderCache other)
+        {
+            return _solution.Equals(other._solution) && string.Equals(_folder, other._folder);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((NugetFolderCache) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_solution.GetHashCode()*397) ^ _folder.GetHashCode();
+            }
+        }
+
+        public static NugetFolderCache DefaultFor(Solution solution)
 		{
 		    var ripple = solution.NugetCacheDirectory;
 		    if (string.IsNullOrEmpty(ripple))

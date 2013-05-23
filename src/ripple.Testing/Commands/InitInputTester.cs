@@ -89,5 +89,11 @@ namespace ripple.Testing.Commands
             theInput.FeedsFlag = "test1#test2";
             theSolution.Feeds.ShouldHaveTheSameElementsAs(new Feed("test1"), new Feed("test2"));
         }
+
+        [Test]
+        public void default_cache()
+        {
+            theSolution.NugetCacheDirectory.ShouldBeNull();
+        }
     }
 }

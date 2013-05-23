@@ -69,7 +69,7 @@ namespace ripple.Model
             UsePublisher(PublishingService.For(Mode));
             UseBuilder(new NugetPlanBuilder());
 
-            _cacheLocalPath = Cache.LocalPath;
+            //_cacheLocalPath = Cache.LocalPath;
 
             RestoreSettings = new RestoreSettings();
             NuspecSettings = new NuspecSettings();
