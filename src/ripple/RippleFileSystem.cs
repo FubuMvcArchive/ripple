@@ -44,7 +44,7 @@ namespace ripple
         }
 
         public static bool IsCodeDirectory()
-        {
+	      {
             if (IsSolutionDirectory()) return false;
 
             // We only traverse one level here
