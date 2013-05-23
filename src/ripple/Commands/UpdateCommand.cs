@@ -9,7 +9,7 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-	public class UpdateInput : SolutionInput, INugetOperationContext
+	public class UpdateInput : RippleInput, INugetOperationContext
 	{
 	    public UpdateInput()
 	    {

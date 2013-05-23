@@ -15,6 +15,7 @@ namespace ripple.Commands
             ArtifactsFlag = "artifacts";
 
             ApiKey = Environment.GetEnvironmentVariable(PublishingService.ApiKey, EnvironmentVariableTarget.User);
+            ServerFlag = "https://nuget.org/";
         }
 
         [Description("Nuget version number")]
@@ -50,7 +51,7 @@ namespace ripple.Commands
                     RippleLog.Info("Creating and publishing Nuget for " + nuget.Name);
 
 					var packageFile = solution.Package(nuget, SemanticVersion.Parse(input.Version), artifactDirectory);
-					solution.Publisher.PublishPackage(packageFile, input.ApiKey);
+                    solution.Publisher.PublishPackage(input.ServerFlag, packageFile, input.ApiKey);
                 });
             });
 

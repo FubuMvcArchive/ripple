@@ -13,7 +13,7 @@ namespace ripple.Model
 		IEnumerable<NugetSpec> SpecificationsFor(Solution solution);
 		string CreatePackage(NugetSpec spec, SemanticVersion version, string outputPath);
 
-		void PublishPackage(string file, string apiKey);
+		void PublishPackage(string serverUrl, string file, string apiKey);
 	}
 
 	public class PublishingService : IPublishingService
@@ -81,9 +81,9 @@ namespace ripple.Model
 			return nupkgFileName;
 		}
 
-		public void PublishPackage(string file, string apiKey)
+        public void PublishPackage(string serverUrl, string file, string apiKey)
 		{
-            var packageServer = new PackageServer("https://nuget.org/", "ripple");
+            var packageServer = new PackageServer(serverUrl, "ripple");
 		    var package = new OptimizedZipPackage(file);
 
 			RippleLog.Info("Publishing " + file + " with " + apiKey);

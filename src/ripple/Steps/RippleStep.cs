@@ -4,7 +4,7 @@ using ripple.Model;
 namespace ripple.Steps
 {
 	public abstract class RippleStep<T> : IRippleStep
-		where T : SolutionInput
+		where T : RippleInput
 	{
 		public Solution Solution { get; set; }
 

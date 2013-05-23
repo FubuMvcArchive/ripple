@@ -8,7 +8,7 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-	public class InstallInput : SolutionInput, INugetOperationContext
+	public class InstallInput : RippleInput, INugetOperationContext
 	{
 		public InstallInput()
 		{

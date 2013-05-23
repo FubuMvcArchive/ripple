@@ -21,6 +21,10 @@ namespace ripple.Commands
 
         [Description("API Key for Nuget.org")]
         public string ApiKeyFlag { get; set; }
+
+        [Description("Custom url for the NuGet server")]
+        [FlagAlias("server", 's')]
+        public string ServerFlag { get; set; }
     }
 
     [CommandDescription("Batch publishes all the nupkg files in a directory to the main nuget feed")]
@@ -41,7 +45,7 @@ namespace ripple.Commands
                 _index++;
 
 				RippleLog.Info("Trying to publish {0}, {1} or {2}".ToFormat(file, _index, _count));
-				publisher.PublishPackage(file, input.ApiKeyFlag);
+				publisher.PublishPackage(input.ServerFlag, file, input.ApiKeyFlag);
             });
 
             return true;

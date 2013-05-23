@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
@@ -7,7 +6,7 @@ using ripple.Model;
 
 namespace ripple.Commands
 {
-    public class InitInput : SolutionInput
+    public class InitInput : RippleInput
     {
         [Description("Shorthand name for the project")]
         public string Name { get; set; }
@@ -24,9 +23,11 @@ namespace ripple.Commands
         public string FeedsFlag { get; set; }
 
         [Description("Build command for your solution. Defaults to 'rake'")]
+        [FlagAlias("build", 'b')]
         public string BuildCommandFlag { get; set; }
 
         [Description("Fast build command (e.g., rake compile vs. rake). Defaults to 'rake compile'")]
+        [FlagAlias("fast-build", 'q')]
         public string FastBuildCommandFlag { get; set; }
 
         public Solution ToSolution()
