@@ -69,7 +69,7 @@ namespace ripple.Commands
               .Step<DownloadMissingNugets>()
               .Step<ExplodeDownloadedNugets>()
               .Step<ProcessDirectives>()
-              .Step<FixReferences>()
+              //.Step<FixReferences>()
               .Execute();
         }
     }
