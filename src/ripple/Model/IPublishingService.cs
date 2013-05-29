@@ -40,28 +40,6 @@ namespace ripple.Model
             PathResolver.FilterPackageFiles(files, file => file.Path, _symbolPackageExcludes);
         }
 
-
-        // Target file paths to exclude when building the lib package for symbol server scenario
-        private static readonly string[] _libPackageExcludes = new[] {
-            @"**\*.pdb",
-            @"src\**\*"
-        };
-        // Target file paths to exclude when building the symbols package for symbol server scenario
-        private static readonly string[] _symbolPackageExcludes = new[] {
-            @"content\**\*",
-            @"tools\**\*.ps1"
-        };
-
-        internal static void ExcludeFilesForLibPackage(ICollection<IPackageFile> files)
-        {
-            PathResolver.FilterPackageFiles(files, file => file.Path, _libPackageExcludes);
-        }
-        internal static void ExcludeFilesForSymbolPackage(ICollection<IPackageFile> files)
-        {
-            PathResolver.FilterPackageFiles(files, file => file.Path, _symbolPackageExcludes);
-        }
-
-
 	    public const string ApiKey = "ripple-api-key";
 
 	    public static readonly IEnumerable<IPackageRule> Rules;

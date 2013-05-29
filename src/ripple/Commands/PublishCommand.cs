@@ -55,7 +55,7 @@ namespace ripple.Commands
                     RippleLog.Info("Creating and publishing Nuget for " + nuget.Name);
 
 					var packageFile = solution.Package(nuget, SemanticVersion.Parse(input.Version), artifactDirectory, input.CreateSymbolsFlag);
-					solution.Publisher.PublishPackage(packageFile, input.ApiKey);
+                    solution.Publisher.PublishPackage(input.ServerFlag, packageFile, input.ApiKey);
                 });
             });
 
