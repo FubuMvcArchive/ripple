@@ -8,7 +8,7 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-    public class RestoreInput : SolutionInput, IOverrideFeeds, IManageReferenceFixing
+    public class RestoreInput : RippleInput, IOverrideFeeds, IManageReferenceFixing
     {
         [Description("Additional NuGet feed urls separated by '#'")]
         public string FeedsFlag { get; set; }
@@ -17,7 +17,7 @@ namespace ripple.Commands
         [FlagAlias("force", 'f')]
         public bool ForceFlag { get; set; }
 
-        [Description("Makes the restore go through project references' fixing.")]
+        [Description("Forces project references to be updated to match the defined dependencies.")]
         [FlagAlias("fix-references", 'r')]
         public bool FixReferencesFlag { get; set; }
 

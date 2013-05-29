@@ -24,9 +24,7 @@ namespace ripple.Commands
 
 			new RestoreCommand().Execute(new RestoreInput
 			{
-				AllFlag = input.AllFlag,
 				CacheFlag = input.CacheFlag,
-				SolutionFlag = input.SolutionFlag
 			});
 
 			// Third time's a charm, apparently
