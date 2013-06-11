@@ -127,8 +127,11 @@ namespace ripple.Nuget
 
             RippleLog.Debug("Retrieving all latest from " + Directory);
 
-            files
-                .GroupBy(x => x.Name)
+			var distinct = from nuget in files
+						   let name = nuget.Name.ToLower()
+						   group nuget by name;
+
+            distinct
                 .Each(x =>
                 {
                     var latest = x.OrderByDescending(n => n.Version).First();

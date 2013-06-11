@@ -84,7 +84,8 @@ namespace ripple.Testing.Nuget
             theFileSystem.CreateDirectory(theDirectory);
 
             createNuget("FubuCore", "0.9.9.9");
-            createNuget("FubuCore", "1.0.0.0");
+            createNuget("fubuCore", "0.9.9.82819");
+			createNuget("FubuCore", "1.0.0.0");
             createNuget("Bottles", "1.0.0.0");
 
             createNuget("ExtendHealth.Quoting.Imm.Data", "2.2.0.275");
