@@ -35,6 +35,9 @@ namespace ripple.Steps
                     var version = constraint.SpecFor(localDependency.Version);
 
                     var nuspecDep = new NuspecDependency(dependency.Name, version);
+
+					RippleLog.Info("Adding dependency: " + nuspecDep);
+
                     nuspec.AddDependency(nuspecDep);
                 });
 
@@ -51,6 +54,9 @@ namespace ripple.Steps
                     var version = constraint.SpecFor(new SemanticVersion(input.VersionFlag));
 
                     var nuspecDep = new NuspecDependency(target.Spec.Name, version);
+
+					RippleLog.Info("Adding dependency: " + nuspecDep);
+
                     nuspec.AddDependency(nuspecDep);
                 });
 

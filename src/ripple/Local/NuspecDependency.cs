@@ -71,6 +71,16 @@ namespace ripple.Local
             }
         }
 
+		public override string ToString()
+		{
+			if (VersionSpec == null)
+			{
+				return "Name: " + Name;
+			}
+
+			return "Name: {0}; Version: {1}".ToFormat(Name, VersionSpec);
+		}
+
         public static NuspecDependency ReadFrom(XElement element)
         {
             var version = element.GetOptionalAttributeValue("version");
