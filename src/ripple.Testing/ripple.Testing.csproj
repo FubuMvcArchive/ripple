@@ -88,6 +88,7 @@
     <Compile Include="Directives\DirectiveRunnerTester.cs" />
     <Compile Include="FeedScenario.cs" />
     <Compile Include="ForceDeleteTester.cs" />
+    <Compile Include="Integration\fix_command_installs_missing_dependencies.cs" />
     <Compile Include="Integration\ignore_offline_feeds.cs" />
     <Compile Include="Integration\installing_an_existing_project_dependency.cs" />
     <Compile Include="Integration\installing_an_existing_solution_dependency.cs" />

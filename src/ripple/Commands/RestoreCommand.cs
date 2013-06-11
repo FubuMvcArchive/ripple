@@ -8,78 +8,78 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-    public class RestoreInput : RippleInput, IOverrideFeeds, IManageReferenceFixing
-    {
-        [Description("Additional NuGet feed urls separated by '#'")]
-        public string FeedsFlag { get; set; }
+	public class RestoreInput : RippleInput, IOverrideFeeds
+	{
+		[Description("Additional NuGet feed urls separated by '#'")]
+		public string FeedsFlag { get; set; }
 
-        [Description("Forces the restoration to correct any version mismatches")]
-        [FlagAlias("force", 'f')]
-        public bool ForceFlag { get; set; }
+		[Description("Forces the restoration to correct any version mismatches")]
+		[FlagAlias("force", 'f')]
+		public bool ForceFlag { get; set; }
 
-        [Description("Forces project references to be updated to match the defined dependencies.")]
-        [FlagAlias("fix-references", 'r')]
-        public bool FixReferencesFlag { get; set; }
+		[Description("Forces project references to be updated to match the defined dependencies.")]
+		[FlagAlias("fix-references", 'r')]
+		public bool FixReferencesFlag { get; set; }
 
-        public override string DescribePlan(Solution solution)
-        {
-            return "Restoring dependencies for solution {0} to {1}".ToFormat(solution.Name, solution.PackagesDirectory());
-        }
+		public override string DescribePlan(Solution solution)
+		{
+			return "Restoring dependencies for solution {0} to {1}".ToFormat(solution.Name, solution.PackagesDirectory());
+		}
 
-        public override void ApplyTo(Solution solution)
-        {
-            if (ForceFlag)
-            {
-                solution.ForceRestore();
-            }
-        }
+		public override void ApplyTo(Solution solution)
+		{
+			if (ForceFlag)
+			{
+				solution.ForceRestore();
+			}
+		}
 
-        public IEnumerable<Feed> Feeds()
-        {
-            return FeedsFlag.GetFeeds();
-        }
+		public IEnumerable<Feed> Feeds()
+		{
+			return FeedsFlag.GetFeeds();
+		}
+	}
 
-        public bool ShouldReferencesBeFixed()
-        {
-            return FixReferencesFlag;
-        }
-    }
+	// Remove when it is possible to have IEnumerable<string> flag
+	public static class StringFeeds
+	{
+		public static IEnumerable<string> ParseFeeds(this string urlString)
+		{
+			return urlString.IsNotEmpty()
+			  ? urlString.ToDelimitedArray('#')
+			  : Enumerable.Empty<string>();
+		}
 
-    // Remove when it is possible to have IEnumerable<string> flag
-    public static class StringFeeds
-    {
-        public static IEnumerable<string> ParseFeeds(this string urlString)
-        {
-            return urlString.IsNotEmpty()
-              ? urlString.ToDelimitedArray('#')
-              : Enumerable.Empty<string>();
-        }
+		public static IEnumerable<Feed> GetFeeds(this string feedsFlag)
+		{
+			if (feedsFlag.IsEmpty())
+			{
+				return new Feed[0];
+			}
 
-        public static IEnumerable<Feed> GetFeeds(this string feedsFlag)
-        {
-            if (feedsFlag.IsEmpty())
-            {
-                return new Feed[0];
-            }
+			return feedsFlag
+				.ParseFeeds()
+				.Select(Feed.FindOrCreate);
+		}
+	}
 
-            return feedsFlag
-                .ParseFeeds()
-                .Select(Feed.FindOrCreate);
-        }
-    }
+	[CommandDescription("Restores nugets for the solution")]
+	public class RestoreCommand : FubuCommand<RestoreInput>
+	{
+		public override bool Execute(RestoreInput input)
+		{
+			var operation = RippleOperation
+			  .For(input)
+			  .Step<DownloadMissingNugets>()
+			  .Step<ExplodeDownloadedNugets>()
+			  .Step<ProcessDirectives>();
 
-    [CommandDescription("Restores nugets for the solution")]
-    public class RestoreCommand : FubuCommand<RestoreInput>
-    {
-        public override bool Execute(RestoreInput input)
-        {
-            return RippleOperation
-              .For(input)
-              .Step<DownloadMissingNugets>()
-              .Step<ExplodeDownloadedNugets>()
-              .Step<ProcessDirectives>()
-              .Step<FixReferences>()
-              .Execute();
-        }
-    }
+			if (input.FixReferencesFlag)
+			{
+				operation.Step<FixReferences>();
+			}
+
+			return operation.Execute();
+		}
+	}
 }
