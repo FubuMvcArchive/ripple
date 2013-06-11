@@ -48,8 +48,21 @@ namespace ripple.Nuget
 
             if (target.Version.IsEmpty())
             {
-                var remote = solution.FeedService.NugetFor(target);
-                target.Version = remote.Version.ToString();
+	            string version;
+	            var local = solution.LocalDependencies();
+
+				if (request.Operation == OperationType.Install && solution.LocalDependencies().Has(target))
+				{
+					var localNuget = local.Get(target);
+					version = localNuget.Version.ToString();
+				}
+				else
+				{
+					var remote = solution.FeedService.NugetFor(target);
+					version = remote.Version.ToString();
+				}
+
+	            target.Version = version;
             }
 
             if (request.UpdatesCurrentDependency())
@@ -63,7 +76,9 @@ namespace ripple.Nuget
 
             projectInstallations(plan, parent, request);
 
-            var nugetDependencies = solution.FeedService.DependenciesFor(target, target.Mode);
+	        var location = request.Operation == OperationType.Install ? SearchLocation.Local : SearchLocation.Remote;
+
+            var nugetDependencies = solution.FeedService.DependenciesFor(target, target.Mode, location);
             nugetDependencies.Each(x =>
             {
                 var childPlan = buildPlan(request.CopyFor(x), target);

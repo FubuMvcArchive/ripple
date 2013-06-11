@@ -458,6 +458,17 @@ namespace ripple.Model
             resetDependencies();
         }
 
+		public bool HasLocalCopy(string name)
+		{
+			return LocalDependencies().Has(name);
+		}
+
+		public IRemoteNuget LocalNuget(string name)
+		{
+			var file = LocalDependencies().Get(name);
+			return new FileSystemNuget(file);
+		}
+
         public LocalDependencies LocalDependencies()
         {
             return Storage.Dependencies(this);

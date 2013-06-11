@@ -88,23 +88,43 @@ namespace ripple.Model
         }
 
         // Almost entirely covered by integration tests
-        public IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode)
+		public IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location = SearchLocation.Remote)
         {
             var cache = mode == UpdateMode.Fixed ? _dependenciesForFixedCache : _dependenciesForFloatCache;
 
             IEnumerable<Dependency> dependencies;
             if (cache.TryGetValue(dependency, out dependencies) == false)
             {
-                dependencies = findDependenciesFor(dependency, mode);
+                dependencies = findDependenciesFor(dependency, mode, 0, location);
                 cache[dependency] = dependencies;
             }
 
             return dependencies.ToArray();
         }
 
-        private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth = 0)
-        {
-            var nuget = NugetFor(dependency);
+		private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location)
+		{
+			IRemoteNuget nuget = null;
+			if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
+			{
+				try
+				{
+					// Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
+					nuget = _solution.LocalNuget(dependency.Name);
+					nuget.Dependencies().ToList();
+				}
+				catch
+				{
+					nuget = null;
+				}
+
+			}
+
+			if(nuget == null)
+			{
+				nuget = NugetFor(dependency);
+			}
+
             var dependencies = new List<Dependency>();
 
             if (depth != 0)
@@ -120,7 +140,7 @@ namespace ripple.Model
 
             nuget
                 .Dependencies()
-                .Each(x => dependencies.AddRange(findDependenciesFor(x, mode, depth + 1)));
+                .Each(x => dependencies.AddRange(findDependenciesFor(x, mode, depth + 1, location)));
 
             return dependencies.OrderBy(x => x.Name);
         }
