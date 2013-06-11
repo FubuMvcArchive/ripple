@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FubuCore.CommandLine;
 using ripple.Model;
 using ripple.Nuget;
@@ -17,7 +18,7 @@ namespace ripple.Commands
 				{
 					ForceUpdates = false,
 					Operation = OperationType.Install,
-					Batched = false,
+					Batched = true,
 					Dependency = dependency
 				});
 		}
@@ -28,6 +29,8 @@ namespace ripple.Commands
 	{
 		public override bool Execute(FixInput input)
 		{
+			Thread.Sleep(5000);
+
 			return RippleOperation
 				.For(input)
 				.Step<NugetOperation>()

@@ -64,7 +64,7 @@ namespace ripple.Model
 		public void Write(Project project)
 		{
 			var dependencies = new StringBuilder();
-			project.Dependencies.Each(dependency => dependencies.AppendLine(dependency.ToString()));
+			project.Dependencies.Each(dependency => dependencies.AppendLine(dependency.Name));
 
 			_fileSystem.WriteStringToFile(FileFor(project), dependencies.ToString());
 		}
