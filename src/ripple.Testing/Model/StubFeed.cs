@@ -15,7 +15,15 @@ namespace ripple.Testing.Model
 
         public StubFeedProvider()
         {
-            _feeds = new Cache<Feed, StubFeed>(feed => new StubFeed(feed));
+            _feeds = new Cache<Feed, StubFeed>(feed =>
+	        {
+		        if (feed.Mode == UpdateMode.Fixed)
+		        {
+			        return new StubFeed(feed);
+		        }
+
+				return new FloatingStubFeed(feed);
+	        });
         }
 
         public INugetFeed For(Feed feed)
@@ -26,7 +34,7 @@ namespace ripple.Testing.Model
 
     public class StubFeed : NugetFeedBase
     {
-        private readonly IList<IRemoteNuget> _nugets = new List<IRemoteNuget>();
+        protected readonly IList<IRemoteNuget> Nugets = new List<IRemoteNuget>();
         private readonly IList<DependencyError> _explicitErrors = new List<DependencyError>();
         private readonly Feed _feed;
         private IPackageRepository _repository;
@@ -47,7 +55,7 @@ namespace ripple.Testing.Model
 
         public StubFeed Add(Dependency dependency)
         {
-            _nugets.Add(new StubNuget(dependency, () => Repository.As<StubPackageRepository>().GetPackageByDependency(dependency)));
+            Nugets.Add(new StubNuget(dependency, () => Repository.As<StubPackageRepository>().GetPackageByDependency(dependency)));
             return this;
         }
 
@@ -67,11 +75,11 @@ namespace ripple.Testing.Model
 
             if (query.IsFloat() || query.Version.IsEmpty())
             {
-                return _nugets.FirstOrDefault(x => query.MatchesName(x.Name));
+                return Nugets.FirstOrDefault(x => query.MatchesName(x.Name));
             }
 
             var version = SemanticVersion.Parse(query.Version);
-            var matching = _nugets.Where(x => query.MatchesName(x.Name));
+            var matching = Nugets.Where(x => query.MatchesName(x.Name));
 
             if (query.DetermineStability(_feed.Stability) == NugetStability.ReleasedOnly)
             {
@@ -86,7 +94,7 @@ namespace ripple.Testing.Model
             Console.WriteLine("FindLatest in {0} for {1}", _repository.GetHashCode(), query);
             throwIfNeeded(query);
 
-            return _nugets.Where(x => x.Name == query.Name)
+            return Nugets.Where(x => x.Name == query.Name)
                           .OrderByDescending(x => x.Version)
                           .FirstOrDefault();
         }
@@ -143,4 +151,29 @@ namespace ripple.Testing.Model
             }
         }
     }
+
+	public class FloatingStubFeed : StubFeed, IFloatingFeed
+	{
+		public FloatingStubFeed(Feed feed) 
+			: base(feed)
+		{
+		}
+
+		public IEnumerable<IRemoteNuget> GetLatest()
+		{
+			var nugets = new List<IRemoteNuget>();
+
+			var distinct = from nuget in Nugets
+			               let name = nuget.Name.ToLower()
+			               group nuget by name;
+
+			distinct.Each(group =>
+			{
+				var latest = group.OrderByDescending(n => n.Version).First();
+				nugets.Add(latest);
+			});
+
+			return nugets.OrderBy(x => x.Name);
+		}
+	}
 }

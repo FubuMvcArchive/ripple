@@ -35,8 +35,15 @@ namespace ripple.Testing.Nuget.Operations
                             });
 
                             teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.2.0.0", owin => owin.DependsOn("FubuMVC.Core"));
-                            teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.3.0.0", owin => owin.DependsOn("FubuMVC.Core"));
+                            teamcity.ConfigurePackage("FubuMVC.OwinHost", "1.3.0.0", owin =>
+	                        {
+		                        owin.DependsOn("FubuMVC.Core");
+		                        owin.DependsOn("FixedNuget");
+	                        });
                         });
+
+	            scenario.For(Feed.NuGetV2)
+	                    .Add("FixedNuget", "1.0.0.0");
             });
 
             theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
@@ -71,6 +78,9 @@ namespace ripple.Testing.Nuget.Operations
 
                 solutionInstallation("FubuMVC.Katana", "1.0.0.1", UpdateMode.Float),
                 projectInstallation("Test", "FubuMVC.Katana"),
+
+				solutionInstallation("FixedNuget", "1.0.0.0", UpdateMode.Fixed),
+				projectInstallation("Test", "FixedNuget"),
 
                 solutionInstallation("FubuMVC.Core", "1.1.0.2", UpdateMode.Float),
                 projectInstallation("Test", "FubuMVC.Core"),

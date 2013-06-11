@@ -19,7 +19,7 @@ namespace ripple.Nuget
 
         protected bool Equals(InstallSolutionDependency other)
         {
-            return Equals(_dependency, other._dependency);
+            return Equals(_dependency, other._dependency) && _dependency.Mode == other._dependency.Mode;
         }
 
         public override bool Equals(object obj)

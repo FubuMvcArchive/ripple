@@ -112,6 +112,8 @@ namespace ripple.Model
 					// Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
 					nuget = _solution.LocalNuget(dependency.Name);
 					nuget.Dependencies().ToList();
+
+					RippleLog.Debug(dependency.Name + " already installed");
 				}
 				catch
 				{
@@ -130,9 +132,11 @@ namespace ripple.Model
             if (depth != 0)
             {
                 var dep = dependency;
-                if (dep.IsFloat() && mode == UpdateMode.Fixed)
+	            var markAsFixed = mode == UpdateMode.Fixed || !isFloated(dependency);
+
+                if (dep.IsFloat() && markAsFixed)
                 {
-                    dep = new Dependency(nuget.Name, nuget.Version, mode);
+					dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
                 }
 
                 dependencies.Add(dep);
@@ -144,6 +148,26 @@ namespace ripple.Model
 
             return dependencies.OrderBy(x => x.Name);
         }
+
+		private bool isFloated(Dependency dependency)
+		{
+			var floated = false;
+			var feeds = _connectivity.FeedsFor(_solution);
+			foreach (var feed in feeds)
+			{
+				_connectivity.IfOnline(feed, x =>
+				{
+					if (getLatestFromFloatingFeed(x, dependency) != null)
+					{
+						floated = true;
+					}
+				});
+
+				if (floated) break;
+			}
+
+			return floated;
+		}
 
         public IRemoteNuget LatestFor(Solution solution, Dependency dependency, bool forced = false)
         {

@@ -81,7 +81,8 @@ namespace ripple.Nuget
             var nugetDependencies = solution.FeedService.DependenciesFor(target, target.Mode, location);
             nugetDependencies.Each(x =>
             {
-                var childPlan = buildPlan(request.CopyFor(x), target);
+				var transitiveDep = request.CopyFor(x);
+				var childPlan = buildPlan(transitiveDep, target);
                 plan.Import(childPlan);
             });
 

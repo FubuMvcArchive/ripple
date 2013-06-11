@@ -20,6 +20,7 @@ namespace ripple.Testing.Integration
 				scenario
 					.For(Feed.Fubu)
 					.Add("Serenity", "1.0.0.2")
+					.Add("Something", "1.0.0.0")
                     .Add("FubuCore", "1.0.0.1")
 					.ConfigureRepository(teamcity =>
 					{
@@ -33,7 +34,6 @@ namespace ripple.Testing.Integration
 
 				scenario.For(Feed.NuGetV2)
 					.Add("WebDriver", "1.2.0.0")
-                    .Add("Something", "1.0.0.0")
                     .Add("SomethingElse", "0.9.9.9");
 			});
 
@@ -99,14 +99,6 @@ namespace ripple.Testing.Integration
         {
             theSolution.FindProject("Test").Dependencies.Has("Something").ShouldBeTrue();
             theSolution.FindProject("Test2").Dependencies.Has("Something").ShouldBeFalse();
-        }
-
-        [Test]
-        public void installs_the_transitive_dependency_as_the_mode_of_the_origin()
-        {
-            // Serenity is Float so this is float
-            var dependency = theSolution.Dependencies.Find("SomethingElse");
-            dependency.Mode.ShouldEqual(UpdateMode.Float);
         }
 
         [Test]
