@@ -89,6 +89,11 @@ namespace ripple.Testing.Model
             return matching.FirstOrDefault(x => x.Version.Version.Equals(version.Version));
         }
 
+        public override IEnumerable<IRemoteNuget> FindLatestByNamePrefix(string idPrefix)
+        {
+            return Nugets.Where(nuget => nuget.Name.StartsWith(idPrefix));
+        }
+
         protected override IRemoteNuget findLatest(Dependency query)
         {
             Console.WriteLine("FindLatest in {0} for {1}", _repository.GetHashCode(), query);

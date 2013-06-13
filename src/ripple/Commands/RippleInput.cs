@@ -36,4 +36,8 @@ namespace ripple.Commands
             return string.Empty;
         }
     }
+
+    public class FindInput : RippleInput
+    {
+    }
 }
