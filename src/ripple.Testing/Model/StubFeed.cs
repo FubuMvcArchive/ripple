@@ -45,7 +45,7 @@ namespace ripple.Testing.Model
             _feed = feed;
             _online = true;
 
-            UseRepository(new StubPackageRepository());
+            UseRepository(new StubPackageRepository(feed.Url));
         }
 
         public StubFeed Add(string name, string version)
@@ -161,8 +161,7 @@ namespace ripple.Testing.Model
 	{
 		public FloatingStubFeed(Feed feed) 
 			: base(feed)
-		{
-		}
+		{}
 
 		public IEnumerable<IRemoteNuget> GetLatest()
 		{

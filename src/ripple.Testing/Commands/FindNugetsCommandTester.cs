@@ -38,7 +38,7 @@ namespace ripple.Testing.Commands
 
             theSolution = theScenario.Find("Bottles");
         }
-        
+
         [TearDown]
         public void TearDown()
         {
@@ -51,7 +51,7 @@ namespace ripple.Testing.Commands
         {
             RippleOperation
                 .With(theSolution)
-                .Execute<FindNugetsInput, FindNugetsCommand>(new FindNugetsInput {Nuget = "FubuCore"});
+                .Execute<FindNugetsInput, FindNugetsCommand>(new FindNugetsInput { Nuget = "FubuCore" });
         }
     }
 }
