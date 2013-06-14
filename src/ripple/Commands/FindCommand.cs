@@ -22,7 +22,7 @@ namespace ripple.Commands
             {
                 connectivity.IfOnline(feed, f =>
                 {
-                    foreach (var nuget in f.FindLatestByNamePrefix(input.Nuget))
+                    foreach (var nuget in f.FindLatestByName(input.Nuget))
                     {
                         RippleLog.Info(string.Format("{0}, {1} ({2})", nuget.Name, nuget.Version, f.Repository.Source));
                     }

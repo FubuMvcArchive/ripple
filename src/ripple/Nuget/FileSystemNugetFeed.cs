@@ -80,7 +80,7 @@ namespace ripple.Nuget
             return findMatching(nuget => query.MatchesName(nuget.Name) && nuget.Version == version);
         }
 
-        public override IEnumerable<IRemoteNuget> FindLatestByNamePrefix(string idPrefix)
+        public override IEnumerable<IRemoteNuget> FindLatestByName(string idPart)
         {
             // TODO: reconsided whether querying over files system should be enabled
             return Enumerable.Empty<IRemoteNuget>();

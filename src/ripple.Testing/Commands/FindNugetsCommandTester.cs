@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.IO;
+using NUnit.Framework;
 using ripple.Commands;
 using ripple.Model;
 
@@ -49,9 +51,25 @@ namespace ripple.Testing.Commands
         [Test]
         public void query()
         {
+            var sw = new StringWriter();
+            var consoleOut = Console.Out;
+            Console.SetOut(sw);
+
             RippleOperation
                 .With(theSolution)
                 .Execute<FindNugetsInput, FindNugetsCommand>(new FindNugetsInput { Nuget = "FubuCore" });
+
+            var output = sw.ToString();
+            consoleOut.Write(output);
+
+            Assert.IsTrue(
+                output.Contains(string.Format("FubuCore, 1.0.0.0 ({0})", Feed.NuGetV2.Url)));
+            Assert.IsTrue(
+                output.Contains(string.Format("FubuCore.Docs, 1.0.0.0 ({0})", Feed.NuGetV2.Url)));
+            Assert.IsTrue(
+                output.Contains(string.Format("FubuCore, 1.0.0.100 ({0})", Feed.Fubu.Url)));
+            Assert.IsTrue(
+                output.Contains(string.Format("FubuCore.Docs, 1.0.0.100 ({0})", Feed.Fubu.Url)));
         }
     }
 }

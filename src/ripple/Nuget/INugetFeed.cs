@@ -11,7 +11,7 @@ namespace ripple.Nuget
         IRemoteNuget Find(Dependency query);
         IRemoteNuget FindLatest(Dependency query);
 
-        IEnumerable<IRemoteNuget> FindLatestByNamePrefix(string idPrefix);
+        IEnumerable<IRemoteNuget> FindLatestByName(string idPart);
 
         IPackageRepository Repository { get; }
     }

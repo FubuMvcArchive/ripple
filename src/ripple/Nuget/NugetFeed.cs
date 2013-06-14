@@ -63,10 +63,10 @@ namespace ripple.Nuget
             return new RemoteNuget(package);
         }
 
-        public override IEnumerable<IRemoteNuget> FindLatestByNamePrefix(string idPrefix)
+        public override IEnumerable<IRemoteNuget> FindLatestByName(string idPart)
         {
             return _repository.GetPackages()
-                .Where(package => package.Id.StartsWith(idPrefix) && package.IsLatestVersion)
+                .Where(package => package.Id.Contains(idPart) && package.IsLatestVersion)
                 .ToArray()
                 .Select(package => new RemoteNuget(package));
         }

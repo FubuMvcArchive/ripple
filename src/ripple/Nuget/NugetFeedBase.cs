@@ -50,7 +50,7 @@ namespace ripple.Nuget
             return Return(_findLatest[key]);
         }
 
-        public abstract IEnumerable<IRemoteNuget> FindLatestByNamePrefix(string idPrefix);
+        public abstract IEnumerable<IRemoteNuget> FindLatestByName(string idPrefix);
         
         protected abstract IRemoteNuget findLatest(Dependency query);
 
