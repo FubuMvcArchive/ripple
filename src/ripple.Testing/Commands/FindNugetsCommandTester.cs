@@ -3,6 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using ripple.Commands;
 using ripple.Model;
+using ripple.Testing.Model;
 
 namespace ripple.Testing.Commands
 {
@@ -51,25 +52,21 @@ namespace ripple.Testing.Commands
         [Test]
         public void query()
         {
-            var sw = new StringWriter();
-            var consoleOut = Console.Out;
-            Console.SetOut(sw);
+            using (var listener = new AssertLogListener())
+            {
+                listener
+                    .InAnyOrder()
+                    .Expect(string.Format("FubuCore, 1.0.0.0 ({0})", Feed.NuGetV2.Url))
+                    .Expect(string.Format("FubuCore.Docs, 1.0.0.0 ({0})", Feed.NuGetV2.Url))
+                    .Expect(string.Format("FubuCore, 1.0.0.100 ({0})", Feed.Fubu.Url))
+                    .Expect(string.Format("FubuCore.Docs, 1.0.0.100 ({0})", Feed.Fubu.Url));
 
-            RippleOperation
-                .With(theSolution)
-                .Execute<FindNugetsInput, FindNugetsCommand>(new FindNugetsInput { Nuget = "FubuCore" });
+                RippleLog.RegisterListener(listener);
 
-            var output = sw.ToString();
-            consoleOut.Write(output);
-
-            Assert.IsTrue(
-                output.Contains(string.Format("FubuCore, 1.0.0.0 ({0})", Feed.NuGetV2.Url)));
-            Assert.IsTrue(
-                output.Contains(string.Format("FubuCore.Docs, 1.0.0.0 ({0})", Feed.NuGetV2.Url)));
-            Assert.IsTrue(
-                output.Contains(string.Format("FubuCore, 1.0.0.100 ({0})", Feed.Fubu.Url)));
-            Assert.IsTrue(
-                output.Contains(string.Format("FubuCore.Docs, 1.0.0.100 ({0})", Feed.Fubu.Url)));
+                RippleOperation
+                    .With(theSolution)
+                    .Execute<FindNugetsInput, FindNugetsCommand>(new FindNugetsInput { Nuget = "FubuCore" });
+            }
         }
     }
 }
