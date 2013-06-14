@@ -145,7 +145,7 @@ namespace ripple.Testing
 	{
         private readonly Cache<Dependency, IPackage> _packages = new Cache<Dependency, IPackage>(x => new StubPackage(x.Name, x.Version));
 
-		public IQueryable<IPackage> GetPackages()
+	    public IQueryable<IPackage> GetPackages()
 		{
 			return _packages.AsQueryable();
 		}
