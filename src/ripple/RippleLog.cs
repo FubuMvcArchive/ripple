@@ -30,11 +30,9 @@ namespace ripple
 		static RippleLog()
 		{
 			Listeners = new List<ILogListener>();
-
-			RegisterListener(new RippleLogger());
 			File = new FileListener();
-            
-            AddFileListener();
+
+			Reset();
 		}
 
         private static void resetLogger()
@@ -52,6 +50,15 @@ namespace ripple
         {
             RegisterListener(File);
         }
+
+		public static void Reset()
+		{
+			Listeners.Clear();
+			RegisterListener(new RippleLogger());
+			AddFileListener();
+
+			resetLogger();
+		}
 
 		public static void Verbose(bool verbose)
 		{

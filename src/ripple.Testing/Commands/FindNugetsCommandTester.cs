@@ -47,6 +47,7 @@ namespace ripple.Testing.Commands
         {
             theScenario.Cleanup();
             FeedRegistry.Reset();
+	        RippleLog.Reset();
         }
 
         [Test]
