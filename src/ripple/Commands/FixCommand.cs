@@ -29,8 +29,6 @@ namespace ripple.Commands
 	{
 		public override bool Execute(FixInput input)
 		{
-			Thread.Sleep(5000);
-
 			return RippleOperation
 				.For(input)
 				.Step<NugetOperation>()
