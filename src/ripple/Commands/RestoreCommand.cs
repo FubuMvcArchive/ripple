@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
@@ -11,6 +10,7 @@ namespace ripple.Commands
 	public class RestoreInput : RippleInput, IOverrideFeeds
 	{
 		[Description("Additional NuGet feed urls separated by '#'")]
+		[FlagAlias("feeds", 'F')]
 		public string FeedsFlag { get; set; }
 
 		[Description("Forces the restoration to correct any version mismatches")]
@@ -20,6 +20,10 @@ namespace ripple.Commands
 		[Description("Forces project references to be updated to match the defined dependencies.")]
 		[FlagAlias("fix-references", 'r')]
 		public bool FixReferencesFlag { get; set; }
+
+		[Description("Invokes the fix command after the restore operation has completed.")]
+		[FlagAlias("fix-solution", 's')]
+		public bool FixSolutionFlag { get; set; }
 
 		public override string DescribePlan(Solution solution)
 		{
@@ -40,29 +44,6 @@ namespace ripple.Commands
 		}
 	}
 
-	// Remove when it is possible to have IEnumerable<string> flag
-	public static class StringFeeds
-	{
-		public static IEnumerable<string> ParseFeeds(this string urlString)
-		{
-			return urlString.IsNotEmpty()
-			  ? urlString.ToDelimitedArray('#')
-			  : Enumerable.Empty<string>();
-		}
-
-		public static IEnumerable<Feed> GetFeeds(this string feedsFlag)
-		{
-			if (feedsFlag.IsEmpty())
-			{
-				return new Feed[0];
-			}
-
-			return feedsFlag
-				.ParseFeeds()
-				.Select(Feed.FindOrCreate);
-		}
-	}
-
 	[CommandDescription("Restores nugets for the solution")]
 	public class RestoreCommand : FubuCommand<RestoreInput>
 	{
@@ -79,7 +60,13 @@ namespace ripple.Commands
 				operation.Step<FixReferences>();
 			}
 
-			return operation.Execute();
+			var success = operation.Execute();
+			if (input.FixSolutionFlag && success)
+			{
+				return new FixCommand().Execute(new FixInput());
+			}
+
+			return success;
 		}
 	}
 }
