@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Classic\NuGetSolutionLoader.cs" />
     <Compile Include="Commands\ApiKeyCommand.cs" />
+    <Compile Include="Commands\BatchInstallCommand.cs" />
     <Compile Include="Commands\BatchPublishCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\ConvertCommand.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Local\NuspecDependency.cs" />
     <Compile Include="Local\NuspecDocument.cs" />
     <Compile Include="Local\ProjectNuspec.cs" />
+    <Compile Include="Model\BatchOperation.cs" />
     <Compile Include="Model\BranchDetector.cs" />
     <Compile Include="Model\Dependency.cs" />
     <Compile Include="Model\DependencyCollection.cs" />

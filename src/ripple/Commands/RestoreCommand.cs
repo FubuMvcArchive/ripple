@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
@@ -47,6 +48,8 @@ namespace ripple.Commands
 	[CommandDescription("Restores nugets for the solution")]
 	public class RestoreCommand : FubuCommand<RestoreInput>
 	{
+		public const string BatchFile = "ripple-install.txt";
+
 		public override bool Execute(RestoreInput input)
 		{
 			var operation = RippleOperation
@@ -61,6 +64,21 @@ namespace ripple.Commands
 			}
 
 			var success = operation.Execute();
+
+			if (!success)
+			{
+				return false;
+			}
+
+			var file = RippleFileSystem.CurrentDirectory().AppendPath(BatchFile);
+			if (File.Exists(file))
+			{
+				success = new BatchInstallCommand().Execute(new BatchInstallInput
+				{
+					FileFlag = file
+				});
+			}
+
 			if (input.FixSolutionFlag && success)
 			{
 				return new FixCommand().Execute(new FixInput());

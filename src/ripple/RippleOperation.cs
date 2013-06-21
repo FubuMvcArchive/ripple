@@ -99,6 +99,11 @@ namespace ripple
 			_solution.EachProject(project => project.RemoveDuplicateReferences());
             _solution.Save(_forceSave);
 
+			if (_resetSolution)
+			{
+				_solution.Reset();
+			}
+
 			return true;
 		}
 
@@ -135,11 +140,14 @@ namespace ripple
 
 		private static Solution _target;
 		private static bool _forceThrow;
+		private static bool _resetSolution;
 
-		public static CommandExecutionExpression With(Solution solution, bool throwOnFailure = true)
+		public static CommandExecutionExpression With(Solution solution, bool throwOnFailure = true, bool resetSolution = false)
 		{
 			_target = solution;
             _forceThrow = throwOnFailure;
+			_resetSolution = resetSolution;
+
             RippleLog.RemoveFileListener();
 
             RippleFileSystem.StubCurrentDirectory(solution.Directory);
@@ -148,9 +156,16 @@ namespace ripple
 			{
 				_target = null;
 				_forceThrow = false;
+				_resetSolution = false;
                 RippleLog.AddFileListener();
                 RippleFileSystem.Live();
 			});
+		}
+
+		public static void Reset()
+		{
+			_target = null;
+			_forceThrow = false;
 		}
 
 		public class CommandExecutionExpression

@@ -14,11 +14,11 @@ namespace ripple
 
     public class RippleAssert
     {
-        public static void Fail(string message)
-        {
-            RippleLog.Error(message);
-            throw new RippleFatalError(message);
-        }
+	    public static void Fail(string message, params object[] substitutions)
+		{
+			RippleLog.Error(message.ToFormat(substitutions));
+			throw new RippleFatalError(message);
+		}
     }
 
 	public class RippleLog
