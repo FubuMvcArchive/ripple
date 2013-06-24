@@ -13,11 +13,11 @@ namespace ripple.Nuget
 
     public class NugetPlanBuilder : INugetPlanBuilder
     {
-        private readonly Cache<Dependency, NugetPlan> _planCache;
+        private readonly Cache<PlanKey, NugetPlan> _planCache;
 
         public NugetPlanBuilder()
         {
-            _planCache = new Cache<Dependency, NugetPlan>();
+			_planCache = new Cache<PlanKey, NugetPlan>();
         }
 
         public NugetPlan PlanFor(NugetPlanRequest request)
@@ -31,12 +31,13 @@ namespace ripple.Nuget
             var target = request.Dependency;
             var solution = request.Solution;
 
-            var key = target.Copy();
-            if (key.IsFloat())
+            var dependencyKey = target.Copy();
+            if (dependencyKey.IsFloat())
             {
-                key = target.AsFloat();
+                dependencyKey = target.AsFloat();
             }
 
+	        var key = new PlanKey(dependencyKey, request.Project);
             if (_planCache.Has(key))
             {
                 return _planCache[key];
@@ -129,5 +130,38 @@ namespace ripple.Nuget
                 plan.AddStep(new InstallProjectDependency(project.Name, Dependency.FloatFor(target.Name)));
             }
         }
+
+		public class PlanKey
+		{
+			public PlanKey(Dependency dependency, string project)
+			{
+				Dependency = dependency;
+				Project = project;
+			}
+
+			public Dependency Dependency { get; private set; }
+			public string Project { get; private set; }
+
+			protected bool Equals(PlanKey other)
+			{
+				return Equals(Dependency, other.Dependency) && string.Equals(Project, other.Project);
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj)) return false;
+				if (ReferenceEquals(this, obj)) return true;
+				if (obj.GetType() != this.GetType()) return false;
+				return Equals((PlanKey) obj);
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					return ((Dependency != null ? Dependency.GetHashCode() : 0)*397) ^ (Project != null ? Project.GetHashCode() : 0);
+				}
+			}
+		}
     }
 }

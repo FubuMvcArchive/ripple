@@ -40,7 +40,7 @@ namespace ripple.Commands
 
 		private static BatchOperation readFromCommandLine(Solution solution)
 		{
-			Console.WriteLine("# Batch installation mode");
+			Console.WriteLine("# Batch installation interactive mode");
 			Console.WriteLine("# Install multiple nugets to projects using either of the following formats:");
 			Console.WriteLine("#    Project: Nuget [, Nuget]");
 			Console.WriteLine("#    Nuget: Project [, Project]");
@@ -49,14 +49,14 @@ namespace ripple.Commands
 			Console.WriteLine("#    NugetID");
 			Console.WriteLine("#    NugetID/Version");
 			Console.WriteLine("#");
-			Console.WriteLine("# Enter multiple lines. Type 'q' or 'quit' to quit.");
+			Console.WriteLine("# Enter multiple lines. Type '', 'q', or 'quit' to quit.");
 
 			var operation = new BatchOperation(solution);
 			string line;
 			while ((line = Console.ReadLine()) != null)
 			{
 				line = line.Trim();
-				if (line == "q" || line == "quit")
+				if (line.IsEmpty() || line == "q" || line == "quit")
 				{
 					break;
 				}
@@ -83,6 +83,7 @@ namespace ripple.Commands
 				.Step<NugetOperation>()
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
+				.Step<FixReferences>()
 				.Execute();
 		}
 	}
