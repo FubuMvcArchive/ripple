@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -37,29 +38,31 @@ namespace ripple.Nuget
                     }
                 }
             }
-            catch
+            catch (Exception exc)
             {
+                RippleLog.Info("Feed unavailable: " + this);
+                RippleLog.Debug(exc.ToString());
                 return false;
             }
         }
 
         protected override IRemoteNuget find(Dependency query)
-		{
-			SemanticVersion version;
-			if (!SemanticVersion.TryParse(query.Version, out version))
-			{
-				RippleLog.Debug("Could not find exact for " + query);
-				return null;
-			}
+        {
+            SemanticVersion version;
+            if (!SemanticVersion.TryParse(query.Version, out version))
+            {
+                RippleLog.Debug("Could not find exact for " + query);
+                return null;
+            }
 
             var versionSpec = new VersionSpec(version);
             var package = _repository.FindPackages(query.Name, versionSpec, query.DetermineStability(_stability) == NugetStability.Anything, true).SingleOrDefault();
 
             if (package == null)
             {
-	            return null;
+                return null;
             }
-            
+
             return new RemoteNuget(package);
         }
 
@@ -73,7 +76,7 @@ namespace ripple.Nuget
 
         protected override IRemoteNuget findLatest(Dependency query)
         {
-			RippleLog.Debug("Searching for {0} from {1}".ToFormat(query, _url));
+            RippleLog.Debug("Searching for {0} from {1}".ToFormat(query, _url));
             var candidates = _repository.Search(query.Name, query.DetermineStability(_stability) == NugetStability.Anything)
                                         .Where(x => query.Name == x.Id).OrderBy(x => x.Id).ToList();
 
@@ -82,13 +85,13 @@ namespace ripple.Nuget
 
             if (candidate == null)
             {
-	            return null;
+                return null;
             }
 
             return new RemoteNuget(candidate);
         }
 
-		public override IPackageRepository Repository { get { return _repository; } }
+        public override IPackageRepository Repository { get { return _repository; } }
 
         public override string ToString()
         {

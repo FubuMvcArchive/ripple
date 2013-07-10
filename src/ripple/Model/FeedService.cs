@@ -88,7 +88,7 @@ namespace ripple.Model
         }
 
         // Almost entirely covered by integration tests
-		public IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location = SearchLocation.Remote)
+        public IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location = SearchLocation.Remote)
         {
             var cache = mode == UpdateMode.Fixed ? _dependenciesForFixedCache : _dependenciesForFloatCache;
 
@@ -102,41 +102,55 @@ namespace ripple.Model
             return dependencies.ToArray();
         }
 
-		private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location)
-		{
-			IRemoteNuget nuget = null;
-			if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
-			{
-				try
-				{
-					// Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
-					nuget = _solution.LocalNuget(dependency.Name);
-					nuget.Dependencies().ToList();
+        private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location)
+        {
+            IRemoteNuget nuget = null;
+            if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
+            {
+                try
+                {
+                    // Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
+                    nuget = _solution.LocalNuget(dependency.Name);
+                    nuget.Dependencies().ToList();
 
-					RippleLog.Debug(dependency.Name + " already installed");
-				}
-				catch
-				{
-					nuget = null;
-				}
+                    RippleLog.Debug(dependency.Name + " already installed");
+                }
+                catch
+                {
+                    nuget = null;
+                }
 
-			}
+            }
 
-			if(nuget == null)
-			{
-				nuget = NugetFor(dependency);
-			}
+            if (nuget == null)
+            {
+                if (dependency.Version.IsNotEmpty())
+                {
+                    if (depth != 0)
+                    {
+                        var dep = dependency;
+                        var markAsFixed = mode == UpdateMode.Fixed || !isFloated(dependency);
+
+                        if (dep.IsFloat() && markAsFixed)
+                        {
+                            dependency.Mode = UpdateMode.Fixed;
+                        }
+                    }
+                }
+
+                nuget = NugetFor(dependency);
+            }
 
             var dependencies = new List<Dependency>();
 
             if (depth != 0)
             {
                 var dep = dependency;
-	            var markAsFixed = mode == UpdateMode.Fixed || !isFloated(dependency);
+                var markAsFixed = mode == UpdateMode.Fixed || !isFloated(dependency);
 
                 if (dep.IsFloat() && markAsFixed)
                 {
-					dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
+                    dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
                 }
 
                 dependencies.Add(dep);
@@ -149,25 +163,25 @@ namespace ripple.Model
             return dependencies.OrderBy(x => x.Name);
         }
 
-		private bool isFloated(Dependency dependency)
-		{
-			var floated = false;
-			var feeds = _connectivity.FeedsFor(_solution);
-			foreach (var feed in feeds)
-			{
-				_connectivity.IfOnline(feed, x =>
-				{
-					if (getLatestFromFloatingFeed(x, dependency) != null)
-					{
-						floated = true;
-					}
-				});
+        private bool isFloated(Dependency dependency)
+        {
+            var floated = false;
+            var feeds = _connectivity.FeedsFor(_solution);
+            foreach (var feed in feeds)
+            {
+                _connectivity.IfOnline(feed, x =>
+                {
+                    if (getLatestFromFloatingFeed(x, dependency) != null)
+                    {
+                        floated = true;
+                    }
+                });
 
-				if (floated) break;
-			}
+                if (floated) break;
+            }
 
-			return floated;
-		}
+            return floated;
+        }
 
         public IRemoteNuget LatestFor(Solution solution, Dependency dependency, bool forced = false)
         {
