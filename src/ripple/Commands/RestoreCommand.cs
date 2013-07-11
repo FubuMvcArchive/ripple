@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Threading;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
@@ -53,8 +52,6 @@ namespace ripple.Commands
 
 		public override bool Execute(RestoreInput input)
 		{
-            Thread.Sleep(3000);
-
 			var operation = RippleOperation
 			  .For(input)
 			  .Step<DownloadMissingNugets>()
