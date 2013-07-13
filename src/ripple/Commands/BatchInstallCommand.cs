@@ -12,6 +12,8 @@ namespace ripple.Commands
 {
 	public class BatchInstallInput : RippleInput, INugetOperationContext
 	{
+	    internal Action After = () => { };
+
 		[Description("Optionally read the batch instruction(s) from a flat file.")]
 		[FlagAlias("file", 'f')]
 		public string FileFlag { get; set; }
@@ -27,7 +29,7 @@ namespace ripple.Commands
 				var contents = File.ReadAllText(file);
 				operation = BatchOperation.Parse(solution, contents);
 
-				File.Delete(file);
+			    After = () => File.Delete(file);
 			}
 			else
 			{
@@ -78,13 +80,17 @@ namespace ripple.Commands
 
 		public override bool Execute(BatchInstallInput input)
 		{
-			return RippleOperation
+			var returnValue = RippleOperation
 				.For(input)
 				.Step<NugetOperation>()
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
 				.Step<FixReferences>()
 				.Execute();
+
+		    input.After();
+
+		    return returnValue;
 		}
 	}
 }
