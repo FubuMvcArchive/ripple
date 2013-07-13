@@ -88,7 +88,7 @@ namespace ripple.Model
 
 		public SemanticVersion SemanticVersion()
 		{
-			return NuGet.SemanticVersion.Parse(Version);
+			return Version.IsNotEmpty() ? NuGet.SemanticVersion.Parse(Version) : null;
 		}
 
         public void FixAt(string version)
@@ -111,7 +111,7 @@ namespace ripple.Model
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return Equals(other.Name, Name) && Equals(other.Version, Version);
+			return Equals(other.Name, Name) && Equals(other.SemanticVersion(), SemanticVersion());
 		}
 
 		public override bool Equals(object obj)

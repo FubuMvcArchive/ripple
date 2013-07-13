@@ -98,5 +98,15 @@ namespace ripple.Testing.Model
             var dependency = new Dependency("FubuCore") {Constraint = VersionConstraint.DefaultFloat.ToString()};
             dependency.VersionConstraint.ShouldEqual(VersionConstraint.DefaultFloat);
         }
+
+	    [Test]
+	    public void equals_uses_semantic_version()
+	    {
+	        var dep1 = new Dependency("structuremap", "2.6.3");
+	        var dep2 = new Dependency("structuremap", "2.6.3.0");
+
+	        dep1.ShouldEqual(dep2);
+	        dep2.ShouldEqual(dep1);
+	    }
 	}
 }

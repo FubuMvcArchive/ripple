@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
@@ -82,7 +83,7 @@ namespace ripple.Commands
 		{
 			var returnValue = RippleOperation
 				.For(input)
-				.Step<NugetOperation>()
+				.Step<BatchNugetOperation>()
 				.Step<DownloadMissingNugets>()
 				.Step<ExplodeDownloadedNugets>()
 				.Step<FixReferences>()
@@ -93,4 +94,38 @@ namespace ripple.Commands
 		    return returnValue;
 		}
 	}
+
+    public class BatchNugetOperation : IRippleStep
+    {
+        public Solution Solution { get; set; }
+
+        public void Execute(RippleInput input, IRippleStepRunner runner)
+        {
+            var nugetRunner = new NugetStepRunner(Solution);
+            var aggregatePlan = PlanFor(input.As<INugetOperationContext>(), Solution);
+
+            if (aggregatePlan.Any())
+            {
+                RippleLog.InfoMessage(aggregatePlan);
+            }
+
+            aggregatePlan.Execute(nugetRunner);
+        }
+
+        public static NugetPlan PlanFor(INugetOperationContext context, Solution solution)
+        {
+            var aggregatePlan = new NugetPlan();
+
+            var requests = context.Requests(solution);
+            requests.Each(request =>
+            {
+                request.Solution = solution;
+
+                var plan = solution.Builder.PlanFor(request);
+                aggregatePlan.Import(plan);
+            });
+
+            return aggregatePlan;
+        }
+    }
 }
