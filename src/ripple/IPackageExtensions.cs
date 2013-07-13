@@ -20,8 +20,7 @@ namespace ripple
                 {
                     if (x.VersionSpec != null)
                     {
-                        var version = x.VersionSpec.MaxVersion ?? x.VersionSpec.MinVersion;
-                        return new Dependency(x.Id, version.ToString());
+                        return new Dependency(x.Id, x.VersionSpec);
                     }
 
                     return new Dependency(x.Id);

@@ -116,8 +116,16 @@ namespace ripple.Commands
         {
             var aggregatePlan = new NugetPlan();
 
-            var requests = context.Requests(solution);
-            requests.Each(request =>
+            var requests = context.Requests(solution).ToArray();
+            requests.Where(x => x.Dependency.IsFixed()).Each(request =>
+            {
+                request.Solution = solution;
+
+                var plan = solution.Builder.PlanFor(request);
+                aggregatePlan.Import(plan);
+            });
+
+            requests.Where(x => x.Dependency.IsFloat()).Each(request =>
             {
                 request.Solution = solution;
 

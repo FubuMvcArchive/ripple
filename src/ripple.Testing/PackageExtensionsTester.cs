@@ -15,7 +15,7 @@ namespace ripple.Testing
 
             var fubucore = package.ImmediateDependencies().Single();
             fubucore.Name.ShouldEqual("FubuCore");
-            fubucore.Version.ShouldEqual("1.0.0.0");
+            fubucore.VersionSpec.MaxVersion.Version.ToString().ShouldEqual("1.0.0.0");
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace ripple.Testing
 
             var fubucore = package.ImmediateDependencies().Single();
             fubucore.Name.ShouldEqual("FubuCore");
-            fubucore.Version.ShouldEqual("0.9.9.9999");
+            fubucore.VersionSpec.MinVersion.Version.ToString().ShouldEqual("0.9.9.9999");
         }
 
         [Test]

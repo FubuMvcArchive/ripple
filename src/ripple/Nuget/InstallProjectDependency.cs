@@ -1,4 +1,6 @@
-﻿using FubuCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -17,6 +19,35 @@ namespace ripple.Nuget
         public void Execute(INugetStepRunner runner)
         {
             runner.AddProjectDependency(_project, _dependency);
+        }
+
+        public Dependency Dependency
+        {
+            get { return _dependency; }
+        }
+
+        public void AddSelf(IList<INugetStep> steps)
+        {
+            var other = steps.OfType<InstallProjectDependency>().Where(x => x.Dependency.Name.EqualsIgnoreCase(Dependency.Name) && x._project.Equals(_project)).SingleOrDefault();
+
+            if (other == null)
+            {
+                steps.Add(this);
+                return;
+            }
+
+            if (Equals(other.Dependency, Dependency))
+            {
+                return;
+            }
+
+            if (Dependency.Mode != UpdateMode.Fixed) return;
+            if (other.Dependency.Mode == UpdateMode.Float)
+            {
+                steps.Remove(other);
+                steps.Add(this);
+            }
+            
         }
 
         protected bool Equals(InstallProjectDependency other)

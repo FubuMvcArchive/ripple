@@ -1,4 +1,5 @@
-﻿using ripple.Model;
+﻿using System.Collections.Generic;
+using ripple.Model;
 
 namespace ripple.Nuget
 {
@@ -14,6 +15,11 @@ namespace ripple.Nuget
         public void Execute(INugetStepRunner runner)
         {
             runner.UpdateDependency(_dependency);
+        }
+
+        public void AddSelf(IList<INugetStep> steps)
+        {
+            steps.Fill(this);
         }
 
         protected bool Equals(UpdateDependency other)

@@ -10,7 +10,9 @@ namespace ripple.Model
 {
 	public class Dependency : DescribesItself
 	{
-		public Dependency()
+	    private IVersionSpec _versionSpec;
+
+	    public Dependency()
 		{
 		}
 
@@ -42,7 +44,29 @@ namespace ripple.Model
         {
         }
 
-		[XmlAttribute]
+	    public Dependency(string name, IVersionSpec versionSpec) : this(name)
+	    {
+	        if (versionSpec.MinVersion != null && versionSpec.MaxVersion != null &&
+	            versionSpec.MinVersion == versionSpec.MaxVersion)
+	        {
+	            Mode = UpdateMode.Fixed;
+	            Version = versionSpec.MinVersion.Version.ToString();
+	        }
+	        else
+	        {
+	            Mode = UpdateMode.Float;
+	        }
+
+	        _versionSpec = versionSpec;
+	    }
+
+	    public IVersionSpec VersionSpec
+	    {
+	        get { return _versionSpec; }
+	    }
+
+
+	    [XmlAttribute]
 		public string Name { get; set; }
 		[XmlAttribute]
 		public string Version { get; set; }
