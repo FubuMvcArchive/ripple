@@ -64,7 +64,6 @@
     <Compile Include="Commands\ReplacePackagesConfigCommand.cs" />
     <Compile Include="Commands\RestoreCommand.cs" />
     <Compile Include="Commands\RippleInput.cs" />
-    <Compile Include="Commands\Samples\ExtractSampleCommand.cs" />
     <Compile Include="Commands\FloatCommand.cs" />
     <Compile Include="Commands\FloCommand.cs" />
     <Compile Include="Commands\HistoryCommand.cs" />
@@ -77,10 +76,6 @@
     <Compile Include="Commands\OpenRakeCommand.cs" />
     <Compile Include="Commands\PublishCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
-    <Compile Include="Commands\Samples\ExtractSampleInput.cs" />
-    <Compile Include="Commands\Samples\FileCollector.cs" />
-    <Compile Include="Commands\Samples\SampleCollector.cs" />
-    <Compile Include="Commands\Samples\SampleReader.cs" />
     <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\StringFeeds.cs" />
     <Compile Include="Commands\TestCommand.cs" />
