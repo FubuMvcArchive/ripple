@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using FubuCore;
@@ -20,13 +21,33 @@ namespace ripple.Extract
 			system.CreateDirectory(input.Directory);
 
 			var feeds = loadNugetEntries(input).ToList();
+		    var count = 0;
+
+		    var failed = new List<string>();
 
 			feeds.Each(feed =>
 			{
-				feed.DownloadTo(input.Directory);
+                Console.WriteLine("Downloading {0}/{1} - {2}", ++count, feeds.Count, feed.Name);
 
-				Console.WriteLine(feed);
+			    try
+			    {
+                    feed.DownloadTo(input.Directory);
+			    }
+			    catch (Exception e)
+			    {
+			        Console.WriteLine("Error!");
+                    Console.WriteLine(e.Message);
+                    failed.Add(feed.Name + " " + feed.Version);
+			    }
+
+				
 			});
+
+            if (failed.Any())
+            {
+                ConsoleWriter.Write(ConsoleColor.Red, "Nuget's failed to download:");
+                failed.Each(x => Console.WriteLine(x));
+            }
 
 			return true;
 		}
@@ -39,7 +60,9 @@ namespace ripple.Extract
 			
 			var document = XDocument.Load(url);
 
-			return document.Elements(atomNS + "entry").Select(e => new NugetEntry(e));
+		    document.Root.Elements().Each(x => Debug.WriteLine(x.Name.LocalName));
+
+			return document.Root.Elements().Where(x => x.Name.LocalName == "entry").Select(e => new NugetEntry(e)).Where(x => !x.Name.EndsWith(".Docs")).ToArray();
 		}
 	}
 }
