@@ -11,6 +11,7 @@ namespace ripple.Commands
         public string FeedsFlag { get; set; }
 	}
 
+    [CommandDescription("Converts a solution using the Nuget packages.config configuration to the Ripple v2+ format")]
 	public class ConvertCommand : FubuCommand<ConvertInput>
 	{
 		public override bool Execute(ConvertInput input)
