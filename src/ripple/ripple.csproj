@@ -11,7 +11,8 @@
     <RootNamespace>ripple</RootNamespace>
     <AssemblyName>ripple</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -84,7 +85,6 @@
     <Compile Include="Commands\StringFeeds.cs" />
     <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
-    <Compile Include="Commands\UseTheirsCommand.cs" />
     <Compile Include="Commands\ValidateCommand.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
     <Compile Include="Directives\DirectiveProcessor.cs" />
