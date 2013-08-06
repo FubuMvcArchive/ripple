@@ -14,6 +14,7 @@ namespace ripple.Commands
         public BatchPublishInput()
         {
             ApiKeyFlag = Environment.GetEnvironmentVariable(PublishingService.ApiKey, EnvironmentVariableTarget.User);
+            ServerFlag = new PublishInput().ServerFlag;
         }
 
         [Description("Directory holding the nuget package files to be published")]
@@ -27,7 +28,7 @@ namespace ripple.Commands
         public string ServerFlag { get; set; }
     }
 
-    [CommandDescription("Batch publishes all the nupkg files in a directory to the main nuget feed")]
+    [CommandDescription("Batch publishes all the nupkg files in a directory to the main nuget feed", Name = "batch-publish")]
     public class BatchPublishCommand : FubuCommand<BatchPublishInput>
     {
         private int _index;

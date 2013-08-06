@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
+using FubuCore.CommandLine;
 using NuGet;
 using ripple.Local;
 
@@ -153,7 +154,23 @@ namespace ripple.Model
 
             RippleLog.Info("Publishing " + file + " with " + apiKey);
 
-            packageServer.PushPackage(apiKey, package, (int)60.Minutes().TotalMilliseconds);
+            try
+            {
+                packageServer.PushPackage(apiKey, package, (int) 60.Minutes().TotalMilliseconds);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (ex.Message.Contains("already exists"))
+                {
+                    ConsoleWriter.Write(ConsoleColor.Yellow, "File {0} already exists on the server".ToFormat(file));
+                }
+                else
+                {
+                    ConsoleWriter.Write(ConsoleColor.Red, "File {0} failed!");
+                    ConsoleWriter.Write(ConsoleColor.Red, ex.ToString());
+                }
+                
+            }
         }
 
         private IPackage createPackage(PackageBuilder builder, string outputPath)
