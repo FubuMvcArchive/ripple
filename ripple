@@ -5,5 +5,11 @@
 # The application 'fubu' is installed as part of a gem, and
 # this file is here to facilitate running it.
 #
-result = system(File.dirname(__FILE__) + "/ripple.exe " + ARGV.join(' '))
+cmd = ""
+if(!RUBY_PLATFORM.match("linux|darwin").nil?)
+  cmd << "mono "
+end
+cmd << File.dirname(__FILE__) + "/ripple.exe " + ARGV.join(' ')
+
+result = system(cmd)
 exit 1 unless result
