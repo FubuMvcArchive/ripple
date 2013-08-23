@@ -32,7 +32,7 @@ namespace ripple.Model
             }
             catch (Exception exc)
             {
-                markOffline(feed);
+                MarkOffline(feed);
                 RippleLog.Info("Feed unavailable: " + feed);
                 RippleLog.Debug(exc.ToString());
             }
@@ -40,13 +40,16 @@ namespace ripple.Model
 
         public IEnumerable<INugetFeed> FeedsFor(Solution solution)
         {
-            var feeds = solution.Feeds.Select(x => x.GetNugetFeed());
-            if (!RippleEnvironment.Connected() || AllOffline(feeds))
+            var cache = solution.Cache.ToFeed().GetNugetFeed();
+            var feeds = new List<INugetFeed> { cache };
+            var solutionFeeds = solution.Feeds.Select(x => x.GetNugetFeed()).ToArray();
+
+            if (RippleEnvironment.Connected() && !AllOffline(solutionFeeds))
             {
-                var cache = solution.Cache.ToFeed();
-                return new[] { cache.GetNugetFeed() };
+                feeds.AddRange(solutionFeeds);
             }
 
+            
             return feeds;
         }
 
@@ -55,7 +58,7 @@ namespace ripple.Model
             return feeds.All(isOffline);
         }
 
-        private void markOffline(INugetFeed feed)
+        public void MarkOffline(INugetFeed feed)
         {
             _offline.Fill(feed);
         }
