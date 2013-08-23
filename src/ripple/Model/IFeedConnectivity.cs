@@ -40,17 +40,17 @@ namespace ripple.Model
 
         public IEnumerable<INugetFeed> FeedsFor(Solution solution)
         {
-            var cache = solution.Cache.ToFeed().GetNugetFeed();
-            var feeds = new List<INugetFeed> { cache };
+            yield return solution.Cache.ToFeed().GetNugetFeed();
+
             var solutionFeeds = solution.Feeds.Select(x => x.GetNugetFeed()).ToArray();
 
             if (RippleEnvironment.Connected() && !AllOffline(solutionFeeds))
             {
-                feeds.AddRange(solutionFeeds);
+                foreach (var feed in solutionFeeds)
+                {
+                    yield return feed;
+                }
             }
-
-            
-            return feeds;
         }
 
         public bool AllOffline(IEnumerable<INugetFeed> feeds)
