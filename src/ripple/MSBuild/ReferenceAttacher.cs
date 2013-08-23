@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuCore.Util;
 using NuGet;
 using ripple.Model;
@@ -52,7 +53,7 @@ namespace ripple.MSBuild
 				var assemblies = package.AssemblyReferences;
 				if (assemblies == null) return;
 
-				project.CsProj.AddAssemblies(dep, assemblies);
+				project.CsProj.AddAssemblies(dep, assemblies, _solution);
 			});
 
 

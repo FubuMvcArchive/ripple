@@ -119,6 +119,7 @@
     <Compile Include="Model\IDependencyStrategy.cs" />
     <Compile Include="Model\IFeedConnectivity.cs" />
     <Compile Include="Model\IFeedService.cs" />
+    <Compile Include="Model\IgnoreAssemblyReference.cs" />
     <Compile Include="Model\IProjectReader.cs" />
     <Compile Include="Model\IPublishingService.cs" />
     <Compile Include="Model\ISolutionBuilder.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Model\NuspecSettings.cs" />
     <Compile Include="Model\PackageParams.cs" />
     <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\ReferenceSettings.cs" />
     <Compile Include="Model\RestoreSettings.cs" />
     <Compile Include="Model\RippleProblem.cs" />
     <Compile Include="Model\Solution.cs" />

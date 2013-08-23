@@ -118,9 +118,11 @@
     <Compile Include="Integration\valid_solution.cs" />
     <Compile Include="Model\BatchOperationTester.cs" />
     <Compile Include="Model\FeedConnectivityTester.cs" />
+    <Compile Include="Model\IgnoreAssemblyReferenceTester.cs" />
     <Compile Include="Model\InMemoryNugetCache.cs" />
     <Compile Include="Model\NuspecSettingsTester.cs" />
     <Compile Include="Model\PublishingServiceTester.cs" />
+    <Compile Include="Model\ReferenceSettingsTester.cs" />
     <Compile Include="Model\VersionConstraintTester.cs" />
     <Compile Include="Model\VersionTokenTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />

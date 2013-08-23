@@ -28,6 +28,7 @@ namespace ripple.Testing.MSBuild
 				.References
 				.ShouldHaveTheSameElementKeysAs(new[]
 				{
+                    "yeti",
 					"FubuCore", 
 					"Ionic.Zip", 
 					"Ionic.Zip, Version=1.9.1.8, Culture=neutral, processorArchitecture=MSIL",
@@ -58,7 +59,8 @@ namespace ripple.Testing.MSBuild
 					"System",
 					"System.Core",
 					"System.Web",
-					"System.Xml"
+					"System.Xml",
+                    "yeti",
 				}, x => x.Name);
 		}
 	}

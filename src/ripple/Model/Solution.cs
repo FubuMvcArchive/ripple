@@ -72,6 +72,7 @@ namespace ripple.Model
 
             RestoreSettings = new RestoreSettings();
             NuspecSettings = new NuspecSettings();
+            References = new ReferenceSettings();
 
             Reset();
         }
@@ -143,6 +144,9 @@ namespace ripple.Model
         [XmlArray("Groups")]
         [XmlArrayItem("Group")]
         public List<DependencyGroup> Groups { get; set; }
+
+        [XmlElement("References")]
+        public ReferenceSettings References { get; set; }
 
         [XmlArray("Nuspecs")]
         [XmlArrayItem("Nuspec")]
