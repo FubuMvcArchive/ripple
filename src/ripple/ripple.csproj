@@ -123,6 +123,7 @@
     <Compile Include="Model\IFeedConnectivity.cs" />
     <Compile Include="Model\IFeedService.cs" />
     <Compile Include="Model\IgnoreAssemblyReference.cs" />
+    <Compile Include="Model\InvalidSyntaxException.cs" />
     <Compile Include="Model\IProjectReader.cs" />
     <Compile Include="Model\IPublishingService.cs" />
     <Compile Include="Model\ISolutionBuilder.cs" />
@@ -141,8 +142,18 @@
     <Compile Include="Model\SolutionConfig.cs" />
     <Compile Include="Model\UpdateMode.cs" />
     <Compile Include="Model\ValidationResult.cs" />
+    <Compile Include="Model\DependencyVersion.cs" />
     <Compile Include="Model\VersionConstraint.cs" />
+    <Compile Include="Model\Versioning\ApproximatelyGreaterRule.cs" />
+    <Compile Include="Model\Versioning\LessThanOrEqualRule.cs" />
+    <Compile Include="Model\Versioning\GreaterThanOrEqualRule.cs" />
+    <Compile Include="Model\Versioning\EqualityRule.cs" />
+    <Compile Include="Model\Versioning\GreaterRule.cs" />
+    <Compile Include="Model\Versioning\InequalityRule.cs" />
+    <Compile Include="Model\Versioning\IVersionRule.cs" />
+    <Compile Include="Model\Versioning\LessThanRule.cs" />
     <Compile Include="Model\VersionToken.cs" />
+    <Compile Include="Model\VersionTokenizer.cs" />
     <Compile Include="MSBuild\CsProjFile.cs" />
     <Compile Include="MSBuild\Reference.cs" />
     <Compile Include="MSBuild\ReferenceAttacher.cs" />
