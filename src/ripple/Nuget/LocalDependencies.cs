@@ -9,76 +9,80 @@ using ripple.Model;
 
 namespace ripple.Nuget
 {
-	public class LocalDependencies : DescribesItself, LogTopic
-	{
-		private readonly IEnumerable<INugetFile> _dependencies;
+    public class LocalDependencies : DescribesItself, LogTopic
+    {
+        private readonly IEnumerable<INugetFile> _dependencies;
 
-		public LocalDependencies(IEnumerable<INugetFile> dependencies)
-		{
-			_dependencies = dependencies;
-		}
+        public LocalDependencies(IEnumerable<INugetFile> dependencies)
+        {
+            _dependencies = dependencies;
+        }
 
-		public bool Any()
-		{
-			return _dependencies.Any();
-		}
+        public bool Any()
+        {
+            return _dependencies.Any();
+        }
 
-		public INugetFile Get(Dependency dependency)
-		{
-			return Get(dependency.Name);
-		}
+        public INugetFile Get(Dependency dependency)
+        {
+            return Get(dependency.Name);
+        }
 
-		public INugetFile Get(string name)
-		{
-			try
-			{
-				var nuget = _dependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
-				if (nuget == null)
-				{
-					RippleLog.DebugMessage(this);
-					throw new ArgumentOutOfRangeException("name", "Could not find " + name);
-				}
+        public INugetFile Get(string name)
+        {
+            try
+            {
+                var nuget = _dependencies.SingleOrDefault(x => x.Name.EqualsIgnoreCase(name));
+                if (nuget == null)
+                {
+                    RippleLog.DebugMessage(this);
+                    throw new ArgumentOutOfRangeException("name", "Could not find " + name);
+                }
 
-				return nuget;
-			}
-			catch (InvalidOperationException)
-			{
-				var dependencies = _dependencies.Where(x => x.Name.EqualsIgnoreCase(name)).Select(x => x.FileName).Join(",");
-				RippleLog.Info("Found multiple copies of {0}: {1}".ToFormat(name, dependencies));
+                return nuget;
+            }
+            catch (InvalidOperationException)
+            {
+                var dependencies = _dependencies.Where(x => x.Name.EqualsIgnoreCase(name)).Select(x => x.FileName).Join(",");
+                RippleLog.Info("Found multiple copies of {0}: {1}".ToFormat(name, dependencies));
 
-				throw;
-			}
-		}
+                throw;
+            }
+        }
 
-		public bool ShouldRestore(Dependency dependency, bool force = false)
-		{
-			if (!Has(dependency))
-			{
-				return true;
-			}
+        public bool ShouldRestore(Dependency dependency, bool force = false)
+        {
+            if (!Has(dependency))
+            {
+                return true;
+            }
 
-			if (!force) return false;
+            var local = Get(dependency);
+            if (dependency.Version.IsNotEmpty())
+            {
+                return local.Version < dependency.SemanticVersion();
+            }
 
-			if (dependency.IsFloat()) return true;
+            if (!force) return false;
+            if (dependency.IsFloat()) return true;
 
-			var local = Get(dependency);
-			return local.Version != dependency.SemanticVersion();
-		}
+            return local.Version != dependency.SemanticVersion();
+        }
 
-		public bool Has(Dependency dependency)
-		{
-			return Has(dependency.Name);
-		}
+        public bool Has(Dependency dependency)
+        {
+            return Has(dependency.Name);
+        }
 
-		public bool Has(string name)
-		{
-			return _dependencies.Any(x => x.Name.EqualsIgnoreCase(name));
-		}
+        public bool Has(string name)
+        {
+            return _dependencies.Any(x => x.Name.EqualsIgnoreCase(name));
+        }
 
-		public IEnumerable<INugetFile> All()
-		{
-			return _dependencies;
-		}
+        public IEnumerable<INugetFile> All()
+        {
+            return _dependencies;
+        }
 
         public bool HasLockedFiles(Solution solution)
         {
@@ -106,9 +110,9 @@ namespace ripple.Nuget
             });
         }
 
-		public void Describe(Description description)
-		{
-			description.AddList("Items", _dependencies);
-		}
-	}
+        public void Describe(Description description)
+        {
+            description.AddList("Items", _dependencies);
+        }
+    }
 }

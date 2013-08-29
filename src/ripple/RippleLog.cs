@@ -83,9 +83,15 @@ namespace ripple
 			Logger.InfoMessage(message);
 		}
 
-		public static void Debug(string message)
+		public static void Debug(string message, bool useFormatting = true)
 		{
-			Logger.Debug(message);
+            if (useFormatting)
+            {
+                Logger.Debug(message);
+                return;
+            }
+
+            Logger.Debug(() => message);
 		}
 
 		public static void Info(string message)

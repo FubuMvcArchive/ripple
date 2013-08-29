@@ -82,7 +82,12 @@ namespace ripple.Nuget
 
             if (candidate == null)
             {
-	            return null;
+                // If both absolute and latest are false, then we order in descending order (by version) and take the top
+                candidate = candidates
+                    .OrderByDescending(x => x.Version)
+                    .FirstOrDefault();
+
+                if (candidate == null) return null;
             }
 
             return new RemoteNuget(candidate);

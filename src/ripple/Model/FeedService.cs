@@ -44,12 +44,20 @@ namespace ripple.Model
                 if (dependency.IsFloat() || dependency.Version.IsEmpty())
                 {
                     _connectivity.IfOnline(feed, x => nuget = x.FindLatest(dependency));
+                    if (nuget != null && dependency.Version.IsNotEmpty() && nuget.Version < dependency.SemanticVersion())
+                    {
+                        nuget = null;
+                        continue;
+                    }
+
                     if (nuget != null) break;
                 }
 
                 _connectivity.IfOnline(feed, x => nuget = x.Find(dependency));
                 if (nuget != null) break;
             }
+
+            
 
             if (nuget == null)
             {

@@ -90,6 +90,10 @@
     <Compile Include="FeedScenario.cs" />
     <Compile Include="ForceDeleteTester.cs" />
     <Compile Include="Integration\batch_install_from_a_flat_file.cs" />
+    <Compile Include="Integration\feed_order_with_cache.cs" />
+    <Compile Include="Integration\restore_dependencies_that_only_exist_in_cache.cs" />
+    <Compile Include="Integration\restore_fixed_dependency_with_min_version_higher_than_local.cs" />
+    <Compile Include="Integration\restore_float_dependency_with_min_version_higher_than_local.cs" />
     <Compile Include="Integration\fix_command_installs_missing_dependencies.cs" />
     <Compile Include="Integration\ignore_offline_feeds.cs" />
     <Compile Include="Integration\installing_an_existing_project_dependency.cs" />
@@ -115,8 +119,12 @@
     <Compile Include="Integration\updating_a_dependency_with_transitive_updates.cs" />
     <Compile Include="Integration\valid_solution.cs" />
     <Compile Include="Model\BatchOperationTester.cs" />
+    <Compile Include="Model\FeedConnectivityTester.cs" />
+    <Compile Include="Model\IgnoreAssemblyReferenceTester.cs" />
+    <Compile Include="Model\InMemoryNugetCache.cs" />
     <Compile Include="Model\NuspecSettingsTester.cs" />
     <Compile Include="Model\PublishingServiceTester.cs" />
+    <Compile Include="Model\ReferenceSettingsTester.cs" />
     <Compile Include="Model\VersionConstraintTester.cs" />
     <Compile Include="Model\VersionTokenTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />

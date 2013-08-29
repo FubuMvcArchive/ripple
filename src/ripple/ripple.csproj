@@ -26,7 +26,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -50,6 +50,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Classic\NuGetSolutionLoader.cs" />
     <Compile Include="Commands\ApiKeyCommand.cs" />
     <Compile Include="Commands\BatchInstallCommand.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="Model\IDependencyStrategy.cs" />
     <Compile Include="Model\IFeedConnectivity.cs" />
     <Compile Include="Model\IFeedService.cs" />
+    <Compile Include="Model\IgnoreAssemblyReference.cs" />
     <Compile Include="Model\IProjectReader.cs" />
     <Compile Include="Model\IPublishingService.cs" />
     <Compile Include="Model\ISolutionBuilder.cs" />
@@ -130,6 +134,7 @@
     <Compile Include="Model\NuspecSettings.cs" />
     <Compile Include="Model\PackageParams.cs" />
     <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\ReferenceSettings.cs" />
     <Compile Include="Model\RestoreSettings.cs" />
     <Compile Include="Model\RippleProblem.cs" />
     <Compile Include="Model\Solution.cs" />

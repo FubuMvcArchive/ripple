@@ -51,7 +51,13 @@ namespace ripple.Steps
 
 				RippleLog.Debug("Downloading " + nuget);
 				nugets.Add(nuget.DownloadTo(solution, solution.PackagesDirectory()));
-			});
+			}).ContinueWith(task =>
+			    {
+			       if (task.Exception == null)
+			       {
+                       RippleLog.Info("Downloaded " + query);
+			       }
+			    });
 		}
 
 		public void Describe(Description description)

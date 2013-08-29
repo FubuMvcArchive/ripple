@@ -243,7 +243,7 @@ namespace ripple.MSBuild
             return string.Format("Filename: {0}", _filename);
         }
 
-        public void AddAssemblies(Dependency dep, IEnumerable<IPackageAssemblyReference> assemblies)
+        public void AddAssemblies(Dependency dep, IEnumerable<IPackageAssemblyReference> assemblies, Solution solution)
         {
             bool needsSaved = false;
 
@@ -254,6 +254,8 @@ namespace ripple.MSBuild
                 string assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
 
                 if (assemblyName == "_._") return;
+
+                if (!solution.References.ShouldAddReference(dep, assemblyName)) return;
 
                 var nugetDir = _solution.NugetFolderFor(dep.Name);
                 var assemblyPath = nugetDir.AppendPath(assem.Path);

@@ -139,6 +139,24 @@ namespace ripple.Testing.Model
             get { return _repository; }
         }
 
+        protected bool Equals(StubFeed other)
+        {
+            return _feed.Equals(other._feed);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((StubFeed) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _feed.GetHashCode();
+        }
+
         public class DependencyError
         {
             public DependencyError(Dependency dependency, Exception exception)
