@@ -17,5 +17,10 @@ namespace ripple.Nuget
 
             return new NugetResult { Nuget = nuget };
         }
+
+        public void Filter(Solution solution, Dependency dependency, NugetResult result)
+        {
+            // no-op
+        }
     }
 }

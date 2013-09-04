@@ -6,5 +6,7 @@ namespace ripple.Nuget
     {
         bool Matches(Dependency dependency);
         NugetResult Find(Solution solution, Dependency dependency);
+
+        void Filter(Solution solution, Dependency dependency, NugetResult result);
     }
 }

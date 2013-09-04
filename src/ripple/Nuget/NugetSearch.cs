@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +25,7 @@ namespace ripple.Nuget
 
             Finders.Add(new CacheFinder());
             Finders.Add(new FloatingFinder());
-            Finders.Add(new FixedFinder());
+            Finders.Add(new DefaultFinder());
         }
 
         private readonly LinkedList<INugetFinder> _finders; 
@@ -39,8 +38,14 @@ namespace ripple.Nuget
         public Task<NugetResult> FindDependency(Solution solution, Dependency dependency)
         {
             var finder = _finders.First.Value;
-            var task = Task.Factory.StartNew(() => finder.Find(solution, dependency));
-            return fill(solution, dependency, task, _finders.First);
+            var parent = Task.Factory.StartNew(() => finder.Find(solution, dependency));
+            var task = fill(solution, dependency, parent, _finders.First);
+
+            return task.ContinueWith(inner =>
+            {
+                _finders.Each(x => x.Filter(solution, dependency, inner.Result));
+                return inner.Result;
+            });
         }
 
         private Task<NugetResult> fill(Solution solution, Dependency dependency, Task<NugetResult> result, LinkedListNode<INugetFinder> node)
@@ -50,10 +55,8 @@ namespace ripple.Nuget
                 NugetResult parent;
                 if (task.IsFaulted)
                 {
-                    // TODO -- Can this even happen?
-                    var message = task.Exception != null ? task.Exception.Message : "Fatal error finding " + dependency;
                     parent = new NugetResult();
-                    parent.AddProblem(new Exception(message, task.Exception));
+                    parent.AddProblem(task.Exception);
                 }
                 else
                 {

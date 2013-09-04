@@ -103,6 +103,11 @@ namespace ripple.Testing.Nuget
 
                 return NugetResult.For(_nuget);
             }
+
+            public void Filter(Solution solution, Dependency dependency, NugetResult result)
+            {
+                // no-op
+            }
         }
     }
 }

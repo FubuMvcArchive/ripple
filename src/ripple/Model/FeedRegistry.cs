@@ -100,7 +100,7 @@ namespace ripple.Model
 
         public static bool IsFloat(Solution solution, Dependency dependency)
         {
-            return FloatedFeedsFor(solution).Any(feed => feed.LatestFor(dependency) != null);
+            return FloatedFeedsFor(solution).Any(feed => feed.FindLatest(dependency) != null);
         }
 
         public static INugetFeed FeedFor(Feed feed)

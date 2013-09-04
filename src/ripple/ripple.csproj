@@ -130,7 +130,7 @@
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
     <Compile Include="Nuget\CacheFinder.cs" />
-    <Compile Include="Nuget\FixedFinder.cs" />
+    <Compile Include="Nuget\DefaultFinder.cs" />
     <Compile Include="Nuget\FloatingFinder.cs" />
     <Compile Include="Nuget\INugetFinder.cs" />
     <Compile Include="Nuget\NugetProblem.cs" />

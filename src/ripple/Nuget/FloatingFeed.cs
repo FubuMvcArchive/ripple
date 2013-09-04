@@ -38,10 +38,10 @@ namespace ripple.Nuget
             return feed.ReadAll(this);
         }
 
-        public IRemoteNuget LatestFor(Dependency dependency)
+        protected override IRemoteNuget findLatest(Dependency query)
         {
-            var floatedResult = GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
-            if (floatedResult != null && dependency.Mode == UpdateMode.Fixed && floatedResult.IsUpdateFor(dependency))
+            var floatedResult = GetLatest().SingleOrDefault(x => query.MatchesName(x.Name));
+            if (floatedResult != null && query.Mode == UpdateMode.Fixed && floatedResult.IsUpdateFor(query))
             {
                 return null;
             }

@@ -17,7 +17,7 @@ namespace ripple.Nuget
             var feeds = FeedRegistry.FloatedFeedsFor(solution).ToArray();
             foreach (var feed in feeds)
             {
-                nuget = feed.LatestFor(dependency);
+                nuget = feed.FindLatest(dependency);
                 if (nuget == null) continue;
 
                 if (dependency.Mode == UpdateMode.Fixed && nuget.IsUpdateFor(dependency))
@@ -36,6 +36,11 @@ namespace ripple.Nuget
             }
 
             return NugetResult.For(nuget);
+        }
+
+        public void Filter(Solution solution, Dependency dependency, NugetResult result)
+        {
+            // no-op
         }
     }
 }

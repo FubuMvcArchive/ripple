@@ -16,6 +16,23 @@ namespace ripple.Nuget
             AddProblem(new NugetProblem(exception.Message, exception));
         }
 
+        public void AddProblem(AggregateException exception)
+        {
+            var message = "Fatal error";
+            if (exception != null)
+            {
+                exception = exception.Flatten();
+                message = exception.Message;
+
+                if (exception.InnerException != null)
+                {
+                    message = exception.InnerException.Message;
+                }
+            }
+
+            AddProblem(new NugetProblem(message, exception));
+        }
+
         public void AddProblem(NugetProblem problem)
         {
             _problems.Add(problem);

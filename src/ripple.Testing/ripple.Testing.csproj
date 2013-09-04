@@ -159,7 +159,7 @@
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
     <Compile Include="Nuget\CacheFinderTester.cs" />
-    <Compile Include="Nuget\FixedFinderTester.cs" />
+    <Compile Include="Nuget\DefaultFinderTester.cs" />
     <Compile Include="Nuget\FileSystemFeedTester.cs" />
     <Compile Include="Nuget\FloatingFinderTester.cs" />
     <Compile Include="Nuget\NugetFeedTester.cs" />
