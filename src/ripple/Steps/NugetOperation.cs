@@ -16,10 +16,10 @@ namespace ripple.Steps
             var nugetRunner = new NugetStepRunner(Solution);
             var aggregatePlan = PlanFor(input.As<INugetOperationContext>(), Solution);
 
-			if (aggregatePlan.Any())
-			{
-				RippleLog.InfoMessage(aggregatePlan);
-			}
+            if (aggregatePlan.Any())
+            {
+                RippleLog.InfoMessage(aggregatePlan);
+            }
 
             aggregatePlan.Execute(nugetRunner);
         }

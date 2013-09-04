@@ -154,6 +154,11 @@ namespace ripple.Nuget
             return _nugets.Value;
         }
 
+        public IRemoteNuget LatestFor(Dependency dependency)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DumpLatest()
         {
             var latest = GetLatest();

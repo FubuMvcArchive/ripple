@@ -53,9 +53,11 @@ namespace ripple.Testing.Integration
         public void restores_the_latest_version()
         {
             var missing = theSolution.MissingNugets().Single();
-            var target = theSolution.Restore(missing);
 
-            target.Version.ShouldEqual(new SemanticVersion("4.0.0.0-beta0002"));
+            var target = theSolution.Restore(missing);
+            target.Wait();
+
+            target.Result.Nuget.Version.ShouldEqual(new SemanticVersion("4.0.0.0-beta0002"));
         } 
     }
 }

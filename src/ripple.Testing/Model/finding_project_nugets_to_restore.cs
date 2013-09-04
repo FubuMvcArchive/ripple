@@ -6,7 +6,7 @@ using ripple.Model;
 namespace ripple.Testing.Model
 {
     [TestFixture]
-    public class finding_solution_nugets_to_restore
+    public class finding_project_nugets_to_restore
     {
         private Solution theSolution;
 
@@ -24,10 +24,14 @@ namespace ripple.Testing.Model
             theSolution.AddFeed(Feed.Fubu);
             theSolution.AddFeed(Feed.NuGetV2);
 
-            theSolution.AddDependency(bottles = new Dependency("Bottles"));
             theSolution.AddDependency(fubucore = new Dependency("FubuCore", "1.0.1.201"));
-            theSolution.AddDependency(rhinomocks = new Dependency("RhinoMocks", "3.6.1", UpdateMode.Fixed));
-            theSolution.AddDependency(structuremap = new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
+
+            var theProject = new Project("Test.csproj");
+            theSolution.AddProject(theProject);
+
+            theProject.AddDependency(bottles = new Dependency("Bottles"));
+            theProject.AddDependency(rhinomocks = new Dependency("RhinoMocks", "3.6.1", UpdateMode.Fixed));
+            theProject.AddDependency(structuremap = new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
 
             FeedScenario.Create(scenario =>
             {
@@ -57,8 +61,7 @@ namespace ripple.Testing.Model
             var task = theSolution.Restore(dependency);
             task.Wait();
 
-            var nuget = task.Result.Nuget;
-            nuget.Version.ShouldEqual(new SemanticVersion(version));
+            task.Result.Nuget.Version.ShouldEqual(new SemanticVersion(version));
         }
 
         [Test]

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Xml;
+using ripple.Model;
 
 namespace ripple.Nuget
 {
@@ -34,6 +36,17 @@ namespace ripple.Nuget
         {
             var feed = new NugetXmlFeed(_feed.Value);
             return feed.ReadAll(this);
+        }
+
+        public IRemoteNuget LatestFor(Dependency dependency)
+        {
+            var floatedResult = GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
+            if (floatedResult != null && dependency.Mode == UpdateMode.Fixed && floatedResult.IsUpdateFor(dependency))
+            {
+                return null;
+            }
+
+            return floatedResult;
         }
     }
 }

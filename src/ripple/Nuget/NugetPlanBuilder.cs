@@ -17,7 +17,7 @@ namespace ripple.Nuget
 
         public NugetPlanBuilder()
         {
-			_planCache = new Cache<PlanKey, NugetPlan>();
+            _planCache = new Cache<PlanKey, NugetPlan>();
         }
 
         public NugetPlan PlanFor(NugetPlanRequest request)
@@ -37,7 +37,7 @@ namespace ripple.Nuget
                 dependencyKey = target.AsFloat();
             }
 
-	        var key = new PlanKey(dependencyKey, request.Project);
+            var key = new PlanKey(dependencyKey, request.Project);
             if (_planCache.Has(key))
             {
                 return _planCache[key];
@@ -49,41 +49,53 @@ namespace ripple.Nuget
 
             if (target.Version.IsEmpty())
             {
-	            string version;
-	            var local = solution.LocalDependencies();
+                string version = null;
+                var local = solution.LocalDependencies();
 
-				if (request.Operation == OperationType.Install && solution.LocalDependencies().Has(target))
-				{
-					var localNuget = local.Get(target);
-					version = localNuget.Version.ToString();
-				}
-				else
-				{
-					var remote = solution.FeedService.NugetFor(target);
-					version = remote.Version.ToString();
-				}
+                if (request.Operation == OperationType.Install && solution.LocalDependencies().Has(target))
+                {
+                    var localNuget = local.Get(target);
+                    version = localNuget.Version.ToString();
+                }
+                else
+                {
+                    if (!RippleEnvironment.Connected())
+                    {
+                        RippleAssert.Fail("Cannot update in offline mode");
+                    }
 
-	            target.Version = version;
+                    var task = solution.FeedService.NugetFor(target);
+                    task.Wait();
+
+                    if (!task.Result.Found)
+                    {
+                        RippleAssert.Fail("Could not find " + request.Dependency);
+                    }
+                    var remote = task.Result.Nuget;
+                    version = remote.Version.ToString();
+                }
+
+                target.Version = version;
             }
 
             if (request.UpdatesCurrentDependency())
             {
                 updateDependency(plan, request);
             }
-            else if(!solution.Dependencies.Has(target.Name))
+            else if (!solution.Dependencies.Has(target.Name))
             {
                 plan.AddStep(new InstallSolutionDependency(target));
             }
 
             projectInstallations(plan, parent, request);
 
-	        var location = request.Operation == OperationType.Install ? SearchLocation.Local : SearchLocation.Remote;
+            var location = request.Operation == OperationType.Install ? SearchLocation.Local : SearchLocation.Remote;
 
             var nugetDependencies = solution.FeedService.DependenciesFor(target, target.Mode, location);
             nugetDependencies.Each(x =>
             {
-				var transitiveDep = request.CopyFor(x);
-				var childPlan = buildPlan(transitiveDep, target);
+                var transitiveDep = request.CopyFor(x);
+                var childPlan = buildPlan(transitiveDep, target);
                 plan.Import(childPlan);
             });
 
@@ -131,37 +143,37 @@ namespace ripple.Nuget
             }
         }
 
-		public class PlanKey
-		{
-			public PlanKey(Dependency dependency, string project)
-			{
-				Dependency = dependency;
-				Project = project;
-			}
+        public class PlanKey
+        {
+            public PlanKey(Dependency dependency, string project)
+            {
+                Dependency = dependency;
+                Project = project;
+            }
 
-			public Dependency Dependency { get; private set; }
-			public string Project { get; private set; }
+            public Dependency Dependency { get; private set; }
+            public string Project { get; private set; }
 
-			protected bool Equals(PlanKey other)
-			{
-				return Equals(Dependency, other.Dependency) && string.Equals(Project, other.Project);
-			}
+            protected bool Equals(PlanKey other)
+            {
+                return Equals(Dependency, other.Dependency) && string.Equals(Project, other.Project);
+            }
 
-			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) return false;
-				if (ReferenceEquals(this, obj)) return true;
-				if (obj.GetType() != this.GetType()) return false;
-				return Equals((PlanKey) obj);
-			}
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((PlanKey)obj);
+            }
 
-			public override int GetHashCode()
-			{
-				unchecked
-				{
-					return ((Dependency != null ? Dependency.GetHashCode() : 0)*397) ^ (Project != null ? Project.GetHashCode() : 0);
-				}
-			}
-		}
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((Dependency != null ? Dependency.GetHashCode() : 0) * 397) ^ (Project != null ? Project.GetHashCode() : 0);
+                }
+            }
+        }
     }
 }

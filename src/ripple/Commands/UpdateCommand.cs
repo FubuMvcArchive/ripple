@@ -9,48 +9,48 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-	public class UpdateInput : RippleInput, INugetOperationContext
-	{
-	    public UpdateInput()
-	    {
-	        VersionFlag = "";
-	    }
+    public class UpdateInput : RippleInput, INugetOperationContext
+    {
+        public UpdateInput()
+        {
+            VersionFlag = "";
+        }
 
-		[Description("Only update a specific nuget by name")]
-		public string NugetFlag { get; set; }
+        [Description("Only update a specific nuget by name")]
+        public string NugetFlag { get; set; }
 
-		[Description("Only show what would be updated")]
-		public bool PreviewFlag { get; set; }
+        [Description("Only show what would be updated")]
+        public bool PreviewFlag { get; set; }
 
         [Description("Version of the nuget")]
         [FlagAlias("version", 'v')]
         public string VersionFlag { get; set; }
 
-		[Description("Forces the update command to override all dependencies even if they are locked")]
-		[FlagAlias("force", 'f')]
-		public bool ForceFlag { get; set; }
+        [Description("Forces the update command to override all dependencies even if they are locked")]
+        [FlagAlias("force", 'f')]
+        public bool ForceFlag { get; set; }
 
         [Description("Override the feed-level stability configuration")]
         [FlagAlias("stability", 's')]
         public NugetStability? StabilityFlag { get; set; }
 
-		public override string DescribePlan(Solution solution)
-		{
-			return "Updating dependencies for solution {0}".ToFormat(solution.Name);
-		}
+        public override string DescribePlan(Solution solution)
+        {
+            return "Updating dependencies for solution {0}".ToFormat(solution.Name);
+        }
 
-	    public IEnumerable<NugetPlanRequest> Requests(Solution solution)
-	    {
-	        if (NugetFlag.IsNotEmpty())
-	        {
+        public IEnumerable<NugetPlanRequest> Requests(Solution solution)
+        {
+            if (NugetFlag.IsNotEmpty())
+            {
                 var requests = new List<NugetPlanRequest>();
-	            gatherDependencies(requests, solution, NugetFlag);
+                gatherDependencies(requests, solution, NugetFlag);
 
-	            return requests;
-	        }
+                return requests;
+            }
 
-	        return solution.Dependencies.Select(requestForDependency);
-	    }
+            return solution.Dependencies.Select(requestForDependency);
+        }
 
         private NugetPlanRequest requestForExisting(Solution solution, string name)
         {
@@ -91,8 +91,8 @@ namespace ripple.Commands
             newItems.Each(x => gatherDependencies(requests, solution, x));
         }
 
-	    private NugetPlanRequest requestForDependency(Dependency dependency)
-	    {
+        private NugetPlanRequest requestForDependency(Dependency dependency)
+        {
             return new NugetPlanRequest
             {
                 ForceUpdates = ForceFlag,
@@ -100,15 +100,15 @@ namespace ripple.Commands
                 Batched = true,
                 Dependency = new Dependency(dependency.Name, dependency.Mode)
             };
-	    }
-	}
+        }
+    }
 
-	[CommandDescription("Updates the nugets for the solution")]
-	public class UpdateCommand : FubuCommand<UpdateInput>
-	{
-		public override bool Execute(UpdateInput input)
-		{
-		    var solution = Solution.For(input);
+    [CommandDescription("Updates the nugets for the solution")]
+    public class UpdateCommand : FubuCommand<UpdateInput>
+    {
+        public override bool Execute(UpdateInput input)
+        {
+            var solution = Solution.For(input);
             if (input.NugetFlag.IsNotEmpty() && !solution.Dependencies.Has(input.NugetFlag))
             {
                 RippleAssert.Fail(input.NugetFlag + " is not a configured dependency");
@@ -121,20 +121,20 @@ namespace ripple.Commands
                 return true;
             }
 
-			return RippleOperation
-				.For<UpdateInput>(input)
-				.Step<NugetOperation>()
-				.Step<DownloadMissingNugets>()
-				.Step<ExplodeDownloadedNugets>()
-				.Step<ProcessDirectives>()
-				.Step<FixReferences>()
-				.Execute();
-		}
+            return RippleOperation
+                .For(input)
+                .Step<NugetOperation>()
+                .Step<DownloadMissingNugets>()
+                .Step<ExplodeDownloadedNugets>()
+                .Step<ProcessDirectives>()
+                .Step<FixReferences>()
+                .Execute();
+        }
 
         private void preview(UpdateInput input, Solution solution)
         {
             var plan = NugetOperation.PlanFor(input, solution);
             RippleLog.InfoMessage(plan);
         }
-	}
+    }
 }

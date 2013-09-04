@@ -30,6 +30,16 @@ namespace ripple.Testing.Model
         {
             return _feeds[feed];
         }
+
+        public IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution)
+        {
+            return FeedsFor(solution).OfType<IFloatingFeed>();
+        }
+
+        public IEnumerable<INugetFeed> FeedsFor(Solution solution)
+        {
+            return solution.Feeds.Select(For);
+        }
     }
 
     public class StubFeed : NugetFeedBase
@@ -75,7 +85,9 @@ namespace ripple.Testing.Model
 
             if (query.IsFloat() || query.Version.IsEmpty())
             {
-                return Nugets.FirstOrDefault(x => query.MatchesName(x.Name));
+                return Nugets
+                    .OrderByDescending(x => x.Version)
+                    .FirstOrDefault(x => query.MatchesName(x.Name));
             }
 
             var version = SemanticVersion.Parse(query.Version);
@@ -104,10 +116,10 @@ namespace ripple.Testing.Model
                           .FirstOrDefault();
         }
 
-        private void throwIfNeeded(Dependency dependency)
+        protected void throwIfNeeded(Dependency dependency, UpdateMode mode = UpdateMode.Fixed)
         {
             var error = _explicitErrors.FirstOrDefault(x => x.Matches(dependency));
-            if (error != null)
+            if (error != null && error.Mode == mode)
             {
                 throw error.Exception;
             }
@@ -118,9 +130,14 @@ namespace ripple.Testing.Model
             return ThrowWhenSearchingFor(new Dependency(name, version), exception);
         }
 
-        public StubFeed ThrowWhenSearchingFor(Dependency dependency, Exception exception)
+        public StubFeed ThrowWhenSearchingFor(string name, string version, UpdateMode mode, Exception exception)
         {
-            _explicitErrors.Add(new DependencyError(dependency, exception));
+            return ThrowWhenSearchingFor(new Dependency(name, version), exception, mode);
+        }
+
+        public StubFeed ThrowWhenSearchingFor(Dependency dependency, Exception exception, UpdateMode mode = UpdateMode.Fixed)
+        {
+            _explicitErrors.Add(new DependencyError(dependency, exception, mode));
             return this;
         }
 
@@ -159,14 +176,16 @@ namespace ripple.Testing.Model
 
         public class DependencyError
         {
-            public DependencyError(Dependency dependency, Exception exception)
+            public DependencyError(Dependency dependency, Exception exception, UpdateMode mode)
             {
                 Dependency = dependency;
                 Exception = exception;
+                Mode = mode;
             }
 
             public Dependency Dependency { get; private set; }
             public Exception Exception { get; private set; }
+            public UpdateMode Mode { get; set; }
 
             public bool Matches(Dependency dependency)
             {
@@ -197,5 +216,11 @@ namespace ripple.Testing.Model
 
 			return nugets.OrderBy(x => x.Name);
 		}
+
+	    public IRemoteNuget LatestFor(Dependency dependency)
+	    {
+            throwIfNeeded(dependency, UpdateMode.Float);
+            return GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
+	    }
 	}
 }
