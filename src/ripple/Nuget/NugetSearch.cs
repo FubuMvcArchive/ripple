@@ -44,6 +44,11 @@ namespace ripple.Nuget
             return task.ContinueWith(inner =>
             {
                 _finders.Each(x => x.Filter(solution, dependency, inner.Result));
+                if (inner.Result.Found)
+                {
+                    inner.Result.Nuget = solution.Cache.Retrieve(inner.Result.Nuget);
+                }
+
                 return inner.Result;
             });
         }
