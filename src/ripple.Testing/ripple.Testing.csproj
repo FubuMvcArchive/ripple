@@ -90,6 +90,7 @@
     <Compile Include="FeedScenario.cs" />
     <Compile Include="ForceDeleteTester.cs" />
     <Compile Include="Integration\batch_install_from_a_flat_file.cs" />
+    <Compile Include="Integration\restore_fixed_dependency_that_cannot_be_found.cs" />
     <Compile Include="Integration\restore_float_dependency_with_no_version.cs" />
     <Compile Include="Integration\feed_order_with_cache.cs" />
     <Compile Include="Integration\restore_dependencies_that_only_exist_in_cache.cs" />
