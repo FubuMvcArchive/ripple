@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Threading;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;

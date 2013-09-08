@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
@@ -20,7 +21,8 @@ namespace ripple.Testing.Nuget
             var task = find(new Dependency("FubuCore"), f1, f2);
             task.Wait();
 
-            task.Result.Nuget.ShouldBeTheSameAs(nuget);
+            var result = task.Result.Nuget.As<CacheableNuget>();
+            result.Inner.ShouldBeTheSameAs(nuget);
         }
 
         [Test]
@@ -33,7 +35,8 @@ namespace ripple.Testing.Nuget
             var task = find(new Dependency("FubuCore"), f1, f2);
             task.Wait();
 
-            task.Result.Nuget.ShouldBeTheSameAs(nuget);
+            var result = task.Result.Nuget.As<CacheableNuget>();
+            result.Inner.ShouldBeTheSameAs(nuget);
         }
 
         [Test]
@@ -47,7 +50,8 @@ namespace ripple.Testing.Nuget
             var task = find(new Dependency("FubuCore"), f1, f2, f3);
             task.Wait();
 
-            task.Result.Nuget.ShouldBeTheSameAs(nuget);
+            var result = task.Result.Nuget.As<CacheableNuget>();
+            result.Inner.ShouldBeTheSameAs(nuget);
         }
 
         [Test]
@@ -64,7 +68,9 @@ namespace ripple.Testing.Nuget
             var task = find(new Dependency("FubuCore"), f1, f2, f3);
             task.Wait();
 
-            task.Result.Nuget.ShouldBeTheSameAs(nuget);
+            var result = task.Result.Nuget.As<CacheableNuget>();
+            result.Inner.ShouldBeTheSameAs(nuget);
+
             task.Result.Problems.ShouldHaveCount(1);
         }
 
