@@ -1,6 +1,6 @@
-﻿using FubuTestingSupport;
+﻿using System;
+using FubuTestingSupport;
 using NUnit.Framework;
-using NuGet;
 using ripple.Commands;
 using ripple.Model;
 
@@ -30,6 +30,11 @@ namespace ripple.Testing.Integration
                 scenario
                     .For(Feed.Fubu)
                     .Add("Bottles", "1.1.0.537");
+
+                scenario
+                    .For(Feed.NuGetV2)
+                    .Add("Bottles", "1.1.0.538")
+                    .ThrowWhenSearchingFor("Bottles", "1.1.0.538", new InvalidOperationException("Test"));
             });
         }
 

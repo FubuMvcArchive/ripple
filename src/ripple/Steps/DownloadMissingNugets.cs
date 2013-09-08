@@ -3,36 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Descriptions;
-using FubuCore.Logging;
 using ripple.Commands;
 using ripple.Model;
 using ripple.Nuget;
 
 namespace ripple.Steps
 {
-    public class MissingNugetReport : LogTopic, DescribesItself
-    {
-        private readonly IList<Dependency> _nugets = new List<Dependency>(); 
-
-        public void Add(Dependency dependency)
-        {
-            _nugets.Add(dependency);
-        }
-
-        public bool IsValid()
-        {
-            return !_nugets.Any();
-        }
-
-        public void Describe(Description description)
-        {
-            description.Title = "Missing Nugets";
-            description.ShortDescription = "Could not find nugets";
-            description.AddList("Nugets", _nugets);
-        }
-    }
-
-
     public class DownloadMissingNugets : IRippleStep, DescribesItself
     {
         public Solution Solution { get; set; }
@@ -81,6 +57,7 @@ namespace ripple.Steps
                 if (!task.Result.Found)
                 {
                     report.Add(query);
+                    report.AddProblems(task.Result.Problems);
                     return;
                 }
 

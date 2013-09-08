@@ -61,7 +61,9 @@ namespace ripple.Nuget
                 if (task.IsFaulted)
                 {
                     parent = new NugetResult();
-                    parent.AddProblem(task.Exception);
+                    var problem = parent.AddProblem(task.Exception);
+
+                    RippleLog.Error(problem.Message);
                 }
                 else
                 {

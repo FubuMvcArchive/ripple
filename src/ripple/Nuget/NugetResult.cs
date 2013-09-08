@@ -16,7 +16,7 @@ namespace ripple.Nuget
             AddProblem(new NugetProblem(exception.Message, exception));
         }
 
-        public void AddProblem(AggregateException exception)
+        public NugetProblem AddProblem(AggregateException exception)
         {
             var message = "Fatal error";
             if (exception != null)
@@ -30,7 +30,10 @@ namespace ripple.Nuget
                 }
             }
 
-            AddProblem(new NugetProblem(message, exception));
+            var problem = new NugetProblem(message, exception);
+            AddProblem(problem);
+
+            return problem;
         }
 
         public void AddProblem(NugetProblem problem)
