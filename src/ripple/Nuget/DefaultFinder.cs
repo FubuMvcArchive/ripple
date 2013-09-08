@@ -1,3 +1,4 @@
+using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -15,7 +16,8 @@ namespace ripple.Nuget
             var feeds = FeedRegistry.FeedsFor(solution);
             foreach (var feed in feeds)
             {
-                nuget = feed.Find(dependency);
+                nuget = dependency.Version.IsEmpty() ? feed.FindLatest(dependency) : feed.Find(dependency);
+
                 if (nuget != null) break;
             }
 

@@ -70,8 +70,6 @@ namespace ripple
 
         public bool Execute(bool throwOnFailure = false)
         {
-            RippleLog.DebugMessage(this);
-
             foreach (var step in _steps)
             {
                 try
