@@ -63,7 +63,11 @@ namespace ripple.Nuget
                     parent = new NugetResult();
                     var problem = parent.AddProblem(task.Exception);
 
-                    RippleLog.Error(problem.Message);
+                    RippleLog.Debug(problem.Message);
+                    if (problem.Exception != null)
+                    {
+                        RippleLog.Debug(problem.Exception.StackTrace);
+                    }
                 }
                 else
                 {
