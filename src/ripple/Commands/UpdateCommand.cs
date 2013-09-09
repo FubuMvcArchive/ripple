@@ -23,7 +23,7 @@ namespace ripple.Commands
         public bool PreviewFlag { get; set; }
 
         [Description("Version of the nuget")]
-        [FlagAlias("version", 'v')]
+        [FlagAlias("version", 'V')]
         public string VersionFlag { get; set; }
 
         [Description("Forces the update command to override all dependencies even if they are locked")]
