@@ -14,21 +14,24 @@ namespace ripple.Nuget
         IEnumerable<Dependency> Dependencies();
     }
 
-	public static class RemoteNugetExtensions
-	{
-		public static bool IsUpdateFor(this IRemoteNuget nuget, Dependency dependency)
-		{
-			return nuget.Version > dependency.SemanticVersion();
-		}
+    public static class RemoteNugetExtensions
+    {
+        public static bool IsUpdateFor(this IRemoteNuget nuget, Dependency dependency)
+        {
+            var version = dependency.SemanticVersion();
+            if (version == null) return false;
 
-		public static bool IsUpdateFor(this IRemoteNuget nuget, INugetFile dependency)
-		{
-			return nuget.Version > dependency.Version;
-		}
+            return nuget.Version > version;
+        }
 
-		public static Dependency ToDependency(this IRemoteNuget nuget, UpdateMode mode = UpdateMode.Float)
-		{
-			return new Dependency(nuget.Name, nuget.Version.ToString(), mode);
-		}
-	}
+        public static bool IsUpdateFor(this IRemoteNuget nuget, INugetFile dependency)
+        {
+            return nuget.Version > dependency.Version;
+        }
+
+        public static Dependency ToDependency(this IRemoteNuget nuget, UpdateMode mode = UpdateMode.Float)
+        {
+            return new Dependency(nuget.Name, nuget.Version.ToString(), mode);
+        }
+    }
 }

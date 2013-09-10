@@ -37,10 +37,5 @@ namespace ripple.Nuget
 
             return NugetResult.For(nuget);
         }
-
-        public void Filter(Solution solution, Dependency dependency, NugetResult result)
-        {
-            // no-op
-        }
     }
 }

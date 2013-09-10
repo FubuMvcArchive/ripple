@@ -96,7 +96,7 @@ namespace ripple.Nuget
             var candidates = _repository.Search(query.Name, query.DetermineStability(_stability) == NugetStability.Anything)
                                         .Where(x => query.Name == x.Id).OrderBy(x => x.Id).ToList();
 
-            return candidates.LatestNuget();
+            return candidates.LatestNuget(query.VersionSpec);
         }
 
         public override IPackageRepository Repository { get { return _repository; } }

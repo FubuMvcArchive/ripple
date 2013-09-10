@@ -1,17 +1,18 @@
+﻿using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
 {
-    public class DefaultFinder : INugetFinder
+    public class EmptyVersionFinder : INugetFinder
     {
         public bool Matches(Dependency dependency)
         {
-            return true;
+            return dependency.Version.IsEmpty();
         }
 
         public NugetResult Find(Solution solution, Dependency dependency)
         {
-            return NugetSearch.FindNuget(solution, dependency);
+            return NugetSearch.FindLatestByName(solution, dependency.Name);
         }
     }
 }

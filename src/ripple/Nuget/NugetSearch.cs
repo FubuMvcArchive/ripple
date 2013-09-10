@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace ripple.Nuget
     public class NugetSearch
     {
         private static readonly IList<INugetFinder> Finders = new List<INugetFinder>();
+        private static readonly IList<INugetFilter> Filters = new List<INugetFilter>();
  
         static NugetSearch()
         {
@@ -17,6 +19,7 @@ namespace ripple.Nuget
         public static void Clear()
         {
             Finders.Clear();
+            Filters.Clear();
         }
 
         public static void Reset()
@@ -25,7 +28,11 @@ namespace ripple.Nuget
 
             Finders.Add(new CacheFinder());
             Finders.Add(new FloatingFinder());
+            Finders.Add(new NoMaxVersionSpecFinder());
+            Finders.Add(new EmptyVersionFinder());
             Finders.Add(new DefaultFinder());
+
+            Filters.Add(new EnsureLatestNuget());
         }
 
         private readonly LinkedList<INugetFinder> _finders; 
@@ -43,7 +50,7 @@ namespace ripple.Nuget
 
             return task.ContinueWith(inner =>
             {
-                _finders.Each(x => x.Filter(solution, dependency, inner.Result));
+                Filters.Each(x => x.Filter(solution, dependency, inner.Result));
                 if (inner.Result.Found)
                 {
                     inner.Result.Nuget = solution.Cache.Retrieve(inner.Result.Nuget);
@@ -100,6 +107,30 @@ namespace ripple.Nuget
             var search = new NugetSearch(finders);
 
             return search.FindDependency(solution, dependency);
+        }
+
+        public static NugetResult FindNuget(IEnumerable<INugetFeed> feeds, Func<INugetFeed, IRemoteNuget> find)
+        {
+            foreach (var feed in feeds)
+            {
+                var nuget = find(feed);
+                if (nuget != null)
+                {
+                    return NugetResult.For(nuget);
+                }
+            }
+
+            return NugetResult.NotFound();
+        }
+
+        public static NugetResult FindNuget(Solution solution, Dependency dependency)
+        {
+            return FindNuget(FeedRegistry.FeedsFor(solution), feed => feed.Find(dependency));
+        }
+
+        public static NugetResult FindLatestByName(Solution solution, string name)
+        {
+            return FindNuget(FeedRegistry.FeedsFor(solution), feed => feed.FindLatestByName(name));
         }
     }
 }

@@ -71,6 +71,7 @@ namespace ripple.Commands
                 return false;
             }
 
+            Thread.Sleep(8000);
             var file = RippleFileSystem.CurrentDirectory().AppendPath(BatchFile);
             if (File.Exists(file))
             {

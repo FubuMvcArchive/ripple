@@ -134,8 +134,11 @@
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
     <Compile Include="Nuget\CacheFinder.cs" />
     <Compile Include="Nuget\DefaultFinder.cs" />
+    <Compile Include="Nuget\EnsureLatestNuget.cs" />
     <Compile Include="Nuget\FloatingFinder.cs" />
+    <Compile Include="Nuget\INugetFilter.cs" />
     <Compile Include="Nuget\INugetFinder.cs" />
+    <Compile Include="Nuget\NoMaxVersionSpecFinder.cs" />
     <Compile Include="Nuget\NugetProblem.cs" />
     <Compile Include="Nuget\NugetResult.cs" />
     <Compile Include="Model\NulloDependencyStrategy.cs" />
@@ -189,6 +192,7 @@
     <Compile Include="Nuget\RemotePackageDownloader.cs" />
     <Compile Include="Nuget\UpdateDependency.cs" />
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
+    <Compile Include="Nuget\EmptyVersionFinder.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="RippleEnvironment.cs" />
     <Compile Include="RippleConstants.cs" />

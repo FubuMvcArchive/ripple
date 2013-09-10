@@ -252,5 +252,11 @@ namespace ripple.Model
         {
             return !IsReleasedOnly();
         }
+
+        public bool MatchesVersionSpec(Predicate<IVersionSpec> predicate)
+        {
+            if (VersionSpec == null) return false;
+            return predicate(VersionSpec);
+        }
     }
 }

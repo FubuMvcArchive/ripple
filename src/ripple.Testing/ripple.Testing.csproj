@@ -163,9 +163,13 @@
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
     <Compile Include="Nuget\CacheFinderTester.cs" />
+    <Compile Include="Nuget\EmptyVersionFinderTester.cs" />
     <Compile Include="Nuget\DefaultFinderTester.cs" />
+    <Compile Include="Nuget\EnsureLatestNugetTester.cs" />
     <Compile Include="Nuget\FileSystemFeedTester.cs" />
+    <Compile Include="Nuget\finding_latest_nuget_by_name_from_NugetSearch.cs" />
     <Compile Include="Nuget\FloatingFinderTester.cs" />
+    <Compile Include="Nuget\NoMaxVersionSpecFinderTester.cs" />
     <Compile Include="Nuget\NugetFeedTester.cs" />
     <Compile Include="Nuget\NugetPlanRequestTester.cs" />
     <Compile Include="Nuget\NugetSearchTester.cs" />

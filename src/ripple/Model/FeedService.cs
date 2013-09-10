@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuCore.Util;
 using ripple.Nuget;
 
@@ -34,8 +36,8 @@ namespace ripple.Model
 
         private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location)
         {
-            var dependecies = new List<Dependency>();
-            var task = findDependenciesFor(dependency, mode, 0, location, dependecies);
+            var dependencies = new List<Dependency>();
+            var task = findDependenciesFor(dependency, mode, 0, location, dependencies);
 
             try
             {
@@ -50,7 +52,7 @@ namespace ripple.Model
                 }
             }
 
-            return dependecies.OrderBy(x => x.Name);
+            return dependencies.OrderBy(x => x.Name);
         }
 
         private Task findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location, List<Dependency> dependencies)
@@ -95,6 +97,7 @@ namespace ripple.Model
                     nuget
                         .Dependencies()
                         .Each(x => findDependenciesFor(x, mode, depth + 1, location, dependencies));
+
                 }, TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.AttachedToParent);
             }, TaskCreationOptions.AttachedToParent);
         }

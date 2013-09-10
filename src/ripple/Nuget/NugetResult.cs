@@ -49,6 +49,11 @@ namespace ripple.Nuget
             _problems.AddRange(result._problems);
         }
 
+        public static NugetResult NotFound()
+        {
+            return new NugetResult();
+        }
+
         public static NugetResult For(IRemoteNuget nuget)
         {
             return new NugetResult {Nuget = nuget};
