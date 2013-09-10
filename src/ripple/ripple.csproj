@@ -183,6 +183,7 @@
     <Compile Include="Nuget\NugetSearch.cs" />
     <Compile Include="Nuget\NugetStability.cs" />
     <Compile Include="Nuget\NugetXmlFeed.cs" />
+    <Compile Include="Nuget\PackageFiltering.cs" />
     <Compile Include="Nuget\RemoteDependencies.cs" />
     <Compile Include="Nuget\RemoteNuget.cs" />
     <Compile Include="Nuget\RemotePackageDownloader.cs" />

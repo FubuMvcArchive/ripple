@@ -101,7 +101,14 @@ namespace ripple.Testing.Model
             return matching.FirstOrDefault(x => x.Version.Version.Equals(version.Version));
         }
 
-        public override IEnumerable<IRemoteNuget> FindLatestByName(string idPart)
+        public override IRemoteNuget FindLatestByName(string name)
+        {
+            return Nugets.Where(x => x.Name.EqualsIgnoreCase(name))
+                         .OrderByDescending(x => x.Version)
+                         .FirstOrDefault();
+        }
+
+        public override IEnumerable<IRemoteNuget> FindAllLatestByName(string idPart)
         {
             return Nugets.Where(nuget => nuget.Name.Contains(idPart));
         }

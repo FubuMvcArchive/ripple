@@ -16,7 +16,7 @@ namespace ripple.Nuget
             var feeds = FeedRegistry.FeedsFor(solution);
             foreach (var feed in feeds)
             {
-                nuget = dependency.Version.IsEmpty() ? feed.FindLatest(dependency) : feed.Find(dependency);
+                nuget = dependency.Version.IsEmpty() ? feed.FindLatestByName(dependency.Name) : feed.Find(dependency);
 
                 if (nuget != null) break;
             }

@@ -74,7 +74,15 @@ namespace ripple.Nuget
             return new RemoteNuget(package);
         }
 
-        public override IEnumerable<IRemoteNuget> FindLatestByName(string idPart)
+        public override IRemoteNuget FindLatestByName(string name)
+        {
+            return _repository
+                .GetPackages()
+                .Where(x => x.Id.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                .LatestNuget();
+        }
+
+        public override IEnumerable<IRemoteNuget> FindAllLatestByName(string idPart)
         {
             return _repository.GetPackages()
                 .Where(package => package.Id.Contains(idPart) && package.IsLatestVersion)
@@ -88,20 +96,7 @@ namespace ripple.Nuget
             var candidates = _repository.Search(query.Name, query.DetermineStability(_stability) == NugetStability.Anything)
                                         .Where(x => query.Name == x.Id).OrderBy(x => x.Id).ToList();
 
-            var candidate = candidates.FirstOrDefault(x => x.IsAbsoluteLatestVersion)
-                            ?? candidates.FirstOrDefault(x => x.IsLatestVersion);
-
-            if (candidate == null)
-            {
-                // If both absolute and latest are false, then we order in descending order (by version) and take the top
-                candidate = candidates
-                    .OrderByDescending(x => x.Version)
-                    .FirstOrDefault();
-
-                if (candidate == null) return null;
-            }
-
-            return new RemoteNuget(candidate);
+            return candidates.LatestNuget();
         }
 
         public override IPackageRepository Repository { get { return _repository; } }

@@ -23,5 +23,18 @@ namespace ripple.Testing.Nuget
             var stableVersionInThePast = new SemanticVersion("4.9.1");
             theFeed.FindLatest(new Dependency("Newtonsoft.Json") {NugetStability = NugetStability.ReleasedOnly}).Version.ShouldBeGreaterThan(stableVersionInThePast);
         }
+
+        [Test]
+        public void find_the_async_package()
+        {
+            var asyncTargetPack = new Dependency("Microsoft.CompilerServices.AsyncTargetingPack");
+            var solution = new Solution();
+            solution.AddDependency(asyncTargetPack);
+
+            var task = NugetSearch.Find(solution, asyncTargetPack);
+            task.Wait();
+
+            task.Result.Nuget.Version.ShouldEqual(new SemanticVersion("1.0.1"));
+        }
     }
 }
