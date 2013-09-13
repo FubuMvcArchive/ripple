@@ -157,9 +157,12 @@
     <Compile Include="Model\SolutionTester.cs" />
     <Compile Include="Model\StubFeed.cs" />
     <Compile Include="Model\updating_solution_dependencies.cs" />
+    <Compile Include="MSBuild\detecting_framework_names.cs" />
+    <Compile Include="MSBuild\framework_name_detection_harness.cs" />
     <Compile Include="MSBuild\reads_the_project_references.cs" />
     <Compile Include="MSBuild\removing_duplicate_assembly_references.cs" />
     <Compile Include="MSBuild\replacing_reference_to_packages_config.cs" />
+    <Compile Include="MSBuild\XElementExtensionsTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
     <Compile Include="Nuget\CacheFinderTester.cs" />

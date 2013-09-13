@@ -132,6 +132,8 @@
     <Compile Include="Model\ISolutionFiles.cs" />
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
+    <Compile Include="MSBuild\FrameworkNameDetector.cs" />
+    <Compile Include="MSBuild\XElementExtensions.cs" />
     <Compile Include="Nuget\CacheFinder.cs" />
     <Compile Include="Nuget\DefaultFinder.cs" />
     <Compile Include="Nuget\EnsureLatestNuget.cs" />
