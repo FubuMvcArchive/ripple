@@ -45,7 +45,7 @@ namespace ripple.Nuget
         public Task<NugetResult> FindDependency(Solution solution, Dependency dependency)
         {
             var finder = _finders.First.Value;
-            var parent = Task.Factory.StartNew(() => finder.Find(solution, dependency));
+            var parent = Task.Factory.StartNew(() => finder.Find(solution, dependency), TaskCreationOptions.AttachedToParent);
             var task = fill(solution, dependency, parent, _finders.First);
 
             return task.ContinueWith(inner =>
@@ -57,7 +57,7 @@ namespace ripple.Nuget
                 }
 
                 return inner.Result;
-            });
+            }, TaskContinuationOptions.AttachedToParent);
         }
 
         private Task<NugetResult> fill(Solution solution, Dependency dependency, Task<NugetResult> result, LinkedListNode<INugetFinder> node)
@@ -113,11 +113,20 @@ namespace ripple.Nuget
         {
             foreach (var feed in feeds)
             {
-                var nuget = find(feed);
-                if (nuget != null)
+                try
                 {
-                    return NugetResult.For(nuget);
+                    var nuget = find(feed);
+                    if (nuget != null)
+                    {
+                        return NugetResult.For(nuget);
+                    }
                 }
+                catch
+                {
+                    feed.MarkOffline();
+                    throw;
+                }
+                
             }
 
             return NugetResult.NotFound();

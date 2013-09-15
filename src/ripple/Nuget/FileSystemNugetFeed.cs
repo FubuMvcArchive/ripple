@@ -16,6 +16,7 @@ namespace ripple.Nuget
         private readonly FubuCore.IFileSystem _fileSystem;
         private readonly NugetStability _stability;
         private IPackageRepository _repository;
+        private bool _online = true;
 
         public FileSystemNugetFeed(string directory, NugetStability stability)
         {
@@ -62,8 +63,12 @@ namespace ripple.Nuget
 
         public override bool IsOnline()
         {
-            // TODO -- Make this smarter
-            return true;
+            return _online;
+        }
+
+        public override void MarkOffline()
+        {
+            _online = false;
         }
 
         protected override IRemoteNuget find(Dependency query)

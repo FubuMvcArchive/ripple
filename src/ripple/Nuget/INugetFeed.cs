@@ -7,6 +7,7 @@ namespace ripple.Nuget
     public interface INugetFeed
     {
         bool IsOnline();
+        void MarkOffline();
 
         IRemoteNuget Find(Dependency query);
         IRemoteNuget FindLatest(Dependency query);

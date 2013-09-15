@@ -13,7 +13,7 @@ namespace ripple.Nuget
         private readonly IPackageRepository _repository;
         private readonly string _url;
         private readonly NugetStability _stability;
-        private readonly Lazy<bool> _online;
+        private Lazy<bool> _online;
 
         public NugetFeed(string url, NugetStability stability)
         {
@@ -32,6 +32,11 @@ namespace ripple.Nuget
         public override bool IsOnline()
         {
             return _online.Value;
+        }
+
+        public override void MarkOffline()
+        {
+            _online = new Lazy<bool>(() => false);
         }
 
         private bool isOnline()

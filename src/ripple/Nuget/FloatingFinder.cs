@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -13,29 +14,27 @@ namespace ripple.Nuget
 
         public NugetResult Find(Solution solution, Dependency dependency)
         {
-            IRemoteNuget nuget = null;
             var feeds = FeedRegistry.FloatedFeedsFor(solution).ToArray();
-            foreach (var feed in feeds)
+            var result = NugetSearch.FindNuget(feeds, x =>
             {
-                nuget = feed.FindLatest(dependency);
-                if (nuget == null) continue;
+                var feed = x.As<IFloatingFeed>();
+                var nuget = feed.FindLatest(dependency);;
 
-                if (dependency.Mode == UpdateMode.Fixed && nuget.IsUpdateFor(dependency))
+                if (nuget != null && dependency.Mode == UpdateMode.Fixed && nuget.IsUpdateFor(dependency))
                 {
-                    nuget = null;
-                    continue;
+                    return null;
                 }
 
-                break;
-            }
+                return nuget;
+            });
 
-            if (nuget == null)
+            if (!result.Found)
             {
                 feeds.OfType<FloatingFileSystemNugetFeed>()
                     .Each(files => files.DumpLatest());
             }
 
-            return NugetResult.For(nuget);
+            return result;
         }
     }
 }

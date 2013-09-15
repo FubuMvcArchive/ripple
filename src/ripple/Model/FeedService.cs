@@ -42,90 +42,95 @@ namespace ripple.Model
             try
             {
                 task.Wait();
+                if (!task.Result.Found)
+                {
+                    RippleAssert.Fail("Could not find " + dependency.Name);
+                }
             }
             catch (AggregateException ex)
             {
                 var flat = ex.Flatten();
                 if (flat.InnerException != null)
                 {
-                    RippleAssert.Fail(flat.InnerException.Message);
+                    RippleLog.Debug(flat.InnerException.Message);
                 }
             }
 
             return dependencies.OrderBy(x => x.Name);
         }
 
-        private Task findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location, List<Dependency> dependencies)
+        private Task<NugetResult> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location, List<Dependency> dependencies)
         {
+            var result = findLocal(dependency, location);
             return Task.Factory.StartNew(() =>
             {
-                var result = findLocal(dependency, location);
-
-                result.ContinueWith(task =>
+                if (result.Found)
                 {
-                    var parent = task.Result;
-                    if (task.Result.Found) return parent;
+                    processNuget(result.Nuget, dependency, mode, depth, location, dependencies);
+                    return result;
+                }
 
-                    var inner = NugetFor(dependency);
-                    var options = TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.AttachedToParent;
-                    inner.ContinueWith(innerResult => parent.Import(innerResult.Result), options);
+                var search = NugetSearch.Find(_solution, dependency);
 
-                    return parent;
-
-                }, TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.AttachedToParent)
-                .ContinueWith(task =>
+                search.ContinueWith(task =>
                 {
                     if (!task.Result.Found)
                     {
-                        RippleAssert.Fail("Could not find " + dependency);
+                        return;
                     }
 
+                    result.Import(task.Result);
                     var nuget = task.Result.Nuget;
-                    if (depth != 0)
-                    {
-                        var dep = dependency;
-                        var markAsFixed = mode == UpdateMode.Fixed || !FeedRegistry.IsFloat(_solution, dependency);
-
-                        if (dep.IsFloat() && markAsFixed)
-                        {
-                            dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
-                        }
-
-                        dependencies.Add(dep);
-                    }
-
-                    nuget
-                        .Dependencies()
-                        .Each(x => findDependenciesFor(x, mode, depth + 1, location, dependencies));
+                    processNuget(nuget, dependency, mode, depth, location, dependencies);
 
                 }, TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.AttachedToParent);
-            }, TaskCreationOptions.AttachedToParent);
-        }
-
-        private Task<NugetResult> findLocal(Dependency dependency, SearchLocation location)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                var result = new NugetResult();
-                if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
-                {
-                    try
-                    {
-                        // Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
-                        result.Nuget = _solution.LocalNuget(dependency.Name);
-                        result.Nuget.Dependencies().ToList();
-
-                        RippleLog.Debug(dependency.Name + " already installed");
-                    }
-                    catch
-                    {
-                        result.Nuget = null;
-                    }
-                }
 
                 return result;
+
             });
-            
+        }
+
+        private void processNuget(IRemoteNuget nuget, Dependency dependency, UpdateMode mode, int depth, SearchLocation location,
+                                  List<Dependency> dependencies)
+        {
+            if (depth != 0)
+            {
+                var dep = dependency;
+                var markAsFixed = mode == UpdateMode.Fixed || !FeedRegistry.IsFloat(_solution, dependency);
+
+                if (dep.IsFloat() && markAsFixed)
+                {
+                    dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
+                }
+
+                dependencies.Add(dep);
+            }
+
+            nuget
+                .Dependencies()
+                .Each(x => findDependenciesFor(x, mode, depth + 1, location, dependencies));
+        }
+
+        private NugetResult findLocal(Dependency dependency, SearchLocation location)
+        {
+            var result = new NugetResult();
+            if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
+            {
+                try
+                {
+                    // Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
+                    result.Nuget = _solution.LocalNuget(dependency.Name);
+                    result.Nuget.Dependencies().ToList();
+
+                    RippleLog.Debug(dependency.Name + " already installed");
+                }
+                catch
+                {
+                    result.Nuget = null;
+                }
+            }
+
+            return result;
         }
 
         public class DependencyCacheKey

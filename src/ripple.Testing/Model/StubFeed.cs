@@ -74,7 +74,7 @@ namespace ripple.Testing.Model
             return _online;
         }
 
-        public void MarkOffline()
+        public override void MarkOffline()
         {
             _online = false;
         }

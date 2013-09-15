@@ -196,6 +196,7 @@
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
     <Compile Include="Nuget\EmptyVersionFinder.cs" />
     <Compile Include="Platform.cs" />
+    <Compile Include="RippleAssert.cs" />
     <Compile Include="RippleEnvironment.cs" />
     <Compile Include="RippleConstants.cs" />
     <Compile Include="RippleFileSystem.cs" />
