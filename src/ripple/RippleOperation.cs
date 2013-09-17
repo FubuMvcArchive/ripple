@@ -132,6 +132,8 @@ namespace ripple
 
             input.Apply(target);
 
+            target.Dependencies.AssertIsValid();
+
             var runner = new RippleStepRunner(new FileSystem());
             return new RippleOperation(target, input, runner);
         }
