@@ -87,7 +87,7 @@ namespace ripple.Model
 
                 return result;
 
-            });
+            }, TaskCreationOptions.AttachedToParent);
         }
 
         private void processNuget(IRemoteNuget nuget, Dependency dependency, UpdateMode mode, int depth, SearchLocation location,
