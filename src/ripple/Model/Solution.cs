@@ -137,7 +137,7 @@ namespace ripple.Model
             set
             {
                 _configuredDependencies.Clear();
-                _configuredDependencies.AddRange(value);
+                _configuredDependencies.AddRange(value.OrderBy(x => x.Name));
                 resetDependencies();
             }
         }

@@ -115,6 +115,8 @@ namespace ripple.Nuget
             {
                 try
                 {
+                    if (!feed.IsOnline()) return NugetResult.NotFound();
+
                     var nuget = find(feed);
                     if (nuget != null)
                     {

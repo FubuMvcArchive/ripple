@@ -15,6 +15,7 @@ namespace ripple.Nuget
         private readonly string _directory;
         private readonly FubuCore.IFileSystem _fileSystem;
         private readonly NugetStability _stability;
+        private readonly Lazy<IEnumerable<INugetFile>> _files; 
         private IPackageRepository _repository;
         private bool _online = true;
 
@@ -32,22 +33,26 @@ namespace ripple.Nuget
 
             _stability = stability;
             _fileSystem = new FileSystem();
+
+            _files = new Lazy<IEnumerable<INugetFile>>(findFiles);
         }
 
         public string Directory { get { return _directory; } }
 
         protected IEnumerable<INugetFile> files
         {
-            get
-            {
-                var nupkgSet = new FileSet
-                {
-                    Include = "*.nupkg",
-                    DeepSearch = false
-                };
+            get { return _files.Value; }
+        }
 
-                return _fileSystem.FindFiles(_directory, nupkgSet).Select(x => new NugetFile(x, SolutionMode.Ripple));
-            }
+        private IEnumerable<INugetFile> findFiles()
+        {
+            var nupkgSet = new FileSet
+            {
+                Include = "*.nupkg",
+                DeepSearch = false
+            };
+
+            return _fileSystem.FindFiles(_directory, nupkgSet).Select(x => new NugetFile(x, SolutionMode.Ripple));
         }
 
         private IRemoteNuget findMatching(Func<INugetFile, bool> predicate)
