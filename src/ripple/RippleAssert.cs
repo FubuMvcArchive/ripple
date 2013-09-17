@@ -7,7 +7,18 @@ namespace ripple
     {
         public static void Fail(string message, params object[] substitutions)
         {
-            RippleLog.Error(message.ToFormat(substitutions));
+            // TODO -- Hate this
+            var formattedMessage = message;
+            try
+            {
+                formattedMessage = message.ToFormat(substitutions);
+            }
+            catch (FormatException)
+            {
+                // Just swallow it
+            }
+
+            RippleLog.Error(formattedMessage);
             throw new RippleFatalError(message);
         }
     }

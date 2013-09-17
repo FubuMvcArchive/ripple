@@ -134,7 +134,8 @@ namespace ripple.Nuget
 
     public class FloatingFileSystemNugetFeed : FileSystemNugetFeed, IFloatingFeed
     {
-        private readonly Lazy<IEnumerable<IRemoteNuget>> _nugets; 
+        private readonly Lazy<IEnumerable<IRemoteNuget>> _nugets;
+        private bool _dumped = false;
 
         public FloatingFileSystemNugetFeed(string directory, NugetStability stability) 
             : base(directory, stability)
@@ -176,29 +177,37 @@ namespace ripple.Nuget
 
         public void DumpLatest()
         {
-            var latest = GetLatest();
-            var topic = new LatestFileNugets(latest, Directory);
+            lock (this)
+            {
+                if (_dumped) return;
 
-            RippleLog.DebugMessage(topic);
+                var latest = GetLatest();
+                var topic = new LatestNugets(latest, Directory);
+
+                RippleLog.DebugMessage(topic);
+                _dumped = true;
+            }
         }
 
-        public class LatestFileNugets : LogTopic, DescribesItself
+        
+    }
+
+    public class LatestNugets : LogTopic, DescribesItself
+    {
+        private readonly IEnumerable<IRemoteNuget> _nugets;
+        private readonly string _source;
+
+        public LatestNugets(IEnumerable<IRemoteNuget> nugets, string source)
         {
-            private readonly IEnumerable<IRemoteNuget> _nugets;
-            private readonly string _directory;
+            _nugets = nugets;
+            _source = source;
+        }
 
-            public LatestFileNugets(IEnumerable<IRemoteNuget> nugets, string directory)
-            {
-                _nugets = nugets;
-                _directory = directory;
-            }
-
-            public void Describe(Description description)
-            {
-                description.ShortDescription = "Files found in " + _directory;
-                var list = description.AddList("Files", _nugets);
-                list.Label = "Files";
-            }
+        public void Describe(Description description)
+        {
+            description.ShortDescription = "Nugets found from " + _source;
+            var list = description.AddList("Nugets", _nugets);
+            list.Label = "Nugets";
         }
     }
 }

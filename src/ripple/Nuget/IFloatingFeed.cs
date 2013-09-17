@@ -5,5 +5,6 @@ namespace ripple.Nuget
     public interface IFloatingFeed : INugetFeed
     {
         IEnumerable<IRemoteNuget> GetLatest();
+        void DumpLatest();
     }
 }

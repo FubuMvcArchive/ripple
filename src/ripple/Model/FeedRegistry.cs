@@ -115,7 +115,13 @@ namespace ripple.Model
 
         public static IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution)
         {
-            return _provider.FloatedFeedsFor(solution);
+            foreach (var feed in _provider.FloatedFeedsFor(solution))
+            {
+                if (feed.IsOnline())
+                {
+                    yield return feed;
+                }
+            }
         }
 
         public static IEnumerable<INugetFeed> FeedsFor(Solution solution)

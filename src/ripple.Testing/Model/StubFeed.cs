@@ -16,14 +16,14 @@ namespace ripple.Testing.Model
         public StubFeedProvider()
         {
             _feeds = new Cache<Feed, StubFeed>(feed =>
-	        {
-		        if (feed.Mode == UpdateMode.Fixed)
-		        {
-			        return new StubFeed(feed);
-		        }
+            {
+                if (feed.Mode == UpdateMode.Fixed)
+                {
+                    return new StubFeed(feed);
+                }
 
-				return new FloatingStubFeed(feed);
-	        });
+                return new FloatingStubFeed(feed);
+            });
         }
 
         public INugetFeed For(Feed feed)
@@ -132,6 +132,11 @@ namespace ripple.Testing.Model
             }
         }
 
+        public StubFeed ThrowWhenSearchingFor(string name, Exception exception)
+        {
+            return ThrowWhenSearchingFor(new Dependency(name), exception, UpdateMode.Float);
+        }
+
         public StubFeed ThrowWhenSearchingFor(string name, string version, Exception exception)
         {
             return ThrowWhenSearchingFor(new Dependency(name, version), exception);
@@ -173,7 +178,7 @@ namespace ripple.Testing.Model
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((StubFeed) obj);
+            return Equals((StubFeed)obj);
         }
 
         public override int GetHashCode()
@@ -201,33 +206,37 @@ namespace ripple.Testing.Model
         }
     }
 
-	public class FloatingStubFeed : StubFeed, IFloatingFeed
-	{
-		public FloatingStubFeed(Feed feed) 
-			: base(feed)
-		{}
+    public class FloatingStubFeed : StubFeed, IFloatingFeed
+    {
+        public FloatingStubFeed(Feed feed)
+            : base(feed)
+        { }
 
-		public IEnumerable<IRemoteNuget> GetLatest()
-		{
-			var nugets = new List<IRemoteNuget>();
+        public IEnumerable<IRemoteNuget> GetLatest()
+        {
+            var nugets = new List<IRemoteNuget>();
 
-			var distinct = from nuget in Nugets
-			               let name = nuget.Name.ToLower()
-			               group nuget by name;
+            var distinct = from nuget in Nugets
+                           let name = nuget.Name.ToLower()
+                           group nuget by name;
 
-			distinct.Each(group =>
-			{
-				var latest = group.OrderByDescending(n => n.Version).First();
-				nugets.Add(latest);
-			});
+            distinct.Each(group =>
+            {
+                var latest = group.OrderByDescending(n => n.Version).First();
+                nugets.Add(latest);
+            });
 
-			return nugets.OrderBy(x => x.Name);
-		}
+            return nugets.OrderBy(x => x.Name);
+        }
 
-	    public IRemoteNuget LatestFor(Dependency dependency)
-	    {
+        public void DumpLatest()
+        {
+        }
+
+        public IRemoteNuget LatestFor(Dependency dependency)
+        {
             throwIfNeeded(dependency, UpdateMode.Float);
             return GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
-	    }
-	}
+        }
+    }
 }

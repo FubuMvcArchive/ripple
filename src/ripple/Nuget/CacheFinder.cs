@@ -1,9 +1,10 @@
 using FubuCore;
+using FubuCore.Descriptions;
 using ripple.Model;
 
 namespace ripple.Nuget
 {
-    public class CacheFinder : INugetFinder
+    public class CacheFinder : INugetFinder, DescribesItself
     {
         public bool Matches(Dependency dependency)
         {
@@ -16,6 +17,11 @@ namespace ripple.Nuget
             var nuget = cache.Find(dependency);
 
             return new NugetResult { Nuget = nuget };
+        }
+
+        public void Describe(Description description)
+        {
+            description.ShortDescription = "Search in Cache";
         }
     }
 }

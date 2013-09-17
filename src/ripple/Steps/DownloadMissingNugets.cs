@@ -51,6 +51,8 @@ namespace ripple.Steps
 
         private static Task restore(Dependency query, Solution solution, MissingNugetReport report, List<INugetFile> nugets)
         {
+            RippleLog.Debug("Restoring " + query);
+
             var result = solution.Restore(query);
             return result.ContinueWith(task =>
             {

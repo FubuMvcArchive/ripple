@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FubuCore.Descriptions;
+using FubuCore.Logging;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -103,7 +105,7 @@ namespace ripple.Nuget
 
         public static Task<NugetResult> Find(Solution solution, Dependency dependency)
         {
-            var finders = Finders.Where(x => x.Matches(dependency));
+            var finders = Finders.Where(x => x.Matches(dependency)).ToArray();
             var search = new NugetSearch(finders);
 
             return search.FindDependency(solution, dependency);
@@ -115,8 +117,6 @@ namespace ripple.Nuget
             {
                 try
                 {
-                    if (!feed.IsOnline()) return NugetResult.NotFound();
-
                     var nuget = find(feed);
                     if (nuget != null)
                     {

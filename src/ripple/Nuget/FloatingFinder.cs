@@ -18,8 +18,7 @@ namespace ripple.Nuget
             var result = NugetSearch.FindNuget(feeds, x =>
             {
                 var feed = x.As<IFloatingFeed>();
-                var nuget = feed.FindLatest(dependency);;
-
+                var nuget = feed.FindLatest(dependency);
                 if (nuget != null && dependency.Mode == UpdateMode.Fixed && nuget.IsUpdateFor(dependency))
                 {
                     return null;
@@ -30,7 +29,8 @@ namespace ripple.Nuget
 
             if (!result.Found)
             {
-                feeds.OfType<FloatingFileSystemNugetFeed>()
+                feeds
+                    .Where(x => x.IsOnline())
                     .Each(files => files.DumpLatest());
             }
 
