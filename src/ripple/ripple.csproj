@@ -56,7 +56,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Classic\NuGetSolutionLoader.cs" />
+    <Compile Include="Classic\ClassicRippleSolutionLoader.cs" />
     <Compile Include="Commands\ApiKeyCommand.cs" />
     <Compile Include="Commands\BatchInstallCommand.cs" />
     <Compile Include="Commands\BatchPublishCommand.cs" />
@@ -127,12 +127,16 @@
     <Compile Include="Model\IFeedConnectivity.cs" />
     <Compile Include="Model\IFeedService.cs" />
     <Compile Include="Model\IgnoreAssemblyReference.cs" />
+    <Compile Include="Model\InMemorySolutionLoader.cs" />
     <Compile Include="Model\IProjectReader.cs" />
     <Compile Include="Model\IPublishingService.cs" />
     <Compile Include="Model\ISolutionBuilder.cs" />
     <Compile Include="Model\ISolutionFiles.cs" />
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
+    <Compile Include="Model\SolutionFiles.cs" />
+    <Compile Include="Model\SolutionLoader.cs" />
+    <Compile Include="Model\Xml\XmlSolutionLoader.cs" />
     <Compile Include="MSBuild\FrameworkNameDetector.cs" />
     <Compile Include="MSBuild\XElementExtensions.cs" />
     <Compile Include="Nuget\CacheFinder.cs" />

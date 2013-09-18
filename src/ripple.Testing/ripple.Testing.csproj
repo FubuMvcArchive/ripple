@@ -160,6 +160,7 @@
     <Compile Include="Model\SolutionTester.cs" />
     <Compile Include="Model\StubFeed.cs" />
     <Compile Include="Model\updating_solution_dependencies.cs" />
+    <Compile Include="Model\Xml\XmlSolutionLoaderTester.cs" />
     <Compile Include="MSBuild\detecting_framework_names.cs" />
     <Compile Include="MSBuild\framework_name_detection_harness.cs" />
     <Compile Include="MSBuild\reads_the_project_references.cs" />
@@ -235,6 +236,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="Model\Xml\solution.txt" />
     <EmbeddedResource Include="MSBuild\ProjectWithProjectRefs.txt" />
     <EmbeddedResource Include="MSBuild\ProjectWithPackagesConfig.txt" />
     <EmbeddedResource Include="MSBuild\ProjectWithDuplicateRefs.txt" />

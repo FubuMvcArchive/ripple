@@ -16,7 +16,7 @@ namespace ripple.Testing.Classic
 		private Project p1;
 		private Project p2;
 
-		private NuGetSolutionLoader theLoader;
+		private ClassicRippleSolutionLoader theLoader;
 
 		[SetUp]
 		public void SetUp()
@@ -36,7 +36,7 @@ namespace ripple.Testing.Classic
 			p2.AddDependency(new Dependency("FubuLocalization", "1.0.0.1", UpdateMode.Fixed));
 			p2.AddDependency(new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
 
-			theLoader = new NuGetSolutionLoader();
+			theLoader = new ClassicRippleSolutionLoader();
 			theLoader.MarkFloatingDependencies(theConfig, theSolution);
 		}
 
@@ -65,7 +65,7 @@ namespace ripple.Testing.Classic
 		private Project p1;
 		private Project p2;
 
-		private NuGetSolutionLoader theLoader;
+		private ClassicRippleSolutionLoader theLoader;
 
 		[SetUp]
 		public void SetUp()
@@ -83,7 +83,7 @@ namespace ripple.Testing.Classic
 			p2.AddDependency(new Dependency("FubuLocalization"));
 			p2.AddDependency(new Dependency("StructureMap", "2.6.3", UpdateMode.Fixed));
 
-			theLoader = new NuGetSolutionLoader();
+			theLoader = new ClassicRippleSolutionLoader();
 			theLoader.ExtractSolutionLevelConfiguration(theConfig, theSolution);
 		}
 
@@ -114,7 +114,7 @@ namespace ripple.Testing.Classic
         private Solution theSolution;
         private Feed theFeed;
 
-        private NuGetSolutionLoader theLoader;
+        private ClassicRippleSolutionLoader theLoader;
 
         [SetUp]
         public void SetUp()
@@ -129,7 +129,7 @@ namespace ripple.Testing.Classic
             var fileSystem = MockRepository.GenerateStub<IFileSystem>();
             fileSystem.Stub(x => x.LoadFromFile<SolutionConfig>(rippleConfig)).Return(theConfig);
             
-            theLoader = new NuGetSolutionLoader();
+            theLoader = new ClassicRippleSolutionLoader();
             theSolution = theLoader.LoadFrom(fileSystem, rippleConfig);
         }
 
