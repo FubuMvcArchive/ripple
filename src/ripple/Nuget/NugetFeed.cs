@@ -69,7 +69,10 @@ namespace ripple.Nuget
             }
 
             var versionSpec = new VersionSpec(version);
-            var package = _repository.FindPackages(query.Name, versionSpec, query.DetermineStability(_stability) == NugetStability.Anything, true).SingleOrDefault();
+            var package = _repository
+                .FindPackages(query.Name, versionSpec, query.DetermineStability(_stability) == NugetStability.Anything, true)
+                .OrderByDescending(x => x.Version)
+                .FirstOrDefault();
 
             if (package == null)
             {
