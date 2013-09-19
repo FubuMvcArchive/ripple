@@ -38,6 +38,9 @@
       <HintPath>..\packages\FubuTestingSupport\lib\FubuTestingSupport.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.XmlTransform">
+      <HintPath>..\packages\Microsoft.Web.Xdt\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    </Reference>
     <Reference Include="NuGet.Core">
       <HintPath>..\packages\Nuget.Core\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
@@ -90,6 +93,9 @@
     <Compile Include="FeedScenario.cs" />
     <Compile Include="ForceDeleteTester.cs" />
     <Compile Include="Integration\batch_install_from_a_flat_file.cs" />
+    <Compile Include="Integration\restore_dependencies_from_multiple_feeds_first_feed_unavailable.cs" />
+    <Compile Include="Integration\restore_fixed_dependency_that_cannot_be_found.cs" />
+    <Compile Include="Integration\restore_float_dependency_with_no_version.cs" />
     <Compile Include="Integration\feed_order_with_cache.cs" />
     <Compile Include="Integration\restore_dependencies_that_only_exist_in_cache.cs" />
     <Compile Include="Integration\restore_fixed_dependency_with_min_version_higher_than_local.cs" />
@@ -114,12 +120,15 @@
     <Compile Include="Integration\restore_dependencies_and_trigger_batch_install.cs" />
     <Compile Include="Integration\restore_dependencies_case_insensitive.cs" />
     <Compile Include="Integration\restoring_prelease_nugets_from_cache.cs" />
+    <Compile Include="Integration\update_a_dependency_with_errors_from_a_feed.cs" />
     <Compile Include="Integration\update_dependencies_while_creating_local_nugets.cs" />
     <Compile Include="Integration\updating_an_existing_dependency_in_a_group.cs" />
     <Compile Include="Integration\updating_a_dependency_with_transitive_updates.cs" />
+    <Compile Include="Integration\updating_a_float_dependency_when_a_cached_version_exists.cs" />
     <Compile Include="Integration\valid_solution.cs" />
     <Compile Include="Model\BatchOperationTester.cs" />
     <Compile Include="Model\FeedConnectivityTester.cs" />
+    <Compile Include="Model\finding_project_nugets_to_restore.cs" />
     <Compile Include="Model\IgnoreAssemblyReferenceTester.cs" />
     <Compile Include="Model\InMemoryNugetCache.cs" />
     <Compile Include="Model\NuspecSettingsTester.cs" />
@@ -135,7 +144,6 @@
     <Compile Include="Model\FeedProviderTester.cs" />
     <Compile Include="Model\FeedTester.cs" />
     <Compile Include="Model\finding_solution_nugets_to_restore.cs" />
-    <Compile Include="Model\finding_the_latest_dependency.cs" />
     <Compile Include="Model\missing_files_with_force_all_restore.cs" />
     <Compile Include="Model\missing_files_with_force_restore_of_specific_dependency.cs" />
     <Compile Include="Model\NugetDependencyStrategyTester.cs" />
@@ -152,14 +160,25 @@
     <Compile Include="Model\SolutionTester.cs" />
     <Compile Include="Model\StubFeed.cs" />
     <Compile Include="Model\updating_solution_dependencies.cs" />
+    <Compile Include="MSBuild\detecting_framework_names.cs" />
+    <Compile Include="MSBuild\framework_name_detection_harness.cs" />
     <Compile Include="MSBuild\reads_the_project_references.cs" />
     <Compile Include="MSBuild\removing_duplicate_assembly_references.cs" />
     <Compile Include="MSBuild\replacing_reference_to_packages_config.cs" />
+    <Compile Include="MSBuild\XElementExtensionsTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
+    <Compile Include="Nuget\CacheFinderTester.cs" />
+    <Compile Include="Nuget\EmptyVersionFinderTester.cs" />
+    <Compile Include="Nuget\DefaultFinderTester.cs" />
+    <Compile Include="Nuget\EnsureLatestNugetTester.cs" />
     <Compile Include="Nuget\FileSystemFeedTester.cs" />
+    <Compile Include="Nuget\finding_latest_nuget_by_name_from_NugetSearch.cs" />
+    <Compile Include="Nuget\FloatingFinderTester.cs" />
+    <Compile Include="Nuget\NoMaxVersionSpecFinderTester.cs" />
     <Compile Include="Nuget\NugetFeedTester.cs" />
     <Compile Include="Nuget\NugetPlanRequestTester.cs" />
+    <Compile Include="Nuget\NugetSearchTester.cs" />
     <Compile Include="Nuget\NugetStepRunnerTester.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_any_stability.cs" />
     <Compile Include="Nuget\Operations\installing_a_fixed_project_dependency_released_only.cs" />

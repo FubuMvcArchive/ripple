@@ -12,6 +12,7 @@ namespace ripple.Testing.Nuget.Operations
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
+        private NugetPlanRequest theRequest;
 
         [SetUp]
         public void SetUp()
@@ -39,15 +40,13 @@ namespace ripple.Testing.Nuget.Operations
 
             theBuilder = new NugetPlanBuilder();
 
-            var request = new NugetPlanRequest
+            theRequest = new NugetPlanRequest
             {
                 Solution = theSolution,
                 Dependency = new Dependency("FubuCore"),
                 Operation = OperationType.Update,
                 ForceUpdates = false
             };
-
-            thePlan = theBuilder.PlanFor(request);
         }
 
         [TearDown]
@@ -58,11 +57,10 @@ namespace ripple.Testing.Nuget.Operations
         }
 
         [Test]
-        public void verify_plan()
+        public void cannot_update_floats_in_offline_mode()
         {
-            thePlan.ShouldHaveTheSameElementsAs(
-                updateSolutionDependency("FubuCore", "1.2.0.0", UpdateMode.Float)
-            );
+            Exception<RippleFatalError>
+                .ShouldBeThrownBy(() => theBuilder.PlanFor(theRequest));
         }
 
     }

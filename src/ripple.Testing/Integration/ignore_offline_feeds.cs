@@ -19,7 +19,7 @@ namespace ripple.Testing.Integration
             {
                 scenario.For(Feed.Fubu)
                     .Add("FubuCore", "1.1.0.0")
-                    .ThrowWhenSearchingFor("Bottles", "1.0.0.0", new NotImplementedException());
+                    .ThrowWhenSearchingFor("Bottles", "1.0.0.0", UpdateMode.Float, new NotImplementedException());
 
                 scenario.For(Feed.NuGetV2)
                         .Add("Bottles", "1.0.0.0");
@@ -41,28 +41,10 @@ namespace ripple.Testing.Integration
         [Test]
         public void continues_to_next_feed_when_an_exception_occurs()
         {
-            theFeedService.NugetFor(new Dependency("Bottles", "1.0.0.0")).ShouldNotBeNull();
-        }
+            var task = theFeedService.NugetFor(new Dependency("Bottles", "1.0.0.0"));
+            task.Wait();
 
-        [Test]
-        public void ignores_feed_after_encountering_error()
-        {
-            theFeedService.NugetFor(new Dependency("Bottles", "1.0.0.0"));
-
-            var dependency = new Dependency("FubuCore", "1.1.0.0");
-            var exception = Exception<RippleFatalError>.ShouldBeThrownBy(() => theFeedService.NugetFor(dependency));
-            exception.Message.ShouldEqual("Could not find " + dependency);
-        }
-
-        [Test]
-        public void continues_to_next_feed_when_finding_latest_and_an_exception_occurs()
-        {
-            var storage = new StubNugetStorage();
-            storage.Add("Bottles", "0.9.9.9");
-
-            theSolution.UseStorage(storage);
-
-            theFeedService.LatestFor(theSolution, new Dependency("Bottles", "1.0.0.0")).ShouldNotBeNull();
+            task.Result.Nuget.ShouldNotBeNull();
         }
     }
 

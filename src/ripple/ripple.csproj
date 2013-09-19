@@ -39,6 +39,9 @@
       <HintPath>..\packages\FubuCore\lib\FubuCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.XmlTransform">
+      <HintPath>..\packages\Microsoft.Web.Xdt\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    </Reference>
     <Reference Include="NuGet.Core">
       <HintPath>..\packages\Nuget.Core\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
@@ -116,6 +119,7 @@
     <Compile Include="Model\Dependency.cs" />
     <Compile Include="Model\DependencyCollection.cs" />
     <Compile Include="Model\DependencyGroup.cs" />
+    <Compile Include="Model\DependencyValidationResult.cs" />
     <Compile Include="Model\Feed.cs" />
     <Compile Include="Model\FeedRegistry.cs" />
     <Compile Include="Model\FeedService.cs" />
@@ -129,6 +133,17 @@
     <Compile Include="Model\ISolutionFiles.cs" />
     <Compile Include="Model\ISolutionLoader.cs" />
     <Compile Include="Model\NuGetDependencyStrategy.cs" />
+    <Compile Include="MSBuild\FrameworkNameDetector.cs" />
+    <Compile Include="MSBuild\XElementExtensions.cs" />
+    <Compile Include="Nuget\CacheFinder.cs" />
+    <Compile Include="Nuget\DefaultFinder.cs" />
+    <Compile Include="Nuget\EnsureLatestNuget.cs" />
+    <Compile Include="Nuget\FloatingFinder.cs" />
+    <Compile Include="Nuget\INugetFilter.cs" />
+    <Compile Include="Nuget\INugetFinder.cs" />
+    <Compile Include="Nuget\NoMaxVersionSpecFinder.cs" />
+    <Compile Include="Nuget\NugetProblem.cs" />
+    <Compile Include="Nuget\NugetResult.cs" />
     <Compile Include="Model\NulloDependencyStrategy.cs" />
     <Compile Include="Model\NuspecMap.cs" />
     <Compile Include="Model\NuspecSettings.cs" />
@@ -171,14 +186,18 @@
     <Compile Include="Nuget\NugetPlan.cs" />
     <Compile Include="Nuget\NugetPlanBuilder.cs" />
     <Compile Include="Nuget\NugetPlanRequest.cs" />
+    <Compile Include="Nuget\NugetSearch.cs" />
     <Compile Include="Nuget\NugetStability.cs" />
     <Compile Include="Nuget\NugetXmlFeed.cs" />
+    <Compile Include="Nuget\PackageFiltering.cs" />
     <Compile Include="Nuget\RemoteDependencies.cs" />
     <Compile Include="Nuget\RemoteNuget.cs" />
     <Compile Include="Nuget\RemotePackageDownloader.cs" />
     <Compile Include="Nuget\UpdateDependency.cs" />
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
+    <Compile Include="Nuget\EmptyVersionFinder.cs" />
     <Compile Include="Platform.cs" />
+    <Compile Include="RippleAssert.cs" />
     <Compile Include="RippleEnvironment.cs" />
     <Compile Include="RippleConstants.cs" />
     <Compile Include="RippleFileSystem.cs" />
@@ -203,6 +222,7 @@
     <Compile Include="Steps\DownloadedNugets.cs" />
     <Compile Include="Steps\DownloadMissingNugets.cs" />
     <Compile Include="Steps\FloatDependency.cs" />
+    <Compile Include="Steps\MissingNugetReport.cs" />
     <Compile Include="Steps\NugetOperation.cs" />
     <Compile Include="Steps\ProcessDirectives.cs" />
     <Compile Include="Steps\RemoveNuget.cs" />

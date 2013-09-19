@@ -16,7 +16,7 @@ namespace ripple.MSBuild
     public class CsProjFile
     {
         public const string Schema = "http://schemas.microsoft.com/developer/msbuild/2003";
-        private static readonly XmlNamespaceManager _manager;
+        public static readonly XmlNamespaceManager Manager;
         private static readonly XNamespace _xmlns;
         private readonly XElement _document;
         private readonly string _filename;
@@ -27,10 +27,16 @@ namespace ripple.MSBuild
 
         static CsProjFile()
         {
-            _manager = new XmlNamespaceManager(new NameTable());
-            _manager.AddNamespace("tns", Schema);
+            Manager = new XmlNamespaceManager(new NameTable());
+            Manager.AddNamespace("tns", Schema);
 
             _xmlns = Schema;
+        }
+
+        private CsProjFile(XElement document)
+        {
+            _document = document;
+            _document.Name = _xmlns + _document.Name.LocalName;
         }
 
         public CsProjFile(string filename, Solution solution)
@@ -52,20 +58,11 @@ namespace ripple.MSBuild
             }
         }
 
-        public string ToolsVersion
-        {
-            get { return _document.Attribute(XName.Get("ToolsVersion")).Value; }
-        }
-
-        public IEnumerable<Reference> References
-        {
-            get { return _references.Value; }
-        }
-
-        public IEnumerable<string> ProjectReferences
-        {
-            get { return _projectReferences.Value; }
-        }
+        public XElement Document { get { return _document; } }
+        public FrameworkName FrameworkName { get { return FrameworkNameDetector.Detect(this); } }
+        public string ToolsVersion { get { return _document.Attribute(XName.Get("ToolsVersion")).Value; } }
+        public IEnumerable<Reference> References { get { return _references.Value; } }
+        public IEnumerable<string> ProjectReferences { get { return _projectReferences.Value; } }
 
         public ReferenceStatus AddReference(string name, string hintPath)
         {
@@ -131,7 +128,7 @@ namespace ripple.MSBuild
 
         public XElement FindPackagesConfigItem()
         {
-            foreach (var none in _document.XPathSelectElements("tns:ItemGroup/tns:None", _manager))
+            foreach (var none in _document.XPathSelectElements("tns:ItemGroup/tns:None", Manager))
             {
                 if (none.Attribute("Include").Value == "packages.config")
                 {
@@ -139,7 +136,7 @@ namespace ripple.MSBuild
                 }
             }
 
-            foreach (var content in _document.XPathSelectElements("tns:ItemGroup/tns:Content", _manager))
+            foreach (var content in _document.XPathSelectElements("tns:ItemGroup/tns:Content", Manager))
             {
                 if (content.Attribute("Include").Value == "packages.config")
                 {
@@ -165,7 +162,7 @@ namespace ripple.MSBuild
                     node.Remove();
                 }
 
-                var itemGroup = _document.XPathSelectElement("tns:ItemGroup", _manager);
+                var itemGroup = _document.XPathSelectElement("tns:ItemGroup", Manager);
                 itemGroup.Name = _xmlns + itemGroup.Name.LocalName;
 
                 _references.Value.OrderBy(x => x.Name).Each(reference =>
@@ -193,85 +190,39 @@ namespace ripple.MSBuild
             _document.Save(_filename);
         }
 
-        private IEnumerable<string> readProjectReferences()
-        {
-            var references = _document.XPathSelectElements("tns:ItemGroup/tns:ProjectReference", _manager);
-            foreach (var reference in references)
-            {
-                var name = reference.XPathSelectElement("tns:Name", _manager);
-                if (name != null)
-                {
-                    yield return name.Value;
-                }
-            }
-        }
-
-        private IEnumerable<Reference> readReferences()
-        {
-            var nodes = FindReferenceNodes();
-            foreach (var node in nodes)
-            {
-                var reference = new Reference
-                {
-                    Name = node.Attribute("Include").Value
-                };
-
-                foreach (var child in node.Elements())
-                {
-                    switch (child.Name.LocalName)
-                    {
-                        case "HintPath":
-                            reference.HintPath = child.Value;
-                            break;
-                        case "Aliases":
-                            reference.Aliases = child.Value;
-                            break;
-                    }
-                }
-
-                yield return reference;
-            }
-        }
-
         public IEnumerable<XElement> FindReferenceNodes()
         {
-            return _document.XPathSelectElements("tns:ItemGroup/tns:Reference", _manager);
+            return _document.XPathSelectElements("tns:ItemGroup/tns:Reference", Manager);
         }
 
-        public override string ToString()
-        {
-            return string.Format("Filename: {0}", _filename);
-        }
-
-        public void AddAssemblies(Dependency dep, IEnumerable<IPackageAssemblyReference> assemblies, Solution solution)
+        public void AddAssemblies(Dependency dep, IEnumerable<IPackageAssemblyReference> assemblies)
         {
             bool needsSaved = false;
 
-            assemblies = GetCompatibleItemsCore(assemblies).ToList();
+            assemblies = findCompatibleItems(assemblies).ToList();
 
             assemblies.Each(assem =>
             {
-                string assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
+                var assemblyName = Path.GetFileNameWithoutExtension(assem.Name);
 
-                if (assemblyName == "_._") return;
+                if (assemblyName == "_._" || assemblyName == "_") return;
 
-                if (!solution.References.ShouldAddReference(dep, assemblyName)) return;
+                if (!_solution.References.ShouldAddReference(dep, assemblyName)) return;
 
                 var nugetDir = _solution.NugetFolderFor(dep.Name);
                 var assemblyPath = nugetDir.AppendPath(assem.Path);
-
                 var hintPath = assemblyPath.PathRelativeTo(_filename.ParentDirectory());
 
                 if (AddReference(assemblyName, hintPath) == ReferenceStatus.Changed)
                 {
-                    Console.WriteLine("Updated reference for {0} to {1}", _filename, hintPath);
+                    RippleLog.Info("Updated reference for {0} to {1}".ToFormat(_filename, hintPath));
                     needsSaved = true;
                 }
             });
 
             if (needsSaved)
             {
-                Console.WriteLine("Writing changes to " + _filename);
+                RippleLog.Info("Writing changes to " + _filename);
                 Write();
             }
         }
@@ -308,17 +259,72 @@ namespace ripple.MSBuild
             RemoveReferences(removals);
         }
 
-        internal static IEnumerable<T> GetCompatibleItemsCore<T>(IEnumerable<T> items) where T : IFrameworkTargetable
+        private IEnumerable<string> readProjectReferences()
+        {
+            var references = _document.XPathSelectElements("tns:ItemGroup/tns:ProjectReference", Manager);
+            foreach (var reference in references)
+            {
+                var name = reference.XPathSelectElement("tns:Name", Manager);
+                if (name != null)
+                {
+                    yield return name.Value;
+                }
+            }
+        }
+
+        private IEnumerable<Reference> readReferences()
+        {
+            var nodes = FindReferenceNodes();
+            foreach (var node in nodes)
+            {
+                var reference = new Reference
+                {
+                    Name = node.Attribute("Include").Value
+                };
+
+                foreach (var child in node.Elements())
+                {
+                    switch (child.Name.LocalName)
+                    {
+                        case "HintPath":
+                            reference.HintPath = child.Value;
+                            break;
+                        case "Aliases":
+                            reference.Aliases = child.Value;
+                            break;
+                    }
+                }
+
+                yield return reference;
+            }
+        }
+
+        // Manually tested for now. Sucks, but it is what it is.
+        private IEnumerable<T> findCompatibleItems<T>(IEnumerable<T> items) where T : IFrameworkTargetable
         {
             IEnumerable<T> compatibleItems;
 
-            // TODO -- this obviously isn't good enough.
-            if (VersionUtility.TryGetCompatibleItems(new FrameworkName(".NETFramework, Version=4.0"), items,
-                                                     out compatibleItems))
+            if (VersionUtility.TryGetCompatibleItems(FrameworkName, items, out compatibleItems))
             {
                 return compatibleItems;
             }
+
             return Enumerable.Empty<T>();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Filename: {0}", _filename);
+        }
+
+        /// <summary>
+        /// *ONLY* used for testing
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
+        public static CsProjFile For(XElement document)
+        {
+            return new CsProjFile(document);
         }
     }
 }

@@ -6,69 +6,69 @@ using ripple.Model;
 
 namespace ripple.Testing.Integration
 {
-	[TestFixture]
-	public class updating_a_dependency_with_transitive_updates
-	{
-		private SolutionGraphScenario theScenario;
-		private Solution theSolution;
+    [TestFixture]
+    public class updating_a_dependency_with_transitive_updates
+    {
+        private SolutionGraphScenario theScenario;
+        private Solution theSolution;
 
-		[SetUp]
-		public void SetUp()
-		{
-			FeedScenario.Create(scenario =>
-			{
-				scenario
-					.For(Feed.Fubu)
-					.Add("Serenity", "1.0.0.2")
-					.Add("Something", "1.0.0.0")
+        [SetUp]
+        public void SetUp()
+        {
+            FeedScenario.Create(scenario =>
+            {
+                scenario
+                    .For(Feed.Fubu)
+                    .Add("Serenity", "1.0.0.2")
+                    .Add("Something", "1.0.0.0")
                     .Add("FubuCore", "1.0.0.1")
-					.ConfigureRepository(teamcity =>
-					{
-						teamcity.ConfigurePackage("Serenity", "1.0.0.2", serenity =>
-						{
-							serenity.DependsOn("WebDriver", "1.2.0.0");
-							serenity.DependsOn("Something");
-							serenity.DependsOn("SomethingElse", "0.9.9.9");
-						});
-					});
+                    .ConfigureRepository(teamcity =>
+                    {
+                        teamcity.ConfigurePackage("Serenity", "1.0.0.2", serenity =>
+                        {
+                            serenity.DependsOn("WebDriver", "1.2.0.0");
+                            serenity.DependsOn("Something");
+                            serenity.DependsOn("SomethingElse", "0.9.9.9");
+                        });
+                    });
 
-				scenario.For(Feed.NuGetV2)
-					.Add("WebDriver", "1.2.0.0")
+                scenario.For(Feed.NuGetV2)
+                    .Add("WebDriver", "1.2.0.0")
                     .Add("SomethingElse", "0.9.9.9");
-			});
+            });
 
-			theScenario = SolutionGraphScenario.Create(scenario =>
-			{
-				scenario.Solution("Test", test =>
-				{
+            theScenario = SolutionGraphScenario.Create(scenario =>
+            {
+                scenario.Solution("Test", test =>
+                {
                     test.LocalDependency("WebDriver", "1.1.0.0");
 
-					test.ProjectDependency("Test", "Serenity");
-					test.ProjectDependency("Test", "WebDriver");
+                    test.ProjectDependency("Test", "Serenity");
+                    test.ProjectDependency("Test", "WebDriver");
 
                     test.ProjectDependency("Test2", "FubuCore");
 
                     test.SolutionDependency("WebDriver", "1.1.0.0", UpdateMode.Fixed);
-				});
-			});
+                });
+            });
 
-			theSolution = theScenario.Find("Test");
+            theSolution = theScenario.Find("Test");
 
-			RippleOperation
-				.With(theSolution)
-				.Execute<UpdateInput, UpdateCommand>(input =>
-				{
+            RippleOperation
+                .With(theSolution)
+                .Execute<UpdateInput, UpdateCommand>(input =>
+                {
                     input.NugetFlag = "Serenity";
-				    input.ForceFlag = true;
-				});
-		}
+                    input.ForceFlag = true;
+                });
+        }
 
-		[TearDown]
-		public void TearDown()
-		{
-			theScenario.Cleanup();
-			FeedRegistry.Reset();
-		}
+        [TearDown]
+        public void TearDown()
+        {
+            theScenario.Cleanup();
+            FeedRegistry.Reset();
+        }
 
         [Test]
         public void updates_the_configured_dependency()
@@ -107,5 +107,5 @@ namespace ripple.Testing.Integration
             theSolution.FindProject("Test").Dependencies.Has("SomethingElse").ShouldBeTrue();
             theSolution.FindProject("Test2").Dependencies.Has("SomethingElse").ShouldBeFalse();
         }
-	}
+    }
 }

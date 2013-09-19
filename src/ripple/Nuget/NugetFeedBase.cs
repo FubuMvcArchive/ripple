@@ -12,6 +12,7 @@ namespace ripple.Nuget
         private readonly Cache<CacheKey<string>, IRemoteNuget> _findLatest = new Cache<CacheKey<string>, IRemoteNuget>();
 
         public abstract bool IsOnline();
+        public abstract void MarkOffline();
 
         public IRemoteNuget Find(Dependency query)
         {
@@ -50,7 +51,8 @@ namespace ripple.Nuget
             return Return(_findLatest[key]);
         }
 
-        public abstract IEnumerable<IRemoteNuget> FindLatestByName(string idPrefix);
+        public abstract IRemoteNuget FindLatestByName(string name);
+        public abstract IEnumerable<IRemoteNuget> FindAllLatestByName(string idPrefix);
         
         protected abstract IRemoteNuget findLatest(Dependency query);
 

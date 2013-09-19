@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Util;
 using ripple.Nuget;
@@ -11,140 +13,94 @@ namespace ripple.Model
     public class FeedService : IFeedService
     {
         private readonly Solution _solution;
-        private readonly IFeedConnectivity _connectivity;
+        private readonly Cache<DependencyCacheKey, IEnumerable<Dependency>> _dependenciesCache = new Cache<DependencyCacheKey, IEnumerable<Dependency>>();
 
-        private readonly Cache<Dependency, IRemoteNuget> _nugetForCache = new Cache<Dependency, IRemoteNuget>();
-        private readonly Dictionary<Dependency, IEnumerable<Dependency>> _dependenciesForFixedCache = new Dictionary<Dependency, IEnumerable<Dependency>>();
-        private readonly Dictionary<Dependency, IEnumerable<Dependency>> _dependenciesForFloatCache = new Dictionary<Dependency, IEnumerable<Dependency>>();
-
-        public FeedService(Solution solution, IFeedConnectivity connectivity)
+        public FeedService(Solution solution)
         {
             _solution = solution;
-            _connectivity = connectivity;
-
-            _nugetForCache = new Cache<Dependency, IRemoteNuget>(x => nugetFor(x));
+            _dependenciesCache.OnMissing = key => findDependenciesFor(key.Dependency, key.Mode, SearchLocation.Local);
 
             ServicePointManager.DefaultConnectionLimit = 10;
         }
 
-        public virtual IRemoteNuget NugetFor(Dependency dependency)
+        public virtual Task<NugetResult> NugetFor(Dependency dependency)
         {
-            return _nugetForCache[dependency];
-        }
-
-        private IRemoteNuget nugetFor(Dependency dependency, bool retrying = false)
-        {
-            IRemoteNuget nuget = null;
-            var feeds = _connectivity.FeedsFor(_solution);
-            foreach (var feed in feeds)
-            {
-                _connectivity.IfOnline(feed, x => nuget = getLatestFromFloatingFeed(x, dependency));
-                if (nuget != null) break;
-
-                if (dependency.IsFloat() || dependency.Version.IsEmpty())
-                {
-                    _connectivity.IfOnline(feed, x => nuget = x.FindLatest(dependency));
-                    if (nuget != null && dependency.Version.IsNotEmpty() && nuget.Version < dependency.SemanticVersion())
-                    {
-                        nuget = null;
-                        continue;
-                    }
-
-                    if (nuget != null) break;
-                }
-
-                _connectivity.IfOnline(feed, x => nuget = x.Find(dependency));
-                if (nuget != null) break;
-            }
-
-            
-
-            if (nuget == null)
-            {
-                if (_connectivity.AllOffline(feeds) && !retrying)
-                {
-                    return nugetFor(dependency, true);
-                }
-
-                feeds.OfType<FloatingFileSystemNugetFeed>()
-                    .Each(files => files.DumpLatest());
-
-                RippleAssert.Fail("Could not find " + dependency);
-            }
-
-            return remoteOrCached(nuget);
-        }
-
-        private IRemoteNuget remoteOrCached(IRemoteNuget nuget)
-        {
-            if (nuget == null) return null;
-            return _solution.Cache.Retrieve(nuget);
-        }
-
-        private IRemoteNuget getLatestFromFloatingFeed(INugetFeed feed, Dependency dependency)
-        {
-            var floatingFeed = feed as IFloatingFeed;
-            if (floatingFeed == null) return null;
-
-            var floatedResult = floatingFeed.GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
-            if (floatedResult != null && dependency.Mode == UpdateMode.Fixed && floatedResult.IsUpdateFor(dependency))
-            {
-                return null;
-            }
-
-            return floatedResult;
+            return NugetSearch.Find(_solution, dependency);
         }
 
         // Almost entirely covered by integration tests
-		public IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location = SearchLocation.Remote)
+        public IEnumerable<Dependency> DependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location = SearchLocation.Remote)
         {
-            var cache = mode == UpdateMode.Fixed ? _dependenciesForFixedCache : _dependenciesForFloatCache;
-
-            IEnumerable<Dependency> dependencies;
-            if (cache.TryGetValue(dependency, out dependencies) == false)
-            {
-                dependencies = findDependenciesFor(dependency, mode, 0, location);
-                cache[dependency] = dependencies;
-            }
-
-            return dependencies.ToArray();
+            return _dependenciesCache[DependencyCacheKey.For(dependency, mode, location)];
         }
 
-		private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location)
-		{
-			IRemoteNuget nuget = null;
-			if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
-			{
-				try
-				{
-					// Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
-					nuget = _solution.LocalNuget(dependency.Name);
-					nuget.Dependencies().ToList();
-
-					RippleLog.Debug(dependency.Name + " already installed");
-				}
-				catch
-				{
-					nuget = null;
-				}
-
-			}
-
-			if(nuget == null)
-			{
-				nuget = NugetFor(dependency);
-			}
-
+        private IEnumerable<Dependency> findDependenciesFor(Dependency dependency, UpdateMode mode, SearchLocation location)
+        {
             var dependencies = new List<Dependency>();
+            var task = findDependenciesFor(dependency, mode, 0, location, dependencies);
 
+            try
+            {
+                task.Wait();
+                if (!task.Result.Found)
+                {
+                    RippleAssert.Fail("Could not find " + dependency.Name);
+                }
+            }
+            catch (AggregateException ex)
+            {
+                var flat = ex.Flatten();
+                if (flat.InnerException != null)
+                {
+                    RippleLog.Debug(flat.InnerException.Message);
+                }
+            }
+
+            return dependencies.OrderBy(x => x.Name);
+        }
+
+        private Task<NugetResult> findDependenciesFor(Dependency dependency, UpdateMode mode, int depth, SearchLocation location, List<Dependency> dependencies)
+        {
+            var result = findLocal(dependency, location);
+            return Task.Factory.StartNew(() =>
+            {
+                if (result.Found)
+                {
+                    processNuget(result.Nuget, dependency, mode, depth, location, dependencies);
+                    return result;
+                }
+
+                var search = NugetSearch.Find(_solution, dependency);
+
+                search.ContinueWith(task =>
+                {
+                    if (!task.Result.Found)
+                    {
+                        return;
+                    }
+
+                    result.Import(task.Result);
+                    var nuget = task.Result.Nuget;
+                    processNuget(nuget, dependency, mode, depth, location, dependencies);
+
+                }, TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.AttachedToParent);
+
+                return result;
+
+            }, TaskCreationOptions.AttachedToParent);
+        }
+
+        private void processNuget(IRemoteNuget nuget, Dependency dependency, UpdateMode mode, int depth, SearchLocation location,
+                                  List<Dependency> dependencies)
+        {
             if (depth != 0)
             {
                 var dep = dependency;
-	            var markAsFixed = mode == UpdateMode.Fixed || !isFloated(dependency);
+                var markAsFixed = mode == UpdateMode.Fixed || !FeedRegistry.IsFloat(_solution, dependency);
 
                 if (dep.IsFloat() && markAsFixed)
                 {
-					dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
+                    dep = new Dependency(nuget.Name, nuget.Version, UpdateMode.Fixed);
                 }
 
                 dependencies.Add(dep);
@@ -152,94 +108,67 @@ namespace ripple.Model
 
             nuget
                 .Dependencies()
-                .Each(x => dependencies.AddRange(findDependenciesFor(x, mode, depth + 1, location)));
-
-            return dependencies.OrderBy(x => x.Name);
+                .Each(x => findDependenciesFor(x, mode, depth + 1, location, dependencies));
         }
 
-		private bool isFloated(Dependency dependency)
-		{
-			var floated = false;
-			var feeds = _connectivity.FeedsFor(_solution);
-			foreach (var feed in feeds)
-			{
-				_connectivity.IfOnline(feed, x =>
-				{
-					if (getLatestFromFloatingFeed(x, dependency) != null)
-					{
-						floated = true;
-					}
-				});
-
-				if (floated) break;
-			}
-
-			return floated;
-		}
-
-        public IRemoteNuget LatestFor(Solution solution, Dependency dependency, bool forced = false)
+        private NugetResult findLocal(Dependency dependency, SearchLocation location)
         {
-            if (dependency.Mode == UpdateMode.Fixed && !forced)
-            {
-                return null;
-            }
-
-            IRemoteNuget latest = null;
-            var feeds = _connectivity.FeedsFor(solution);
-
-            foreach (var feed in feeds)
+            var result = new NugetResult();
+            if (location == SearchLocation.Local && _solution.HasLocalCopy(dependency.Name))
             {
                 try
                 {
-                    IRemoteNuget nuget = null;
-                    _connectivity.IfOnline(feed, x => nuget = feed.FindLatest(dependency));
+                    // Try to hit the local zip and read it. Mostly for testing but it'll detect a corrupted local package as well
+                    result.Nuget = _solution.LocalNuget(dependency.Name);
+                    result.Nuget.Dependencies().ToList();
 
-                    if (latest == null)
-                    {
-                        latest = nuget;
-                    }
-
-                    if (latest != null && nuget != null && latest.Version < nuget.Version)
-                    {
-                        latest = nuget;
-                    }
+                    RippleLog.Debug(dependency.Name + " already installed");
                 }
-                catch (Exception)
+                catch
                 {
-                    RippleLog.Debug("Error while finding latest " + dependency);
+                    result.Nuget = null;
                 }
             }
 
-            if (isUpdate(latest, dependency))
-            {
-                return remoteOrCached(latest);
-            }
-
-            return null;
+            return result;
         }
 
-        private bool isUpdate(IRemoteNuget latest, Dependency dependency)
+        public class DependencyCacheKey
         {
-            if (latest == null) return false;
+            public Dependency Dependency { get; private set; }
+            public UpdateMode Mode { get; private set; }
+            public SearchLocation Location { get; private set; }
 
-            var localDependencies = _solution.LocalDependencies();
-            if (localDependencies.Has(dependency))
+            protected bool Equals(DependencyCacheKey other)
             {
-                var local = localDependencies.Get(dependency);
-                return latest.IsUpdateFor(local);
+                return Dependency.Equals(other.Dependency) && Mode == other.Mode;
             }
 
-            if (dependency.IsFloat())
+            public override bool Equals(object obj)
             {
-                return true;
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((DependencyCacheKey) obj);
             }
 
-            return latest.IsUpdateFor(dependency);
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (Dependency.GetHashCode()*397) ^ (int) Mode;
+                }
+            }
+
+            public static DependencyCacheKey For(Dependency dependency, UpdateMode mode, SearchLocation location)
+            {
+                return new DependencyCacheKey { Dependency = dependency, Mode = mode, Location = location};
+            }
         }
 
         public static FeedService Basic(Solution solution)
         {
-            return new FeedService(solution, new FeedConnectivity());
+            return new FeedService(solution);
         }
     }
 }

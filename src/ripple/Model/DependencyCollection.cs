@@ -7,120 +7,147 @@ using FubuCore.Util;
 
 namespace ripple.Model
 {
-	public class DependencyCollection : IEnumerable<Dependency>
-	{
-		private readonly IList<Dependency> _dependencies = new List<Dependency>();
-		private readonly IList<DependencyCollection> _children = new List<DependencyCollection>();
-		private Lazy<Cache<string, Dependency>> _allDependencies;
-		private string _hash;
+    public class DependencyCollection : IEnumerable<Dependency>
+    {
+        private readonly IList<Dependency> _dependencies = new List<Dependency>();
+        private readonly IList<DependencyCollection> _children = new List<DependencyCollection>();
+        private Lazy<Cache<string, Dependency>> _allDependencies;
+        private string _hash;
 
-		public DependencyCollection()
-		{
-			reset();
-		}
+        public DependencyCollection()
+        {
+            reset();
+        }
 
-		public DependencyCollection(IEnumerable<Dependency> dependencies)
-			: this()
-		{
-			_dependencies.AddRange(dependencies);
-		}
+        public DependencyCollection(IEnumerable<Dependency> dependencies)
+            : this()
+        {
+            _dependencies.AddRange(dependencies);
+        }
 
-		private void reset()
-		{
-			_allDependencies = new Lazy<Cache<string, Dependency>>(buildAll);
-		}
+        private void reset()
+        {
+            _allDependencies = new Lazy<Cache<string, Dependency>>(buildAll);
+        }
 
-		private Cache<string, Dependency> buildAll()
-		{
-			var cache = new Cache<string, Dependency>();
+        private Cache<string, Dependency> buildAll()
+        {
+            var cache = new Cache<string, Dependency>();
 
-			_dependencies.Each(d => cache.Fill(d.Name.ToLower(), d));
-			_children.Each(child => child._dependencies.Each(d => cache.Fill(d.Name.ToLower(), d)));
+            _dependencies.Each(d => cache.Fill(d.Name.ToLower(), d));
+            _children.Each(child => child._dependencies.Each(d => cache.Fill(d.Name.ToLower(), d)));
 
-			return cache;
-		}
+            return cache;
+        }
 
-		public void Add(Dependency dependency)
-		{
-			reset();
+        public void Add(Dependency dependency)
+        {
+            reset();
             if (_dependencies.Any(x => x.MatchesName(dependency)))
                 return;
 
-			_dependencies.Fill(dependency);
-		}
+            _dependencies.Fill(dependency);
+        }
 
-		public void Remove(string name)
-		{
+        public void Remove(string name)
+        {
             var dependency = _dependencies.SingleOrDefault(x => x.MatchesName(name));
-			if (dependency != null)
-			{
-				_dependencies.Remove(dependency);
-			    reset();
-			}
-		}
+            if (dependency != null)
+            {
+                _dependencies.Remove(dependency);
+                reset();
+            }
+        }
 
-		public void AddChild(DependencyCollection collection)
-		{
-			reset();
-			_children.Add(collection);
-		}
+        public void AddChild(DependencyCollection collection)
+        {
+            reset();
+            _children.Add(collection);
+        }
 
-		public void Update(Dependency dependency)
-		{
-			var existing = Find(dependency.Name);
-			if (existing == null)
-			{
-				throw new ArgumentOutOfRangeException("dependency", "Could not find Dependency: " + dependency);
-			}
+        public void Update(Dependency dependency)
+        {
+            var existing = Find(dependency.Name);
+            if (existing == null)
+            {
+                throw new ArgumentOutOfRangeException("dependency", "Could not find Dependency: " + dependency);
+            }
 
-			if (existing.IsFixed())
-			{
-				existing.Version = dependency.Version;
-			}
-		}
+            if (existing.IsFixed())
+            {
+                existing.Version = dependency.Version;
+            }
+        }
 
-		public bool Has(string name)
-		{
-			return Find(name) != null;
-		}
+        public bool Has(string name)
+        {
+            return Find(name) != null;
+        }
 
-		public Dependency Find(string name)
-		{
+        public Dependency Find(string name)
+        {
             var topLevel = _dependencies.SingleOrDefault(x => x.MatchesName(name));
-			if (topLevel != null)
-			{
-				return topLevel;
-			}
+            if (topLevel != null)
+            {
+                return topLevel;
+            }
 
-			return _children
-				.SelectMany(x => x._dependencies)
+            return _children
+                .SelectMany(x => x._dependencies)
                 .FirstOrDefault(x => x.MatchesName(name));
-		}
+        }
 
-		public IEnumerator<Dependency> GetEnumerator()
-		{
-			return _allDependencies.Value.OrderBy(x => x.Name).GetEnumerator();
-		}
+        public DependencyValidationResult Validate()
+        {
+            var result = new DependencyValidationResult();
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+            _dependencies.Each(x =>
+            {
+                if (x.IsFixed() && x.Version.IsEmpty())
+                {
+                    result.AddProblem(x.Name, "The dependency's update mode is set to 'Fixed' but no version is specified (xml attributes are case sensitive).");
+                }
+            });
 
-		public bool HasChanges()
-		{
-			return _hash != null && _hash != getHash();
-		}
+            return result;
+        }
 
-		public void MarkRead()
-		{
-			_children.Each(x => x.MarkRead());
-			_hash = getHash();
-		}
+        public void AssertIsValid()
+        {
+            var result = Validate();
+            if (result.IsValid())
+            {
+                return;
+            };
 
-		private string getHash()
-		{
-			return this.Select(x => x.ToString()).Join(",").ToHash();
-		}
-	}
+            RippleLog.InfoMessage(result);
+            RippleAssert.Fail("Validation failed");
+        }
+
+        public IEnumerator<Dependency> GetEnumerator()
+        {
+            return _allDependencies.Value.OrderBy(x => x.Name).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public bool HasChanges()
+        {
+            return _hash != null && _hash != getHash();
+        }
+
+        public void MarkRead()
+        {
+            _children.Each(x => x.MarkRead());
+            _hash = getHash();
+        }
+
+        private string getHash()
+        {
+            return this.Select(x => x.ToString()).Join(",").ToHash();
+        }
+    }
 }

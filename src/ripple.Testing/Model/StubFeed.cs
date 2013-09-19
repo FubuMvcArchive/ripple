@@ -16,19 +16,29 @@ namespace ripple.Testing.Model
         public StubFeedProvider()
         {
             _feeds = new Cache<Feed, StubFeed>(feed =>
-	        {
-		        if (feed.Mode == UpdateMode.Fixed)
-		        {
-			        return new StubFeed(feed);
-		        }
+            {
+                if (feed.Mode == UpdateMode.Fixed)
+                {
+                    return new StubFeed(feed);
+                }
 
-				return new FloatingStubFeed(feed);
-	        });
+                return new FloatingStubFeed(feed);
+            });
         }
 
         public INugetFeed For(Feed feed)
         {
             return _feeds[feed];
+        }
+
+        public IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution)
+        {
+            return FeedsFor(solution).OfType<IFloatingFeed>();
+        }
+
+        public IEnumerable<INugetFeed> FeedsFor(Solution solution)
+        {
+            return solution.Feeds.Select(For);
         }
     }
 
@@ -64,7 +74,7 @@ namespace ripple.Testing.Model
             return _online;
         }
 
-        public void MarkOffline()
+        public override void MarkOffline()
         {
             _online = false;
         }
@@ -75,7 +85,9 @@ namespace ripple.Testing.Model
 
             if (query.IsFloat() || query.Version.IsEmpty())
             {
-                return Nugets.FirstOrDefault(x => query.MatchesName(x.Name));
+                return Nugets
+                    .OrderByDescending(x => x.Version)
+                    .FirstOrDefault(x => query.MatchesName(x.Name));
             }
 
             var version = SemanticVersion.Parse(query.Version);
@@ -89,7 +101,14 @@ namespace ripple.Testing.Model
             return matching.FirstOrDefault(x => x.Version.Version.Equals(version.Version));
         }
 
-        public override IEnumerable<IRemoteNuget> FindLatestByName(string idPart)
+        public override IRemoteNuget FindLatestByName(string name)
+        {
+            return Nugets.Where(x => x.Name.EqualsIgnoreCase(name))
+                         .OrderByDescending(x => x.Version)
+                         .FirstOrDefault();
+        }
+
+        public override IEnumerable<IRemoteNuget> FindAllLatestByName(string idPart)
         {
             return Nugets.Where(nuget => nuget.Name.Contains(idPart));
         }
@@ -104,13 +123,18 @@ namespace ripple.Testing.Model
                           .FirstOrDefault();
         }
 
-        private void throwIfNeeded(Dependency dependency)
+        protected void throwIfNeeded(Dependency dependency, UpdateMode mode = UpdateMode.Fixed)
         {
             var error = _explicitErrors.FirstOrDefault(x => x.Matches(dependency));
-            if (error != null)
+            if (error != null && error.Mode == mode)
             {
                 throw error.Exception;
             }
+        }
+
+        public StubFeed ThrowWhenSearchingFor(string name, Exception exception)
+        {
+            return ThrowWhenSearchingFor(new Dependency(name), exception, UpdateMode.Float);
         }
 
         public StubFeed ThrowWhenSearchingFor(string name, string version, Exception exception)
@@ -118,9 +142,14 @@ namespace ripple.Testing.Model
             return ThrowWhenSearchingFor(new Dependency(name, version), exception);
         }
 
-        public StubFeed ThrowWhenSearchingFor(Dependency dependency, Exception exception)
+        public StubFeed ThrowWhenSearchingFor(string name, string version, UpdateMode mode, Exception exception)
         {
-            _explicitErrors.Add(new DependencyError(dependency, exception));
+            return ThrowWhenSearchingFor(new Dependency(name, version), exception, mode);
+        }
+
+        public StubFeed ThrowWhenSearchingFor(Dependency dependency, Exception exception, UpdateMode mode = UpdateMode.Fixed)
+        {
+            _explicitErrors.Add(new DependencyError(dependency, exception, mode));
             return this;
         }
 
@@ -149,7 +178,7 @@ namespace ripple.Testing.Model
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((StubFeed) obj);
+            return Equals((StubFeed)obj);
         }
 
         public override int GetHashCode()
@@ -159,14 +188,16 @@ namespace ripple.Testing.Model
 
         public class DependencyError
         {
-            public DependencyError(Dependency dependency, Exception exception)
+            public DependencyError(Dependency dependency, Exception exception, UpdateMode mode)
             {
                 Dependency = dependency;
                 Exception = exception;
+                Mode = mode;
             }
 
             public Dependency Dependency { get; private set; }
             public Exception Exception { get; private set; }
+            public UpdateMode Mode { get; set; }
 
             public bool Matches(Dependency dependency)
             {
@@ -175,27 +206,37 @@ namespace ripple.Testing.Model
         }
     }
 
-	public class FloatingStubFeed : StubFeed, IFloatingFeed
-	{
-		public FloatingStubFeed(Feed feed) 
-			: base(feed)
-		{}
+    public class FloatingStubFeed : StubFeed, IFloatingFeed
+    {
+        public FloatingStubFeed(Feed feed)
+            : base(feed)
+        { }
 
-		public IEnumerable<IRemoteNuget> GetLatest()
-		{
-			var nugets = new List<IRemoteNuget>();
+        public IEnumerable<IRemoteNuget> GetLatest()
+        {
+            var nugets = new List<IRemoteNuget>();
 
-			var distinct = from nuget in Nugets
-			               let name = nuget.Name.ToLower()
-			               group nuget by name;
+            var distinct = from nuget in Nugets
+                           let name = nuget.Name.ToLower()
+                           group nuget by name;
 
-			distinct.Each(group =>
-			{
-				var latest = group.OrderByDescending(n => n.Version).First();
-				nugets.Add(latest);
-			});
+            distinct.Each(group =>
+            {
+                var latest = group.OrderByDescending(n => n.Version).First();
+                nugets.Add(latest);
+            });
 
-			return nugets.OrderBy(x => x.Name);
-		}
-	}
+            return nugets.OrderBy(x => x.Name);
+        }
+
+        public void DumpLatest()
+        {
+        }
+
+        public IRemoteNuget LatestFor(Dependency dependency)
+        {
+            throwIfNeeded(dependency, UpdateMode.Float);
+            return GetLatest().SingleOrDefault(x => dependency.MatchesName(x.Name));
+        }
+    }
 }

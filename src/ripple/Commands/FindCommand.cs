@@ -8,7 +8,7 @@ namespace ripple.Commands
         public string Nuget { get; set; }
     }
 
-    [CommandDescription("Queryies feeds for nugets", Name = "find")]
+    [CommandDescription("Queries feeds for nugets", Name = "find")]
     public class FindNugetsCommand : FubuCommand<FindNugetsInput>
     {
         public override bool Execute(FindNugetsInput input)
@@ -22,7 +22,7 @@ namespace ripple.Commands
             {
                 connectivity.IfOnline(feed, f =>
                 {
-                    foreach (var nuget in f.FindLatestByName(input.Nuget))
+                    foreach (var nuget in f.FindAllLatestByName(input.Nuget))
                     {
                         RippleLog.Info(string.Format("{0}, {1} ({2})", nuget.Name, nuget.Version, f.Repository.Source));
                     }

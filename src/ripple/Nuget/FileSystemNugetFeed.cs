@@ -15,7 +15,9 @@ namespace ripple.Nuget
         private readonly string _directory;
         private readonly FubuCore.IFileSystem _fileSystem;
         private readonly NugetStability _stability;
+        private readonly Lazy<IEnumerable<INugetFile>> _files; 
         private IPackageRepository _repository;
+        private bool _online = true;
 
         public FileSystemNugetFeed(string directory, NugetStability stability)
         {
@@ -31,22 +33,26 @@ namespace ripple.Nuget
 
             _stability = stability;
             _fileSystem = new FileSystem();
+
+            _files = new Lazy<IEnumerable<INugetFile>>(findFiles);
         }
 
         public string Directory { get { return _directory; } }
 
         protected IEnumerable<INugetFile> files
         {
-            get
-            {
-                var nupkgSet = new FileSet
-                {
-                    Include = "*.nupkg",
-                    DeepSearch = false
-                };
+            get { return _files.Value; }
+        }
 
-                return _fileSystem.FindFiles(_directory, nupkgSet).Select(x => new NugetFile(x, SolutionMode.Ripple));
-            }
+        private IEnumerable<INugetFile> findFiles()
+        {
+            var nupkgSet = new FileSet
+            {
+                Include = "*.nupkg",
+                DeepSearch = false
+            };
+
+            return _fileSystem.FindFiles(_directory, nupkgSet).Select(x => new NugetFile(x, SolutionMode.Ripple));
         }
 
         private IRemoteNuget findMatching(Func<INugetFile, bool> predicate)
@@ -62,8 +68,12 @@ namespace ripple.Nuget
 
         public override bool IsOnline()
         {
-            // TODO -- Make this smarter
-            return true;
+            return _online;
+        }
+
+        public override void MarkOffline()
+        {
+            _online = false;
         }
 
         protected override IRemoteNuget find(Dependency query)
@@ -80,9 +90,14 @@ namespace ripple.Nuget
             return findMatching(nuget => query.MatchesName(nuget.Name) && nuget.Version == version);
         }
 
-        public override IEnumerable<IRemoteNuget> FindLatestByName(string idPart)
+        public override IRemoteNuget FindLatestByName(string name)
         {
-            // TODO: reconsided whether querying over files system should be enabled
+            return findLatest(new Dependency(name));
+        }
+
+        public override IEnumerable<IRemoteNuget> FindAllLatestByName(string idPart)
+        {
+            // TODO: reconsider whether querying over file system should be enabled
             return Enumerable.Empty<IRemoteNuget>();
         }
 
@@ -119,7 +134,8 @@ namespace ripple.Nuget
 
     public class FloatingFileSystemNugetFeed : FileSystemNugetFeed, IFloatingFeed
     {
-        private readonly Lazy<IEnumerable<IRemoteNuget>> _nugets; 
+        private readonly Lazy<IEnumerable<IRemoteNuget>> _nugets;
+        private bool _dumped = false;
 
         public FloatingFileSystemNugetFeed(string directory, NugetStability stability) 
             : base(directory, stability)
@@ -154,31 +170,44 @@ namespace ripple.Nuget
             return _nugets.Value;
         }
 
-        public void DumpLatest()
+        public IRemoteNuget LatestFor(Dependency dependency)
         {
-            var latest = GetLatest();
-            var topic = new LatestFileNugets(latest, Directory);
-
-            RippleLog.DebugMessage(topic);
+            throw new NotImplementedException();
         }
 
-        public class LatestFileNugets : LogTopic, DescribesItself
+        public void DumpLatest()
         {
-            private readonly IEnumerable<IRemoteNuget> _nugets;
-            private readonly string _directory;
-
-            public LatestFileNugets(IEnumerable<IRemoteNuget> nugets, string directory)
+            lock (this)
             {
-                _nugets = nugets;
-                _directory = directory;
-            }
+                if (_dumped) return;
 
-            public void Describe(Description description)
-            {
-                description.ShortDescription = "Files found in " + _directory;
-                var list = description.AddList("Files", _nugets);
-                list.Label = "Files";
+                var latest = GetLatest();
+                var topic = new LatestNugets(latest, Directory);
+
+                RippleLog.DebugMessage(topic);
+                _dumped = true;
             }
+        }
+
+        
+    }
+
+    public class LatestNugets : LogTopic, DescribesItself
+    {
+        private readonly IEnumerable<IRemoteNuget> _nugets;
+        private readonly string _source;
+
+        public LatestNugets(IEnumerable<IRemoteNuget> nugets, string source)
+        {
+            _nugets = nugets;
+            _source = source;
+        }
+
+        public void Describe(Description description)
+        {
+            description.ShortDescription = "Nugets found from " + _source;
+            var list = description.AddList("Nugets", _nugets);
+            list.Label = "Nugets";
         }
     }
 }

@@ -6,34 +6,19 @@ using FubuCore.Logging;
 
 namespace ripple
 {
-    public class RippleFatalError : Exception
+    public class RippleLog
     {
-        public RippleFatalError(string message) : base(message) { }
-		public RippleFatalError(string message, Exception ex) : base(message,ex) { }
-    }
+        private static Lazy<ILogger> _logger;
+        private static readonly IList<ILogListener> Listeners;
+        private static readonly ILogListener File;
 
-    public class RippleAssert
-    {
-	    public static void Fail(string message, params object[] substitutions)
-		{
-			RippleLog.Error(message.ToFormat(substitutions));
-			throw new RippleFatalError(message);
-		}
-    }
+        static RippleLog()
+        {
+            Listeners = new List<ILogListener>();
+            File = new FileListener();
 
-	public class RippleLog
-	{
-		private static Lazy<ILogger> _logger;
-		private static readonly IList<ILogListener> Listeners;
-	    private static readonly ILogListener File;
-
-		static RippleLog()
-		{
-			Listeners = new List<ILogListener>();
-			File = new FileListener();
-
-			Reset();
-		}
+            Reset();
+        }
 
         private static void resetLogger()
         {
@@ -51,40 +36,40 @@ namespace ripple
             RegisterListener(File);
         }
 
-		public static void Reset()
-		{
-			Listeners.Clear();
-			RegisterListener(new RippleLogger());
-			AddFileListener();
+        public static void Reset()
+        {
+            Listeners.Clear();
+            RegisterListener(new RippleLogger());
+            AddFileListener();
 
-			resetLogger();
-		}
-
-		public static void Verbose(bool verbose)
-		{
-			RippleLogger.PrintDebug = verbose;
-		}
-
-		private static ILogger Logger { get { return _logger.Value; } }
-
-		public static void RegisterListener(ILogListener listener)
-		{
-			Listeners.Add(listener);
             resetLogger();
-		}
+        }
 
-		public static void DebugMessage(LogTopic message)
-		{
-			Logger.DebugMessage(message);
-		}
+        public static void Verbose(bool verbose)
+        {
+            RippleLogger.PrintDebug = verbose;
+        }
 
-		public static void InfoMessage(LogTopic message)
-		{
-			Logger.InfoMessage(message);
-		}
+        private static ILogger Logger { get { return _logger.Value; } }
 
-		public static void Debug(string message, bool useFormatting = true)
-		{
+        public static void RegisterListener(ILogListener listener)
+        {
+            Listeners.Add(listener);
+            resetLogger();
+        }
+
+        public static void DebugMessage(LogTopic message)
+        {
+            Logger.DebugMessage(message);
+        }
+
+        public static void InfoMessage(LogTopic message)
+        {
+            Logger.InfoMessage(message);
+        }
+
+        public static void Debug(string message, bool useFormatting = true)
+        {
             if (useFormatting)
             {
                 Logger.Debug(message);
@@ -92,23 +77,23 @@ namespace ripple
             }
 
             Logger.Debug(() => message);
-		}
+        }
 
-		public static void Info(string message)
-		{
-			Logger.Info(message);
-		}
+        public static void Info(string message)
+        {
+            Logger.Info(message);
+        }
 
         public static void Error(string message)
         {
             Error(message, new RippleFatalError(message));
         }
 
-		public static void Error(string message, Exception ex)
-		{
+        public static void Error(string message, Exception ex)
+        {
             withConsoleColor(ConsoleColor.Red, () => Console.WriteLine("ripple: " + message));
-			Logger.Error(message, ex);
-		}
+            Logger.Error(message, ex);
+        }
 
         private static void withConsoleColor(ConsoleColor color, Action action)
         {
@@ -117,54 +102,54 @@ namespace ripple
             Console.ResetColor();
         }
 
-		public class RippleLogger : ILogListener
-		{
-			public static bool PrintDebug = false;
-			public static bool PrintInfo = true;
+        public class RippleLogger : ILogListener
+        {
+            public static bool PrintDebug = false;
+            public static bool PrintInfo = true;
 
-			public bool ListensFor(Type type)
-			{
-				return true;
-			}
+            public bool ListensFor(Type type)
+            {
+                return true;
+            }
 
-			public void Debug(string message)
-			{
-				Console.WriteLine(message);
-			}
+            public void Debug(string message)
+            {
+                Console.WriteLine(message);
+            }
 
-			public void DebugMessage(object message)
-			{
-				Debug(message.ToDescriptionText());
-			}
+            public void DebugMessage(object message)
+            {
+                Debug(message.ToDescriptionText());
+            }
 
-			public void Info(string message)
-			{
-				writeWithColor(ConsoleColor.Cyan, () => Console.WriteLine(message));
-			}
+            public void Info(string message)
+            {
+                writeWithColor(ConsoleColor.Cyan, () => Console.WriteLine(message));
+            }
 
-			public void InfoMessage(object message)
-			{
-				Info(message.ToDescriptionText());
-			}
+            public void InfoMessage(object message)
+            {
+                Info(message.ToDescriptionText());
+            }
 
-			public void Error(string message, Exception ex)
-			{
-			}
+            public void Error(string message, Exception ex)
+            {
+            }
 
-			public void Error(object correlationId, string message, Exception ex)
-			{
-			}
+            public void Error(object correlationId, string message, Exception ex)
+            {
+            }
 
-			private void writeWithColor(ConsoleColor color, Action action)
-			{
-				Console.ForegroundColor = color;
-				action();
-				Console.ResetColor();
-			}
+            private void writeWithColor(ConsoleColor color, Action action)
+            {
+                Console.ForegroundColor = color;
+                action();
+                Console.ResetColor();
+            }
 
-			public bool IsDebugEnabled { get { return PrintDebug; } }
-			public bool IsInfoEnabled { get { return PrintInfo; } }
-		}
+            public bool IsDebugEnabled { get { return PrintDebug; } }
+            public bool IsInfoEnabled { get { return PrintInfo; } }
+        }
 
         public class FileListener : ILogListener
         {
@@ -222,5 +207,5 @@ namespace ripple
             public bool IsDebugEnabled { get { return true; } }
             public bool IsInfoEnabled { get { return true; } }
         }
-	}
+    }
 }

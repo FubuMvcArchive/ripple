@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.CommandLine;
@@ -136,7 +137,7 @@ namespace ripple.Model
             set
             {
                 _configuredDependencies.Clear();
-                _configuredDependencies.AddRange(value);
+                _configuredDependencies.AddRange(value.OrderBy(x => x.Name));
                 resetDependencies();
             }
         }
@@ -373,7 +374,7 @@ namespace ripple.Model
             return Directory.AppendPath(SourceFolder, "packages").ToFullPath();
         }
 
-        public IRemoteNuget Restore(Dependency dependency)
+        public Task<NugetResult> Restore(Dependency dependency)
         {
             return FeedService.NugetFor(dependency);
         }

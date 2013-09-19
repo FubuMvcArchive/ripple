@@ -7,8 +7,11 @@ namespace ripple.Model
 {
     public interface IFeedConnectivity
     {
+        // TODO -- Kill this
         void IfOnline(INugetFeed feed, Action<INugetFeed> continuation);
         bool AllOffline(IEnumerable<INugetFeed> feeds);
+
+        IEnumerable<INugetFeed> FloatedFeedsFor(Solution solution);
         IEnumerable<INugetFeed> FeedsFor(Solution solution);
     }
 
@@ -36,6 +39,11 @@ namespace ripple.Model
                 RippleLog.Info("Feed unavailable: " + feed);
                 RippleLog.Debug(exc.ToString());
             }
+        }
+
+        public IEnumerable<INugetFeed> FloatedFeedsFor(Solution solution)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<INugetFeed> FeedsFor(Solution solution)

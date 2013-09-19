@@ -28,7 +28,7 @@ namespace ripple.Nuget
 
         public void AddSelf(IList<INugetStep> steps)
         {
-            var other = steps.OfType<InstallProjectDependency>().Where(x => x.Dependency.Name.EqualsIgnoreCase(Dependency.Name) && x._project.Equals(_project)).SingleOrDefault();
+            var other = steps.OfType<InstallProjectDependency>().SingleOrDefault(x => x.Dependency.Name.EqualsIgnoreCase(Dependency.Name) && x._project.Equals(_project));
 
             if (other == null)
             {

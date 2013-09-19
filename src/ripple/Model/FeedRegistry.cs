@@ -1,43 +1,58 @@
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using FubuCore;
 using FubuCore.Util;
 using ripple.Nuget;
 
 namespace ripple.Model
 {
-	public interface IFeedProvider
-	{
-		INugetFeed For(Feed feed);
-	}
+    public interface IFeedProvider
+    {
+        INugetFeed For(Feed feed);
 
-	public class FeedProvider : IFeedProvider
-	{
-		private readonly Cache<Feed, INugetFeed> _feeds;
-        
-		public FeedProvider()
-		{
-			_feeds = new Cache<Feed, INugetFeed>(buildFeed);
-		}
+        IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution);
+        IEnumerable<INugetFeed> FeedsFor(Solution solution);
+    }
 
-		public INugetFeed For(Feed feed)
-		{
-			return _feeds[feed];
-		}
+    public class FeedProvider : IFeedProvider
+    {
+        private readonly Cache<Feed, INugetFeed> _feeds;
 
-		private INugetFeed buildFeed(Feed feed)
-		{
-            if(feed.Url.StartsWith("file://"))
+        public FeedProvider()
+        {
+            _feeds = new Cache<Feed, INugetFeed>(buildFeed);
+        }
+
+        public INugetFeed For(Feed feed)
+        {
+            return _feeds[feed];
+        }
+
+        public IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution)
+        {
+            return FeedsFor(solution).OfType<IFloatingFeed>();
+        }
+
+        public IEnumerable<INugetFeed> FeedsFor(Solution solution)
+        {
+            return solution.Feeds.Select(For);
+        }
+
+        private INugetFeed buildFeed(Feed feed)
+        {
+            if (feed.Url.StartsWith("file://"))
             {
                 return buildFileSystemFeed(feed);
             }
 
-			if (feed.Mode == UpdateMode.Fixed)
-			{
+            if (feed.Mode == UpdateMode.Fixed)
+            {
                 return new NugetFeed(feed.Url, feed.Stability);
-			}
+            }
 
             return new FloatingFeed(feed.Url, feed.Stability);
-		}
+        }
 
         private const string BranchPlaceholder = "{branch}";
 
@@ -62,30 +77,62 @@ namespace ripple.Model
 
             return new FloatingFileSystemNugetFeed(directory, feed.Stability);
         }
-	}
+    }
 
     public class FeedRegistry
-	{
-		private static IFeedProvider _provider;
+    {
+        private static IFeedProvider _provider;
 
-		static FeedRegistry()
-		{
-			Reset();
-		}
+        static FeedRegistry()
+        {
+            Reset();
+        }
 
-		public static void Stub(IFeedProvider provider)
-		{
-			_provider = provider;
-		}
+        public static void Stub(IFeedProvider provider)
+        {
+            _provider = provider;
+        }
 
-		public static void Reset()
-		{
-			Stub(new FeedProvider());
-		}
+        public static void Reset()
+        {
+            Stub(new FeedProvider());
+        }
 
-	 	public static INugetFeed FeedFor(Feed feed)
-	 	{
-	 		return _provider.For(feed);
-	 	}
-	}
+        public static bool IsFloat(Solution solution, Dependency dependency)
+        {
+            return FloatedFeedsFor(solution).Any(feed => feed.FindLatest(dependency) != null);
+        }
+
+        public static INugetFeed FeedFor(Feed feed)
+        {
+            return _provider.For(feed);
+        }
+
+        public static INugetFeed CacheFor(Solution solution)
+        {
+            return solution.Cache.ToFeed().GetNugetFeed();
+        }
+
+        public static IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution)
+        {
+            foreach (var feed in _provider.FloatedFeedsFor(solution))
+            {
+                if (feed.IsOnline())
+                {
+                    yield return feed;
+                }
+            }
+        }
+
+        public static IEnumerable<INugetFeed> FeedsFor(Solution solution)
+        {
+            foreach (var feed in _provider.FeedsFor(solution))
+            {
+                if (feed.IsOnline())
+                {
+                    yield return feed;
+                }
+            }
+        }
+    }
 }

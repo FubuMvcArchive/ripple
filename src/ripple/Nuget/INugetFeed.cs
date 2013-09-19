@@ -7,11 +7,12 @@ namespace ripple.Nuget
     public interface INugetFeed
     {
         bool IsOnline();
+        void MarkOffline();
 
         IRemoteNuget Find(Dependency query);
         IRemoteNuget FindLatest(Dependency query);
-
-        IEnumerable<IRemoteNuget> FindLatestByName(string idPart);
+        IRemoteNuget FindLatestByName(string name);
+        IEnumerable<IRemoteNuget> FindAllLatestByName(string idPart);
 
         IPackageRepository Repository { get; }
     }
