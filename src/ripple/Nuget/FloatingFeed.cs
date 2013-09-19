@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Xml;
+using FubuCore;
 using ripple.Model;
 
 namespace ripple.Nuget
@@ -10,20 +11,21 @@ namespace ripple.Nuget
     public class FloatingFeed : NugetFeed, IFloatingFeed
     {
         public const string FindAllLatestCommand =
-            "/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip=0&$top=1000";
+            "/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$take=100";
 
-		private readonly Lazy<XmlDocument> _feed;
         private bool _dumped;
+        private readonly Lazy<IEnumerable<IRemoteNuget>> _latest; 
 
         public FloatingFeed(string url, NugetStability stability) 
             : base(url, stability)
         {
-            _feed = new Lazy<XmlDocument>(loadLatestFeed);
+            _latest = new Lazy<IEnumerable<IRemoteNuget>>(getLatest);
         }
 
-        private XmlDocument loadLatestFeed()
+        private IEnumerable<IRemoteNuget> loadLatestFeed(int page)
         {
-            var url = Url + FindAllLatestCommand;
+            var toSkip = (page - 1) * 100;
+            var url = Url + FindAllLatestCommand.ToFormat(toSkip);
             RippleLog.Debug("Retrieving latest from " + url);
             
             var client = new WebClient();
@@ -32,13 +34,28 @@ namespace ripple.Nuget
             var document = new XmlDocument();
             document.LoadXml(text);
 
-            return document;
+            return new NugetXmlFeed(document).ReadAll(this).ToArray();
         }
 
         public IEnumerable<IRemoteNuget> GetLatest()
         {
-            var feed = new NugetXmlFeed(_feed.Value);
-            return feed.ReadAll(this);
+            return _latest.Value;
+        }
+
+        private IEnumerable<IRemoteNuget> getLatest()
+        {
+            var all = new List<IRemoteNuget>();
+            var page = 1;
+            var results = loadLatestFeed(page);
+            all.AddRange(results);
+            while (results.Count() == 100)
+            {
+                page++;
+                results = loadLatestFeed(page);
+                all.AddRange(results);
+            }
+
+            return all;
         }
 
         public void DumpLatest()
