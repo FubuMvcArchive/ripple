@@ -70,6 +70,12 @@ namespace ripple
 
         public bool Execute(bool throwOnFailure = false)
         {
+            // TODO -- This needs to be done as part of the new "activator" model
+            if (BranchDetector.CanDetectBranch())
+            {
+                BranchDetector.Current();
+            }
+
             foreach (var step in _steps)
             {
                 try

@@ -84,7 +84,6 @@
     <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\StringFeeds.cs" />
-    <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Commands\ValidateCommand.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
