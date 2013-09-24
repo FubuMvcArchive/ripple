@@ -32,7 +32,7 @@ namespace ripple.Commands
         [FlagAlias("server", 's')]
         public string ServerFlag { get; set; }
 
-        [Description("Create also symbols packages")]
+        [Description("Also create symbols packages")]
         [FlagAlias("symbols")]
         public bool CreateSymbolsFlag { get; set; }
     }

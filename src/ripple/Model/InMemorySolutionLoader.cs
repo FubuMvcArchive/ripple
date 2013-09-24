@@ -1,4 +1,5 @@
 using FubuCore;
+using ripple.Model.Conditions;
 
 namespace ripple.Model
 {
@@ -11,12 +12,9 @@ namespace ripple.Model
             _solution = solution;
         }
 
-        public bool CanLoad(IFileSystem fileSystem, string directory)
-        {
-            return true;
-        }
+        public IDirectoryCondition Condition { get; private set; }
 
-        public Solution LoadFrom(IFileSystem fileSystem, string filePath)
+        public Solution LoadFrom(IFileSystem fileSystem, string directory)
         {
             _solution.Directory = RippleFileSystem.CurrentDirectory();
             return _solution;

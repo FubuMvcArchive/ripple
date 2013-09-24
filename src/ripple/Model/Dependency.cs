@@ -191,6 +191,14 @@ namespace ripple.Model
             return floated;
         }
 
+        public Dependency AsFixed()
+        {
+            var @fixed = Copy();
+            @fixed.Mode = UpdateMode.Fixed;
+
+            return @fixed;
+        }
+
         public Dependency Copy()
         {
             return MemberwiseClone().As<Dependency>();

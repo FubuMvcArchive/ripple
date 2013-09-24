@@ -43,6 +43,11 @@ namespace ripple
             return findSolutionDir(_currentDir(), false).IsNotEmpty();
         }
 
+        public static bool IsSolutionDirectory(string directory)
+        {
+            return findSolutionDir(directory, false).IsNotEmpty();
+        }
+
         public static bool IsCodeDirectory()
 	      {
             if (IsSolutionDirectory()) return false;

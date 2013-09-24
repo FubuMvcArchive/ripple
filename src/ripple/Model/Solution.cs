@@ -16,12 +16,6 @@ using ripple.Runners;
 
 namespace ripple.Model
 {
-    public enum SolutionMode
-    {
-        Ripple,
-        Classic
-    }
-
     public enum CleanMode
     {
         all,
@@ -83,7 +77,7 @@ namespace ripple.Model
         public string SourceFolder { get; set; }
         public string BuildCommand { get; set; }
         public string FastBuildCommand { get; set; }
-        
+
         public string NugetCacheDirectory
         {
             get { return _cacheLocalPath; }
@@ -463,16 +457,16 @@ namespace ripple.Model
             resetDependencies();
         }
 
-		public bool HasLocalCopy(string name)
-		{
-			return LocalDependencies().Has(name);
-		}
+        public bool HasLocalCopy(string name)
+        {
+            return LocalDependencies().Has(name);
+        }
 
-		public IRemoteNuget LocalNuget(string name)
-		{
-			var file = LocalDependencies().Get(name);
-			return new FileSystemNuget(file);
-		}
+        public IRemoteNuget LocalNuget(string name)
+        {
+            var file = LocalDependencies().Get(name);
+            return new FileSystemNuget(file);
+        }
 
         public LocalDependencies LocalDependencies()
         {
@@ -588,10 +582,18 @@ namespace ripple.Model
             return solution;
         }
 
+        public static Solution NuGet(string name)
+        {
+            var solution = new Solution { Name = name };
+
+            solution.ClearFeeds();
+            solution.AddFeed(Feed.NuGetV2);
+
+            return solution;
+        }
+
         public static Solution For(RippleInput input)
         {
-            // TODO -- Need to allow a specific solution
-            // TODO -- Need to be smarter about the current directory maybe
             return SolutionBuilder.ReadFromCurrentDirectory();
         }
     }

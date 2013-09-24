@@ -16,7 +16,7 @@ namespace ripple
         private readonly RippleInput _input;
         private readonly IRippleStepRunner _runner;
         private readonly IList<IRippleStep> _steps = new List<IRippleStep>();
-        private bool _forceSave = false;
+        private bool _forceSave;
 
         public RippleOperation(Solution solution, RippleInput input, IRippleStepRunner runner)
         {

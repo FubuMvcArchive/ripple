@@ -128,6 +128,15 @@
     <Compile Include="Integration\valid_solution.cs" />
     <Compile Include="Model\BatchOperationTester.cs" />
     <Compile Include="Model\BranchDetectorTester.cs" />
+    <Compile Include="Model\Conditions\CompositeDirectoryConditionTester.cs" />
+    <Compile Include="Model\Conditions\DetectPackagesConfigTester.cs" />
+    <Compile Include="Model\Conditions\DetectRippleConfigTester.cs" />
+    <Compile Include="Model\Conditions\DetectRippleDependenciesTester.cs" />
+    <Compile Include="Model\Conditions\DetectSingleSolutionTester.cs" />
+    <Compile Include="Model\Conditions\NotDirectoryConditionTester.cs" />
+    <Compile Include="Model\Conditions\StubDirectoryCondition.cs" />
+    <Compile Include="Model\Conversion\finalizing_nuget_solution_loading.cs" />
+    <Compile Include="Model\Conversion\NuGetSolutionLoaderTester.cs" />
     <Compile Include="Model\FeedConnectivityTester.cs" />
     <Compile Include="Model\finding_project_nugets_to_restore.cs" />
     <Compile Include="Model\IgnoreAssemblyReferenceTester.cs" />
@@ -215,8 +224,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RippleFileSystemTester.cs" />
     <Compile Include="RippleOperationTester.cs" />
+    <Compile Include="DirectorySandbox.cs" />
     <Compile Include="SolutionGraphScenario.cs" />
     <Compile Include="SolutionTester.cs" />
+    <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="Steps\NugetOperationTester.cs" />
     <Compile Include="StubNuget.cs" />
     <Compile Include="StubNugetFile.cs" />

@@ -27,7 +27,7 @@ namespace ripple.Commands
         [FlagAlias("update-dependencies", 'u')]
         public bool UpdateDependenciesFlag { get; set; }
 
-        [Description("Create also symbols packages")]
+        [Description("Also create symbols packages")]
         [FlagAlias("symbols", 'C')]
         public bool CreateSymbolsFlag { get; set; }
 

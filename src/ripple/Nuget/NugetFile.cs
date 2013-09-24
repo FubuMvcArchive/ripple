@@ -61,7 +61,7 @@ namespace ripple.Nuget
 
         public virtual string ExplodedDirectory(string directory)
         {
-            if (_mode == SolutionMode.Classic)
+            if (_mode == SolutionMode.NuGet)
                 return directory.AppendPath(Name + "." + Version);
 
             return directory.AppendPath(Name).ToFullPath();

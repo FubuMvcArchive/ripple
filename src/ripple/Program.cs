@@ -11,6 +11,8 @@ namespace ripple
         {
             try
             {
+                RippleApplication.Start();
+
                 var factory = new CommandFactory();
                 factory.RegisterCommands(typeof (Program).Assembly);
 
@@ -34,6 +36,10 @@ namespace ripple
                 Console.WriteLine("ERROR: " + ex);
                 Console.ResetColor();
                 return 1;
+            }
+            finally
+            {
+                RippleApplication.Stop();
             }
             
             return success ? 0 : 1;
