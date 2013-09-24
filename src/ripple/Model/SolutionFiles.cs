@@ -56,7 +56,7 @@ namespace ripple.Model
             get
             {
                 if (_loader is SolutionLoader) return SolutionMode.Ripple;
-                return SolutionMode.Classic;
+                return SolutionMode.NuGet;
             }
         }
 
@@ -110,7 +110,7 @@ namespace ripple.Model
             if (!configFiles.Any())
             {
                 isClassicMode = true;
-                RippleLog.Info("Classic Mode Detected");
+                RippleLog.Info("NuGet Mode Detected");
             }
 
             var files = isClassicMode ? Classic() : Basic();
@@ -134,7 +134,7 @@ namespace ripple.Model
 
         public static SolutionFiles For(SolutionMode mode)
         {
-            return mode == SolutionMode.Classic ? Classic() : Basic();
+            return mode == SolutionMode.NuGet ? Classic() : Basic();
         }
     }
 }

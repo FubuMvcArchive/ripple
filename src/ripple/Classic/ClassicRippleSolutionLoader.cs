@@ -2,23 +2,22 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using ripple.Model;
+using ripple.Model.Conditions;
 
 namespace ripple.Classic
 {
+    // TODO -- Kill this off
     public class ClassicRippleSolutionLoader : ISolutionLoader
     {
         // Hate this
         public SolutionConfig Config { get; set; }
 
-        public bool CanLoad(IFileSystem fileSystem, string directory)
-        {
-            throw new System.NotImplementedException();
-        }
+        public IDirectoryCondition Condition { get; private set; }
 
-        public Solution LoadFrom(IFileSystem fileSystem, string filePath)
+        public Solution LoadFrom(IFileSystem fileSystem, string directory)
         {
-            Config = fileSystem.LoadFromFile<SolutionConfig>(filePath);
-            var solution = new Solution { Mode = SolutionMode.Classic };
+            Config = fileSystem.LoadFromFile<SolutionConfig>(directory);
+            var solution = new Solution { Mode = SolutionMode.NuGet };
 
             solution.Name = Config.Name;
             solution.SourceFolder = Config.SourceFolder;

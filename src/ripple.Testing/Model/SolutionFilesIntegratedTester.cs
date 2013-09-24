@@ -19,7 +19,7 @@ namespace ripple.Testing.Model
 				scenario.Solution("HtmlTags", htmlTags =>
 				{
 					htmlTags.Publishes("HtmlTags", x => x.Assembly("HtmlTags.dll", "lib\\4.0"));
-					htmlTags.Mode(SolutionMode.Classic);
+					htmlTags.Mode(SolutionMode.NuGet);
 				});
 			});
 		}
@@ -45,7 +45,7 @@ namespace ripple.Testing.Model
 			SolutionFiles
 				.FromDirectory(theScenario.DirectoryForSolution("HtmlTags"))
 				.Mode
-				.ShouldEqual(SolutionMode.Classic);
+				.ShouldEqual(SolutionMode.NuGet);
 		}
 	}
 }

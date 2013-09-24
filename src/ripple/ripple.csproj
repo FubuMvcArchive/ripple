@@ -11,8 +11,7 @@
     <RootNamespace>ripple</RootNamespace>
     <AssemblyName>ripple</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -35,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bottles">
+      <HintPath>..\packages\Bottles\lib\Bottles.dll</HintPath>
+    </Reference>
     <Reference Include="FubuCore">
       <HintPath>..\packages\FubuCore\lib\FubuCore.dll</HintPath>
     </Reference>
@@ -115,6 +117,18 @@
     <Compile Include="Local\ProjectNuspec.cs" />
     <Compile Include="Model\BatchOperation.cs" />
     <Compile Include="Model\BranchDetector.cs" />
+    <Compile Include="Model\Conditions\CompositeDirectoryCondition.cs" />
+    <Compile Include="Model\Conditions\DetectPackagesConfig.cs" />
+    <Compile Include="Model\Conditions\DetectRippleConfig.cs" />
+    <Compile Include="Model\Conditions\DetectRippleDependencies.cs" />
+    <Compile Include="Model\Conditions\DetectSingleSolution.cs" />
+    <Compile Include="Model\Conditions\DirectoryCondition.cs" />
+    <Compile Include="Model\Conditions\NotDirectoryCondition.cs" />
+    <Compile Include="Model\Conversion\DependencyAnalyzer.cs" />
+    <Compile Include="Model\Conversion\NuGetConversionReport.cs" />
+    <Compile Include="Model\Conversion\NuGetConverter.cs" />
+    <Compile Include="Model\Conversion\NuGetDependencyStrategy.cs" />
+    <Compile Include="Model\Conversion\NuGetSolutionLoader.cs" />
     <Compile Include="Model\Dependency.cs" />
     <Compile Include="Model\DependencyCollection.cs" />
     <Compile Include="Model\DependencyGroup.cs" />
@@ -123,6 +137,7 @@
     <Compile Include="Model\FeedRegistry.cs" />
     <Compile Include="Model\FeedService.cs" />
     <Compile Include="Model\IDependencyStrategy.cs" />
+    <Compile Include="Model\Conditions\IDirectoryCondition.cs" />
     <Compile Include="Model\IFeedConnectivity.cs" />
     <Compile Include="Model\IFeedService.cs" />
     <Compile Include="Model\IgnoreAssemblyReference.cs" />
@@ -132,9 +147,9 @@
     <Compile Include="Model\ISolutionBuilder.cs" />
     <Compile Include="Model\ISolutionFiles.cs" />
     <Compile Include="Model\ISolutionLoader.cs" />
-    <Compile Include="Model\NuGetDependencyStrategy.cs" />
     <Compile Include="Model\SolutionFiles.cs" />
     <Compile Include="Model\SolutionLoader.cs" />
+    <Compile Include="Model\SolutionMode.cs" />
     <Compile Include="Model\Xml\XmlSolutionLoader.cs" />
     <Compile Include="MSBuild\FrameworkNameDetector.cs" />
     <Compile Include="MSBuild\XElementExtensions.cs" />
@@ -201,6 +216,7 @@
     <Compile Include="Nuget\UrlNugetDownloader.cs" />
     <Compile Include="Nuget\EmptyVersionFinder.cs" />
     <Compile Include="Platform.cs" />
+    <Compile Include="RippleApplication.cs" />
     <Compile Include="RippleAssert.cs" />
     <Compile Include="RippleEnvironment.cs" />
     <Compile Include="RippleConstants.cs" />

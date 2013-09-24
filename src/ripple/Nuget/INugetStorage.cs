@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using ripple.Model;
+using ripple.Model.Conversion;
 
 namespace ripple.Nuget
 {
@@ -101,7 +102,7 @@ namespace ripple.Nuget
 
         public static NugetStorage For(SolutionMode mode)
         {
-            return mode == SolutionMode.Classic ? Classic() : Basic();
+            return mode == SolutionMode.NuGet ? Classic() : Basic();
         }
     }
 }

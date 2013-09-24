@@ -3,20 +3,18 @@ using System.Linq;
 using System.Xml.Linq;
 using FubuCore;
 using FubuCore.Conversion;
+using ripple.Model.Conditions;
 
 namespace ripple.Model.Xml
 {
     // This is STRICTLY here for upgrades since the format drastically changed
     public class XmlSolutionLoader : ISolutionLoader
     {
-        public bool CanLoad(IFileSystem fileSystem, string directory)
-        {
-            throw new System.NotImplementedException();
-        }
+        public IDirectoryCondition Condition { get; private set; }
 
-        public Solution LoadFrom(IFileSystem fileSystem, string filePath)
+        public Solution LoadFrom(IFileSystem fileSystem, string directory)
         {
-            var document = XElement.Load(filePath);
+            var document = XElement.Load(directory);
             var solution = Solution.Empty();
 
             fillProperties(document, solution);
