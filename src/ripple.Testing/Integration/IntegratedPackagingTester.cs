@@ -12,7 +12,7 @@ namespace ripple.Testing.Integration
     public class IntegratedPackagingTester
     {
         private readonly bool _publishSymbols;
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
 
         private FileSystem theFileSystem;
         private string theNugetDirectory;
@@ -27,7 +27,7 @@ namespace ripple.Testing.Integration
         [TestFixtureSetUp()]
         public void FixtureSetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("FubuCore", fubucore => fubucore.Publishes("FubuCore"));
             });

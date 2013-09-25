@@ -8,13 +8,13 @@ namespace ripple.Testing.Commands
     [TestFixture]
     public class floating_command_with_min_version
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
                 {
                     scenario.Solution("Bottles", bottles =>
                         {

@@ -2,21 +2,22 @@
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Commands;
-using ripple.Local;
 using ripple.Model;
+using ripple.Nuget;
+using ripple.Packaging;
 
 namespace ripple.Testing.Integration
 {
     [TestFixture]
     public class update_dependencies_while_creating_local_nugets
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
@@ -42,7 +43,7 @@ namespace ripple.Testing.Integration
             theSolution = theScenario.Find("Test");
 
             // Map Something.nuspec to the "JustToBeComplicated" project
-            theSolution.Nuspecs.Add(new NuspecMap { File = "Something.nuspec", Project = "JustToBeComplicated"});
+            theSolution.Nuspecs.Add(new NuspecMap { File = "Something.nuspec", Project = "JustToBeComplicated" });
 
             var someProject = theSolution.FindProject("SomeProject");
             var justToBeComplicated = theSolution.FindProject("JustToBeComplicated");
@@ -53,7 +54,7 @@ namespace ripple.Testing.Integration
 
             RippleOperation
                 .With(theSolution, false)
-                .Execute<CreatePackagesInput, LocalNugetCommand>(input =>
+                .Execute<CreatePackagesInput, CreatePackagesCommand>(input =>
                 {
                     input.VersionFlag = "1.0.1.244";
                     input.UpdateDependenciesFlag = true;

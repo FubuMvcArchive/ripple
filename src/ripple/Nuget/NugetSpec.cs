@@ -4,7 +4,7 @@ using System.Linq;
 using FubuCore;
 using ripple.Model;
 
-namespace ripple.Local
+namespace ripple.Nuget
 {
     public class NugetSpec
     {

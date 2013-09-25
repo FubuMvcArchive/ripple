@@ -10,7 +10,7 @@ namespace ripple.Testing.Commands
     [TestFixture]
     public class FindNugetsCommandTester
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
@@ -31,7 +31,7 @@ namespace ripple.Testing.Commands
                     .Add("log4net", "1.0.1.1");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Bottles", bottles =>
                 {

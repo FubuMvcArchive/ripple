@@ -8,7 +8,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class installing_a_new_floating_solution_dependency : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -18,7 +18,7 @@ namespace ripple.Testing.Nuget.Operations
         {
             FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("fubu", "1.0.0.1"));
 
-            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theScenario = SolutionScenario.Create(scenario => scenario.Solution("Test"));
 
             theSolution = theScenario.Find("Test");
 

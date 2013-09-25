@@ -37,16 +37,17 @@ namespace ripple.Commands
         public override bool Execute(BatchPublishInput input)
         {
             Console.WriteLine("Looking for *.nupkg files in " + input.Directory);
-            var files = new FileSystem().FindFiles(input.Directory, new FileSet {Include = "*.nupkg"});
+            var files = new FileSystem().FindFiles(input.Directory, new FileSet { Include = "*.nupkg" });
             _count = files.Count();
             _index = 0;
 
-	        var publisher = PublishingService.For(SolutionMode.Ripple);
-            files.Each(file => {
+            var publisher = PublishingService.Basic();
+            files.Each(file =>
+            {
                 _index++;
 
-				RippleLog.Info("Trying to publish {0}, {1} or {2}".ToFormat(file, _index, _count));
-				publisher.PublishPackage(input.ServerFlag, file, input.ApiKeyFlag);
+                RippleLog.Info("Trying to publish {0}, {1} or {2}".ToFormat(file, _index, _count));
+                publisher.PublishPackage(input.ServerFlag, file, input.ApiKeyFlag);
             });
 
             return true;

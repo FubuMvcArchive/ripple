@@ -9,13 +9,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_dependencies_case_insensitive
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

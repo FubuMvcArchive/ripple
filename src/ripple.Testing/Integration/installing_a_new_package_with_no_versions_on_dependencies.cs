@@ -9,7 +9,7 @@ namespace ripple.Testing.Integration
 	[TestFixture]
 	public class installing_a_new_package_with_no_versions_on_dependencies
 	{
-		private SolutionGraphScenario theScenario;
+		private SolutionScenario theScenario;
 		private Solution theSolution;
 
 		[SetUp]
@@ -33,7 +33,7 @@ namespace ripple.Testing.Integration
 						});
 			});
 
-			theScenario = SolutionGraphScenario.Create(scenario =>
+			theScenario = SolutionScenario.Create(scenario =>
 			{
 				scenario.Solution("Test", fubumvc => { });
 			});

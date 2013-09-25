@@ -8,7 +8,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class update_an_existing_floated_dependency_offline : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -17,7 +17,7 @@ namespace ripple.Testing.Nuget.Operations
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", sln =>
                 {

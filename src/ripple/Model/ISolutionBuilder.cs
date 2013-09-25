@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FubuCore;
 using ripple.Nuget;
@@ -67,11 +68,6 @@ namespace ripple.Model
 			return new SolutionBuilder(SolutionFiles.Basic(), ProjectReader.Basic());
 		}
 
-		public static ISolutionBuilder Classic()
-		{
-			return new SolutionBuilder(SolutionFiles.Classic(), ProjectReader.Basic());
-		}
-
 		public static Solution ReadFromCurrentDirectory()
 		{
 			return ReadFrom(RippleFileSystem.FindSolutionDirectory());
@@ -81,11 +77,6 @@ namespace ripple.Model
 		{
 			var builder = new SolutionBuilder(SolutionFiles.FromDirectory(directory), ProjectReader.Basic());
 			return builder.Build();
-		}
-
-		public static ISolutionBuilder For(SolutionMode mode)
-		{
-			return mode == SolutionMode.Ripple ? Basic() : Classic();
 		}
 	}
 }

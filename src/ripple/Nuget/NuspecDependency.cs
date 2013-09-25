@@ -1,9 +1,8 @@
-﻿using System.Xml;
 using System.Xml.Linq;
 using FubuCore;
 using NuGet;
 
-namespace ripple.Local
+namespace ripple.Nuget
 {
     public class NuspecDependency
     {

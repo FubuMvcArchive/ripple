@@ -8,7 +8,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class update_an_existing_floated_dependency : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -23,7 +23,7 @@ namespace ripple.Testing.Nuget.Operations
                             .Add("FubuCore", "1.2.0.0");
                 });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
                 {
                     scenario.Solution("Test", sln =>
                         {

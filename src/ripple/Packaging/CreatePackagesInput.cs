@@ -1,13 +1,13 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
-using ripple.Local;
+using ripple.Commands;
 using ripple.Model;
-using ripple.Steps;
+using ripple.Nuget;
 
-namespace ripple.Commands
+namespace ripple.Packaging
 {
     public class CreatePackagesInput : SolutionInput
     {
@@ -55,29 +55,6 @@ namespace ripple.Commands
             return specs
                 .GroupBy(x => x.Spec)
                 .Select(x => new SpecGroup(x.Key, x.Select(y => y.Project)));
-        }
-    }
-
-    [CommandDescription("Creates the nuget files locally", Name = "local-nuget")]
-    public class LocalNugetCommand : FubuCommand<CreatePackagesInput>
-    {
-        public override bool Execute(CreatePackagesInput input)
-        {
-            // TODO -- Kill off this command completely and transition to the new alias
-            return new CreatePackagesCommand().Execute(input);
-        }
-    }
-
-    [CommandDescription("Creates the nuget files locally", Name = "create-packages")]
-    public class CreatePackagesCommand : FubuCommand<CreatePackagesInput>
-    {
-        public override bool Execute(CreatePackagesInput input)
-        {
-            return RippleOperation
-                .For(input)
-                .Step<UpdateNuspecs>()
-                .Step<CreatePackages>()
-                .Execute();
         }
     }
 }

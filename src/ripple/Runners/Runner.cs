@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using FubuCore;
 using FubuCore.CommandLine;
-using ripple.Local;
 
 namespace ripple.Runners
 {

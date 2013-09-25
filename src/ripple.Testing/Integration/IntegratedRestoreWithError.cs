@@ -10,14 +10,14 @@ namespace ripple.Testing.Integration
 	[TestFixture]
 	public class IntegratedRestoreWithError
 	{
-		private SolutionGraphScenario theScenario;
+		private SolutionScenario theScenario;
 		private Solution theSolution;
 
 
 		[SetUp]
 		public void SetUp()
 		{
-			theScenario = SolutionGraphScenario.Create(scenario =>
+			theScenario = SolutionScenario.Create(scenario =>
 			{
 				scenario.Solution("FubuMVC", fubumvc =>
 				{

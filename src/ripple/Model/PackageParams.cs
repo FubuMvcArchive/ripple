@@ -1,5 +1,5 @@
 using NuGet;
-using ripple.Local;
+using ripple.Nuget;
 
 namespace ripple.Model
 {

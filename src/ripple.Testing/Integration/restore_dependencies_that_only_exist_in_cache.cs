@@ -10,14 +10,14 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_dependencies_that_only_exist_in_cache
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed theCache;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

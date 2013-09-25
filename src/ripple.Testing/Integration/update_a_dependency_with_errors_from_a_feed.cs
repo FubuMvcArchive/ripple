@@ -9,13 +9,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class update_a_dependency_with_errors_from_a_feed
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
@@ -60,13 +60,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class walk_dependency_tree_with_errors_in_a_feed
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

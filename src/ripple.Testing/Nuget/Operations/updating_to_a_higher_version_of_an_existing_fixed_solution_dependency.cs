@@ -8,7 +8,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class updating_to_a_higher_version_of_an_existing_fixed_solution_dependency : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -18,7 +18,7 @@ namespace ripple.Testing.Nuget.Operations
         {
             FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("fubu", "1.2.0.0"));
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

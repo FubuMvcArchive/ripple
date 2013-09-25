@@ -8,13 +8,13 @@ namespace ripple.Testing.Model
     [TestFixture]
     public class missing_files_with_no_forced_restore
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Bottles", bottles =>
                 {

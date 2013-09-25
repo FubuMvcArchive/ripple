@@ -9,13 +9,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class valid_solution
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Bottles", bottles =>
                 {
@@ -46,13 +46,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class invalid_solution
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", bottles =>
                 {

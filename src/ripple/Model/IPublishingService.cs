@@ -1,12 +1,12 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using NuGet;
-using ripple.Local;
+using ripple.Nuget;
+using ripple.Packaging;
 
 namespace ripple.Model
 {
@@ -80,9 +80,9 @@ namespace ripple.Model
             return specs;
         }
 
-        public static PublishingService For(SolutionMode mode)
+        public static PublishingService Basic()
         {
-            return new PublishingService(SolutionFiles.For(mode));
+            return new PublishingService(SolutionFiles.Basic());
         }
 
         public void CreateSymbolsPackage(PackageParams ctx)
@@ -157,8 +157,8 @@ namespace ripple.Model
 
             try
             {
-                packageServer.PushPackage(apiKey, package, (int) 60.Minutes().TotalMilliseconds);
-            }
+            packageServer.PushPackage(apiKey, package, (int)60.Minutes().TotalMilliseconds);
+        }
             catch (InvalidOperationException ex)
             {
                 if (ex.Message.Contains("already exists"))

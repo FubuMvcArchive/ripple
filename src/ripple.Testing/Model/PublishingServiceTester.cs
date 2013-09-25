@@ -5,8 +5,8 @@ using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using NuGet;
-using ripple.Local;
 using ripple.Model;
+using ripple.Nuget;
 
 namespace ripple.Testing.Model
 {
@@ -26,11 +26,11 @@ namespace ripple.Testing.Model
         public void smoke_test_the_package_validation()
         {
             var theFilename = "fubumvc.core.nuspec";
-			var stream = GetType()
-					.Assembly
-					.GetManifestResourceStream(typeof(DataMother), "FubuMVCNuspecTemplate.txt");
+            var stream = GetType()
+                    .Assembly
+                    .GetManifestResourceStream(typeof(DataMother), "FubuMVCNuspecTemplate.txt");
 
-			new FileSystem().WriteStreamToFile(theFilename, stream);
+            new FileSystem().WriteStreamToFile(theFilename, stream);
 
             var spec = NugetSpec.ReadFrom(theFilename);
             var service = new PublishingService(new StubSolutionFiles { RootDir = ".".ToFullPath() });

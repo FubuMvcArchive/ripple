@@ -11,14 +11,14 @@ namespace ripple.Testing.Nuget.Operations
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
 
         [SetUp]
         public void SetUp()
         {
             FeedScenario.Create(scenario => scenario.For(Feed.Fubu).Add("FubuCore", "1.0.0.1"));
 
-            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theScenario = SolutionScenario.Create(scenario => scenario.Solution("Test"));
 
             theSolution = theScenario.Find("Test");
 
@@ -60,12 +60,12 @@ namespace ripple.Testing.Nuget.Operations
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theScenario = SolutionScenario.Create(scenario => scenario.Solution("Test"));
 
             theSolution = theScenario.Find("Test");
 

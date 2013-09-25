@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace ripple.Testing.Integration
 
             theFileSystem.CreateDirectory(theSolutionDir);
             theFileSystem.CreateDirectory(theSolutionDir, "src");
+            theFileSystem.WriteStringToFile(Path.Combine(theSolutionDir, "src", "Solution.sln"), "");
 
             createProject("ProjectA");
             createProject("ProjectB");

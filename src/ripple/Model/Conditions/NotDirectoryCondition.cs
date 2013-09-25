@@ -13,7 +13,7 @@ namespace ripple.Model.Conditions
 
         public bool Matches(IFileSystem fileSystem, string directory)
         {
-            return _inner.Matches(fileSystem, directory);
+            return !_inner.Matches(fileSystem, directory);
         }
 
         public override bool Equals(object obj)

@@ -8,7 +8,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class installing_an_existing_solution_dependency_to_a_project
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
@@ -20,7 +20,7 @@ namespace ripple.Testing.Integration
                         .Add("FubuCore", "1.2.0.0");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

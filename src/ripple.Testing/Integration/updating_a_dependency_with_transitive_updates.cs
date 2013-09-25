@@ -9,7 +9,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class updating_a_dependency_with_transitive_updates
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
@@ -37,7 +37,7 @@ namespace ripple.Testing.Integration
                     .Add("SomethingElse", "0.9.9.9");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

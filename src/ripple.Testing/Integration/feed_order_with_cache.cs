@@ -10,7 +10,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class feed_order_with_cache
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed theCacheFeed;
         private Feed theFileSystemFeed;
@@ -33,7 +33,7 @@ namespace ripple.Testing.Integration
                         .Add("Dependency1", "1.0.23.0");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
@@ -70,7 +70,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class floating_feed_order_with_cache
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed theCacheFeed;
         private Feed theFileSystemFeed;
@@ -93,7 +93,7 @@ namespace ripple.Testing.Integration
                         .Add("Dependency1", "1.0.23.0");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

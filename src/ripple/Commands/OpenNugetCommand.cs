@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
 
 namespace ripple.Commands
 {
-
     public class OpenNugetInput
     {
         [Description("The Id of the nuget file to open in an editor")]
@@ -18,11 +18,13 @@ namespace ripple.Commands
     {
         public override bool Execute(OpenNugetInput input)
         {
-            var nuspec = SolutionGraphBuilder.BuildForCurrentDirectory()
-                .FindNugetSpec(input.Name);
+            var solution = SolutionBuilder.ReadFromCurrentDirectory();
+            var nuspec = solution.Specifications.FirstOrDefault(x => x.Name.EqualsIgnoreCase(input.Name));
 
-            new FileSystem().LaunchEditor(nuspec.Filename);
-
+            if (nuspec != null)
+            {
+                new FileSystem().LaunchEditor(nuspec.Filename);
+            }
 
             return true;
         }

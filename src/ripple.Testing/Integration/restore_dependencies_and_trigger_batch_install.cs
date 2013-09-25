@@ -12,14 +12,14 @@ namespace ripple.Testing.Integration
 	[TestFixture]
     public class restore_dependencies_and_trigger_batch_install
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 		private string theFile;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

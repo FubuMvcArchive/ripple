@@ -11,14 +11,14 @@ namespace ripple.Testing.Model
 	[TestFixture]
 	public class BatchOperationTester
 	{
-		private SolutionGraphScenario theScenario;
+		private SolutionScenario theScenario;
 		private Solution theSolution;
 		private string theBatchInput;
 
 		[SetUp]
 		public void SetUp()
 		{
-			theScenario = SolutionGraphScenario.Create(scenario =>
+			theScenario = SolutionScenario.Create(scenario =>
 			{
 				scenario.Solution("Test", test =>
 				{

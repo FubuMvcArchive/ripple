@@ -3,8 +3,7 @@ using FubuCore;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
-using ripple.Directives;
-using ripple.Local;
+using ripple.Nuget;
 
 namespace ripple.Testing
 {

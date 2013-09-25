@@ -7,14 +7,14 @@ namespace ripple.Testing.Commands
     [TestFixture]
     public class NuspecMapTester
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NuspecMap theMap;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
                 {
                     scenario.Solution("Test", test =>
                         {

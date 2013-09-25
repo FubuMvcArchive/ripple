@@ -7,7 +7,7 @@ using System.Xml.XPath;
 using FubuCore;
 using System.IO;
 
-namespace ripple.Local
+namespace ripple.Nuget
 {
     public class NuspecDocument
     {

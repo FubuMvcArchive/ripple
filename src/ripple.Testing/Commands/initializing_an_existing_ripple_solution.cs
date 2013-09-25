@@ -8,12 +8,12 @@ namespace ripple.Testing.Commands
     [TestFixture]
     public class initializing_an_existing_ripple_solution
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test");
             });

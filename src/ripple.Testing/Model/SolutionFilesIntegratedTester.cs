@@ -1,51 +1,52 @@
 ﻿using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
+using ripple.Model.Conversion;
+using ripple.Model.Xml;
 
 namespace ripple.Testing.Model
 {
-	[TestFixture]
-	public class SolutionFilesIntegratedTester
-	{
-		private SolutionGraphScenario theScenario;
+    [TestFixture]
+    public class SolutionFilesIntegratedTester
+    {
+        [Test]
+        public void files_for_nuget_solution()
+        {
+            using (var sandbox = DirectorySandbox.Create())
+            {
+                sandbox.CreateFile("MySolution.sln");
+                sandbox.CreateDirectory("MyProject");
+                sandbox.CreateFile("MyProject", "MyProject.csproj");
+                sandbox.CreateFile("MyProject", "packages.config");
 
-		[TestFixtureSetUp]
-		public void FixtureSetUp()
-		{
-			theScenario = SolutionGraphScenario.Create(scenario =>
-			{
-				scenario.Solution("FubuCore", fubucore => fubucore.Publishes("FubuCore"));
+                SolutionFiles
+                    .FromDirectory(sandbox.Directory)
+                    .Loader
+                    .ShouldBeOfType<NuGetSolutionLoader>();
+            }
+        }
 
-				scenario.Solution("HtmlTags", htmlTags =>
-				{
-					htmlTags.Publishes("HtmlTags", x => x.Assembly("HtmlTags.dll", "lib\\4.0"));
-					htmlTags.Mode(SolutionMode.NuGet);
-				});
-			});
-		}
+        [Test]
+        public void files_for_empty_ripple_solution()
+        {
+            using (var sandbox = DirectorySandbox.Create())
+            {
+                sandbox.StopAtParent();
 
-		[TestFixtureTearDown]
-		public void TearDown()
-		{
-			theScenario.Cleanup();
-		}
+                // TODO -- Going to need to write out some XML to compare the ObjectBlocks vs. XML loaders
+                sandbox.CreateFile("ripple.config");
 
-		[Test]
-		public void files_for_ripple_solution()
-		{
-			SolutionFiles
-				.FromDirectory(theScenario.DirectoryForSolution("FubuCore"))
-				.Mode
-				.ShouldEqual(SolutionMode.Ripple);
-		}
+                sandbox.CreateDirectory("src");
+                sandbox.CreateFile("src", "MySolution.sln");
 
-		[Test]
-		public void files_for_classic_solution()
-		{
-			SolutionFiles
-				.FromDirectory(theScenario.DirectoryForSolution("HtmlTags"))
-				.Mode
-				.ShouldEqual(SolutionMode.NuGet);
-		}
-	}
+                sandbox.CreateDirectory("src", "MyProject");
+                sandbox.CreateFile("src", "MyProject", "MyProject.csproj");
+
+                SolutionFiles
+                    .FromDirectory(sandbox.Directory)
+                    .Loader
+                    .ShouldBeOfType<XmlSolutionLoader>();
+            }
+        }
+    }
 }

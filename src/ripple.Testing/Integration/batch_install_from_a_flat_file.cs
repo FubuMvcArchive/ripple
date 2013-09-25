@@ -13,7 +13,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class batch_install_from_a_flat_file
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private string theFile;
 
@@ -40,7 +40,7 @@ namespace ripple.Testing.Integration
                         });
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                     {

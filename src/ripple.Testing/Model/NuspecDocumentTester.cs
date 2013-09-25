@@ -1,8 +1,7 @@
-using System;
 using FubuCore;
 using NUnit.Framework;
-using ripple.Local;
 using FubuTestingSupport;
+using ripple.Nuget;
 
 namespace ripple.Testing.Model
 {
@@ -15,14 +14,14 @@ namespace ripple.Testing.Model
         [SetUp]
         public void SetUp()
         {
-	        theFilename = "fubucore.nuspec";
-			var stream = GetType()
-					.Assembly
-					.GetManifestResourceStream(typeof(DataMother), "FubuCoreNuspecTemplate.txt");
+            theFilename = "fubucore.nuspec";
+            var stream = GetType()
+                    .Assembly
+                    .GetManifestResourceStream(typeof(DataMother), "FubuCoreNuspecTemplate.txt");
 
-			new FileSystem().WriteStreamToFile(theFilename, stream);
+            new FileSystem().WriteStreamToFile(theFilename, stream);
 
-			theDocument = new NuspecDocument(theFilename);
+            theDocument = new NuspecDocument(theFilename);
         }
 
         [Test]

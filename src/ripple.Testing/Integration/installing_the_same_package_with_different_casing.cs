@@ -9,7 +9,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class installing_the_same_package_with_different_casing
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
@@ -32,7 +32,7 @@ namespace ripple.Testing.Integration
                                                         })
                                                     );
 
-            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theScenario = SolutionScenario.Create(scenario => scenario.Solution("Test"));
 
             theSolution = theScenario.Find("Test");
         }

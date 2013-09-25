@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
-using ripple.Classic;
+using ripple.Model.Conversion;
 using ripple.Model.Xml;
 
 namespace ripple.Model
@@ -22,7 +22,9 @@ namespace ripple.Model
         public static void Reset()
         {
             Loaders.Clear();
+            
             AddLoader(new XmlSolutionLoader());
+            AddLoader(new NuGetSolutionLoader());
         }
 
         public static void AddLoader(ISolutionLoader loader)
@@ -31,9 +33,10 @@ namespace ripple.Model
         }
 
         private readonly IFileSystem _fileSystem;
-        private readonly ISolutionLoader _loader;
+        private readonly Lazy<ISolutionLoader> _loader;
+        private Func<ISolutionLoader> _findLoader; 
 
-        public SolutionFiles(IFileSystem fileSystem, ISolutionLoader loader)
+        public SolutionFiles(IFileSystem fileSystem)
         {
             if (RippleFileSystem.IsSolutionDirectory())
             {
@@ -41,7 +44,8 @@ namespace ripple.Model
             }
 
             _fileSystem = fileSystem;
-            _loader = loader;
+            _findLoader = findLoader;
+            _loader = new Lazy<ISolutionLoader>(() => _findLoader());
         }
 
         private void resetDirectories(string root)
@@ -49,16 +53,23 @@ namespace ripple.Model
             RootDir = root;
         }
 
-        public string RootDir { get; set; }
-
-        public SolutionMode Mode
+        public ISolutionLoader Loader
         {
-            get
-            {
-                if (_loader is SolutionLoader) return SolutionMode.Ripple;
-                return SolutionMode.NuGet;
-            }
+            get { return _loader.Value; }
         }
+
+        private ISolutionLoader findLoader()
+        {
+            var solutionLoader = Loaders.FirstOrDefault(x => x.Condition.Matches(_fileSystem, RootDir));
+            if (solutionLoader == null)
+            {
+                RippleAssert.Fail("Unable to determine ripple mode. See the log for further details or use the --verbose option.");
+            }
+
+            return solutionLoader;
+        }
+
+        public string RootDir { get; set; }
 
         public void ForProjects(Solution solution, Action<string> action)
         {
@@ -80,7 +91,7 @@ namespace ripple.Model
         {
             var file = Path.Combine(RootDir, ConfigFile);
 
-            var solution = _loader.LoadFrom(_fileSystem, file);
+            var solution = Loader.LoadFrom(_fileSystem, file);
             solution.Path = file;
 
             return solution;
@@ -88,32 +99,17 @@ namespace ripple.Model
 
         public void FinalizeSolution(Solution solution)
         {
-            _loader.SolutionLoaded(solution);
+            Loader.SolutionLoaded(solution);
         }
 
         public static SolutionFiles Basic()
         {
-            return new SolutionFiles(new FileSystem(), new SolutionLoader());
+            return new SolutionFiles(new FileSystem());
         }
 
         public static SolutionFiles FromDirectory(string directory)
         {
-            var rippleConfigs = new FileSet
-            {
-                Include = RippleDependencyStrategy.RippleDependenciesConfig,
-                DeepSearch = true
-            };
-
-            var isClassicMode = false;
-            var configFiles = new FileSystem().FindFiles(directory, rippleConfigs);
-
-            if (!configFiles.Any())
-            {
-                isClassicMode = true;
-                RippleLog.Info("NuGet Mode Detected");
-            }
-
-            var files = isClassicMode ? Classic() : Basic();
+            var files = Basic();
             files.resetDirectories(directory);
 
             return files;
@@ -121,20 +117,11 @@ namespace ripple.Model
 
         public static SolutionFiles FromDirectory(string directory, ISolutionLoader loader)
         {
-            var files = new SolutionFiles(new FileSystem(), loader);
+            var files = new SolutionFiles(new FileSystem());
             files.resetDirectories(directory);
+            files._findLoader = () => loader;
 
             return files;
-        }
-
-        public static SolutionFiles Classic()
-        {
-            return new SolutionFiles(new FileSystem(), new ClassicRippleSolutionLoader());
-        }
-
-        public static SolutionFiles For(SolutionMode mode)
-        {
-            return mode == SolutionMode.NuGet ? Classic() : Basic();
         }
     }
 }

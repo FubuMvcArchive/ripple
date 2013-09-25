@@ -11,7 +11,7 @@ namespace ripple.Testing.Nuget.Operations
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
 
         [SetUp]
         public void SetUp()
@@ -29,7 +29,7 @@ namespace ripple.Testing.Nuget.Operations
                         });
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theScenario = SolutionScenario.Create(scenario => scenario.Solution("Test"));
             theSolution = theScenario.Find("Test");
 
             theBuilder = new NugetPlanBuilder();
