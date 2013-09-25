@@ -10,14 +10,14 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_float_dependency_with_no_version
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed theCache;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
@@ -63,14 +63,14 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_float_dependency_with_no_version_from_a_fixed_feed
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed theCache;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

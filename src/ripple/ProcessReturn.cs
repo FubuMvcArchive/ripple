@@ -1,4 +1,4 @@
-namespace ripple.Local
+﻿namespace ripple
 {
     public class ProcessReturn
     {

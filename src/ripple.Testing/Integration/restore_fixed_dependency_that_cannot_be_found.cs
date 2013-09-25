@@ -9,13 +9,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_fixed_dependency_that_cannot_be_found
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
@@ -55,7 +55,6 @@ namespace ripple.Testing.Integration
                     .Execute<RestoreInput, RestoreCommand>();
             });
 
-            theScenario.ResetGraph();
             theSolution = theScenario.Find("Test");
 
             theSolution.Dependencies.Find("Bottles").Version.ShouldEqual("1.1.0.538");
@@ -65,13 +64,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_operation_with_invalid_dependencies
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {
@@ -106,7 +105,6 @@ namespace ripple.Testing.Integration
                     .Execute<RestoreInput, RestoreCommand>();
             });
 
-            theScenario.ResetGraph();
             theSolution = theScenario.Find("Test");
 
             theSolution.Dependencies.Find("Bottles").Version.ShouldEqual("");

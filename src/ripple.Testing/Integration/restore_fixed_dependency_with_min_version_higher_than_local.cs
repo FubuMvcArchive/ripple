@@ -9,13 +9,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_fixed_dependency_with_min_version_higher_than_local
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

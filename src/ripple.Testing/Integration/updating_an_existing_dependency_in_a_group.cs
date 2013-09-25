@@ -9,7 +9,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class updating_an_existing_dependency_in_a_group
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
@@ -32,7 +32,7 @@ namespace ripple.Testing.Integration
                         });
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", sln =>
                 {

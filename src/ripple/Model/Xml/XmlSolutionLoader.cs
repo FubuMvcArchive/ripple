@@ -10,7 +10,17 @@ namespace ripple.Model.Xml
     // This is STRICTLY here for upgrades since the format drastically changed
     public class XmlSolutionLoader : ISolutionLoader
     {
-        public IDirectoryCondition Condition { get; private set; }
+        public IDirectoryCondition Condition
+        {
+            get
+            {
+                return DirectoryCondition.Combine(x =>
+                {
+                    x.Condition<DetectSingleSolution>();
+                    x.Condition<DetectRippleConfig>();
+                });
+            }
+        }
 
         public Solution LoadFrom(IFileSystem fileSystem, string directory)
         {
@@ -122,10 +132,10 @@ namespace ripple.Model.Xml
                 if (prop != null && prop.PropertyType.IsSimple())
                 {
                     var value = converter.FromString(attribute.Value, prop.PropertyType);
-;                   prop.SetValue(target, value, null);
+                    ; prop.SetValue(target, value, null);
                 }
             }
-            
+
         }
 
         public void SolutionLoaded(Solution solution)

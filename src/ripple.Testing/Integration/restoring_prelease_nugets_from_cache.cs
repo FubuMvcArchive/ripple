@@ -10,14 +10,14 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restoring_prelease_nugets_from_cache
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed nServiceBus;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("NServiceBus.WebSphereMQ", test =>
                 {

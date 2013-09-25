@@ -5,6 +5,7 @@ using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
+using ripple.Model.Conditions;
 using ripple.Model.Xml;
 
 namespace ripple.Testing.Model.Xml
@@ -31,6 +32,20 @@ namespace ripple.Testing.Model.Xml
         public void TearDown()
         {
             File.Delete(theFileName);
+        }
+
+        [Test]
+        public void builds_the_condition()
+        {
+            new XmlSolutionLoader()
+                .Condition
+                .As<CompositeDirectoryCondition>()
+                .Conditions
+                .ShouldHaveTheSameElementsAs(
+                    new DetectSingleSolution(),
+                    new DetectRippleConfig()
+                    // TODO -- Detect XML
+                );
         }
 
         [Test]

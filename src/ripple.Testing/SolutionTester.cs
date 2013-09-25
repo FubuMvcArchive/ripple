@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using FubuCore;
 using FubuTestingSupport;
-using ripple.Local;
 using ripple.Model;
 using ripple.Nuget;
 using ripple.Runners;
@@ -145,7 +144,7 @@ namespace ripple.Testing
 
             solution.NugetFolderFor(spec)
                 .ShouldEqual(".".ToFullPath().AppendPath(solution.PackagesDirectory(), "FubuCore"));
-        
+
         }
 
         [Test]
@@ -183,7 +182,7 @@ namespace ripple.Testing
         [Test]
         public void uses_explicit_dependency_constraint()
         {
-            var explicitDep = new Dependency("FubuCore") { Constraint = "Current,NextMinor"};
+            var explicitDep = new Dependency("FubuCore") { Constraint = "Current,NextMinor" };
 
 
             var solution = new Solution();

@@ -10,7 +10,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class update_an_existing_floated_dependency_with_new_transitive_dependencies : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -41,7 +41,7 @@ namespace ripple.Testing.Nuget.Operations
                         .Add("WebDriver", "1.2.0.0");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", sln =>
                 {

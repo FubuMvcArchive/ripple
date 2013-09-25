@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Serialization;
-using ripple.Local;
+using ripple.Nuget;
 
 namespace ripple.Model
 {

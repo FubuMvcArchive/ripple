@@ -4,7 +4,6 @@ using System.IO;
 using FubuCore;
 using FubuCore.Util;
 using ripple.Commands;
-using ripple.Local;
 using ripple.Model;
 using ripple.Nuget;
 
@@ -18,9 +17,9 @@ namespace ripple.Testing
         {
             FileSystem.CreateDirectory(projectDir);
 
-            var stream = typeof(SolutionGraphScenario)
+            var stream = typeof(SolutionScenario)
                 .Assembly
-                .GetManifestResourceStream("{0}.ProjectTemplate.txt".ToFormat(typeof(SolutionGraphScenario).Namespace));
+                .GetManifestResourceStream("{0}.ProjectTemplate.txt".ToFormat(typeof(SolutionScenario).Namespace));
 
             var projectFile = Path.Combine(projectDir, RippleDependencyStrategy.RippleDependenciesConfig);
             FileSystem.WriteStringToFile(projectFile, "");
@@ -32,40 +31,28 @@ namespace ripple.Testing
         }
     }
 
-    public class SolutionGraphScenario
+    public class SolutionScenario
     {
         private readonly string _directory;
         private readonly string _cacheDirectory;
         private readonly IFileSystem _fileSystem;
-        private Lazy<SolutionGraph> _graph;
 
-        public SolutionGraphScenario(string directory, string cacheDirectory)
+        public SolutionScenario(string directory, string cacheDirectory)
         {
             _directory = directory;
             _cacheDirectory = cacheDirectory;
             _fileSystem = new FileSystem();
-
-
-            ResetGraph();
 
             RippleFileSystem.StubCurrentDirectory(_directory);
         }
 
         public Solution Find(string name)
         {
-            var solution = Graph[name];
+            var solution = SolutionBuilder.ReadFrom(_directory.AppendPath(name));
             solution.UseCache(NugetFolderCache.For(_cacheDirectory, solution));
 
             return solution;
         }
-
-        public void ResetGraph()
-        {
-            var builder = new SolutionGraphBuilder(_fileSystem);
-            _graph = new Lazy<SolutionGraph>(() => builder.ReadFrom(_directory));
-        }
-
-        public SolutionGraph Graph { get { return _graph.Value; } }
 
         public string Directory { get { return _directory; } }
 
@@ -82,7 +69,7 @@ namespace ripple.Testing
             return _directory.AppendPath(solutionName);
         }
 
-        public static SolutionGraphScenario Create(Action<SolutionGraphScenarioDefinition> configure)
+        public static SolutionScenario Create(Action<SolutionGraphScenarioDefinition> configure)
         {
             var definition = new SolutionGraphScenarioDefinition();
             configure(definition);
@@ -95,7 +82,7 @@ namespace ripple.Testing
             string Directory { get; }
             void AddSolution(Solution solution);
             void AddModification(SolutionModification modification);
-            SolutionGraphScenario Build();
+            SolutionScenario Build();
         }
 
         public class SolutionGraphScenarioDefinition : ISolutionGraphScenarioBuilder
@@ -148,11 +135,11 @@ namespace ripple.Testing
                 _modifications.Add(modification);
             }
 
-            SolutionGraphScenario ISolutionGraphScenarioBuilder.Build()
+            SolutionScenario ISolutionGraphScenarioBuilder.Build()
             {
                 _modifications.Each(x => x.Execute());
                 _solutions.Each(solution => solution.Save(true));
-                return new SolutionGraphScenario(this.As<ISolutionGraphScenarioBuilder>().Directory, cacheDirectory);
+                return new SolutionScenario(this.As<ISolutionGraphScenarioBuilder>().Directory, cacheDirectory);
             }
         }
 
@@ -187,18 +174,20 @@ namespace ripple.Testing
                 var solutionDir = Path.Combine(builder.Directory, name);
                 _fileSystem.CreateDirectory(solutionDir);
 
-                var solutionFile = Path.Combine(solutionDir, SolutionFiles.ConfigFile);
+                var rippleConfig = Path.Combine(solutionDir, SolutionFiles.ConfigFile);
+                _fileSystem.WriteStringToFile(rippleConfig, "");
+
+                var solutionFile = Path.Combine(solutionDir, name + ".sln");
                 _fileSystem.WriteStringToFile(solutionFile, "");
 
                 _solution = new Solution
                 {
                     Name = name,
-                    Path = solutionFile
+                    Path = rippleConfig,
+                    Directory = solutionDir,
+                    SourceFolder = Path.Combine(solutionDir, "src"),
+                    NugetSpecFolder = Path.Combine(solutionDir, "packaging", "nuget")
                 };
-
-                _solution.Directory = solutionDir;
-                _solution.SourceFolder = Path.Combine(solutionDir, "src");
-                _solution.NugetSpecFolder = Path.Combine(solutionDir, "packaging", "nuget");
 
                 _fileSystem.CreateDirectory(_solution.SourceFolder);
 

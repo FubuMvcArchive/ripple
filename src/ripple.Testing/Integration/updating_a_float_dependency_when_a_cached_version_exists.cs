@@ -8,14 +8,14 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class updating_a_float_dependency_when_a_cached_version_exists
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
                 {
                     scenario.Solution("Test", test =>
                         {

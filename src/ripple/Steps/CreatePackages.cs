@@ -5,6 +5,7 @@ using FubuCore.CommandLine;
 using NuGet;
 using ripple.Commands;
 using ripple.Model;
+using ripple.Packaging;
 
 namespace ripple.Steps
 {

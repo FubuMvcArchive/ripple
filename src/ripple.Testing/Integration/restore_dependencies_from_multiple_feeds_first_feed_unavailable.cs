@@ -10,7 +10,7 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class restore_dependencies_from_multiple_feeds_first_feed_unavailable
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private Feed theUnavailableFeed;
         private Feed anotherFloatingFeed;
@@ -21,7 +21,7 @@ namespace ripple.Testing.Integration
             theUnavailableFeed = new Feed("unavailable");
             anotherFloatingFeed = new Feed("floated");
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                 {

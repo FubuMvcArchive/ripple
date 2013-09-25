@@ -8,54 +8,54 @@ using ripple.Model;
 
 namespace ripple.Testing.Model
 {
-	[TestFixture]
-	public class SolutionFilesTester
-	{
-		private Solution theSolution;
-		private SolutionFiles theSolutionFiles;
-		private IFileSystem theFileSystem;
+    [TestFixture]
+    public class SolutionFilesTester
+    {
+        private Solution theSolution;
+        private SolutionFiles theSolutionFiles;
+        private IFileSystem theFileSystem;
 
-		[SetUp]
-		public void SetUp()
-		{
-			theSolution = new Solution
-			{
-				Directory = "SolutionFiles"
-			};
+        [SetUp]
+        public void SetUp()
+        {
+            theSolution = new Solution
+            {
+                Directory = "SolutionFiles"
+            };
 
 
-			theFileSystem = new FileSystem();
-			theFileSystem.CreateDirectory("SolutionFiles");
+            theFileSystem = new FileSystem();
+            theFileSystem.CreateDirectory("SolutionFiles");
 
-			theSolutionFiles = new SolutionFiles(theFileSystem, new SolutionLoader());
-			theSolutionFiles.RootDir = Path.GetTempPath().AppendRandomPath();
-			
-			theFileSystem.CreateDirectory("SolutionFiles", "src");
+            theSolutionFiles = new SolutionFiles(theFileSystem);
+            theSolutionFiles.RootDir = Path.GetTempPath().AppendRandomPath();
 
-			theFileSystem.CreateDirectory("SolutionFiles", "src", "Project1");
-			theFileSystem.CreateDirectory("SolutionFiles", "src", "Project2");
+            theFileSystem.CreateDirectory("SolutionFiles", "src");
 
-			theFileSystem.WriteStringToFile(Path.Combine("SolutionFiles", "src", "Project1", "Project1.csproj"), "test");
-			theFileSystem.WriteStringToFile(Path.Combine("SolutionFiles", "src", "Project2", "Project2.csproj"), "test");
-		}
+            theFileSystem.CreateDirectory("SolutionFiles", "src", "Project1");
+            theFileSystem.CreateDirectory("SolutionFiles", "src", "Project2");
 
-		[TearDown]
-		public void TearDown()
-		{
+            theFileSystem.WriteStringToFile(Path.Combine("SolutionFiles", "src", "Project1", "Project1.csproj"), "test");
+            theFileSystem.WriteStringToFile(Path.Combine("SolutionFiles", "src", "Project2", "Project2.csproj"), "test");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
             theFileSystem.DeleteDirectory(theSolution.Directory);
-			theFileSystem.DeleteDirectory(theSolutionFiles.RootDir);
-		}
+            theFileSystem.DeleteDirectory(theSolutionFiles.RootDir);
+        }
 
-		[Test]
-		public void reads_the_projects()
-		{
-			var projects = new List<string>();
-			theSolutionFiles.ForProjects(theSolution, projects.Add);
+        [Test]
+        public void reads_the_projects()
+        {
+            var projects = new List<string>();
+            theSolutionFiles.ForProjects(theSolution, projects.Add);
 
-			var project1 = Path.Combine("SolutionFiles", "src", "Project1", "Project1.csproj");
-			var project2 = Path.Combine("SolutionFiles", "src", "Project2", "Project2.csproj");
+            var project1 = Path.Combine("SolutionFiles", "src", "Project1", "Project1.csproj");
+            var project2 = Path.Combine("SolutionFiles", "src", "Project2", "Project2.csproj");
 
-			projects.ShouldHaveTheSameElementsAs(project1, project2);
-		}
-	}
+            projects.ShouldHaveTheSameElementsAs(project1, project2);
+        }
+    }
 }

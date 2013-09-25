@@ -10,19 +10,11 @@ using FubuCore.CommandLine;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 using ripple.Commands;
-using ripple.Local;
 using ripple.Nuget;
 using ripple.Runners;
 
 namespace ripple.Model
 {
-    public enum CleanMode
-    {
-        all,
-        packages,
-        projects
-    }
-
     public interface ISolution
     {
         string NugetFolderFor(string nugetName);
@@ -60,10 +52,8 @@ namespace ripple.Model
             UseStorage(NugetStorage.Basic());
             UseFeedService(Model.FeedService.Basic(this));
             UseCache(NugetFolderCache.DefaultFor(this));
-            UsePublisher(PublishingService.For(Mode));
+            UsePublisher(PublishingService.Basic());
             UseBuilder(new NugetPlanBuilder());
-
-            //_cacheLocalPath = Cache.LocalPath;
 
             RestoreSettings = new RestoreSettings();
             NuspecSettings = new NuspecSettings();
@@ -346,11 +336,6 @@ namespace ripple.Model
                     _nugetDependencies.Add(spec);
                 }
             });
-        }
-
-        public bool DependsOn(Solution peer)
-        {
-            return _nugetDependencies.Any(x => x.Publisher == peer);
         }
 
         public void EachProject(Action<Project> action)

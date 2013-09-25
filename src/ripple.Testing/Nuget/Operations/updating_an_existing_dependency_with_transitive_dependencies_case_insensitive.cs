@@ -11,7 +11,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class updating_an_existing_dependency_with_transitive_dependencies_case_insensitive : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -37,7 +37,7 @@ namespace ripple.Testing.Nuget.Operations
                     .Add("structuremap", "2.6.3");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", sln =>
                 {

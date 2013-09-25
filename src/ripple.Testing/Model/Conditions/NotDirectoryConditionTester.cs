@@ -18,16 +18,16 @@ namespace ripple.Testing.Model.Conditions
         }
 
         [Test]
-        public void matches_when_inner_condition_is_true()
+        public void matches_when_inner_condition_is_false()
         {
-            theInnerCondition.IsMatch(true);
+            theInnerCondition.IsMatch(false);
             theCondition.Matches(null, null).ShouldBeTrue();
         }
 
         [Test]
-        public void no_match_when_inner_condition_is_false()
+        public void no_match_when_inner_condition_is_true()
         {
-            theInnerCondition.IsMatch(false);
+            theInnerCondition.IsMatch(true);
             theCondition.Matches(null, null).ShouldBeFalse();
         }
     }

@@ -71,9 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertLogListener.cs" />
-    <Compile Include="BuildSolutionTester.cs" />
     <Compile Include="CheckXmlPersistence.cs" />
-    <Compile Include="Classic\NuGetSolutionLoaderTester.cs" />
     <Compile Include="Commands\FindNugetsCommandTester.cs" />
     <Compile Include="Commands\NugetEntryTester.cs" />
     <Compile Include="Commands\finding_nuspecs_by_convention_and_mapping.cs" />
@@ -107,14 +105,10 @@
     <Compile Include="Integration\installing_an_existing_solution_dependency_to_a_project.cs" />
     <Compile Include="Integration\installing_a_new_package_with_no_versions_on_dependencies.cs" />
     <Compile Include="Integration\installing_the_same_package_with_different_casing.cs" />
-    <Compile Include="Integration\IntegratedChoosingOfRequiredSolutionsTester.cs" />
     <Compile Include="Integration\IntegratedHistoryCommandTester.cs" />
     <Compile Include="Integration\IntegratedInitCommandTester.cs" />
     <Compile Include="Integration\IntegratedPackagingTester.cs" />
     <Compile Include="Integration\IntegratedRestoreWithError.cs" />
-    <Compile Include="Integration\IntegratedRipplePlanCreationTester.cs" />
-    <Compile Include="Integration\IntegratedSolutionDependencyQueryTester.cs" />
-    <Compile Include="Integration\IntegratedSolutionGraphTester.cs" />
     <Compile Include="Integration\remove_a_dependency_from_a_project.cs" />
     <Compile Include="Integration\remove_a_dependency_from_solution.cs" />
     <Compile Include="Integration\restore_dependencies_and_trigger_batch_install.cs" />
@@ -163,7 +157,6 @@
     <Compile Include="Model\RestoreSettingsTester.cs" />
     <Compile Include="Model\RippleDependencyReaderTester.cs" />
     <Compile Include="Model\SolutionBuilderTester.cs" />
-    <Compile Include="Model\SolutionConfigTester.cs" />
     <Compile Include="Model\SolutionFilesIntegratedTester.cs" />
     <Compile Include="Model\SolutionFilesTester.cs" />
     <Compile Include="Model\SolutionPersistence.cs" />
@@ -225,7 +218,7 @@
     <Compile Include="RippleFileSystemTester.cs" />
     <Compile Include="RippleOperationTester.cs" />
     <Compile Include="DirectorySandbox.cs" />
-    <Compile Include="SolutionGraphScenario.cs" />
+    <Compile Include="SolutionScenario.cs" />
     <Compile Include="SolutionTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="Steps\NugetOperationTester.cs" />

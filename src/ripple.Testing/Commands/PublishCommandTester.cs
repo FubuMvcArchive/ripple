@@ -1,7 +1,7 @@
 ﻿using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Commands;
-using ripple.Local;
+using ripple.Nuget;
 
 namespace ripple.Testing.Commands
 {

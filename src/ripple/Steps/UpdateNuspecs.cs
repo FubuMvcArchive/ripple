@@ -2,8 +2,8 @@
 using System.Linq;
 using NuGet;
 using ripple.Commands;
-using ripple.Local;
-using ripple.Model;
+using ripple.Nuget;
+using ripple.Packaging;
 
 namespace ripple.Steps
 {

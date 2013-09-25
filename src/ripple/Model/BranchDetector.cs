@@ -8,13 +8,13 @@ namespace ripple.Model
     {
         private static Lazy<string> _current;
         private static Func<string> _detectCurrent;
-        private static Func<bool> _canDetect;
-
+        private static Func<bool> _canDetect; 
+ 
         static BranchDetector()
         {
             Live();
         }
-
+        
         public static void Live()
         {
             _canDetect = () => Directory.Exists(GitDirectory);

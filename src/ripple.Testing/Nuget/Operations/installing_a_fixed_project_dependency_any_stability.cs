@@ -8,7 +8,7 @@ namespace ripple.Testing.Nuget.Operations
     [TestFixture]
     public class installing_a_fixed_project_dependency_any_stability : NugetOperationContext
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private NugetPlan thePlan;
         private NugetPlanBuilder theBuilder;
@@ -22,7 +22,7 @@ namespace ripple.Testing.Nuget.Operations
                         .Add("FubuCore", "1.2.0.0-alpha");
             });
 
-            theScenario = SolutionGraphScenario.Create(scenario => scenario.Solution("Test"));
+            theScenario = SolutionScenario.Create(scenario => scenario.Solution("Test"));
 
             theSolution = theScenario.Find("Test");
 

@@ -3,20 +3,21 @@ using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Commands;
 using ripple.Model;
+using ripple.Packaging;
 
 namespace ripple.Testing.Commands
 {
     [TestFixture]
     public class finding_nuspecs_by_convention_and_mapping
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
         private CreatePackagesInput theInput;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
             {
                 scenario.Solution("Test", test =>
                     {

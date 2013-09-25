@@ -1,13 +1,18 @@
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using FubuCore;
 
-namespace ripple.Local
+namespace ripple
 {
+    public interface IProcessRunner
+    {
+        ProcessReturn Run(ProcessStartInfo info, TimeSpan waitDuration, Action<string> callback);
+        ProcessReturn Run(ProcessStartInfo info, Action<string> callback);
+    }
+
     // TODO -- move to FubuCore
     public class ProcessRunner : IProcessRunner
     {
@@ -35,25 +40,26 @@ namespace ripple.Local
             int pid = 0;
             using (var proc = Process.Start(info))
             {
-                pid = proc.Id;				
-                proc.OutputDataReceived += (sender, outputLine) => 
+                pid = proc.Id;
+                proc.OutputDataReceived += (sender, outputLine) =>
                 {
                     if (outputLine.Data.IsNotEmpty())
                     {
                         callback(outputLine.Data);
                     }
-                    output.AppendLine(outputLine.Data); 
+                    output.AppendLine(outputLine.Data);
                 };
-				
+
                 proc.BeginOutputReadLine();
                 proc.WaitForExit((int)waitDuration.TotalMilliseconds);
-				
+
                 killProcessIfItStillExists(pid);
-				
-                returnValue = new ProcessReturn(){              
+
+                returnValue = new ProcessReturn()
+                {
                     ExitCode = proc.ExitCode,
                     OutputText = output.ToString()
-                };                
+                };
             }
 
             return returnValue;
@@ -68,7 +74,7 @@ namespace ripple.Local
                 try
                 {
                     var p = Process.GetProcessById(pid);
-                    if(!p.HasExited)
+                    if (!p.HasExited)
                     {
                         p.Kill();
                         Thread.Sleep(100);
@@ -83,7 +89,7 @@ namespace ripple.Local
 
         public ProcessReturn Run(ProcessStartInfo info, Action<string> callback)
         {
-            return Run(info, new TimeSpan(0,0,0,10), callback);
+            return Run(info, new TimeSpan(0, 0, 0, 10), callback);
         }
     }
 }

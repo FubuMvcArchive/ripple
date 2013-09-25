@@ -8,13 +8,13 @@ namespace ripple.Testing.Integration
     [TestFixture]
     public class remove_a_dependency_from_a_project
     {
-        private SolutionGraphScenario theScenario;
+        private SolutionScenario theScenario;
         private Solution theSolution;
 
         [SetUp]
         public void SetUp()
         {
-            theScenario = SolutionGraphScenario.Create(scenario =>
+            theScenario = SolutionScenario.Create(scenario =>
                 {
                     scenario.Solution("Test", test =>
                         {

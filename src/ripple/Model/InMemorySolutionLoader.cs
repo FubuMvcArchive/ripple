@@ -3,6 +3,7 @@ using ripple.Model.Conditions;
 
 namespace ripple.Model
 {
+    // Mostly used for testing
     public class InMemorySolutionLoader : ISolutionLoader
     {
         private readonly Solution _solution;
@@ -12,7 +13,7 @@ namespace ripple.Model
             _solution = solution;
         }
 
-        public IDirectoryCondition Condition { get; private set; }
+        public IDirectoryCondition Condition { get { return new Always(); } }
 
         public Solution LoadFrom(IFileSystem fileSystem, string directory)
         {
