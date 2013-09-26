@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using FubuCore;
+using System.IO;
 
 namespace ripple.Local
 {
@@ -108,6 +109,7 @@ namespace ripple.Local
                 {
                     var path = target.Replace('\\', '/');
                     var assemblyReference = element.Attribute("src").Value;
+                    assemblyReference = assemblyReference.Replace('\\', Path.DirectorySeparatorChar);
 
                     yield return new PublishedAssembly(nuspecDirectory, assemblyReference, path);
                 }
