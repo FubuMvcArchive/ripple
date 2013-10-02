@@ -57,7 +57,14 @@ namespace ripple.Model
 
         public static bool CanDetectBranch()
         {
-            return _canDetect();
+            try
+            {
+                return _canDetect();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static string Current()

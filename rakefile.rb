@@ -37,6 +37,8 @@ task :create_gem => [:compile] do
 	cleanDirectory 'bin';	
 	cleanDirectory 'pkg'
 	
+	Dir.mkdir 'bin' unless Dir.exists?('bin')
+	
 	copyOutputFiles "src/ripple/bin/#{@solution.compilemode}", '*.dll', 'bin'
 	copyOutputFiles "src/ripple/bin/#{@solution.compilemode}", 'ripple.exe', 'bin'
 	copyOutputFiles "src/ripple/bin/#{@solution.compilemode}", 'run-git.cmd', 'bin'
