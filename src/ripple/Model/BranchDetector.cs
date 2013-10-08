@@ -17,7 +17,7 @@ namespace ripple.Model
 
         public static void Live()
         {
-            _canDetect = () => Directory.Exists(".git");
+            _canDetect = () => Directory.Exists(GitDirectory);
             _detectCurrent = () =>
             {
                 if (!_canDetect())
@@ -25,7 +25,7 @@ namespace ripple.Model
                     RippleAssert.Fail("Cannot use branch detection when not in a git repository");
                 }
 
-                var head = File.ReadAllText(".git\\HEAD");
+                var head = File.ReadAllText(Path.Combine(GitDirectory,"HEAD"));
 
                 return head.Substring(head.LastIndexOf("/") + 1).Trim();
             };
@@ -57,6 +57,14 @@ namespace ripple.Model
         public static string Current()
         {
             return _current.Value;
+        }
+
+        private static string GitDirectory
+        {
+            get
+            {
+                return Path.Combine(RippleFileSystem.FindSolutionDirectory(false) ?? "", ".git");
+            }
         }
     }
 }
