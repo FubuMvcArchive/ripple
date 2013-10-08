@@ -93,7 +93,8 @@ namespace ripple.Model
 
             if (!symbolsBuilder.Files.Any())
             {
-                throw new CreateNugetException(symbolsBuilder.Id, true);
+                RippleLog.Info("No symbols could be generated for {0} since no symbol files could be found. This is expected if this is a code only package".ToFormat(ctx.Spec.Name));
+                return;
             }
 
             var nupkgSymbolsFileName = Path.Combine(ctx.OutputPath, "{0}.{1}.symbols.nupkg".ToFormat(ctx.Spec.Name, ctx.Version));
