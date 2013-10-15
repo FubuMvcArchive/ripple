@@ -14,7 +14,7 @@ namespace ripple.Nuget
         {
             get
             {
-                if(_stability == NugetStability.ReleasedOnly)
+                if(Stability == NugetStability.ReleasedOnly)
                     return "/Packages()?$filter=IsLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$take=100";
 
                 return "/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$take=100";

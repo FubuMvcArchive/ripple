@@ -10,18 +10,21 @@ namespace ripple.Nuget
 {
     public class NugetFeed : NugetFeedBase
     {
-        private readonly IPackageRepository _repository;
         private readonly string _url;
-        protected NugetStability _stability;
+        protected readonly NugetStability Stability;
         private Lazy<bool> _online;
 
         public NugetFeed(string url, NugetStability stability)
         {
             _url = url;
-            _stability = stability;
-            _repository = new PackageRepositoryFactory().CreateRepository(_url);
+            Stability = stability;
 
             _online = new Lazy<bool>(isOnline);
+        }
+
+        private IPackageRepository repository
+        {
+            get { return PackageRepositoryFactory.Default.CreateRepository(_url); }
         }
 
         public string Url
@@ -69,8 +72,8 @@ namespace ripple.Nuget
             }
 
             var versionSpec = new VersionSpec(version);
-            var package = _repository
-                .FindPackages(query.Name, versionSpec, query.DetermineStability(_stability) == NugetStability.Anything, true)
+            var package = repository
+                .FindPackages(query.Name, versionSpec, query.DetermineStability(Stability) == NugetStability.Anything, true)
                 .OrderByDescending(x => x.Version)
                 .FirstOrDefault();
 
@@ -84,7 +87,7 @@ namespace ripple.Nuget
 
         public override IRemoteNuget FindLatestByName(string name)
         {
-            return _repository
+            return repository
                 .GetPackages()
                 .Where(x => x.Id.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                 .LatestNuget();
@@ -92,7 +95,7 @@ namespace ripple.Nuget
 
         public override IEnumerable<IRemoteNuget> FindAllLatestByName(string idPart)
         {
-            return _repository.GetPackages()
+            return repository.GetPackages()
                 .Where(package => package.Id.Contains(idPart) && package.IsLatestVersion)
                 .ToArray()
                 .Select(package => new RemoteNuget(package));
@@ -101,13 +104,13 @@ namespace ripple.Nuget
         protected override IRemoteNuget findLatest(Dependency query)
         {
             RippleLog.Debug("Searching for {0} from {1}".ToFormat(query, _url));
-            var candidates = _repository.Search(query.Name, query.DetermineStability(_stability) == NugetStability.Anything)
+            var candidates = repository.Search(query.Name, query.DetermineStability(Stability) == NugetStability.Anything)
                                         .Where(x => query.Name == x.Id).OrderBy(x => x.Id).ToList();
 
             return candidates.LatestNuget(query.VersionSpec);
         }
 
-        public override IPackageRepository Repository { get { return _repository; } }
+        public override IPackageRepository Repository { get { return repository; } }
 
         public override string ToString()
         {
