@@ -43,8 +43,8 @@ namespace ripple.Testing.Model.Xml
                 .Conditions
                 .ShouldHaveTheSameElementsAs(
                     new DetectSingleSolution(),
-                    new DetectRippleConfig()
-                    // TODO -- Detect XML
+                    new DetectRippleConfig(),
+                    new DetectXml()
                 );
         }
 

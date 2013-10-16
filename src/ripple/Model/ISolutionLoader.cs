@@ -7,9 +7,7 @@ namespace ripple.Model
     {
         IDirectoryCondition Condition { get; }
 
-        Solution LoadFrom(IFileSystem fileSystem, string directory);
+        Solution LoadFrom(IFileSystem fileSystem, string file);
         void SolutionLoaded(Solution solution);
-
-        //IDependencyStrategy DetermineStrategy();
     }
 }
