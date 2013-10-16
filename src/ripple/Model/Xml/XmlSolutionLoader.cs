@@ -18,13 +18,14 @@ namespace ripple.Model.Xml
                 {
                     x.Condition<DetectSingleSolution>();
                     x.Condition<DetectRippleConfig>();
+                    x.Condition<DetectXml>();
                 });
             }
         }
 
-        public Solution LoadFrom(IFileSystem fileSystem, string directory)
+        public Solution LoadFrom(IFileSystem fileSystem, string file)
         {
-            var document = XElement.Load(directory);
+            var document = XElement.Load(file);
             var solution = Solution.Empty();
 
             fillProperties(document, solution);

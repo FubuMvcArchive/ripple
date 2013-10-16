@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuObjectBlocks;
 using ripple.Model;
 using ripple.Model.Conversion;
 
@@ -50,7 +51,10 @@ namespace ripple.Nuget
 
         public void Write(Solution solution)
         {
-            _fileSystem.PersistToFile(solution, solution.Path);
+            var writer = ObjectBlockWriter.Basic(x => x.RegisterSettings<SolutionBlockSettings>());
+            var content = writer.Write(solution);
+
+            _fileSystem.WriteStringToFile(solution.Path, content);
         }
 
         public void Write(Project project)

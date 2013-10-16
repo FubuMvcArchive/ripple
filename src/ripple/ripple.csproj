@@ -41,6 +41,9 @@
     <Reference Include="FubuCore">
       <HintPath>..\packages\FubuCore\lib\FubuCore.dll</HintPath>
     </Reference>
+    <Reference Include="FubuObjectBlocks">
+      <HintPath>..\packages\FubuObjectBlocks\lib\FubuObjectBlocks.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.XmlTransform">
       <HintPath>..\packages\Microsoft.Web.Xdt\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
@@ -65,6 +68,8 @@
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Model\CleanMode.cs" />
     <Compile Include="Model\Conditions\Always.cs" />
+    <Compile Include="Model\Conditions\DetectXml.cs" />
+    <Compile Include="Model\SolutionLoader.cs" />
     <Compile Include="Packaging\CreatePackagesInput.cs" />
     <Compile Include="Commands\DescribeCommand.cs" />
     <Compile Include="Commands\FindCommand.cs" />

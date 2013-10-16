@@ -21,9 +21,9 @@ namespace ripple.Model.Conversion
             }
         }
 
-        public Solution LoadFrom(IFileSystem fileSystem, string directory)
+        public Solution LoadFrom(IFileSystem fileSystem, string file)
         {
-            var solution = DetectSingleSolution.FindSolutionFile(fileSystem, directory);
+            var solution = DetectSingleSolution.FindSolutionFile(fileSystem, file);
             var name = Path.GetFileNameWithoutExtension(solution);
 
             return Solution.NuGet(name);

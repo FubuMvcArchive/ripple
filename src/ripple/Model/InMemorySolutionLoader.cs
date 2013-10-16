@@ -15,7 +15,7 @@ namespace ripple.Model
 
         public IDirectoryCondition Condition { get { return new Always(); } }
 
-        public Solution LoadFrom(IFileSystem fileSystem, string directory)
+        public Solution LoadFrom(IFileSystem fileSystem, string file)
         {
             _solution.Directory = RippleFileSystem.CurrentDirectory();
             return _solution;
