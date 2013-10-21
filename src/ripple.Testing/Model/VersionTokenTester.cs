@@ -33,6 +33,15 @@ namespace ripple.Testing.Model
         }
 
         [Test]
+        public void current_major()
+        {
+            VersionToken
+                .CurrentMajor
+                .Value(new SemanticVersion("1.1.1.3467"))
+                .ShouldEqual(new SemanticVersion("1.0.0.0"));
+        }
+
+        [Test]
         public void next_min()
         {
             VersionToken

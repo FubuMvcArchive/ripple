@@ -10,9 +10,10 @@ namespace ripple.Model
     public class VersionToken
     {
         public static readonly VersionToken Current = new VersionToken("Current", x => x);
+        public static readonly VersionToken CurrentMajor = new VersionToken("CurrentMajor", x=>new SemanticVersion(x.Version.Major,0,0,0));
         public static readonly VersionToken NextMajor = new VersionToken("NextMajor", findNextMajor);
         public static readonly VersionToken NextMinor = new VersionToken("NextMinor", findNextMin);
-
+        
         private static readonly FieldInfo[] Fields;
         private static readonly Cache<string, VersionToken> Tokens;
  
