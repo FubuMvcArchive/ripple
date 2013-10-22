@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using FubuCore;
+using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuObjectBlocks;
+using ripple.Model.Binding;
 using ripple.Model.Conditions;
 
 namespace ripple.Model
@@ -22,7 +25,7 @@ namespace ripple.Model
 
         public Solution LoadFrom(IFileSystem fileSystem, string file)
         {
-            var reader = ObjectBlockReader.Basic(x => x.RegisterSettings<SolutionBlockSettings>());
+            var reader = Reader();
             return reader.Read<Solution>(File.ReadAllText(file));
         }
 
@@ -30,19 +33,19 @@ namespace ripple.Model
         {
             // no-op
         }
-    }
 
-    public class SolutionBlockSettings : ObjectBlockSettings<Solution>
-    {
-        public SolutionBlockSettings()
+        public static IObjectBlockReader Reader()
         {
-            Collection(x => x.Feeds)
-                .ExpressAs("feed")
-                .ImplicitValue(x => x.Url);
+            var registry = new BindingRegistry();
+            registry.Add(new VersionConstraintConverter());
+            registry.Add(new GroupedDependencyConverter());
 
-            Collection(x => x.Dependencies)
-                .ExpressAs("nuget")
-                .ImplicitValue(x => x.Name);
+            var services = new InMemoryServiceLocator();
+            var resolver = new ObjectResolver(services, registry, new NulloBindingLogger());
+
+            services.Add<IObjectResolver>(resolver);
+
+            return new ObjectBlockReader(new ObjectBlockParser(), resolver, services, new RippleBlockRegistry());
         }
     }
 }

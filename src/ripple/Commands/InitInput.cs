@@ -36,8 +36,6 @@ namespace ripple.Commands
 
             SourceFolderFlag.IfNotEmpty(x => solution.SourceFolder = x);
             NuspecFolderFlag.IfNotEmpty(x => solution.NugetSpecFolder = x);
-            BuildCommandFlag.IfNotEmpty(x => solution.BuildCommand = x);
-            FastBuildCommandFlag.IfNotEmpty(x => solution.FastBuildCommand = x);
 
             FeedsFlag.IfNotEmpty(x =>
             {

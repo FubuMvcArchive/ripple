@@ -1,10 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 using FubuCore;
 
 namespace ripple.Model
 {
+    public class DependencyGroup
+    {
+        private readonly IList<GroupedDependency> _dependencies = new List<GroupedDependency>(); 
+
+        public string Name { get; set; }
+
+        public string Dependencies
+        {
+            get { return GroupedDependencies.OrderBy(x => x.Name).Select(x => x.Name).Join(","); }
+            set { GroupedDependencies = GroupedDependency.Parse(value); }
+        }
+
+        public IEnumerable<GroupedDependency> GroupedDependencies
+        {
+            get { return _dependencies; }
+            set
+            {
+                _dependencies.Clear();
+                _dependencies.AddRange(value);
+            }
+        }
+
+        public void Add(string name)
+        {
+            Add(new GroupedDependency(name));
+        }
+
+        public void Add(GroupedDependency dependency)
+        {
+            _dependencies.Add(dependency);
+        }
+
+        public bool Has(string name)
+        {
+            return GroupedDependencies.Any(x => x.Name.EqualsIgnoreCase(name));
+        }
+    }
+
     public class GroupedDependency
     {
         public GroupedDependency()
@@ -16,23 +54,13 @@ namespace ripple.Model
             Name = name;
         }
 
-        [XmlAttribute]
         public string Name { get; set; }
-    }
 
-    public class DependencyGroup
-    {
-        public DependencyGroup()
+        public static IEnumerable<GroupedDependency> Parse(string input)
         {
-            Dependencies = new List<GroupedDependency>();
-        }
-
-        [XmlElement("Dependency")]
-        public List<GroupedDependency> Dependencies { get; set; }
-
-        public bool Has(string name)
-        {
-            return Dependencies.Any(x => x.Name.EqualsIgnoreCase(name));
+            return input
+                .Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(name => new GroupedDependency(name));
         }
     }
 }

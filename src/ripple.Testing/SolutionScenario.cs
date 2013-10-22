@@ -287,9 +287,9 @@ namespace ripple.Testing
                 Modify(solution =>
                 {
                     var group = new DependencyGroup();
-                    dependencies.Each(x => group.Dependencies.Add(new GroupedDependency(x)));
+                    dependencies.Each(x => group.Add(new GroupedDependency(x)));
 
-                    solution.Groups.Add(group);
+                    solution.AddGroup(group);
                 });
             }
         }

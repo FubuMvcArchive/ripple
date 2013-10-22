@@ -94,7 +94,7 @@ namespace ripple.Testing.Model.Xml
             group.Has("Dependency1").ShouldBeTrue();
             group.Has("Dependency2").ShouldBeTrue();
 
-            group.Dependencies.ShouldHaveCount(2);
+            group.GroupedDependencies.ShouldHaveCount(2);
         }
 
         [Test]

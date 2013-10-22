@@ -51,7 +51,7 @@ namespace ripple.Nuget
 
         public void Write(Solution solution)
         {
-            var writer = ObjectBlockWriter.Basic(x => x.RegisterSettings<SolutionBlockSettings>());
+            var writer = ObjectBlockWriter.Basic(new RippleBlockRegistry());
             var content = writer.Write(solution);
 
             _fileSystem.WriteStringToFile(solution.Path, content);

@@ -17,6 +17,11 @@ namespace ripple.Commands
         [Description("The minimum version required")]
         [FlagAlias("min-version", 'm')]
         public string MinVersionFlag { get; set; }
+
+        public override void ApplyTo(Solution solution)
+        {
+            solution.RequestSave();
+        }
     }
 
     [CommandDescription("Allows a nuget to 'float' and be automatically updated from the Update command")]
@@ -25,7 +30,7 @@ namespace ripple.Commands
         public override bool Execute(FloatInput input)
         {
             return RippleOperation
-                .For<FloatInput>(input)
+                .For(input)
                 .Step<FloatDependency>()
                 .Execute();
         }
@@ -35,6 +40,11 @@ namespace ripple.Commands
     {
         [Description("The version to lock to")]
         public string Version { get; set; }
+
+        public override void ApplyTo(Solution solution)
+        {
+            solution.RequestSave();
+        }
     }
 
     [CommandDescription("Locks a nuget to prevent it from being automatically updated from the Update command")]

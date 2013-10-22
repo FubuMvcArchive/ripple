@@ -40,6 +40,11 @@ namespace ripple.Commands
             return "Updating dependencies for solution {0}".ToFormat(solution.Name);
         }
 
+        public override void ApplyTo(Solution solution)
+        {
+            solution.RequestSave();
+        }
+
         public IEnumerable<NugetPlanRequest> Requests(Solution solution)
         {
             if (NugetFlag.IsNotEmpty())
@@ -76,7 +81,7 @@ namespace ripple.Commands
             var dependencies = solution
                 .Groups
                 .Where(group => group.Has(name))
-                .SelectMany(group => group.Dependencies.Select(x => x.Name))
+                .SelectMany(group => group.GroupedDependencies.Select(x => x.Name))
                 .Distinct();
 
             var newItems = new List<string>();

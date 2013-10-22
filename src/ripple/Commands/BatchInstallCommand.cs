@@ -70,6 +70,11 @@ namespace ripple.Commands
 
             return operation;
         }
+
+        public override void ApplyTo(Solution solution)
+        {
+            solution.RequestSave();
+        }
     }
 
     [CommandDescription("Provides a mechanism for installing multiple nugets to your solution", Name = "batch-install")]

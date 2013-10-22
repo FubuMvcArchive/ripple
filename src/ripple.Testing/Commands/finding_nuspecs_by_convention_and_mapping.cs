@@ -31,7 +31,7 @@ namespace ripple.Testing.Commands
             });
 
             theSolution = theScenario.Find("Test");
-            theSolution.Nuspecs.Add(new NuspecMap { File = "SomethingElse.nuspec", Project = "Something"});
+            theSolution.AddNuspec(new NuspecMap { File = "SomethingElse.nuspec", Project = "Something" });
 
             theInput = new CreatePackagesInput
             {

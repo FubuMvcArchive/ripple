@@ -78,10 +78,10 @@ namespace ripple.Testing.Commands
         public void requests_for_a_single_dependency_in_a_group()
         {
             var group = new DependencyGroup();
-            group.Dependencies.Add(new GroupedDependency("FubuCore"));
-            group.Dependencies.Add(new GroupedDependency("FubuLocalization"));
+            group.Add(new GroupedDependency("FubuCore"));
+            group.Add(new GroupedDependency("FubuLocalization"));
 
-            theSolution.Groups.Add(group);
+            theSolution.AddGroup(group);
             theInput.NugetFlag = "FubuCore";
 
             var requests = theInput.Requests(theSolution).ToArray();
@@ -97,14 +97,14 @@ namespace ripple.Testing.Commands
         public void requests_for_a_single_dependency_in_multiple_groups()
         {
             var g1 = new DependencyGroup();
-            g1.Dependencies.Add(new GroupedDependency("FubuCore"));
-            g1.Dependencies.Add(new GroupedDependency("FubuLocalization"));
-            theSolution.Groups.Add(g1);
+            g1.Add(new GroupedDependency("FubuCore"));
+            g1.Add(new GroupedDependency("FubuLocalization"));
+            theSolution.AddGroup(g1);
 
             var g2 = new DependencyGroup();
-            g2.Dependencies.Add(new GroupedDependency("FubuLocalization"));
-            g2.Dependencies.Add(new GroupedDependency("Bottles"));
-            theSolution.Groups.Add(g2);
+            g2.Add(new GroupedDependency("FubuLocalization"));
+            g2.Add(new GroupedDependency("Bottles"));
+            theSolution.AddGroup(g2);
 
             theInput.NugetFlag = "FubuCore";
 

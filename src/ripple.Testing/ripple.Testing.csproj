@@ -125,6 +125,7 @@
     <Compile Include="Integration\valid_solution.cs" />
     <Compile Include="Model\BatchOperationTester.cs" />
     <Compile Include="Model\BranchDetectorTester.cs" />
+    <Compile Include="Model\can_read_a_solution_file.cs" />
     <Compile Include="Model\Conditions\CompositeDirectoryConditionTester.cs" />
     <Compile Include="Model\Conditions\DetectPackagesConfigTester.cs" />
     <Compile Include="Model\Conditions\DetectRippleConfigTester.cs" />

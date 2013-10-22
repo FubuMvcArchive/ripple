@@ -52,32 +52,6 @@ namespace ripple.Testing.Commands
         }
 
         [Test]
-        public void default_build_command()
-        {
-            theSolution.BuildCommand.ShouldEqual("rake");
-        }
-
-        [Test]
-        public void custom_build_command()
-        {
-            theInput.BuildCommandFlag = "psake";
-            theSolution.BuildCommand.ShouldEqual(theInput.BuildCommandFlag);
-        }
-
-        [Test]
-        public void default_fast_build_command()
-        {
-            theSolution.FastBuildCommand.ShouldEqual("rake compile");
-        }
-
-        [Test]
-        public void custom_fast_build_command()
-        {
-            theInput.FastBuildCommandFlag = "psake compile";
-            theSolution.FastBuildCommand.ShouldEqual(theInput.FastBuildCommandFlag);
-        }
-
-        [Test]
         public void default_feeds()
         {
             theSolution.Feeds.ShouldHaveTheSameElementsAs(Feed.Fubu, Feed.NuGetV2);
