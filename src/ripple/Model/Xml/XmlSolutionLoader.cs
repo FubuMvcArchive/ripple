@@ -84,7 +84,7 @@ namespace ripple.Model.Xml
                     dependencies.Add(dep);
                 }
 
-                group.Dependencies = dependencies;
+                group.GroupedDependencies = dependencies;
                 dependencyGroups.Add(group);
             }
 
@@ -141,7 +141,7 @@ namespace ripple.Model.Xml
 
         public void SolutionLoaded(Solution solution)
         {
-            // no-op
+            solution.RequestSave();
         }
     }
 }

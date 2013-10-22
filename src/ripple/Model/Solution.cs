@@ -6,12 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using FubuCore;
-using FubuCore.CommandLine;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 using ripple.Commands;
 using ripple.Nuget;
-using ripple.Runners;
 
 namespace ripple.Model
 {
@@ -23,16 +21,18 @@ namespace ripple.Model
         IEnumerable<string> AllNugetDependencyNames();
     }
 
-    [XmlType("ripple")]
     public class Solution : DescribesItself, LogTopic, ISolution
     {
         private readonly IList<Project> _projects = new List<Project>();
         private readonly IList<Feed> _feeds = new List<Feed>();
-        private readonly IList<Dependency> _configuredDependencies = new List<Dependency>();
+        private readonly IList<Dependency> _configuredDependencies = new DependencyList();
+        private readonly IList<DependencyGroup> _groups = new List<DependencyGroup>();
+        private readonly IList<NuspecMap> _nuspecMaps = new List<NuspecMap>(); 
         private Lazy<IEnumerable<Dependency>> _missing;
         private Lazy<IList<NugetSpec>> _specifications;
         private Lazy<DependencyCollection> _dependencies;
         private readonly IList<NugetSpec> _nugetDependencies = new List<NugetSpec>();
+        private bool _requiresSave;
         private string _path;
         private string _cacheLocalPath;
 
@@ -40,8 +40,6 @@ namespace ripple.Model
         {
             NugetSpecFolder = "packaging/nuget";
             SourceFolder = "src";
-            BuildCommand = "rake";
-            FastBuildCommand = "rake compile";
             Mode = SolutionMode.Ripple;
             Groups = new List<DependencyGroup>();
             Nuspecs = new List<NuspecMap>();
@@ -61,12 +59,6 @@ namespace ripple.Model
 
             Reset();
         }
-
-        public string Name { get; set; }
-        public string NugetSpecFolder { get; set; }
-        public string SourceFolder { get; set; }
-        public string BuildCommand { get; set; }
-        public string FastBuildCommand { get; set; }
 
         public string NugetCacheDirectory
         {
@@ -105,9 +97,9 @@ namespace ripple.Model
             }
         }
 
-        public Feed[] Feeds
+        public IEnumerable<Feed> Feeds
         {
-            get { return _feeds.ToArray(); }
+            get { return _feeds; }
             set
             {
                 _feeds.Clear();
@@ -115,9 +107,9 @@ namespace ripple.Model
             }
         }
 
-        public Dependency[] Nugets
+        public IEnumerable<Dependency> Nugets
         {
-            get { return _configuredDependencies.OrderBy(x => x.Name).ToArray(); }
+            get { return _configuredDependencies; }
             set
             {
                 _configuredDependencies.Clear();
@@ -126,33 +118,29 @@ namespace ripple.Model
             }
         }
 
-        [XmlArray("Groups")]
-        [XmlArrayItem("Group")]
-        public List<DependencyGroup> Groups { get; set; }
-
-        [XmlElement("References")]
-        public ReferenceSettings References { get; set; }
-
-        [XmlArray("Nuspecs")]
-        [XmlArrayItem("Nuspec")]
-        public List<NuspecMap> Nuspecs { get; set; }
-
-        [XmlIgnore]
-        public DependencyCollection Dependencies
+        public IEnumerable<DependencyGroup> Groups
         {
-            get { return _dependencies.Value; }
+            get { return _groups; }
+            set
+        {
+                _groups.Clear();
+                _groups.AddRange(value);
+            }
         }
 
-        [XmlIgnore]
-        public IEnumerable<NugetSpec> Specifications
+        public IEnumerable<NuspecMap> Nuspecs
         {
-            get { return _specifications.Value; }
+            get { return _nuspecMaps; }
+            set
+        {
+                _nuspecMaps.Clear();
+                _nuspecMaps.AddRange(value);
+            }
         }
 
-        [XmlIgnore]
-        public Project[] Projects
+        public IEnumerable<Project> Projects
         {
-            get { return _projects.ToArray(); }
+            get { return _projects; }
             set
             {
                 _projects.Clear();
@@ -160,26 +148,6 @@ namespace ripple.Model
             }
         }
 
-        [XmlIgnore]
-        public string Directory { get; set; }
-        [XmlIgnore]
-        public SolutionMode Mode { get; set; }
-        [XmlIgnore]
-        public INugetStorage Storage { get; private set; }
-        [XmlIgnore]
-        public IFeedService FeedService { get; private set; }
-        [XmlIgnore]
-        public INugetCache Cache { get; private set; }
-        [XmlIgnore]
-        public IPublishingService Publisher { get; private set; }
-        [XmlIgnore]
-        public INugetPlanBuilder Builder { get; private set; }
-        [XmlIgnore]
-        public RestoreSettings RestoreSettings { get; private set; }
-        [XmlIgnore]
-        public NuspecSettings NuspecSettings { get; private set; }
-
-        [XmlIgnore]
         public string Path
         {
             get { return _path; }
@@ -192,6 +160,22 @@ namespace ripple.Model
                 }
             }
         }
+
+        public string Name { get; set; }
+        public string NugetSpecFolder { get; set; }
+        public string SourceFolder { get; set; }
+        public ReferenceSettings References { get; set; }
+        public DependencyCollection Dependencies { get { return _dependencies.Value; } }
+        public IEnumerable<NugetSpec> Specifications { get { return _specifications.Value; } }
+        public string Directory { get; set; }
+        public SolutionMode Mode { get; set; }
+        public INugetStorage Storage { get; private set; }
+        public IFeedService FeedService { get; private set; }
+        public INugetCache Cache { get; private set; }
+        public IPublishingService Publisher { get; private set; }
+        public INugetPlanBuilder Builder { get; private set; }
+        public RestoreSettings RestoreSettings { get; private set; }
+        public NuspecSettings NuspecSettings { get; private set; }
 
         private void resetDependencies()
         {
@@ -227,6 +211,11 @@ namespace ripple.Model
         {
             project.Solution = this;
             _projects.Fill(project);
+        }
+
+        public void AddGroup(DependencyGroup group)
+        {
+            _groups.Add(group);
         }
 
         public Project AddProject(string name)
@@ -479,6 +468,11 @@ namespace ripple.Model
             return nuget.NugetFolder(this);
         }
 
+        public void AddNuspec(NuspecMap map)
+        {
+            _nuspecMaps.Add(map);
+        }
+
         public void AddNugetSpec(NugetSpec spec)
         {
             _specifications.Value.Add(spec);
@@ -524,34 +518,24 @@ namespace ripple.Model
             return NuspecSettings.ConstraintFor(dependency.Mode);
         }
 
-        public void Save(bool force = false)
+        public void RequestSave()
         {
-            Storage.Write(this);
-            Projects.Where(x => force || x.HasChanges()).Each(Storage.Write);
+            _requiresSave = true;
         }
 
-        public ProcessStartInfo CreateBuildProcess(bool fast)
+        public bool RequiresSave()
         {
-            var cmdLine = fast ? FastBuildCommand : BuildCommand;
-            var commands = StringTokenizer.Tokenize(cmdLine);
+            return _requiresSave;
+        }
 
-            var fileName = commands.First();
-            ProcessStartInfo info;
-            var arguments = commands.Skip(1).Join(" ");
-            if (fileName == "rake")
+        public void Save(bool force = false)
             {
-                info = Runner.Rake.Info(arguments);
-            }
-            else
+            if (RequiresSave() || force)
             {
-                info = new ProcessStartInfo(fileName)
-                    {
-                        Arguments = arguments
-                    };
+                Storage.Write(this);
             }
 
-            info.WorkingDirectory = Directory;
-            return info;
+            Projects.Where(x => force || x.HasChanges()).Each(Storage.Write);
         }
 
         public override string ToString()

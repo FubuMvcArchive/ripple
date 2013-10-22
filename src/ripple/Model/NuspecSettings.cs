@@ -1,4 +1,6 @@
-﻿namespace ripple.Model
+﻿using FubuObjectBlocks;
+
+namespace ripple.Model
 {
     public class NuspecSettings
     {
@@ -8,7 +10,9 @@
             Fixed = VersionConstraint.DefaultFixed;
         }
 
+        [ImplicitValue]
         public VersionConstraint Float { get; set; }
+        [ImplicitValue]
         public VersionConstraint Fixed { get; set; } 
 
         public VersionConstraint ConstraintFor(UpdateMode mode)

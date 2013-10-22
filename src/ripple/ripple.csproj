@@ -66,9 +66,13 @@
     <Compile Include="Commands\BatchInstallCommand.cs" />
     <Compile Include="Commands\BatchPublishCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
+    <Compile Include="Model\Binding\VersionConstraintConverter.cs" />
     <Compile Include="Model\CleanMode.cs" />
     <Compile Include="Model\Conditions\Always.cs" />
     <Compile Include="Model\Conditions\DetectXml.cs" />
+    <Compile Include="Model\DependencyList.cs" />
+    <Compile Include="Model\RippleBlockRegistry.cs" />
+    <Compile Include="Model\SolutionBlockSettings.cs" />
     <Compile Include="Model\SolutionLoader.cs" />
     <Compile Include="Packaging\CreatePackagesInput.cs" />
     <Compile Include="Commands\DescribeCommand.cs" />

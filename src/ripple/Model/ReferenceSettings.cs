@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 
 namespace ripple.Model
 {
     public class ReferenceSettings
     {
         private readonly IList<IgnoreAssemblyReference> _ignores = new List<IgnoreAssemblyReference>();
-
-        [XmlArray("IgnoreAssemblies"), XmlArrayItem("Ignore")]
-        public IgnoreAssemblyReference[] IgnoredAssemblies
+        
+        public IEnumerable<IgnoreAssemblyReference> IgnoredAssemblies
         {
             get { return _ignores.ToArray(); }
             set

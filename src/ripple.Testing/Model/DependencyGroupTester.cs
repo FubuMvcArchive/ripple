@@ -11,7 +11,7 @@ namespace ripple.Testing.Model
         public void has_dependency_positive()
         {
             var group = new DependencyGroup();
-            group.Dependencies.Add(new GroupedDependency("FubuCore"));
+            group.Add(new GroupedDependency("FubuCore"));
 
             group.Has("FubuCore").ShouldBeTrue();
         }
@@ -20,7 +20,7 @@ namespace ripple.Testing.Model
         public void has_dependency_case_insensitive()
         {
             var group = new DependencyGroup();
-            group.Dependencies.Add(new GroupedDependency("FubuCore"));
+            group.Add(new GroupedDependency("FubuCore"));
 
             group.Has("fubuCore").ShouldBeTrue();
         }
@@ -29,7 +29,7 @@ namespace ripple.Testing.Model
         public void has_dependency_negative()
         {
             var group = new DependencyGroup();
-            group.Dependencies.Add(new GroupedDependency("FubuCore"));
+            group.Add(new GroupedDependency("FubuCore"));
 
             group.Has("Bottles").ShouldBeFalse();
         }

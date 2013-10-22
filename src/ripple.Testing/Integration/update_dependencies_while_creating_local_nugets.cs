@@ -43,7 +43,7 @@ namespace ripple.Testing.Integration
             theSolution = theScenario.Find("Test");
 
             // Map Something.nuspec to the "JustToBeComplicated" project
-            theSolution.Nuspecs.Add(new NuspecMap { File = "Something.nuspec", Project = "JustToBeComplicated" });
+            theSolution.AddNuspec(new NuspecMap { File = "Something.nuspec", Project = "JustToBeComplicated" });
 
             var someProject = theSolution.FindProject("SomeProject");
             var justToBeComplicated = theSolution.FindProject("JustToBeComplicated");
