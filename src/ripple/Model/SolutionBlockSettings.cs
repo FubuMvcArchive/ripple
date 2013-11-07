@@ -11,6 +11,10 @@ namespace ripple.Model
                 .ExpressAs("feed")
                 .ImplicitValue(x => x.Url);
 
+            Collection(x => x.IgnoredAssemblies)
+                .ExpressAs("ignore")
+                .ImplicitValue(x => x.Assembly);
+
             Collection(x => x.Nugets)
                 .ExpressAs("nuget")
                 .ImplicitValue(x => x.Name);
@@ -40,21 +44,8 @@ namespace ripple.Model
 
             Ignore(x => x.Nuspecs);
 
-            Ignore(x => x.References)
-                .When(settings => !settings.IgnoredAssemblies.Any());
-
             Ignore(x => x.Groups)
                 .When(groups => !groups.Any());
-        }
-    }
-
-    public class ReferenceBlockSettings : ObjectBlockSettings<ReferenceSettings>
-    {
-        public ReferenceBlockSettings()
-        {
-            Collection(x => x.IgnoredAssemblies)
-                .ExpressAs("ignore")
-                .ImplicitValue(x => x.Assembly);
         }
     }
 

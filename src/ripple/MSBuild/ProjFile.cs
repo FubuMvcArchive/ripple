@@ -207,7 +207,7 @@ namespace ripple.MSBuild
 
                 if (assemblyName == "_._" || assemblyName == "_") return;
 
-                if (!_solution.References.ShouldAddReference(dep, assemblyName)) return;
+                if (!_solution.ShouldAddReference(dep, assemblyName)) return;
 
                 var nugetDir = _solution.NugetFolderFor(dep.Name);
                 var assemblyPath = nugetDir.AppendPath(assem.Path);
