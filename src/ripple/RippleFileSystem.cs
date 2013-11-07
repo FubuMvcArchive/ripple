@@ -33,6 +33,12 @@ namespace ripple
             _stopAt = dir => dir.ToFullPath() == directory.ToFullPath();
         }
 
+
+        public static string FindSolutionDirectory(string directory)
+        {
+            return findSolutionDir(directory);
+        }
+
         public static string FindSolutionDirectory(bool shouldThrow = true)
         {
             return findSolutionDir(_currentDir(), shouldThrow);

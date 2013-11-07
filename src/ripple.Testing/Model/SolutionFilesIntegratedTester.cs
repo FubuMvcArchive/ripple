@@ -45,6 +45,29 @@ namespace ripple.Testing.Model
                 SolutionFiles
                     .FromDirectory(sandbox.Directory)
                     .Loader
+                    .ShouldBeOfType<SolutionLoader>();
+            }
+        }
+
+        [Test]
+        public void files_for_empty_xml_ripple_solution()
+        {
+            using (var sandbox = DirectorySandbox.Create())
+            {
+                sandbox.StopAtParent();
+
+                // TODO -- Going to need to write out some XML to compare the ObjectBlocks vs. XML loaders
+                sandbox.CreateXmlFile("ripple.config");
+
+                sandbox.CreateDirectory("src");
+                sandbox.CreateFile("src", "MySolution.sln");
+
+                sandbox.CreateDirectory("src", "MyProject");
+                sandbox.CreateFile("src", "MyProject", "MyProject.csproj");
+
+                SolutionFiles
+                    .FromDirectory(sandbox.Directory)
+                    .Loader
                     .ShouldBeOfType<XmlSolutionLoader>();
             }
         }

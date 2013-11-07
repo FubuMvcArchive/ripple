@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FubuCore;
 using FubuCore.Util;
 using ripple.Commands;
@@ -44,6 +45,7 @@ namespace ripple.Testing
             _fileSystem = new FileSystem();
 
             RippleFileSystem.StubCurrentDirectory(_directory);
+            RippleFileSystem.StopTraversingAt(_directory);
         }
 
         public Solution Find(string name)
@@ -286,7 +288,7 @@ namespace ripple.Testing
             {
                 Modify(solution =>
                 {
-                    var group = new DependencyGroup();
+                    var group = new DependencyGroup { Name = dependencies.First() };
                     dependencies.Each(x => group.Add(new GroupedDependency(x)));
 
                     solution.AddGroup(group);

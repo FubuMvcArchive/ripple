@@ -121,7 +121,7 @@ namespace ripple.Model
         {
             get { return _groups; }
             set
-        {
+            {
                 _groups.Clear();
                 _groups.AddRange(value);
             }
@@ -131,7 +131,7 @@ namespace ripple.Model
         {
             get { return _nuspecMaps; }
             set
-        {
+            {
                 _nuspecMaps.Clear();
                 _nuspecMaps.AddRange(value);
             }
@@ -547,7 +547,7 @@ namespace ripple.Model
         }
 
         public void Save(bool force = false)
-            {
+        {
             if (RequiresSave() || force)
             {
                 Storage.Write(this);

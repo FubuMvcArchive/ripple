@@ -225,7 +225,6 @@
     <Compile Include="RippleOperationTester.cs" />
     <Compile Include="DirectorySandbox.cs" />
     <Compile Include="SolutionScenario.cs" />
-    <Compile Include="SolutionTester.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="Steps\NugetOperationTester.cs" />
     <Compile Include="StubNuget.cs" />

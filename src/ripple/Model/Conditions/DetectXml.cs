@@ -12,7 +12,7 @@ namespace ripple.Model.Conditions
                 return false;
             }
 
-            var slnDir = RippleFileSystem.FindSolutionDirectory();
+            var slnDir = RippleFileSystem.FindSolutionDirectory(directory);
             var configFile = Path.Combine(slnDir, SolutionFiles.ConfigFile);
 
             if (!File.Exists(configFile)) return false;
