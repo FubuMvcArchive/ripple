@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
@@ -27,7 +26,8 @@ namespace ripple.Model
         private readonly IList<Feed> _feeds = new List<Feed>();
         private readonly IList<Dependency> _configuredDependencies = new DependencyList();
         private readonly IList<DependencyGroup> _groups = new List<DependencyGroup>();
-        private readonly IList<NuspecMap> _nuspecMaps = new List<NuspecMap>(); 
+        private readonly IList<NuspecMap> _nuspecMaps = new List<NuspecMap>();
+        private readonly IList<IgnoreAssemblyReference> _ignores = new List<IgnoreAssemblyReference>();
         private Lazy<IEnumerable<Dependency>> _missing;
         private Lazy<IList<NugetSpec>> _specifications;
         private Lazy<DependencyCollection> _dependencies;
@@ -55,7 +55,6 @@ namespace ripple.Model
 
             RestoreSettings = new RestoreSettings();
             NuspecSettings = new NuspecSettings();
-            References = new ReferenceSettings();
 
             Reset();
         }
@@ -164,7 +163,6 @@ namespace ripple.Model
         public string Name { get; set; }
         public string NugetSpecFolder { get; set; }
         public string SourceFolder { get; set; }
-        public ReferenceSettings References { get; set; }
         public DependencyCollection Dependencies { get { return _dependencies.Value; } }
         public IEnumerable<NugetSpec> Specifications { get { return _specifications.Value; } }
         public string Directory { get; set; }
@@ -176,6 +174,16 @@ namespace ripple.Model
         public INugetPlanBuilder Builder { get; private set; }
         public RestoreSettings RestoreSettings { get; private set; }
         public NuspecSettings NuspecSettings { get; private set; }
+
+        public IEnumerable<IgnoreAssemblyReference> IgnoredAssemblies
+        {
+            get { return _ignores; }
+            set
+            {
+                _ignores.Clear();
+                _ignores.AddRange(value);
+            }
+        }
 
         private void resetDependencies()
         {
@@ -205,6 +213,16 @@ namespace ripple.Model
         public void AddFeeds(IEnumerable<Feed> feeds)
         {
             _feeds.Fill(feeds);
+        }
+
+        public void Ignore(string name, string assembly)
+        {
+            _ignores.Add(new IgnoreAssemblyReference { Package = name, Assembly = assembly });
+        }
+
+        public bool ShouldAddReference(Dependency dependency, string assemblyName)
+        {
+            return !_ignores.Any(x => x.Matches(dependency, assemblyName));
         }
 
         public void AddProject(Project project)

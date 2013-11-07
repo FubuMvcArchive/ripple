@@ -1,3 +1,4 @@
+using FubuCore.Reflection;
 using NUnit.Framework;
 using ripple.Model;
 
@@ -16,19 +17,34 @@ namespace ripple.Testing.Model
                 Nugets = new[] { new Dependency("FubuCore", "1.0.1.0") }
             };
 
-            var group = new DependencyGroup();
+            var group = new DependencyGroup { Name = "Test"};
             group.Add(new GroupedDependency("FubuCore"));
             solution.AddGroup(group);
 
-            var constrainedDependency = new Dependency("Bottles", "1.0.0.0")
+            solution.AddDependency(new Dependency("Bottles", "1.0.0.0")
             {
                 VersionConstraint = VersionConstraint.DefaultFloat
-            };
-            solution.AddDependency(constrainedDependency);
+            });
 
             solution.AddNuspec(new NuspecMap { File = "Temp", Project = "Test" });
 
-            CheckXmlPersistence.For(solution);
+            solution.Ignore("Rhino.ServiceBus.dll", "Esent.Interop.dll");
+
+            var registry = new RippleBlockRegistry();
+            var solutionSettings = registry.SettingsFor(typeof (Solution));
+
+            CheckObjectBlockPersistence
+                .ForSolution(solution)
+                .VerifyProperties(property =>
+                {
+                    if (!property.CanWrite)
+                        return false;
+
+                    if (solutionSettings.ShouldIgnore(solution, new SingleProperty(property)))
+                        return false;
+
+                    return true;
+                });
         }
     }
 }

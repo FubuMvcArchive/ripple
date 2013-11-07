@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertLogListener.cs" />
+    <Compile Include="CheckObjectBlockPersistence.cs" />
     <Compile Include="CheckXmlPersistence.cs" />
     <Compile Include="Commands\FindNugetsCommandTester.cs" />
     <Compile Include="Commands\NugetEntryTester.cs" />
@@ -141,7 +142,7 @@
     <Compile Include="Model\InMemoryNugetCache.cs" />
     <Compile Include="Model\NuspecSettingsTester.cs" />
     <Compile Include="Model\PublishingServiceTester.cs" />
-    <Compile Include="Model\ReferenceSettingsTester.cs" />
+    <Compile Include="Model\SolutionReferenceSettingsTester.cs" />
     <Compile Include="Model\VersionConstraintTester.cs" />
     <Compile Include="Model\VersionTokenTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Nuget\RemoteNugetTester.cs" />
     <Compile Include="Nuget\UpdateDependencyTester.cs" />
     <Compile Include="PackageExtensionsTester.cs" />
+    <Compile Include="PersistenceExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RippleFileSystemTester.cs" />
     <Compile Include="RippleOperationTester.cs" />

@@ -7,7 +7,6 @@ namespace ripple.Model
         public RippleBlockRegistry()
         {
             RegisterSettings<SolutionBlockSettings>();
-            RegisterSettings<ReferenceBlockSettings>();
             RegisterSettings<DependencyGroupBlockSettings>();
         }
     }
