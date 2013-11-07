@@ -36,6 +36,12 @@ namespace ripple.Testing
             _fileSystem.WriteStringToFile(file, "");
         }
 
+        public void CreateXmlFile(params string[] parts)
+        {
+            var file = _directory.AppendPath(parts);
+            _fileSystem.WriteStringToFile(file, "<?xml version=\"1.0\"?>");
+        }
+
         public string FindDirectory(params string[] parts)
         {
             return _directory.AppendPath(parts).ToFullPath();
