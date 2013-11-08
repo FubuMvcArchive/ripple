@@ -33,7 +33,6 @@ namespace ripple.Testing.Model
             {
                 sandbox.StopAtParent();
 
-                // TODO -- Going to need to write out some XML to compare the ObjectBlocks vs. XML loaders
                 sandbox.CreateFile("ripple.config");
 
                 sandbox.CreateDirectory("src");
@@ -56,7 +55,6 @@ namespace ripple.Testing.Model
             {
                 sandbox.StopAtParent();
 
-                // TODO -- Going to need to write out some XML to compare the ObjectBlocks vs. XML loaders
                 sandbox.CreateXmlFile("ripple.config");
 
                 sandbox.CreateDirectory("src");

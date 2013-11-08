@@ -8,6 +8,7 @@ using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 using ripple.Commands;
+using ripple.Model.Validation;
 using ripple.Nuget;
 
 namespace ripple.Model
@@ -52,6 +53,7 @@ namespace ripple.Model
             UseCache(NugetFolderCache.DefaultFor(this));
             UsePublisher(PublishingService.Basic());
             UseBuilder(new NugetPlanBuilder());
+            UseValidator(new SolutionValidator());
 
             RestoreSettings = new RestoreSettings();
             NuspecSettings = new NuspecSettings();
@@ -172,6 +174,7 @@ namespace ripple.Model
         public INugetCache Cache { get; private set; }
         public IPublishingService Publisher { get; private set; }
         public INugetPlanBuilder Builder { get; private set; }
+        public ISolutionValidator Validator { get; private set; }
         public RestoreSettings RestoreSettings { get; private set; }
         public NuspecSettings NuspecSettings { get; private set; }
 
@@ -269,25 +272,7 @@ namespace ripple.Model
 
         public ValidationResult Validate()
         {
-            var localDependencies = LocalDependencies();
-            var result = new ValidationResult(this);
-
-            Dependencies.Each(dependency =>
-            {
-                if (!localDependencies.Has(dependency))
-                {
-                    result.AddProblem(dependency.Name, "Not found");
-                    return;
-                }
-
-                var local = localDependencies.Get(dependency);
-                if (dependency.Version.IsNotEmpty() && local.Version < dependency.SemanticVersion())
-                {
-                    result.AddProblem(dependency.Name, "Solution requires {0} but the local copy is {1}".ToFormat(dependency.Version, local.Version.ToString()));
-                }
-            });
-
-            return result;
+            return Validator.Validate(this);
         }
 
         public void AssertIsValid()
@@ -295,7 +280,6 @@ namespace ripple.Model
             var result = Validate();
             if (result.IsValid())
             {
-                RippleLog.Info("Solution valid");
                 return;
             };
 
@@ -399,6 +383,11 @@ namespace ripple.Model
         public void UseBuilder(INugetPlanBuilder builder)
         {
             Builder = builder;
+        }
+
+        public void UseValidator(ISolutionValidator validator)
+        {
+            Validator = validator;
         }
 
         public void Describe(Description description)

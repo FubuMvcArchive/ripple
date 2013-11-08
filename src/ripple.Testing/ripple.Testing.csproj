@@ -117,13 +117,13 @@
     <Compile Include="Integration\remove_a_dependency_from_solution.cs" />
     <Compile Include="Integration\restore_dependencies_and_trigger_batch_install.cs" />
     <Compile Include="Integration\restore_dependencies_case_insensitive.cs" />
+    <Compile Include="Integration\restore_operation_with_invalid_dependencies.cs" />
     <Compile Include="Integration\restoring_prelease_nugets_from_cache.cs" />
     <Compile Include="Integration\update_a_dependency_with_errors_from_a_feed.cs" />
     <Compile Include="Integration\update_dependencies_while_creating_local_nugets.cs" />
     <Compile Include="Integration\updating_an_existing_dependency_in_a_group.cs" />
     <Compile Include="Integration\updating_a_dependency_with_transitive_updates.cs" />
     <Compile Include="Integration\updating_a_float_dependency_when_a_cached_version_exists.cs" />
-    <Compile Include="Integration\valid_solution.cs" />
     <Compile Include="Model\BatchOperationTester.cs" />
     <Compile Include="Model\BranchDetectorTester.cs" />
     <Compile Include="Model\can_read_a_solution_file.cs" />
@@ -143,6 +143,7 @@
     <Compile Include="Model\NuspecSettingsTester.cs" />
     <Compile Include="Model\PublishingServiceTester.cs" />
     <Compile Include="Model\SolutionReferenceSettingsTester.cs" />
+    <Compile Include="Model\Validation\SolutionValidatorTester.cs" />
     <Compile Include="Model\VersionConstraintTester.cs" />
     <Compile Include="Model\VersionTokenTester.cs" />
     <Compile Include="Model\DependencyCollectionTester.cs" />

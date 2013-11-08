@@ -109,6 +109,11 @@ namespace ripple.Model
                 }
             });
 
+            _dependencies
+                .GroupBy(x => x.Name.ToLower())
+                .Where(x => x.Count() > 1)
+                .Each(x => result.AddProblem(x.Key, "Dependencies must be unique"));
+
             return result;
         }
 

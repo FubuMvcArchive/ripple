@@ -71,9 +71,13 @@
     <Compile Include="Model\Conditions\Always.cs" />
     <Compile Include="Model\Conditions\DetectXml.cs" />
     <Compile Include="Model\DependencyList.cs" />
+    <Compile Include="Model\Validation\ISolutionValidationRule.cs" />
+    <Compile Include="Model\Validation\ISolutionValidator.cs" />
     <Compile Include="Model\RippleBlockRegistry.cs" />
     <Compile Include="Model\SolutionBlockSettings.cs" />
     <Compile Include="Model\SolutionLoader.cs" />
+    <Compile Include="Model\Validation\SolutionValidator.cs" />
+    <Compile Include="Model\Validation\ValidateDependencies.cs" />
     <Compile Include="Packaging\CreatePackagesInput.cs" />
     <Compile Include="Commands\DescribeCommand.cs" />
     <Compile Include="Commands\FindCommand.cs" />
@@ -93,7 +97,6 @@
     <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\StringFeeds.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
-    <Compile Include="Commands\ValidateCommand.cs" />
     <Compile Include="Commands\WhereAmICommand.cs" />
     <Compile Include="Directives\DirectiveProcessor.cs" />
     <Compile Include="Directives\DirectiveParser.cs" />
