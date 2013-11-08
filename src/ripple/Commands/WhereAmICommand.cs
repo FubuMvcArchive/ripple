@@ -9,7 +9,7 @@ namespace ripple.Commands
         
     }
 
-    [CommandDescription("Tells you where ripple thinks the root folder is at", Name = "whereami")]
+    [CommandDescription("Tells you where ripple thinks the root folder is at", Name = "where")]
     public class WhereAmICommand : FubuCommand<WhereAmIInput>
     {
         public override bool Execute(WhereAmIInput input)

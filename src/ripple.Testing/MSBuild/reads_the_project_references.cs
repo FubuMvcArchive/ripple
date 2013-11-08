@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using FubuCore;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -33,7 +34,7 @@ namespace ripple.Testing.MSBuild
         [Test]
         public void verify_the_references()
         {
-            theProj.ProjectReferences.ShouldHaveTheSameElementsAs("FubuCore", "FubuTestingSupport");
+            theProj.ProjectReferences.Select(x => x.ProjectName).ShouldHaveTheSameElementsAs("FubuCore", "FubuTestingSupport");
         }
     }
 }
