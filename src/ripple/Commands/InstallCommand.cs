@@ -73,6 +73,7 @@ namespace ripple.Commands
         }
     }
 
+    [CommandDescription("Installs new dependencies")]
     public class InstallCommand : FubuCommand<InstallInput>
     {
         public override bool Execute(InstallInput input)
