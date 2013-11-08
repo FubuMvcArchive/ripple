@@ -35,6 +35,8 @@ namespace ripple.Nuget
 
             _document = XElement.Load(filename);
             _document.Name = _xmlns + _document.Name.LocalName;
+
+            AssertIsValid();
         }
 
         public void SaveChanges()
@@ -116,6 +118,14 @@ namespace ripple.Nuget
             }
         }
 
+        public void AssertIsValid()
+        {
+            var element = findNugetElement("id");
+            if (element == null)
+            {
+                RippleAssert.Fail("Invalid nuspec document");
+            }
+        }
 
         public string Name
         {
