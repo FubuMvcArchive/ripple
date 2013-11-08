@@ -47,6 +47,11 @@ namespace ripple.Testing
             return _directory.AppendPath(parts).ToFullPath();
         }
 
+        public string FindFile(params string[] parts)
+        {
+            return _directory.AppendPath(parts);
+        }
+
         public void StopAtParent()
         {
             RippleFileSystem.StopTraversingAt(_directory.ParentDirectory());

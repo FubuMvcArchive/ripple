@@ -30,6 +30,23 @@ namespace ripple.Testing
 
             return new Project(csProjectFile);
         }
+
+        public static Project CreateNugetProject(string projectDir, string name)
+        {
+            FileSystem.CreateDirectory(projectDir);
+
+            var stream = typeof(SolutionScenario)
+                .Assembly
+                .GetManifestResourceStream("{0}.ProjectTemplate.txt".ToFormat(typeof(SolutionScenario).Namespace));
+
+            var projectFile = Path.Combine(projectDir, "packages.config");
+            FileSystem.WriteStringToFile(projectFile, "<?xml version=\"1.0\"?><packages />");
+
+            var csProjectFile = Path.Combine(projectDir, "{0}.csproj".ToFormat(name));
+            FileSystem.WriteStreamToFile(csProjectFile, stream);
+
+            return new Project(csProjectFile);
+        }
     }
 
     public class SolutionScenario

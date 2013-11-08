@@ -23,10 +23,10 @@ namespace ripple.Model.Conversion
 
         public Solution LoadFrom(IFileSystem fileSystem, string file)
         {
-            var solution = DetectSingleSolution.FindSolutionFile(fileSystem, file);
+            var solution = DetectSingleSolution.FindSolutionFile(fileSystem, file.ParentDirectory());
             var name = Path.GetFileNameWithoutExtension(solution);
 
-            return Solution.NuGet(name);
+            return Solution.NuGet(name, file.ParentDirectory());
         }
 
         public void SolutionLoaded(Solution solution)

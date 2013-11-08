@@ -25,7 +25,6 @@ namespace ripple.Model
             
             AddLoader(new SolutionLoader());
             AddLoader(new XmlSolutionLoader());
-            AddLoader(new NuGetSolutionLoader());
         }
 
         public static void AddLoader(ISolutionLoader loader)

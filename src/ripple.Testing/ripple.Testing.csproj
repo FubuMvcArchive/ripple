@@ -175,6 +175,7 @@
     <Compile Include="Model\Xml\XmlSolutionLoaderTester.cs" />
     <Compile Include="MSBuild\reads_the_project_references.cs" />
     <Compile Include="MSBuild\removing_duplicate_assembly_references.cs" />
+    <Compile Include="MSBuild\replacing_reference_to_packages_config.cs" />
     <Compile Include="MSBuild\XElementExtensionsTester.cs" />
     <Compile Include="NugetSpecTester.cs" />
     <Compile Include="Nuget\CacheableNugetTester.cs" />
