@@ -114,7 +114,10 @@ namespace ripple.MSBuild
 
         public bool RemoveReferences(IEnumerable<string> references)
         {
-            return references.All(RemoveReference);
+            var removed = references.All(RemoveReference);
+            Write();
+
+            return removed;
         }
 
         public void Write()

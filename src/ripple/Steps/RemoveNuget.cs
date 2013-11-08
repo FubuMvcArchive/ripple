@@ -19,7 +19,12 @@ namespace ripple.Steps
             if (!stillReferenced)
             {
                 Solution.RemoveDependency(input.Nuget);
-                new FileSystem().ForceClean(Solution.NugetFolderFor(input.Nuget));
+
+                var directory = Solution.NugetFolderFor(input.Nuget);
+                var files = new FileSystem();
+
+                files.ForceClean(directory);
+                files.DeleteDirectory(directory);
             }
         }
 
