@@ -8,8 +8,12 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-    public class RestoreInput : RippleInput, IOverrideFeeds
+    public class RestoreInput : RippleInput, IOverrideFeeds, IAllowExplicitBranch
     {
+        [Description("Overrides branch detection and explicitly uses the specified branch")]
+        [FlagAlias("branch", 'b')]
+        public string BranchFlag { get; set; }
+
         [Description("Additional NuGet feed urls separated by '#'")]
         [FlagAlias("feeds", 'F')]
         public string FeedsFlag { get; set; }

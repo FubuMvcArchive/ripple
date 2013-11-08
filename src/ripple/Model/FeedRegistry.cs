@@ -65,20 +65,10 @@ namespace ripple.Model
             return new FloatingFeed(feed.Url, feed.Stability);
         }
 
-        private const string BranchPlaceholder = "{branch}";
-
         private INugetFeed buildFileSystemFeed(Feed feed)
         {
-            var directory = feed.Url.Replace("file://", "");
-
-            if (directory.Contains(BranchPlaceholder))
-            {
-                var branchName = BranchDetector.Current();
-                directory = directory.Replace(BranchPlaceholder, branchName);
-
-                RippleLog.Debug("Detected branch feed: {0}. Current branch is {1}. Setting directory to {2}".ToFormat(feed, branchName, directory), false);
-            }
-
+            var directory = FeedRegistry.BranchUrl(feed);
+            directory = directory.Replace("file://", "");
             directory = directory.ToFullPath();
 
             if (feed.Mode == UpdateMode.Fixed)
@@ -144,6 +134,22 @@ namespace ripple.Model
                     yield return feed;
                 }
             }
+        }
+
+        public const string BranchPlaceholder = "{branch}";
+
+        public static string BranchUrl(Feed feed)
+        {
+            var branchUrl = feed.Url;
+            if (branchUrl.Contains(BranchPlaceholder))
+            {
+                var branchName = BranchDetector.Current();
+                branchUrl = branchUrl.Replace(BranchPlaceholder, branchName);
+
+                RippleLog.Debug("Detected branch feed: {0}. Current branch is {1}. Setting url to {2}".ToFormat(feed, branchName, branchUrl), false);
+            }
+
+            return branchUrl;
         }
     }
 }

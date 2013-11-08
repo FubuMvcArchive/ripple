@@ -120,6 +120,7 @@
     <Compile Include="Integration\remove_a_dependency_from_solution.cs" />
     <Compile Include="Integration\restore_dependencies_and_trigger_batch_install.cs" />
     <Compile Include="Integration\restore_dependencies_case_insensitive.cs" />
+    <Compile Include="Integration\restore_from_explicit_branch.cs" />
     <Compile Include="Integration\restore_operation_with_invalid_dependencies.cs" />
     <Compile Include="Integration\restoring_prelease_nugets_from_cache.cs" />
     <Compile Include="Integration\update_a_dependency_with_errors_from_a_feed.cs" />

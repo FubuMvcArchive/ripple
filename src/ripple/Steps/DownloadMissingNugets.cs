@@ -27,6 +27,15 @@ namespace ripple.Steps
                 }
             }
 
+            if (input is IAllowExplicitBranch)
+            {
+                var branchingInput = input.As<IAllowExplicitBranch>();
+                if (branchingInput.BranchFlag.IsNotEmpty())
+                {
+                    BranchDetector.SetBranch(branchingInput.BranchFlag);
+                }
+            }
+
             var missing = Solution.MissingNugets().ToList();
             var nugets = new List<INugetFile>();
             var report = new MissingNugetReport();

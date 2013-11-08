@@ -28,7 +28,7 @@ namespace ripple.Testing.Model
 
         public INugetFeed For(Feed feed)
         {
-            return _feeds[feed];
+            return _feeds[feed.Branch()];
         }
 
         public IEnumerable<IFloatingFeed> FloatedFeedsFor(Solution solution)

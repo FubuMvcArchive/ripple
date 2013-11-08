@@ -8,13 +8,17 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-    public class InstallInput : RippleInput, INugetOperationContext
+    public class InstallInput : RippleInput, INugetOperationContext, IAllowExplicitBranch
     {
         public InstallInput()
         {
             ModeFlag = UpdateMode.Float;
             VersionFlag = string.Empty;
         }
+
+        [Description("Overrides branch detection and explicitly uses the specified branch")]
+        [FlagAlias("branch", 'b')]
+        public string BranchFlag { get; set; }
 
         [Description("The NuGet to install")]
         public string Package { get; set; }
