@@ -248,7 +248,6 @@
     <Compile Include="Steps\UpdateNuspecs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="ripple.dependencies.config" />
     <EmbeddedResource Include="Runners\run-git.cmd" />
     <EmbeddedResource Include="Runners\run-rake.cmd" />
