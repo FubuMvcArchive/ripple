@@ -5,19 +5,19 @@ using ripple.Model;
 
 namespace ripple.Steps
 {
-	public class FixReferences : IRippleStep, DescribesItself
-	{
-		public Solution Solution { get; set; }
+    public class FixReferences : IRippleStep, DescribesItself
+    {
+        public Solution Solution { get; set; }
 
         public void Execute(RippleInput input, IRippleStepRunner runner)
         {
             var attacher = new ReferenceAttacher(Solution);
-			attacher.Attach();
-		}
+            attacher.Attach();
+        }
 
-		public void Describe(Description description)
-		{
-			description.ShortDescription = "Fix References";
-		}
-	}
+        public void Describe(Description description)
+        {
+            description.ShortDescription = "Fix References";
+        }
+    }
 }

@@ -79,7 +79,7 @@ namespace ripple.Steps
                 {
                 
                   var target = groups.Where(g=>g!=group)
-                        .FirstOrDefault(x => x.Projects.Any(p => p.Name == projectRef.Split(' ').First()));
+                        .FirstOrDefault(x => x.Projects.Any(p => p.Name == projectRef.ProjectName.Split(' ').First()));
 
                     if (target == null) return;
 

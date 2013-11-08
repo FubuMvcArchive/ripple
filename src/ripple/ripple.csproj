@@ -41,6 +41,9 @@
     <Reference Include="FubuCore">
       <HintPath>..\packages\FubuCore\lib\FubuCore.dll</HintPath>
     </Reference>
+    <Reference Include="FubuCsProjFile">
+      <HintPath>..\packages\FubuCsProjFile\lib\net40\FubuCsProjFile.dll</HintPath>
+    </Reference>
     <Reference Include="FubuObjectBlocks">
       <HintPath>..\packages\FubuObjectBlocks\lib\FubuObjectBlocks.dll</HintPath>
     </Reference>
@@ -66,6 +69,7 @@
     <Compile Include="Commands\BatchInstallCommand.cs" />
     <Compile Include="Commands\BatchPublishCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
+    <Compile Include="Commands\VersionCommand.cs" />
     <Compile Include="Model\Binding\VersionConstraintConverter.cs" />
     <Compile Include="Model\CleanMode.cs" />
     <Compile Include="Model\Conditions\Always.cs" />
@@ -149,7 +153,6 @@
     <Compile Include="Model\SolutionFiles.cs" />
     <Compile Include="Model\SolutionMode.cs" />
     <Compile Include="Model\Xml\XmlSolutionLoader.cs" />
-    <Compile Include="MSBuild\FrameworkNameDetector.cs" />
     <Compile Include="MSBuild\XElementExtensions.cs" />
     <Compile Include="Nuget\CacheFinder.cs" />
     <Compile Include="Nuget\DefaultFinder.cs" />
