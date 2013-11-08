@@ -36,4 +36,9 @@ namespace ripple.Commands
             return string.Empty;
         }
     }
+
+    public interface IAllowExplicitBranch
+    {
+        string BranchFlag { get; }
+    }
 }

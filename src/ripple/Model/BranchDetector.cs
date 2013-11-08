@@ -35,7 +35,7 @@ namespace ripple.Model
 
         private static void reset()
         {
-            _current = new Lazy<string>(_detectCurrent);
+            _current = new Lazy<string>(() => _detectCurrent());
         }
 
         public static void Stub(Func<string> current)
@@ -47,6 +47,12 @@ namespace ripple.Model
         public static void Stub(Func<bool> canDetect)
         {
             _canDetect = canDetect;
+        }
+
+        public static void SetBranch(string branch)
+        {
+            _canDetect = () => true;
+            _detectCurrent = () => branch;
         }
 
         public static bool CanDetectBranch()

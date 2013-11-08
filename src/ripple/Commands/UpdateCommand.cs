@@ -10,12 +10,16 @@ using ripple.Steps;
 
 namespace ripple.Commands
 {
-    public class UpdateInput : RippleInput, INugetOperationContext
+    public class UpdateInput : RippleInput, INugetOperationContext, IAllowExplicitBranch
     {
         public UpdateInput()
         {
             VersionFlag = "";
         }
+
+        [Description("Overrides branch detection and explicitly uses the specified branch")]
+        [FlagAlias("branch", 'b')]
+        public string BranchFlag { get; set; }
 
         [Description("Only update a specific nuget by name")]
         public string NugetFlag { get; set; }
