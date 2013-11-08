@@ -1,6 +1,7 @@
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
+using ripple.Model.Conversion;
 
 namespace ripple.Commands
 {
@@ -18,18 +19,21 @@ namespace ripple.Commands
                 return false;
             }
 
-            var builder = BuilderFor(input.ToSolution());
+            SolutionFiles.AddLoader(new NuGetSolutionLoader());
+
+            var builder = Builder();
             var solution = builder.Build();
             solution.Save(true);
+
+            new CleanCommand().Execute(new CleanInput());
+            new RestoreCommand().Execute(new RestoreInput { FixReferencesFlag = true });
 
             return true;
         }
 
-        public static ISolutionBuilder BuilderFor(Solution solution)
+        public static ISolutionBuilder Builder()
         {
-            var loader = new InMemorySolutionLoader(solution);
-            var files = SolutionFiles.FromDirectory(RippleFileSystem.CurrentDirectory(), loader);
-
+            var files = SolutionFiles.FromDirectory(RippleFileSystem.CurrentDirectory());
             return new SolutionBuilder(files, ProjectReader.Basic());
         }
     }

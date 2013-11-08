@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 using FubuCore;
 using FubuCore.Util;
 using FubuCsProjFile;
@@ -23,13 +22,47 @@ namespace ripple.MSBuild
             _filename = filename;
             _solution = solution;
 
-            _project = CsProjFile.LoadFrom(_filename);
+            if (File.Exists(_filename))
+            {
+                _project = CsProjFile.LoadFrom(_filename);
+            }
+            else
+            {
+                _project = CsProjFile.CreateAtLocation(_filename, solution.Name);
+            }
         }
 
         public CsProjFile Project { get { return _project; } }
 
         public IEnumerable<AssemblyReference> References { get { return _project.All<AssemblyReference>(); } } 
         public IEnumerable<ProjectReference> ProjectReferences { get { return _project.All<ProjectReference>(); }}
+
+        public bool UsesPackagesConfig()
+        {
+            return FindPackagesConfigItem() != null;
+        }
+
+        public None FindPackagesConfigItem()
+        {
+            return _project
+                .All<None>()
+                .FirstOrDefault(x => x.Include == "packages.config");
+        }
+
+        public void ConvertToRippleDependenciesConfig()
+        {
+            var item = FindPackagesConfigItem();
+            if (item == null)
+            {
+                _project.Add(new None("ripple.dependencies.config"));
+                return;
+            }
+
+            _project.Remove(item);
+
+            item.Include = "ripple.dependencies.config";
+            _project.Add(item);
+        }
 
         public ReferenceStatus AddReference(string name, string hintPath)
         {
@@ -57,6 +90,8 @@ namespace ripple.MSBuild
             if (status == ReferenceStatus.Changed)
             {
                 RippleLog.Debug("HintPath changed: " + original + " to " + hintPath);
+                _project.Remove(reference);
+                _project.Add(reference);
             }
 
             return status;

@@ -35,7 +35,7 @@ namespace ripple.Testing.Model.Conversion
                 sandbox.CreateDirectory("SourceFolder");
                 sandbox.CreateFile("SourceFolder", "Test.sln");
 
-                var solution = theLoader.LoadFrom(new FileSystem(), sandbox.Directory);
+                var solution = theLoader.LoadFrom(new FileSystem(), sandbox.FindFile("ripple.config"));
                 solution.Feeds.ShouldHaveTheSameElementsAs(Feed.NuGetV2);
                 solution.Name.ShouldEqual("Test");
             }

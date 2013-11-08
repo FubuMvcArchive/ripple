@@ -558,12 +558,13 @@ namespace ripple.Model
             return solution;
         }
 
-        public static Solution NuGet(string name)
+        public static Solution NuGet(string name, string directory = null)
         {
             var solution = new Solution { Name = name };
 
             solution.ClearFeeds();
             solution.AddFeed(Feed.NuGetV2);
+            solution.Directory = directory;
 
             return solution;
         }

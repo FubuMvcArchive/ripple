@@ -20,7 +20,7 @@ namespace ripple.Commands
         public string Package { get; set; }
 
         [Description("Version of the package")]
-        [FlagAlias("version", 'v')]
+        [FlagAlias("version", 'V')]
         public string VersionFlag { get; set; }
 
         [Description("The update mode of the package")]
@@ -36,6 +36,7 @@ namespace ripple.Commands
         public bool ForceUpdatesFlag { get; set; }
 
         [Description("Only show what would be installed")]
+        [FlagAlias("preview", 'P')]
         public bool PreviewFlag { get; set; }
 
         [Description("Override the feed-level stability configuration")]

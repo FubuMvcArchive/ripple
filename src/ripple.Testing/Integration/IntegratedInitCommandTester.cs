@@ -46,7 +46,7 @@ namespace ripple.Testing.Integration
         private void createProject(string name)
         {
             var projectDir = theSolutionDir.AppendPath("src", name);
-            ProjectGenerator.Create(projectDir, name);
+            ProjectGenerator.CreateNugetProject(projectDir, name);
         }
 
         [Test]
