@@ -14,14 +14,25 @@ namespace ripple.Model
         {
             _solution = solution;
         }
+
         public void AddProblem(string provenance, string problem)
         {
-            _problems.Fill(new RippleProblem(provenance, problem));
+            AddProblem(new RippleProblem(provenance, problem));
+        }
+
+        public void AddProblem(RippleProblem problem)
+        {
+            _problems.Fill(problem);
         }
 
         public bool IsValid()
         {
             return !_problems.Any();
+        }
+
+        public void Import(DependencyValidationResult result)
+        {
+            result.Problems.Each(AddProblem);
         }
 
         public IEnumerable<RippleProblem> Problems { get { return _problems; } } 

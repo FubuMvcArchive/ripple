@@ -41,6 +41,7 @@ namespace ripple.Model
             Ignore(x => x.DefaultFloatConstraint);
             Ignore(x => x.DefaultFixedConstraint);
             Ignore(x => x.RestoreSettings);
+            Ignore(x => x.Validator);
 
             Ignore(x => x.Nuspecs);
 

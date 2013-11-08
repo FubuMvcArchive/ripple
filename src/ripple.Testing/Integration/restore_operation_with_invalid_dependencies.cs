@@ -1,5 +1,4 @@
-﻿using System;
-using FubuTestingSupport;
+﻿using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Commands;
 using ripple.Model;
@@ -7,7 +6,7 @@ using ripple.Model;
 namespace ripple.Testing.Integration
 {
     [TestFixture]
-    public class restore_fixed_dependency_that_cannot_be_found
+    public class restore_operation_with_invalid_dependencies
     {
         private SolutionScenario theScenario;
         private Solution theSolution;
@@ -16,12 +15,12 @@ namespace ripple.Testing.Integration
         public void SetUp()
         {
             theScenario = SolutionScenario.Create(scenario =>
-            {
-                scenario.Solution("Test", test =>
                 {
-                    test.SolutionDependency("Bottles", "1.1.0.538", UpdateMode.Fixed);
+                    scenario.Solution("Test", test =>
+                    {
+                        test.SolutionDependency("Bottles", "", UpdateMode.Fixed);
+                    });
                 });
-            });
 
             theSolution = theScenario.Find("Test");
 
@@ -30,11 +29,6 @@ namespace ripple.Testing.Integration
                 scenario
                     .For(Feed.Fubu)
                     .Add("Bottles", "1.1.0.537");
-
-                scenario
-                    .For(Feed.NuGetV2)
-                    .Add("Bottles", "1.1.0.538")
-                    .ThrowWhenSearchingFor("Bottles", "1.1.0.538", new InvalidOperationException("Test"));
             });
         }
 
@@ -49,15 +43,15 @@ namespace ripple.Testing.Integration
         public void throws_error_and_leaves_config_alone()
         {
             Exception<RippleFatalError>.ShouldBeThrownBy(() =>
-            {
-                RippleOperation
-                    .With(theSolution)
-                    .Execute<RestoreInput, RestoreCommand>();
-            });
+                {
+                    RippleOperation
+                        .With(theSolution)
+                        .Execute<RestoreInput, RestoreCommand>();
+                });
 
             theSolution = theScenario.Find("Test");
 
-            theSolution.Dependencies.Find("Bottles").Version.ShouldEqual("1.1.0.538");
+            theSolution.Dependencies.Find("Bottles").Version.ShouldEqual("");
         }
     }
 }
