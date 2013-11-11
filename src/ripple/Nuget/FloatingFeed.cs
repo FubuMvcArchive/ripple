@@ -15,9 +15,9 @@ namespace ripple.Nuget
             get
             {
                 if(Stability == NugetStability.ReleasedOnly)
-                    return "/Packages()?$filter=IsLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$take=100";
+                    return "/Packages()?$filter=IsLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$top=100";
 
-                return "/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$take=100";
+                return "/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip={0}&$top=100";
             }
         }
             
@@ -69,16 +69,6 @@ namespace ripple.Nuget
 
         public void DumpLatest()
         {
-            lock (this)
-            {
-                if (_dumped) return;
-
-                var latest = GetLatest();
-                var topic = new LatestNugets(latest, Url);
-
-                RippleLog.DebugMessage(topic);
-                _dumped = true;
-            }
         }
 
         public override IRemoteNuget FindLatestByName(string name)
@@ -89,7 +79,6 @@ namespace ripple.Nuget
         protected override IRemoteNuget findLatest(Dependency query)
         {
             var floatedResult = GetLatest().SingleOrDefault(x => query.MatchesName(x.Name));
-            RippleLog.Debug("Looking for " + query + " in " + Url + "; Found " + floatedResult);
             if (floatedResult != null && query.Mode == UpdateMode.Fixed && floatedResult.IsUpdateFor(query))
             {
                 return null;
