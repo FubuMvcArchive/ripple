@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using ripple.Commands;
 using ripple.Model;
-using ripple.Testing.Model;
 
 namespace ripple.Testing.Commands
 {
@@ -58,8 +55,8 @@ namespace ripple.Testing.Commands
                 listener
                     .InAnyOrder()
                     .Expect(string.Format("FubuCore, 1.0.0.0 ({0})", Feed.NuGetV2.Url))
-                    .Expect(string.Format("FubuCore.Docs, 1.0.0.0 ({0})", Feed.NuGetV2.Url))
                     .Expect(string.Format("FubuCore, 1.0.0.100 ({0})", Feed.Fubu.Url))
+                    .Expect(string.Format("FubuCore.Docs, 1.0.0.0 ({0})", Feed.NuGetV2.Url))
                     .Expect(string.Format("FubuCore.Docs, 1.0.0.100 ({0})", Feed.Fubu.Url));
 
                 RippleLog.RegisterListener(listener);
