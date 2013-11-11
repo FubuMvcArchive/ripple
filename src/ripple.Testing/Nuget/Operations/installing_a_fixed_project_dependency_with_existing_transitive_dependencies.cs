@@ -19,11 +19,13 @@ namespace ripple.Testing.Nuget.Operations
             FeedScenario.Create(scenario =>
             {
                 scenario.For(Feed.NuGetV2)
-                    .Add("FubuCore", "1.2.0.0")
+                    // Omitting this effectively says "FubuCore" doesn't exist in the feed
+                    // so we force it to use the local version instead
+                    //.Add("FubuCore", "1.2.0.0")
                     .Add("Bottles", "1.1.0.0")
                     .ConfigureRepository(nuget =>
                     {
-                       nuget.ConfigurePackage("Bottles", "1.1.0.0", bottles => bottles.DependsOn("FubuCore", "1.2.0.0"));  
+                        nuget.ConfigurePackage("Bottles", "1.1.0.0", bottles => bottles.DependsOn("FubuCore", "1.2.0.0"));
                     });
             });
 
