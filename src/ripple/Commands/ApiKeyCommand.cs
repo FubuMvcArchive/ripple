@@ -3,6 +3,7 @@ using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
 using ripple.Model;
+using ripple.Publishing;
 
 namespace ripple.Commands
 {

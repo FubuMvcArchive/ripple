@@ -67,7 +67,6 @@
     </Compile>
     <Compile Include="Commands\ApiKeyCommand.cs" />
     <Compile Include="Commands\BatchInstallCommand.cs" />
-    <Compile Include="Commands\BatchPublishCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\VersionCommand.cs" />
     <Compile Include="Model\Binding\VersionConstraintConverter.cs" />
@@ -96,7 +95,6 @@
     <Compile Include="Commands\LogCommand.cs" />
     <Compile Include="Commands\OpenNugetCommand.cs" />
     <Compile Include="Commands\OpenRakeCommand.cs" />
-    <Compile Include="Commands\PublishCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Commands\SolutionInput.cs" />
     <Compile Include="Commands\StringFeeds.cs" />
@@ -146,7 +144,6 @@
     <Compile Include="Model\IgnoreAssemblyReference.cs" />
     <Compile Include="Model\InMemorySolutionLoader.cs" />
     <Compile Include="Model\IProjectReader.cs" />
-    <Compile Include="Model\IPublishingService.cs" />
     <Compile Include="Model\ISolutionBuilder.cs" />
     <Compile Include="Model\ISolutionFiles.cs" />
     <Compile Include="Model\ISolutionLoader.cs" />
@@ -223,6 +220,11 @@
     <Compile Include="Packaging\CreatePackagesCommand.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="ProcessReturn.cs" />
+    <Compile Include="Publishing\BatchPublishCommand.cs" />
+    <Compile Include="Publishing\IPublishingService.cs" />
+    <Compile Include="Publishing\PublishCommand.cs" />
+    <Compile Include="Publishing\PublishingService.cs" />
+    <Compile Include="Publishing\PublishReport.cs" />
     <Compile Include="RippleApplication.cs" />
     <Compile Include="RippleAssert.cs" />
     <Compile Include="RippleEnvironment.cs" />

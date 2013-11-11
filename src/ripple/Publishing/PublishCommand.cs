@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore;
 using FubuCore.CommandLine;
-using System.Collections.Generic;
 using NuGet;
+using ripple.Commands;
 using ripple.Model;
 
-namespace ripple.Commands
+namespace ripple.Publishing
 {
     public class PublishInput : SolutionInput
     {
@@ -42,22 +43,33 @@ namespace ripple.Commands
     {
         public override bool Execute(PublishInput input)
         {
+            var report = new PublishReport();
+
             input.EachSolution(solution =>
             {
-                Console.WriteLine("Building nuget files for " + solution.Name);
+                RippleLog.Info("Building nuget files for " + solution.Name);
                 var artifactDirectory = solution.Directory.AppendPath(input.ArtifactsFlag);
 
-                Console.WriteLine("Cleaning out any existing nuget files before continuing");
+                RippleLog.Info("Cleaning out any existing nuget files before continuing");
                 new FileSystem().CleanDirectory(artifactDirectory);
-
+                
                 solution.Specifications.Each(nuget =>
                 {
                     RippleLog.Info("Creating and publishing Nuget for " + nuget.Name);
 
                     var packageFile = solution.Package(new PackageParams(nuget, SemanticVersion.Parse(input.Version), artifactDirectory,  input.CreateSymbolsFlag));
-                    solution.Publisher.PublishPackage(input.ServerFlag, packageFile, input.ApiKey);
+                    var detail = solution.Publisher.PublishPackage(input.ServerFlag, packageFile, input.ApiKey);
+
+                    report.Add(detail);
                 });
             });
+
+            RippleLog.InfoMessage(report);
+
+            if (!report.IsSuccessful())
+            {
+                RippleAssert.Fail("Failure publishing packages");
+            }
 
             return true;
         }

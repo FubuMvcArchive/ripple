@@ -10,6 +10,7 @@ using FubuCore.Logging;
 using ripple.Commands;
 using ripple.Model.Validation;
 using ripple.Nuget;
+using ripple.Publishing;
 
 namespace ripple.Model
 {
