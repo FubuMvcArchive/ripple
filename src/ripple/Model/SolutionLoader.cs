@@ -26,7 +26,10 @@ namespace ripple.Model
         public Solution LoadFrom(IFileSystem fileSystem, string file)
         {
             var reader = Reader();
-            return reader.Read<Solution>(File.ReadAllText(file));
+            var solution = Solution.Empty();
+            reader.Read(solution, File.ReadAllText(file));
+
+            return solution;
         }
 
         public void SolutionLoaded(Solution solution)

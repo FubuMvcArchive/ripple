@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
 using FubuCore.CommandLine;
+using NuGet;
 using ripple.Model;
+using ripple.Nuget;
 
 namespace ripple.Commands
 {
@@ -14,22 +19,34 @@ namespace ripple.Commands
         public override bool Execute(FindNugetsInput input)
         {
             var solution = Solution.For(input);
-            var connectivity = new FeedConnectivity();
-
-            var feeds = connectivity.FeedsFor(solution);
-
-            foreach (var feed in feeds)
+            var feeds = FeedRegistry.FeedsFor(solution);
+            var results = feeds.SelectMany(feed =>
             {
-                connectivity.IfOnline(feed, f =>
-                {
-                    foreach (var nuget in f.FindAllLatestByName(input.Nuget))
+                return feed
+                    .FindAllLatestByName(input.Nuget)
+                    .Select(nuget => new SearchResult
                     {
-                        RippleLog.Info(string.Format("{0}, {1} ({2})", nuget.Name, nuget.Version, f.Repository.Source));
-                    }
+                        Nuget = nuget,
+                        Provenance = feed.Repository
+                    });
+            });
+
+            results
+                .OrderBy(x => x.Nuget.Name)
+                .ThenBy(x => x.Nuget.Version)
+                .Each(result =>
+                {
+                    RippleLog.Info("{0}, {1} ({2})".ToFormat(result.Nuget.Name, result.Nuget.Version, result.Provenance.Source));
                 });
-            }
+
 
             return true;
+        }
+
+        public class SearchResult
+        {
+            public IRemoteNuget Nuget { get; set; }
+            public IPackageRepository Provenance { get; set; }
         }
     }
 }
