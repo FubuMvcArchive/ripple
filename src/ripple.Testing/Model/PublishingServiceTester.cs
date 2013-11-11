@@ -7,6 +7,7 @@ using NUnit.Framework;
 using NuGet;
 using ripple.Model;
 using ripple.Nuget;
+using ripple.Publishing;
 
 namespace ripple.Testing.Model
 {

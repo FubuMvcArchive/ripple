@@ -5,6 +5,7 @@ using NuGet;
 using Rhino.Mocks;
 using ripple.Model;
 using ripple.Nuget;
+using ripple.Publishing;
 
 namespace ripple.Testing.Model
 {

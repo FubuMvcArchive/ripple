@@ -1,13 +1,11 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
+using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
-using System.Collections.Generic;
-using System.Linq;
-using ripple.Model;
 
-namespace ripple.Commands
+namespace ripple.Publishing
 {
     public class BatchPublishInput
     {
@@ -36,19 +34,33 @@ namespace ripple.Commands
 
         public override bool Execute(BatchPublishInput input)
         {
-            Console.WriteLine("Looking for *.nupkg files in " + input.Directory);
-            var files = new FileSystem().FindFiles(input.Directory, new FileSet { Include = "*.nupkg" });
-            _count = files.Count();
+            RippleLog.Info("Looking for *.nupkg files in " + input.Directory);
+
+            var files = new FileSystem()
+                .FindFiles(input.Directory, new FileSet { Include = "*.nupkg" })
+                .ToArray();
+
             _index = 0;
+            _count = files.Count();
 
             var publisher = PublishingService.Basic();
+            var report = new PublishReport();
+
             files.Each(file =>
             {
                 _index++;
-
                 RippleLog.Info("Trying to publish {0}, {1} or {2}".ToFormat(file, _index, _count));
-                publisher.PublishPackage(input.ServerFlag, file, input.ApiKeyFlag);
+                
+                var detail = publisher.PublishPackage(input.ServerFlag, file, input.ApiKeyFlag);
+                report.Add(detail);
             });
+
+            RippleLog.InfoMessage(report);
+
+            if (!report.IsSuccessful())
+            {
+                RippleAssert.Fail("Failure publishing packages");
+            }
 
             return true;
         }

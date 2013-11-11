@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using ripple.Commands;
 using ripple.Nuget;
+using ripple.Publishing;
 
 namespace ripple.Testing.Commands
 {

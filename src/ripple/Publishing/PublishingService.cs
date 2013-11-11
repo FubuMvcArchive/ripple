@@ -5,19 +5,12 @@ using System.Linq;
 using FubuCore;
 using FubuCore.CommandLine;
 using NuGet;
+using ripple.Model;
 using ripple.Nuget;
 using ripple.Packaging;
 
-namespace ripple.Model
+namespace ripple.Publishing
 {
-	public interface IPublishingService
-	{
-		IEnumerable<NugetSpec> SpecificationsFor(Solution solution);
-		string CreatePackage(PackageParams ctx);
-
-		void PublishPackage(string serverUrl, string file, string apiKey);
-	    
-	}
     public class PublishingService : IPublishingService
     {
         // NOTE: the file exclusions taken from the original NuGet
@@ -51,7 +44,7 @@ namespace ripple.Model
             try
             {
                 var types = typeof(IPackageRule).Assembly.GetTypes();
-                Rules = types.Where(x => x.IsConcreteTypeOf<IPackageRule>()).Select(x => (IPackageRule)Activator.CreateInstance(x));
+                Rules = types.Where(x => TypeExtensions.IsConcreteTypeOf<IPackageRule>(x)).Select(x => (IPackageRule)Activator.CreateInstance(x));
             }
             catch
             {
@@ -70,12 +63,12 @@ namespace ripple.Model
         {
             var specs = new List<NugetSpec>();
             _files.ForNuspecs(solution, file =>
-            {
-                var spec = NugetSpec.ReadFrom(file);
-                spec.Publisher = solution;
+                {
+                    var spec = NugetSpec.ReadFrom(file);
+                    spec.Publisher = solution;
 
-                specs.Add(spec);
-            });
+                    specs.Add(spec);
+                });
 
             return specs;
         }
@@ -148,7 +141,7 @@ namespace ripple.Model
             return nupkgFileName;
         }
 
-        public void PublishPackage(string serverUrl, string file, string apiKey)
+        public IPublishReportItem PublishPackage(string serverUrl, string file, string apiKey)
         {
             var packageServer = new PackageServer(serverUrl, "ripple");
             var package = new OptimizedZipPackage(file);
@@ -157,20 +150,19 @@ namespace ripple.Model
 
             try
             {
-            packageServer.PushPackage(apiKey, package, (int)60.Minutes().TotalMilliseconds);
-        }
-            catch (InvalidOperationException ex)
+                packageServer.PushPackage(apiKey, package, (int)60.Minutes().TotalMilliseconds);
+                return new PublishSuccessful(package);
+            }
+            catch (Exception ex)
             {
-                if (ex.Message.Contains("already exists"))
+                // TODO -- Hate this
+                if (ex.Message.Contains("exists"))
                 {
-                    ConsoleWriter.Write(ConsoleColor.Yellow, "File {0} already exists on the server".ToFormat(file));
+                    return new VersionAlreadyExists(package);
                 }
-                else
-                {
-                    ConsoleWriter.Write(ConsoleColor.Red, "File {0} failed!");
-                    ConsoleWriter.Write(ConsoleColor.Red, ex.ToString());
-                }
-                
+
+                return new PublishFailure(package, ex);
+
             }
         }
 
@@ -208,9 +200,9 @@ namespace ripple.Model
             try
             {
                 return new PackageBuilder(spec.Filename, NullPropertyProvider.Instance, true)
-                {
-                    Version = version
-                };
+                    {
+                        Version = version
+                    };
             }
             catch (Exception exc)
             {
