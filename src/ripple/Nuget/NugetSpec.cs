@@ -66,6 +66,11 @@ namespace ripple.Nuget
             return string.Format("Nuget {0} from {1}", _name, Publisher);
         }
 
+        public bool Matches(string packageId)
+        {
+            return Name.EqualsIgnoreCase(packageId);
+        }
+
         public bool MatchesFilename(string file)
         {
             return new FileInfo(Filename).Name == file;

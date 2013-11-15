@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuCore;
 using ripple.Nuget;
 
@@ -44,7 +44,13 @@ namespace ripple.Model
                 var references = project.Proj.ProjectReferences;
                 references.Each(r =>
                 {
-                    var projectRef = solution.FindProject(r.ProjectName);
+                    var name = r.ProjectName;
+                    if (name.Contains(" "))
+                    {
+                        name = name.Split(' ').First();
+                    }
+
+                    var projectRef = solution.FindProject(name);
                     if (projectRef != null)
                     {
                         project.AddProjectReference(projectRef);

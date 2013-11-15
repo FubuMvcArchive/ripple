@@ -1,18 +1,17 @@
 ﻿using System.Linq;
 using FubuTestingSupport;
 using NUnit.Framework;
-using ripple.Commands;
 using ripple.Model;
 using ripple.Packaging;
 
-namespace ripple.Testing.Commands
+namespace ripple.Testing.Packaging
 {
     [TestFixture]
     public class finding_nuspecs_by_convention_and_mapping
     {
         private SolutionScenario theScenario;
         private Solution theSolution;
-        private CreatePackagesInput theInput;
+        private NuspecTemplateFinder theFinder;
 
         [SetUp]
         public void SetUp()
@@ -31,12 +30,9 @@ namespace ripple.Testing.Commands
             });
 
             theSolution = theScenario.Find("Test");
-            theSolution.AddNuspec(new NuspecMap { File = "SomethingElse.nuspec", Project = "Something" });
+            theSolution.AddNuspec(new NuspecMap { PackageId = "SomethingElse", PublishedBy = "Something" });
 
-            theInput = new CreatePackagesInput
-            {
-                UpdateDependenciesFlag = true
-            };
+            theFinder = new NuspecTemplateFinder();
         }
 
         [TearDown]
@@ -48,7 +44,7 @@ namespace ripple.Testing.Commands
         [Test]
         public void finds_nuspecs_with_corresponding_and_mapped_projects()
         {
-            var groups = theInput.SpecsFor(theSolution).ToArray();
+            var groups = theFinder.Templates(theSolution).ToArray();
 
             var spec1 = groups[0].Spec;
             spec1.Name.ShouldEqual("SomeProject");

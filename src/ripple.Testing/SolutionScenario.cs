@@ -73,6 +73,14 @@ namespace ripple.Testing
             return solution;
         }
 
+        public string CreateDirectory(string path)
+        {
+            var dir = _directory.AppendPath(path);
+            _fileSystem.CreateDirectory(dir);
+
+            return dir;
+        }
+
         public string Directory { get { return _directory; } }
 
         public void Cleanup()
@@ -273,11 +281,11 @@ namespace ripple.Testing
                 var document = new NuspecDocument(specFile);
                 document.Name = name;
 
-                var expression = new PublishesExpression(document);
+                var expression = new PublishesExpression(document, _solution);
 
                 if (configure == null)
                 {
-                    expression.Assembly("{0}.dll".ToFormat(name), "lib");
+                    expression.Assembly("{0}.dll".ToFormat(name));
                 }
                 else
                 {
@@ -316,10 +324,12 @@ namespace ripple.Testing
         public class PublishesExpression
         {
             private readonly NuspecDocument _spec;
+            private readonly Solution _solution;
 
-            public PublishesExpression(NuspecDocument spec)
+            public PublishesExpression(NuspecDocument spec, Solution solution)
             {
                 _spec = spec;
+                _solution = solution;
             }
 
             public PublishesExpression DependsOn(string name)
@@ -328,13 +338,28 @@ namespace ripple.Testing
                 return this;
             }
 
-            public PublishesExpression Assembly(string assembly, string target)
+            public PublishesExpression Assembly(string assembly, string name = null)
             {
-                var name = assembly.Replace(".dll", "");
+                // TODO -- Need to create the binary on the fly
+                if (name.IsEmpty())
+                {
+                    name = assembly.Replace(".dll", "");
+                }
+               
+                
+                // Fake the binaries
+                var binaryPath = "src{0}{1}{0}bin{0}Debug".ToFormat(Path.DirectorySeparatorChar, name);
+                var binaryFile = "{0}{1}{2}".ToFormat(binaryPath, Path.DirectorySeparatorChar, assembly);
+
                 // ..\..\src\Bottles\bin\Debug\Bottles.dll
-                var relativePath = "..{0}..{0}src{0}{1}{0}bin{0}Debug{0}{2}".ToFormat(Path.DirectorySeparatorChar, name, assembly);
+                var relativePath = "..{0}..{0}{1}".ToFormat(Path.DirectorySeparatorChar, binaryFile);
 
                 _spec.AddPublishedAssembly(relativePath);
+
+                var files = new FileSystem();
+                files.CreateDirectory(_solution.Directory.AppendPath(binaryPath));
+                files.WriteStringToFile(_solution.Directory.AppendPath(binaryFile), "");
+
                 return this;
             }
         }

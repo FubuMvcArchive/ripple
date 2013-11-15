@@ -101,8 +101,8 @@ namespace ripple.Testing.Model.Xml
         public void nuspecs()
         {
             var nuspec = theSolution.Nuspecs.Single();
-            nuspec.File.ShouldEqual("Test");
-            nuspec.Project.ShouldEqual("MyProject");
+            nuspec.PackageId.ShouldEqual("Test");
+            nuspec.PublishedBy.ShouldEqual("MyProject");
         }
 
         [Test]

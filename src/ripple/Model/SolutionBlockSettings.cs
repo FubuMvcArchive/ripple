@@ -25,7 +25,7 @@ namespace ripple.Model
 
             Collection(x => x.Nuspecs)
                 .ExpressAs("nuspec")
-                .ImplicitValue(x => x.File);
+                .ImplicitValue(x => x.PackageId);
 
             Ignore(x => x.Directory);
             Ignore(x => x.Mode);

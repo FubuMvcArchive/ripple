@@ -64,7 +64,7 @@ namespace ripple.Publishing
             var specs = new List<NugetSpec>();
             _files.ForNuspecs(solution, file =>
                 {
-                    var spec = NugetSpec.ReadFrom(file);
+                    var spec = NugetSpec.ReadFrom(file.ToFullPath());
                     spec.Publisher = solution;
 
                     specs.Add(spec);

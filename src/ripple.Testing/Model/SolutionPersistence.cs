@@ -26,7 +26,7 @@ namespace ripple.Testing.Model
                 VersionConstraint = VersionConstraint.DefaultFloat
             });
 
-            solution.AddNuspec(new NuspecMap { File = "Temp", Project = "Test" });
+            solution.AddNuspec(new NuspecMap { PackageId = "Temp", PublishedBy = "Test" });
 
             solution.Ignore("Rhino.ServiceBus.dll", "Esent.Interop.dll");
 

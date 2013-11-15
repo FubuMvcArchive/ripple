@@ -1,6 +1,4 @@
 ﻿using FubuCore.CommandLine;
-using ripple.Commands;
-using ripple.Steps;
 
 namespace ripple.Packaging
 {
@@ -9,11 +7,17 @@ namespace ripple.Packaging
     {
         public override bool Execute(CreatePackagesInput input)
         {
-            return RippleOperation
-                .For(input)
-                .Step<UpdateNuspecs>()
-                .Step<CreatePackages>()
-                .Execute();
+            var operation = RippleOperation.For(input);
+
+            // TODO -- Opt out of the package templating
+            operation.Step<GenerateNuspecs>();
+
+            if (!input.PreviewFlag)
+            {
+                operation.Step<CreatePackages>();
+            }
+
+            return operation.Execute();
         }
     }
 }

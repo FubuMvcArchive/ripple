@@ -103,6 +103,18 @@ namespace ripple.Model.Xml
                 var map = new NuspecMap();
                 fillProperties(element, map);
 
+                var file = element.Attribute("File");
+                if (file != null)
+                {
+                    map.PackageId = file.Value;
+                }
+
+                var project = element.Attribute("Project");
+                if (project != null)
+                {
+                    map.PublishedBy = project.Value;
+                }
+
                 maps.Add(map);
             }
 
