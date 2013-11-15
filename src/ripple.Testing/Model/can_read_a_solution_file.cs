@@ -29,7 +29,7 @@ nuget 'structuremap.automocking', version: '2.6.3', mode: 'Fixed'
 
 group 'Test', dependencies: 'Dep1,Dep2,Dep3'
 
-nuspec 'Test.nuspec', project: 'MyProject'";
+nuspec 'Test', publishedBy: 'MyProject'";
 
         private Solution theSolution;
 
@@ -62,8 +62,8 @@ nuspec 'Test.nuspec', project: 'MyProject'";
             group.GroupedDependencies.Select(x => x.Name).ShouldHaveTheSameElementsAs("Dep1", "Dep2", "Dep3");
 
             var nuspec = theSolution.Nuspecs.Single();
-            nuspec.File.ShouldEqual("Test.nuspec");
-            nuspec.Project.ShouldEqual("MyProject");
+            nuspec.PackageId.ShouldEqual("Test");
+            nuspec.PublishedBy.ShouldEqual("MyProject");
         }
 
     }

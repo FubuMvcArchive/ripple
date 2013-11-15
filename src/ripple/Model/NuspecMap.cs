@@ -1,32 +1,53 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using FubuCore;
 using ripple.Nuget;
+using ripple.Packaging;
 
 namespace ripple.Model
 {
+    // nuspec 'FubuCore', publishedBy: 'FubuCore', dependsOn: 'FubuCore.Interfaces'
+    // nuspec 'FubuCore.Interfaces', publishedBy: 'FubuCore'
+    // nuspec 'FubuCore.Interfaces', publishedBy: 'FubuCore.Support'
+
     public class NuspecMap
     {
-        [XmlAttribute]
-        public string File { get; set; }
-        [XmlAttribute]
-        public string Project { get; set; }
+        public string PackageId { get; set; }
+        public string PublishedBy { get; set; }
+        public string DependsOn { get; set; }
 
         public ProjectNuspec ToSpec(Solution solution)
         {
-            var project = solution.FindProject(Project);
+            var project = solution.FindProject(PublishedBy);
             if (project == null)
             {
-                throw new ArgumentOutOfRangeException("Project", Project + " is not a valid project name");
+                throw new InvalidOperationException(PublishedBy + " is not a valid project name");
             }
 
-            var spec = solution.Specifications.SingleOrDefault(x => x.MatchesFilename(File));
-            if (spec == null)
+            var target = solution.Specifications.SingleOrDefault(x => x.Matches(PackageId));
+            if (target == null)
             {
-                throw new ArgumentOutOfRangeException("File", File + " is not a valid nuspec file name");
+                throw new InvalidOperationException("Solution is not configured to publish " + PackageId);
             }
 
-            return new ProjectNuspec(project, spec);
+            var spec = new ProjectNuspec(project, target);
+            if (DependsOn.IsNotEmpty())
+            {
+                var dependencies = DependsOn.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                dependencies.Each(x =>
+                {
+                    var dependency = solution.Specifications.SingleOrDefault(s => s.Matches(x));
+                    if (dependency == null)
+                    {
+                        throw new InvalidOperationException("Solution is not configured to publish " + x);
+                    }
+
+                    spec.AddDependency(dependency);
+                });
+            }
+
+            return spec;
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿using FubuTestingSupport;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using FubuTestingSupport;
 using NUnit.Framework;
 using ripple.Model;
 using ripple.Nuget;
+using ripple.Packaging;
 
 namespace ripple.Testing.Nuget
 {
@@ -12,7 +16,7 @@ namespace ripple.Testing.Nuget
         private Project p1;
         private Project p2;
         private NugetSpec theNugetSpec;
-        private SpecGroup theGroup;
+        private NuspecTemplate theGroup;
 
         [SetUp]
         public void SetUp()
@@ -33,10 +37,12 @@ namespace ripple.Testing.Nuget
             theSolution.AddDependency(new Dependency("FubuMVC.Core", "1.4.0.0", UpdateMode.Fixed));
 
             theNugetSpec = new NugetSpec("MyProject", "myproject.nuspec");
-            // explicit dependencies are not overridden
-            theNugetSpec.Dependencies.Add(new NuspecDependency("Bottles", "1.0.0.0"));
 
-            theGroup = new SpecGroup(theNugetSpec, new[] { p1, p2 });
+            theGroup = new NuspecTemplate(theNugetSpec, new[]
+            {
+                new ProjectNuspec(p1, new NugetSpec("MyProject", "MyProject.nuspec")), 
+                new ProjectNuspec(p2, new NugetSpec("MyOtherProject", "MyOtherProject.nuspec"))
+            });
         }
 
         [Test]
@@ -44,6 +50,7 @@ namespace ripple.Testing.Nuget
         {
             var dependencies = theGroup.DetermineDependencies();
             dependencies.ShouldHaveTheSameElementsAs(
+                theSolution.FindDependency("Bottles"),
                 theSolution.FindDependency("FubuCore"),
                 theSolution.FindDependency("FubuLocalization"),
                 theSolution.FindDependency("FubuMVC.Core")
