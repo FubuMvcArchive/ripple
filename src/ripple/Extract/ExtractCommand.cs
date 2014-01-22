@@ -12,7 +12,7 @@ namespace ripple.Extract
 	public class ExtractCommand : FubuCommand<ExtractInput>
 	{
 		public const string Command =
-			"/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip=0&$top=";
+			"/Packages()?$filter=IsAbsoluteLatestVersion&$orderby=DownloadCount%20desc,Id&$skip=SKIP&$top=";
 
 		public override bool Execute(ExtractInput input)
 		{
@@ -56,13 +56,25 @@ namespace ripple.Extract
 
 		private static IEnumerable<NugetEntry> loadNugetEntries(ExtractInput input)
 		{
-			var url = input.FeedFlag.TrimEnd('/') + Command + input.MaxFlag;
-			
-			var document = XDocument.Load(url);
+		    int count = 100;
+		    int attempt = 0;
+		    while (count == 100)
+		    {
+                var url = input.FeedFlag.TrimEnd('/') + Command.Replace("SKIP", (attempt * 100).ToString()) + input.MaxFlag;
 
-		    document.Root.Elements().Each(x => Debug.WriteLine(x.Name.LocalName));
+                var document = XDocument.Load(url);
+                var entries = document.Root.Elements().Where(x => x.Name.LocalName == "entry");
+		        count = entries.Count();
 
-			return document.Root.Elements().Where(x => x.Name.LocalName == "entry").Select(e => new NugetEntry(e)).Where(x => !x.Name.EndsWith(".Docs")).ToArray();
+                foreach (var entry in entries.Select(e => new NugetEntry(e)).Where(x => !x.Name.EndsWith(".Docs")))
+                {
+                    yield return entry;
+                }
+
+		        attempt++;
+		    }
+
+
 		}
 	}
 }
