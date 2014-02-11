@@ -30,6 +30,7 @@ namespace ripple.Testing
 		public Uri LicenseUrl { get; private set; }
 		public Uri ProjectUrl { get; private set; }
 		public bool RequireLicenseAcceptance { get; private set; }
+		public bool DevelopmentDependency { get; private set; }
 		public string Description { get; private set; }
 		public string Summary { get; private set; }
 		public string ReleaseNotes { get; private set; }
@@ -148,6 +149,8 @@ namespace ripple.Testing
 	    public StubPackageRepository(string url)
 	    {
 	        Source = url;
+
+			PackageSaveMode = PackageSaveModes.Nupkg;
 	    }
 
 	    public IQueryable<IPackage> GetPackages()
@@ -177,6 +180,7 @@ namespace ripple.Testing
 		}
 
 		public string Source { get; private set; }
+		public PackageSaveModes PackageSaveMode { get; set; }
 		public bool SupportsPrereleasePackages { get; private set; }
 	}
 }
