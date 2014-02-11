@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -48,15 +48,20 @@
     <None Include="1.GettingStarted\3.Feeds.spark" />
     <None Include="1.GettingStarted\4.DirectoryStructure.spark" />
     <None Include="1.GettingStarted\index.spark" />
-    <None Include="2.Commands\1.Clean.spark" />
-    <None Include="2.Commands\2.Float.spark" />
-    <None Include="2.Commands\3.Install.spark" />
-    <None Include="2.Commands\4.List.spark" />
-    <None Include="2.Commands\5.Lock.spark" />
-    <None Include="2.Commands\6.Restore.spark" />
-    <None Include="2.Commands\7.Update.spark" />
-    <None Include="2.Commands\8.Validate.spark" />
-    <None Include="2.Commands\index.spark" />
+    <None Include="2.Features\1.Local.spark" />
+    <None Include="2.Features\2.CreatingPackages.spark" />
+    <None Include="2.Features\index.spark" />
+    <None Include="3.Commands\1.Clean.spark" />
+    <None Include="3.Commands\10.Validate.spark" />
+    <None Include="3.Commands\2.CreatePackages.spark" />
+    <None Include="3.Commands\3.Float.spark" />
+    <None Include="3.Commands\4.Init.spark" />
+    <None Include="3.Commands\5.Install.spark" />
+    <None Include="3.Commands\6.List.spark" />
+    <None Include="3.Commands\7.Lock.spark" />
+    <None Include="3.Commands\8.Restore.spark" />
+    <None Include="3.Commands\9.Update.spark" />
+    <None Include="3.Commands\index.spark" />
     <None Include="index.spark">
       <SubType>Designer</SubType>
     </None>
@@ -82,9 +87,5 @@
     <EmbeddedResource Include="pak-WebContent.zip" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="pak-Data.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="pak-Config.zip" />
   </ItemGroup>
 </Project>
