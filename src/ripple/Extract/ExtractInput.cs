@@ -11,7 +11,6 @@ namespace ripple.Extract
         public ExtractInput()
         {
             FeedFlag = RippleConstants.FubuTeamCityFeed;
-            MaxFlag = 200;
         }
 
         [Description("Directory to dump the nuget files")]
@@ -19,9 +18,6 @@ namespace ripple.Extract
 
         [Description("Nuget feed.  If not specified, will use the Fubu TeamCity")]
         public string FeedFlag { get; set; }
-        
 
-        [Description("Maximum number of nugets to download, capped at 200 by default")]
-        public int MaxFlag { get; set; }
     }
 }
